@@ -14,7 +14,6 @@ Ele deve ser usado como referência principal para a implementação e validaç�
 - assinatura, pagamentos e mudanças de plano;
 - suspensão e reativação;
 - manutenção global;
-- extensão excepcional da cota de IA;
 - histórico administrativo;
 - exclusão administrativa excepcional;
 - limites de acesso a dados privados das barbearias;
@@ -147,7 +146,6 @@ Mostrar:
 - total de barbearias;
 - quantidade no Plano Grátis;
 - quantidade no Plano Normal;
-- quantidade no Plano Com IA;
 - receita de assinaturas recebida no mês;
 - próximos vencimentos;
 - alterações de plano, renovações ou ações pendentes relevantes;
@@ -170,7 +168,7 @@ Nunca utilizar para esse indicador:
 Pode apresentar:
 
 - nome da barbearia;
-- código `EG-XXXXXX`;
+- código `BAR-XXXXXX`;
 - plano atual;
 - data de vencimento.
 
@@ -201,7 +199,7 @@ Permitir localizar uma barbearia e abrir seus dados administrativos.
 Usar uma busca única por:
 
 - nome da barbearia;
-- código amigável `EG-XXXXXX`.
+- código amigável `BAR-XXXXXX`.
 
 Não exigir que o operador saiba UUID ou ID técnico.
 
@@ -212,7 +210,6 @@ Não exigir que o operador saiba UUID ou ID técnico.
 - Todos;
 - Grátis;
 - Normal;
-- Com IA.
 
 ### Situação da conta
 
@@ -227,7 +224,6 @@ Exemplos válidos:
 ```text
 Ativa + Grátis
 Ativa + Normal
-Ativa + Com IA
 Suspensa + qualquer plano
 ```
 
@@ -238,7 +234,7 @@ Não utilizar `Inativa` como situação comum.
 Exibir, no mínimo:
 
 - nome;
-- código EG;
+- Código da barbearia;
 - plano;
 - situação da conta.
 
@@ -272,7 +268,7 @@ Concentrar dados administrativos e ações autorizadas de uma única conta.
 Exibir:
 
 - nome da barbearia;
-- código EG;
+- Código da barbearia;
 - responsável/perfil;
 - e-mail;
 - WhatsApp;
@@ -281,7 +277,7 @@ Exibir:
 - data de criação;
 - validade atual do plano.
 
-O código EG:
+O Código da barbearia:
 
 - é gerado pelo servidor;
 - é único;
@@ -302,7 +298,6 @@ Não exibir:
 - despesas;
 - estoque;
 - relatórios internos;
-- conteúdo de conversas da IA;
 - dados operacionais sem necessidade administrativa.
 
 O ADMIN não deve agir como se fosse proprietário da barbearia.
@@ -326,8 +321,7 @@ Situação da conta
 Planos oficiais:
 
 - Grátis;
-- Normal;
-- Com IA.
+- Normal.
 
 Situações da conta:
 
@@ -413,35 +407,25 @@ Não existe período de tolerância automático.
 
 ---
 
-# 12. Upgrade Normal → Com IA
+# 12. Mudança entre Grátis e Normal
 
-O upgrade pode ser aplicado imediatamente após a confirmação administrativa.
-
-Regras:
-
-- a diferença de valor é tratada manualmente;
-- o vencimento atual não muda;
-- não criar fórmula automática de pró-rata no MVP;
-- na renovação seguinte, aplica-se o valor integral do Plano Com IA;
-- registrar o evento administrativo.
-
----
-
-# 13. Downgrade Com IA → Normal
-
-O downgrade não é imediato.
+Na versão inicial existe apenas um plano pago: Normal.
 
 Regras:
 
-- fica agendado para o final do período atual;
-- o Plano Com IA permanece ativo até essa data;
-- a alteração pode ser cancelada antes de entrar em vigor;
-- registrar agendamento e cancelamento no histórico administrativo.
-
-Se chegar ao vencimento sem novo pagamento confirmado, a conta retorna ao Grátis. O Normal não começa automaticamente sem pagamento.
+- Grátis → Normal ocorre após confirmação de pagamento real ou concessão de cortesia administrativa;
+- Normal → Grátis ocorre no vencimento sem renovação ou ao término de um cancelamento agendado;
+- não existe segundo plano pago para upgrade ou downgrade nesta etapa;
+- mudanças relevantes devem ser registradas no histórico administrativo.
 
 ---
+# 13. Recursos comerciais futuros
 
+Planos adicionais, incluindo eventual plano associado ao Assistente IA, não fazem parte da versão inicial.
+
+Quando esse recurso entrar no escopo, revisar regras de upgrade, downgrade e cobrança conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
+
+---
 # 14. Cancelamento da assinatura
 
 Cancelar assinatura não significa excluir conta.
@@ -504,15 +488,11 @@ Pode registrar eventos como:
 
 - plano ativado;
 - pagamento confirmado;
-- upgrade;
-- downgrade agendado;
-- downgrade cancelado;
 - cancelamento de assinatura;
 - cancelamento desfeito;
 - período gratuito concedido;
 - conta suspensa;
 - conta reativada;
-- extensão excepcional da cota de IA;
 - manutenção global alterada;
 - exclusão administrativa excepcional.
 
@@ -626,30 +606,13 @@ Ao encerrar manutenção:
 
 ---
 
-# 21. Assistente IA — acompanhamento administrativo
+# 21. Assistente IA — recurso futuro
 
-Cada barbearia no Plano Com IA possui inicialmente:
+O painel ADMIN da versão inicial não possui consumo, cota, extensão ou controles específicos de IA.
 
-- 1.000 respostas por ciclo da assinatura;
-- máximo de 20 mensagens por conversa;
-- proteção de taxa e abuso.
-
-O ADMIN deve ser alertado em 80% da cota.
-
-Em 100%, o uso é bloqueado, salvo extensão administrativa registrada.
-
-## Extensão excepcional
-
-Quando realmente necessária, o ADMIN pode estender a cota com:
-
-- justificativa;
-- valor/limite adicional definido pela regra vigente;
-- registro no histórico administrativo.
-
-O ADMIN não recebe acesso ao conteúdo das conversas da IA.
+Quando o Assistente IA entrar no escopo, os controles administrativos deverão ser definidos conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ---
-
 # 22. Exclusão administrativa excepcional
 
 O ADMIN não possui um botão comum de exclusão definitiva nos detalhes da barbearia.
@@ -682,7 +645,7 @@ Exigir:
 - confirmação no formato:
 
 ```text
-EXCLUIR EG-XXXXXX
+EXCLUIR BAR-XXXXXX
 ```
 
 - registro no histórico administrativo.
@@ -715,7 +678,6 @@ Não reter na área administrativa comum:
 - Vitrine;
 - imagens;
 - configurações operacionais;
-- conteúdo de IA.
 
 Os registros retidos ficam fora da lista normal do ADMIN e possuem acesso técnico restrito, motivado e auditado.
 

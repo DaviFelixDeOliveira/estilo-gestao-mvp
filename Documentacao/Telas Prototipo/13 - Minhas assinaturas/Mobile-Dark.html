@@ -99,17 +99,14 @@
 <div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Relatórios em PDF e PNG</span></div>
 <div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Vitrine Digital e Portfólio</span></div>
 </div>
-<div class="pt-2 border-t border-[#3F3F3B] flex items-center gap-1.5 text-[11px] text-[#B8B8B2]">
-<i class="w-3.5 h-3.5 shrink-0" data-lucide="info"></i>
-<span>Assistente de IA não incluído</span>
-</div>
+
 </div>
 <button class="w-full py-2.5 px-4 rounded-xl bg-[#F4F4F0] text-[#181817] hover:bg-[#E9E9E4] transition font-bold text-xs flex items-center justify-center gap-2 shadow-sm" onclick="openModal('modal-compare')">
 <i class="w-4 h-4 text-amber-600" data-lucide="sparkles"></i>
 <span>Conhecer e alterar plano</span>
 </button>
 </div>
-<!-- CARD 2: GARANTIA DE CONTINUIDADE E RETORNO AO GRÁTIS -->
+
 <div class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm space-y-3">
 <div class="flex items-center gap-2">
 <i class="w-4 h-4 text-[#6FB892]" data-lucide="shield-check"></i>
@@ -167,7 +164,7 @@
 </button>
 </div>
 </main>
-<!-- BARRA INFERIOR FIXA DO BARBEIRO (MOBILE - 4 ITENS OFICIAIS) -->
+
 <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#222220] border-t border-[#3F3F3B] px-3 grid grid-cols-4 items-center z-30 select-none">
 <!-- 1. Dashboard -->
 <a class="flex flex-col items-center justify-center gap-1 text-[#B8B8B2] hover:text-white py-1" href="#">
@@ -215,26 +212,9 @@
 <p class="text-[11px] text-[#B8B8B2] leading-tight">
           Gestão completa da barbearia (PDV, comandas, controle de estoque, financeiro, despesas e relatórios em PDF/PNG).
         </p>
-<div class="pt-2 border-t border-[#3F3F3B] text-[10px] text-[#B8B8B2] italic">
-          Não inclui Assistente de Inteligência Artificial.
-        </div>
+
 </div>
-<!-- PLANO COM IA -->
-<div class="rounded-xl border border-indigo-500/40 bg-gradient-to-b from-indigo-950/40 to-[#222220] p-4 space-y-2.5">
-<div class="flex items-center justify-between">
-<span class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-            Plano Com IA
-            <i class="w-3.5 h-3.5 text-amber-400" data-lucide="sparkles"></i>
-</span>
-<span class="text-[10px] text-amber-400 font-semibold">Atendimento 24h</span>
-</div>
-<p class="text-[11px] text-[#B8B8B2] leading-tight">
-          Tudo do Plano Normal + Assistente de Inteligência Artificial integrado na sua Vitrine para tirar dúvidas de clientes.
-        </p>
-<button class="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition" onclick="upgradeFlow()">
-          Fazer upgrade para Com IA
-        </button>
-</div>
+
 <!-- PLANO GRÁTIS -->
 <div class="rounded-xl border border-[#3F3F3B] p-4 bg-[#1E1E1C] space-y-2 opacity-80">
 <span class="text-xs font-bold text-[#B8B8B2] uppercase tracking-wider">Plano Grátis</span>
@@ -280,7 +260,6 @@
     function openModal(id) { document.getElementById(id).showModal(); }
     function closeModal(id) { document.getElementById(id).close(); }
     function upgradeFlow() {
-      alert('Solicitação de upgrade para o Plano Com IA registrada. O suporte entrará em contato para ativação mantendo a validade de 16/10/2026.');
       closeModal('modal-compare');
     }
     function confirmCancel() {

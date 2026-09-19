@@ -1655,7 +1655,6 @@ Pode ser separado em seções como:
 
 \- Portfólio;
 
-\- Assistente IA.
 
 Evitar formulário visualmente interminável.
 
@@ -2357,7 +2356,6 @@ Diálogos de:
 
 \- desativação;
 
-\- retirada da IA;
 
 deverão funcionar em 320px.
 
@@ -2561,69 +2559,15 @@ Botões deverão:
 
 \---
 
-**# 120. Assistente IA Mobile**
+**# 120. Assistente IA — recurso futuro**
 
-Quando fechado:
-
-\- não esconder CTAs;
-
-\- respeitar safe areas;
-
-\- ocupar pouco espaço.
+O Assistente IA não faz parte da versão inicial. Regras responsivas específicas de chat, teclado, safe area e painel flutuante serão definidas quando o módulo voltar ao escopo.
 
 \---
 
-**# 121. Assistente IA aberto**
+**# 123. Estados de IA — recurso futuro**
 
-No Mobile poderá ocupar grande parte da tela.
-
-Deverá considerar:
-
-\- teclado virtual;
-
-\- campo de mensagem;
-
-\- botão Enviar;
-
-\- lista de mensagens;
-
-\- fechamento;
-
-\- safe area.
-
-\---
-
-**# 122. Assistente IA Desktop**
-
-Pode utilizar:
-
-\- janela flutuante;
-
-\- painel lateral;
-
-\- solução equivalente.
-
-Não deverá bloquear conteúdo principal desnecessariamente.
-
-\---
-
-**# 123. Estados da IA**
-
-Deverão funcionar em telas pequenas:
-
-\`\`\`text
-
-Aguardando resposta
-
-Erro
-
-Timeout
-
-Limite de uso
-
-\`\`\`
-
-Mensagens longas não deverão provocar overflow horizontal.
+Não se aplica à versão inicial.
 
 \---
 
@@ -3031,7 +2975,6 @@ Testar especialmente:
 
 \- relatórios;
 
-\- IA;
 
 \- Painel Administrativo.
 
@@ -3397,7 +3340,6 @@ Prioridade especial:
 
 \- Perfil/Conta;
 
-\- Assistente IA;
 
 \- Painel Administrativo.
 
@@ -3553,7 +3495,6 @@ Prioridade recomendada:
 
 27. Vitrine Pública
 
-28. Assistente IA
 
 29. Dashboard Administrativo
 
@@ -3610,7 +3551,6 @@ A responsividade estará suficientemente definida para prototipação quando:
 
 \- Vitrine Pública estiver adequada ao celular;
 
-\- Assistente IA considerar teclado e safe area;
 
 \- Painel Administrativo funcionar em Mobile e Desktop;
 

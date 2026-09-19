@@ -206,7 +206,7 @@ Ser a referência funcional principal da área autenticada da barbearia: autenti
 
 **Finalidade:**
 
-Ser a referência funcional principal da experiência pública: Vitrine, serviços, produtos, Portfólio, contatos, Assistente IA e estados públicos.
+Ser a referência funcional principal da experiência pública da versão inicial: Vitrine, serviços, produtos, Portfólio, contatos e estados públicos.
 
 ## Fluxo do ADMIN
 
@@ -559,7 +559,7 @@ Orienta a separação entre interface, servidor e persistência.
 
 [`../10-skills/VITRINE_E_IA.md`](../10-skills/VITRINE_E_IA.md)
 
-Orienta implementação da área pública e do Assistente IA.
+Registra a situação atual da Vitrine e direciona o planejamento futuro do Assistente IA para o documento específico.
 
 ---
 

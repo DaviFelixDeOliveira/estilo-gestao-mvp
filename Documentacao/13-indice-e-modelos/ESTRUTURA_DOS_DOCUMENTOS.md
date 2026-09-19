@@ -482,7 +482,7 @@ Definir requisitos técnicos obrigatórios de segurança.
 
 # Dados públicos
 
-# IA
+# Recursos futuros, quando aplicável
 
 # Logs
 
@@ -580,7 +580,7 @@ Organizar os fatos que um advogado precisa conhecer.
 
 # Fornecedores
 
-# IA
+# Recursos futuros, quando aplicável
 
 # Vitrine
 
@@ -638,7 +638,7 @@ Data
 
 # Vitrine
 
-# IA
+# Recursos futuros, quando aplicável
 
 # Planos
 

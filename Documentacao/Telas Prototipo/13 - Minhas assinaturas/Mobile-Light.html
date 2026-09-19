@@ -45,10 +45,7 @@
           Vitrine Digital e Portfólio
         </li>
 </ul>
-<div class="pt-space-2xs mt-space-xs flex items-center gap-space-xs font-body-sm text-body-sm text-text-secondary">
-<span class="material-symbols-outlined text-[16px] text-text-secondary">info</span>
-<span>Assistente de IA não incluído</span>
-</div>
+
 </div>
 <button class="w-full min-h-[44px] bg-primary hover:bg-interactive-hover active:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-space-xs transition-colors shadow-sm" onclick="openPlansModal()">
 <span class="material-symbols-outlined text-[18px]">swap_horiz</span>
@@ -116,61 +113,6 @@
 </div>
 <!-- BOTTOM SHEET DE COMPARAÇÃO DE PLANOS -->
 <div class="hidden fixed inset-0 z-50 flex items-end justify-center bg-primary/45 backdrop-blur-sm transition-opacity" id="plansSheet">
-<div class="w-full max-h-[85vh] overflow-y-auto bg-surface-elevated rounded-t-xl p-space-md space-y-space-md shadow-2xl">
-<!-- Handle & Fechar -->
-<div class="flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-text-secondary uppercase">Planos do Sistema</span>
-<h3 class="font-headline-sm text-headline-sm text-text-primary">Compare os Planos</h3>
-</div>
-<button aria-label="Fechar" class="min-h-[44px] min-w-[44px] flex items-center justify-center text-text-secondary hover:bg-surface-secondary rounded-lg" onclick="closePlansModal()">
-<span class="material-symbols-outlined text-[20px]">close</span>
-</button>
-</div>
-<p class="font-body-sm text-body-sm text-text-secondary">
-      O upgrade pode ser ativado imediatamente sem alterar a validade atual. O valor adicional será tratado separadamente.
-    </p>
-<!-- Lista de Planos -->
-<div class="space-y-space-sm">
-<!-- 1. Plano Grátis -->
-<div class="bg-surface-container-low rounded-xl p-space-md space-y-space-xs">
-<div class="flex items-center justify-between">
-<span class="font-headline-sm text-headline-sm text-text-primary">Grátis</span>
-<span class="font-label-sm text-label-sm bg-surface-secondary text-text-secondary px-2 py-0.5 rounded-full">Básico</span>
-</div>
-<p class="font-body-sm text-body-sm text-text-secondary">
-          Vitrine Digital pública, portfólio de cortes e histórico de dados operacionais em somente leitura. Sem novas vendas no PDV.
-        </p>
-</div>
-<!-- 2. Plano Normal (Atual) -->
-<div class="bg-surface-elevated rounded-xl p-space-md space-y-space-xs shadow-sm">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-space-xs">
-<span class="font-headline-sm text-headline-sm text-text-primary">Normal</span>
-<span class="font-label-sm text-label-sm bg-success-surface text-success px-2 py-0.5 rounded-full">Plano atual</span>
-</div>
-<span class="font-body-sm text-body-sm text-text-secondary">Ativo até 16/10/2026</span>
-</div>
-<p class="font-body-sm text-body-sm text-text-secondary">
-          Gestão completa, PDV, comandas, estoque, relatórios e controle financeiro diário. Assistente de IA não incluído.
-        </p>
-</div>
-<!-- 3. Plano Com IA -->
-<div class="bg-surface-container-low rounded-xl p-space-md space-y-space-sm">
-<div class="flex items-center justify-between">
-<span class="font-headline-sm text-headline-sm text-text-primary">Com IA</span>
-<span class="font-label-sm text-label-sm bg-primary text-on-primary px-2.5 py-0.5 rounded-full">Avançado</span>
-</div>
-<p class="font-body-sm text-body-sm text-text-secondary">
-          Tudo do Plano Normal com o Assistente de Inteligência Artificial ativo na Vitrine para agendamentos e atendimento autônomo aos seus clientes.
-        </p>
-<button class="w-full min-h-[44px] bg-primary hover:bg-interactive-hover text-on-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-space-xs transition-colors" onclick="alert('Solicitação de upgrade para Com IA encaminhada!'); closePlansModal();">
-<span class="material-symbols-outlined text-[18px]">bolt</span>
-<span>Fazer upgrade para Com IA</span>
-</button>
-</div>
-</div>
-</div>
 </div>
 <!-- MODAL DE CONFIRMAÇÃO DE CANCELAMENTO -->
 <div class="hidden fixed inset-0 z-50 flex items-center justify-center p-space-gutter bg-primary/45 backdrop-blur-sm" id="cancelModal">
@@ -192,7 +134,7 @@
 </div>
 </div>
 </div>
-<!-- BARRA INFERIOR FIXA OFICIAL DO BARBEIRO (4 ITENS RIGOROSOS) -->
+
 <nav aria-label="Navegação Principal" class="fixed bottom-0 inset-x-0 z-40 bg-surface-elevated/95 backdrop-blur-md pb-safe shadow-[0_-1px_6px_rgba(0,0,0,0.04)]">
 <div class="h-16 flex items-center justify-around px-space-xs">
 <!-- 1. Dashboard -->

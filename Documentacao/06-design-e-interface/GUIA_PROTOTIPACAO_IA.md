@@ -592,7 +592,8 @@ Usar somente estes planos e valores:
 | --- | ---: | --- |
 | Grátis | R$ 0,00 | Recursos pagos bloqueados com explicação e dados anteriores em somente leitura |
 | Normal | R$ 49,90 | Núcleo completo de gestão |
-| Com IA | R$ 79,90 | Tudo do Normal mais o Assistente IA |
+
+O Assistente IA é um recurso futuro e não deve aparecer nos protótipos da versão inicial.
 
 Não inventar período de tolerância, cobrança por cartão, boleto, renovação automática ou preço promocional.
 
@@ -640,7 +641,7 @@ Mostrar somente indicadores gerais necessários à operação, sem dados privado
 
 Prever:
 
-- busca por nome ou código `EG-XXXXXX`;
+- busca por nome ou código `BAR-XXXXXX`;
 - filtros por plano e situação `ATIVA` ou `SUSPENSA`;
 - estado vazio, sem resultado, Loading e erro;
 - acesso aos detalhes da barbearia.
@@ -664,7 +665,7 @@ Ações previstas:
 - cancelar renovação;
 - suspender ou reativar a conta.
 
-A exclusão administrativa é excepcional. Não usar botão comum. Quando autorizada por fluxo restrito, exigir justificativa e a frase `EXCLUIR EG-XXXXXX` com o código real.
+A exclusão administrativa é excepcional. Não usar botão comum. Quando autorizada por fluxo restrito, exigir justificativa e a frase `EXCLUIR BAR-XXXXXX` com o código real.
 
 ---
 

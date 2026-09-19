@@ -49,7 +49,6 @@ Uma conta administrativa para uma barbearia.
 - relatórios;
 - Vitrine Digital;
 - Portfólio;
-- Assistente IA opcional.
 
 ---
 
@@ -87,9 +86,9 @@ Pessoa que acessa a Vitrine.
 
 Pessoa que pode aparecer em foto publicada no Portfólio.
 
-## Pessoa que utiliza a IA
+## Pessoa que utiliza recurso futuro de IA
 
-Visitante que envia mensagem ao Assistente IA.
+Não se aplica à versão inicial. Revisar esta categoria somente quando o módulo de IA entrar novamente no escopo.
 
 ## Pessoa que entra em contato com suporte
 
@@ -195,36 +194,9 @@ Deverá ser validado:
 
 ---
 
-# 9. Assistente IA
+# 9. Assistente IA — revisão futura
 
-Fornecedor previsto:
-
-**Google — Gemini API**
-
-O sistema enviará à IA:
-
-- mensagem do visitante;
-- informações públicas necessárias da barbearia.
-
-Não deverá enviar:
-
-- faturamento;
-- despesas;
-- custos;
-- estoque interno;
-- credenciais.
-
-Questões jurídicas:
-
-- papel do Google no tratamento;
-- termos aplicáveis à API;
-- localização do processamento;
-- retenção;
-- uso dos dados pelo fornecedor;
-- transferência internacional;
-- informação necessária ao visitante;
-- responsabilidades sobre respostas incorretas;
-- necessidade de identificar claramente que se trata de IA.
+O recurso não faz parte da versão inicial. Qualquer revisão jurídica específica de IA deverá ocorrer antes de sua futura implementação comercial e considerar fornecedor, dados enviados, transparência, retenção, limites e transferência internacional.
 
 ---
 
@@ -290,19 +262,9 @@ Verificar:
 
 ---
 
-# 13. Google Gemini
+# 13. Provedor de IA — revisão futura
 
-Verificar:
-
-- versão atual dos termos da API;
-- política de dados;
-- retenção;
-- uso para treinamento, se aplicável à modalidade utilizada;
-- regiões de processamento;
-- subprocessadores;
-- requisitos para informar o usuário.
-
-Não utilizar informações antigas de produtos gratuitos ou interfaces de consumidor como se fossem automaticamente aplicáveis à API comercial.
+Nenhum provedor de IA integra a versão inicial. A escolha do fornecedor e a revisão jurídica correspondente ficam adiadas até a retomada do módulo.
 
 ---
 
@@ -331,7 +293,6 @@ Antes da revisão jurídica, montar uma tabela final como:
 | WhatsApp | Barbeiro | Contato/Vitrine | Banco | Supabase/Vitrine | Pendente | Validar |
 | CEP | Barbeiro | Endereço | Banco | Supabase/ViaCEP | Pendente | Validar |
 | Foto Portfólio | Terceiro possível | Divulgação | Storage | Supabase/Vitrine | Pendente | Validar |
-| Mensagem IA | Visitante | Responder pergunta | Processamento | Google/Vercel | Pendente | Validar |
 
 A tabela deverá refletir o sistema real no momento da revisão.
 
@@ -615,7 +576,6 @@ O advogado deverá revisar pelo menos:
 - cancelamento;
 - propriedade intelectual;
 - Vitrine;
-- IA;
 - limitações;
 - modelo comercial;
 - jurisdição/foro quando aplicável.
@@ -641,15 +601,6 @@ Antes da revisão jurídica definir:
 - cancelamento;
 - atraso;
 - reajuste.
-
-## Plano com IA
-
-- preço;
-- limites;
-- diferenças;
-- forma de ativação;
-- o que acontece ao cancelar;
-- possíveis limites de uso.
 
 Enquanto isso não for decidido, os Termos não poderão conter condições comerciais definitivas.
 
@@ -736,19 +687,9 @@ Definir nos Termos:
 
 ---
 
-# 38. Assistente IA nos Termos
+# 38. Assistente IA nos Termos — futuro
 
-Definir:
-
-- que respostas são automatizadas;
-- que podem existir erros;
-- que a IA não substitui contato humano;
-- que não realiza agendamento no MVP;
-- limites do recurso;
-- uso aceitável;
-- possibilidade de indisponibilidade.
-
-Evitar apresentar a IA como infalível.
+Não é necessário disciplinar o recurso na versão inicial. Antes de uma futura liberação, revisar Termos de Uso e Política de Privacidade para incluir as condições específicas do módulo.
 
 ---
 
@@ -778,11 +719,10 @@ O sistema pode retirar uma página do ar, mas não controla instantaneamente cac
 
 ## Produto
 
-- [ ] Escopo do MVP congelado.
+- [ ] Escopo da versão inicial congelado.
 - [ ] Planos definidos.
 - [ ] Preços definidos.
 - [ ] Processo de cancelamento definido.
-- [ ] IA comercialmente definida.
 
 ## Dados
 
@@ -797,7 +737,7 @@ O sistema pode retirar uma página do ar, mas não controla instantaneamente cac
 
 - [ ] Supabase revisado.
 - [ ] Vercel revisada.
-- [ ] Google Gemini revisado.
+- [ ] Provedor de IA futuro revisado antes da implementação do módulo.
 - [ ] ViaCEP revisado.
 
 ## Documentos
@@ -826,7 +766,7 @@ O sistema pode retirar uma página do ar, mas não controla instantaneamente cac
 6. Quais prazos de retenção devo usar?
 7. Quais obrigações do Marco Civil se aplicam?
 8. Como tratar registros de acesso?
-9. O uso da Gemini API exige aviso adicional?
+9. Se um recurso de IA for lançado futuramente, quais avisos e cláusulas adicionais serão necessários?
 10. Como tratar transferência internacional?
 11. Como regular fotos do Portfólio?
 12. Como tratar fotos de menores?
@@ -857,7 +797,6 @@ Ao final, deverão existir decisões claras sobre:
 - transferências internacionais;
 - cookies;
 - Portfólio;
-- IA;
 - modelo comercial;
 - relação de consumo.
 

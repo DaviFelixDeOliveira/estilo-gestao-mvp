@@ -61,7 +61,6 @@ Integrações externas previstas:
 
 ```text
 ViaCEP
-Gemini API
 ```
 
 Não adicionar no MVP sem decisão documentada:
@@ -206,108 +205,12 @@ Deverá possuir:
 - tratamento adequado de erros.
 
 ---
-
 # 9. Variáveis de ambiente
 
 A configuração completa pertence ao:
 
 ```text
 ENV_SETUP.md
-```
-
-Variáveis atualmente previstas:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-
-SUPABASE_SECRET_KEY=
-
-NEXT_PUBLIC_APP_URL=
-APP_ENV=
-
-GEMINI_API_KEY=
-GEMINI_MODEL=
-
-MAINTENANCE_MODE=
-AI_REQUEST_TIMEOUT_MS=
-AI_MAX_MESSAGE_LENGTH=
-```
-
-Nem todas precisam existir em todos os ambientes.
-
----
-
-# 10. Variáveis públicas
-
-Variáveis com prefixo:
-
-```text
-NEXT_PUBLIC_
-```
-
-podem chegar ao navegador.
-
-Por isso, nunca utilizar esse prefixo em:
-
-- Gemini API Key;
-- Supabase Secret Key;
-- segredos administrativos;
-- tokens privados.
-
----
-
-# 11. Variáveis privadas
-
-Segredos devem existir apenas no servidor.
-
-Exemplos:
-
-```text
-SUPABASE_SECRET_KEY
-GEMINI_API_KEY
-```
-
-Nunca:
-
-```text
-NEXT_PUBLIC_GEMINI_API_KEY
-```
-
-ou:
-
-```text
-NEXT_PUBLIC_SUPABASE_SECRET_KEY
-```
-
----
-
-# 12. Arquivos `.env`
-
-O projeto deverá possuir:
-
-```text
-.env.example
-```
-
-com os nomes das variáveis, mas sem valores reais.
-
-Exemplo:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-GEMINI_API_KEY=
-```
-
-O arquivo real:
-
-```text
-.env.local
-```
-
-não deverá ser enviado ao GitHub.
-
 ---
 
 # 13. Deploy na Vercel
@@ -1114,7 +1017,6 @@ Não registrar:
 - Secret Key;
 - Authorization header;
 - dados financeiros completos sem necessidade;
-- mensagem privada completa da IA sem finalidade.
 
 ---
 
@@ -1303,7 +1205,6 @@ Integrações externas deverão possuir tratamento de espera excessiva quando ap
 Especialmente:
 
 ```text
-Gemini API
 ```
 
 A variável prevista:
@@ -1323,7 +1224,7 @@ O sistema deverá degradar de forma segura.
 Exemplo:
 
 ```text
-Gemini indisponível
+provedor externo indisponível
 ```
 
 não deve derrubar:
@@ -1348,23 +1249,9 @@ Ela não deve ser dependência obrigatória para cadastrar endereço.
 
 ---
 
-# 75. Rate Limiting
+# 75. Rate Limiting de IA — recurso futuro
 
-O endpoint público do Assistente IA deverá possuir rate limiting.
-
-Os valores ainda não foram definidos.
-
-```text
-DECISÃO PENDENTE
-```
-
-Não assumir:
-
-```text
-100 requisições/minuto
-```
-
-ou qualquer valor antigo.
+Não há endpoint de IA na versão inicial. Rate limiting específico desse módulo será definido quando o recurso voltar ao escopo, conforme `ASSISTENTE_IA_FUTURO.md`.
 
 ---
 
@@ -1383,7 +1270,7 @@ Vitrine
 ≠
 PDV
 ≠
-Assistente IA
+recurso futuro de IA
 ```
 
 ---
@@ -1573,16 +1460,9 @@ O slug deverá:
 
 ---
 
-# 90. Performance do Assistente IA
+# 90. Performance de IA — recurso futuro
 
-A experiência do chat deverá considerar:
-
-- tempo da requisição;
-- timeout;
-- fallback;
-- mensagens de carregamento.
-
-O visitante não deverá clicar repetidamente porque a interface parece travada.
+Não é requisito de performance da versão inicial. Métricas de latência, timeout, streaming e fallback de IA serão definidas antes de uma futura implementação.
 
 ---
 
@@ -1698,7 +1578,6 @@ Conforme o SaaS crescer, acompanhar custos de:
 - Supabase;
 - Storage;
 - tráfego;
-- Gemini API;
 - domínio;
 - demais fornecedores.
 
@@ -1712,18 +1591,9 @@ MODELO_DE_NEGOCIO.md
 
 ---
 
-# 101. Custos da IA
+# 101. Custos de IA — recurso futuro
 
-A utilização da Gemini API deverá ser acompanhada separadamente porque é um recurso comercial opcional.
-
-Monitorar quando possível:
-
-- volume;
-- consumo;
-- custo;
-- abuso.
-
-Não armazenar conteúdo privado desnecessário apenas para medir uso.
+Não existem custos de provedor de IA na versão inicial. Caso o módulo seja retomado, seu custo deverá ser acompanhado separadamente antes da definição comercial.
 
 ---
 
@@ -1837,8 +1707,6 @@ Antes do primeiro lançamento comercial:
 
 - [ ] Segredos somente server-side.
 - [ ] `.env` fora do Git.
-- [ ] IA protegida.
-- [ ] Rate limit da IA definido.
 - [ ] Uploads validados.
 - [ ] Teste entre tenants realizado.
 

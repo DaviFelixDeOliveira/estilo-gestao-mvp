@@ -1228,7 +1228,6 @@ Ela pode apresentar:
 
 \- contatos;
 
-\- Assistente IA.
 
 \---
 
@@ -1361,23 +1360,11 @@ A imagem permanecerá no painel, mas não será exibida publicamente.
 
 \---
 
-**# 17. Assistente IA**
+**# 17. Assistente IA — recurso futuro**
 
-![Assistente IA]\(./assets/31-assistente-ia.png)
+O Assistente IA não está disponível na versão inicial. Nenhuma configuração de IA aparece na área da barbearia ou na Vitrine neste momento.
 
-O Assistente IA é um recurso opcional da Vitrine.
-
-Quando estiver liberado para a barbearia:
-
-1\. Abra **\*\*Vitrine\*\***.
-
-2\. Acesse a configuração do Assistente IA.
-
-3\. Ative ou desative o recurso.
-
-Quando ativo, visitantes poderão perguntar sobre informações públicas da barbearia.
-
-O Assistente não realiza agendamentos.
+Quando o recurso entrar no produto, o manual será atualizado antes da liberação.
 
 \---
 
@@ -1413,7 +1400,6 @@ Dependendo das informações publicadas, ele poderá consultar:
 
 \- Instagram;
 
-\- Assistente IA.
 
 \---
 
@@ -1478,7 +1464,6 @@ O sistema possui três planos:
 
 - **Grátis:** Vitrine Digital, Portfólio, serviços e produtos para divulgação;
 - **Normal — R$ 49,90/mês:** todos os recursos de gestão;
-- **Com IA — R$ 79,90/mês:** todos os recursos do Normal e Assistente IA na Vitrine.
 
 Se um período pago terminar, sua conta volta ao Grátis. Seus dados não são apagados. Vendas, estoque, financeiro e relatórios anteriores continuam disponíveis para consulta, mas não podem ser alterados ou exportados enquanto o plano estiver Grátis.
 
@@ -1500,22 +1485,18 @@ Nessa área você pode consultar:
 - cancelamento agendado;
 - histórico de pagamentos reais.
 
-Use **Alterar plano** para conhecer Grátis, Normal e Com IA.
+Use **Alterar plano** para conhecer as opções Grátis e Normal.
 
 ## Cancelar assinatura
 
 Cancelar uma assinatura paga não exclui sua conta. Você continua usando o plano até o vencimento e pode desfazer o cancelamento antes dessa data. Depois, a conta volta ao Grátis.
-
-## Downgrade
-
-Uma mudança do Com IA para o Normal acontece no vencimento. Sem novo pagamento confirmado, a conta volta ao Grátis.
 
 # 25. Código da barbearia
 
 Em **Dados da barbearia**, você encontrará um código semelhante a:
 
 ```text
-EG-7K2M9Q
+BAR-7K2M9Q
 ```
 
 Use **Copiar código** quando o suporte solicitar. O código não aparece na Vitrine e não pode ser alterado.
@@ -1563,11 +1544,9 @@ Se você deseja apenas parar de renovar e continuar usando o período atual, esc
 
 Pagamentos reais e ações administrativas essenciais podem permanecer por cinco anos para obrigações legais e defesa de direitos. Esse registro limitado não permite restaurar sua conta.
 
-# 30. Assistente IA
+# 30. Assistente IA — recurso futuro
 
-Quando contratado, o Assistente IA aparece na Vitrine. O conteúdo da conversa não é guardado no banco e existe somente durante a conversa atual.
-
-O limite inicial é de 1.000 respostas por ciclo da assinatura e 20 mensagens por conversa. Ao atingir o limite, novas respostas ficam indisponíveis até o próximo ciclo ou uma extensão administrativa.
+O recurso não faz parte da versão inicial. Quando houver implementação e liberação comercial, este manual deverá receber uma seção própria com instruções de uso e limites aplicáveis.
 
 # 31. Primeiro barbeiro parceiro
 

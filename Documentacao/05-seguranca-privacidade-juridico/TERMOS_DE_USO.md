@@ -43,13 +43,12 @@ O sistema poderá oferecer funcionalidades como:
 - relatórios;
 - Vitrine Digital;
 - Portfólio;
-- Assistente IA opcional.
 
 As funcionalidades disponíveis poderão variar conforme o plano contratado.
 
 ---
 
-# 3. Funcionalidades fora do MVP
+# 3. Funcionalidades fora do versão inicial
 
 A versão inicial não inclui:
 
@@ -74,7 +73,7 @@ O usuário deverá fornecer informações verdadeiras e manter seus dados atuali
 
 A conta é individual e vinculada à barbearia cadastrada.
 
-No MVP, a estrutura prevista é:
+Na versão inicial, a estrutura prevista é:
 
 - uma conta administrativa;
 - uma barbearia.
@@ -125,7 +124,6 @@ O usuário poderá utilizar o sistema para:
 - obter acesso não autorizado;
 - interferir no funcionamento do serviço;
 - utilizar automações abusivas;
-- utilizar o Assistente IA para finalidade incompatível com o serviço;
 - publicar conteúdo cuja utilização seja ilegal.
 
 Também é proibido utilizar o sistema para armazenar deliberadamente conteúdo ilícito.
@@ -246,50 +244,9 @@ Quando possível e apropriado, o usuário poderá ser informado.
 
 ---
 
-# 15. Assistente IA
+# 15. Assistente IA — recurso futuro
 
-O Assistente IA é um recurso opcional.
-
-Quando habilitado, poderá responder perguntas utilizando informações públicas da barbearia.
-
-Exemplos:
-
-- serviços;
-- preços;
-- produtos;
-- endereço;
-- horários;
-- contatos.
-
----
-
-# 16. Limitações do Assistente IA
-
-Respostas de inteligência artificial podem conter:
-
-- erros;
-- informações incompletas;
-- interpretações incorretas;
-- indisponibilidade temporária.
-
-O Assistente IA não deverá ser apresentado como fonte infalível.
-
-No MVP, ele não realiza agendamentos.
-
-Quando necessário, o visitante deverá entrar em contato diretamente com a barbearia.
-
----
-
-# 17. Uso abusivo da IA
-
-O Estilo e Gestão poderá aplicar limites de utilização ao Assistente IA para:
-
-- evitar abuso;
-- controlar custos;
-- preservar estabilidade;
-- proteger o serviço.
-
-Os limites comerciais e técnicos poderão variar conforme o plano.
+O Assistente IA não faz parte da versão inicial do serviço. Caso um recurso de inteligência artificial seja disponibilizado futuramente, estes Termos e a Política de Privacidade deverão ser atualizados antes de sua liberação comercial para disciplinar uso, limites, responsabilidades e tratamento de dados aplicáveis.
 
 ---
 
@@ -377,37 +334,27 @@ A indisponibilidade de um fornecedor poderá afetar temporariamente determinadas
 
 # 23. Planos
 
-O Estilo e Gestão poderá possuir diferentes modalidades comerciais.
+A versão inicial possui duas modalidades:
 
-Estrutura inicial prevista:
+## Plano Grátis
 
-## Plano padrão
+Inclui os recursos gratuitos de divulgação previstos para a Vitrine Digital, Portfólio, serviços e produtos. Recursos de gestão pagos permanecem bloqueados para novas alterações, preservando a consulta histórica quando aplicável.
 
-Inclui as funções principais de gestão e Vitrine.
+## Plano Normal
 
-## Plano com Assistente IA
+Inclui o núcleo completo de gestão disponibilizado comercialmente na versão inicial.
 
-Inclui as funções do plano padrão e o Assistente IA.
-
-Os nomes comerciais definitivos dos planos poderão ser alterados.
+Não existe plano comercial de IA na versão inicial.
 
 ---
 
 # 24. Preços
 
-Os valores dos planos ainda serão definidos.
+O Plano Grátis não possui cobrança mensal.
 
-Antes do lançamento deverão ser especificados:
+O Plano Normal possui preço inicial de R$ 49,90 por ciclo mensal, conforme a oferta vigente. Alterações futuras de preço deverão ser informadas de forma adequada antes de produzirem efeitos sobre novas contratações ou renovações, conforme a regra aplicável.
 
-- preço;
-- periodicidade;
-- forma de pagamento;
-- data de cobrança;
-- reajuste;
-- atraso;
-- eventual período gratuito.
-
-`[PREENCHER APÓS DEFINIÇÃO DO MODELO COMERCIAL]`
+A cobrança inicial do plano pago é feita manualmente por Pix, com confirmação administrativa do pagamento.
 
 ---
 
@@ -427,7 +374,7 @@ Deverão ser apresentados ao usuário, antes da contratação:
 
 # 26. Pagamento da assinatura
 
-A cobrança automatizada da assinatura não faz parte da arquitetura inicial do MVP.
+A cobrança automatizada da assinatura não faz parte da arquitetura inicial do versão inicial.
 
 Enquanto a cobrança for realizada manualmente, o procedimento comercial deverá ser documentado e informado ao usuário.
 
@@ -684,7 +631,6 @@ Para questões sobre privacidade:
 - [ ] Direito de arrependimento revisado.
 - [ ] Exclusão de conta definida.
 - [ ] Responsabilidade por imagens revisada.
-- [ ] Regras da IA revisadas.
 - [ ] Propriedade intelectual revisada.
 - [ ] Limitação de responsabilidade revisada.
 - [ ] Foro revisado.

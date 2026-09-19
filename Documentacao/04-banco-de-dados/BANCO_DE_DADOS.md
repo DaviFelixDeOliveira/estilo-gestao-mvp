@@ -678,9 +678,7 @@ Exemplos:
 
 \- capa;
 
-\- liberação da IA;
 
-\- ativação da IA;
 
 \- estado da conta.
 
@@ -752,7 +750,6 @@ As formas configuradas poderão ser utilizadas:
 
 \- na Vitrine Digital pública;
 
-\- no contexto público permitido ao Assistente IA.
 
 A forma registrada em *\`vendas.forma_pagamento\`* continua representando somente como aquela venda específica foi paga.
 
@@ -2995,58 +2992,15 @@ Exemplo inválido:
 
 \---
 
-**# 88. Assistente IA**
+**# 88. Assistente IA — recurso futuro**
 
-O banco não armazenará o conteúdo das conversas. Ele existe somente durante a conversa atual.
+O Assistente IA não faz parte da modelagem da versão inicial.
 
-A barbearia controla:
+Não criar nesta etapa colunas, tabelas, cotas ou estruturas específicas de IA.
 
-\`\`\`text
-
-assistente\_ia\_ativo
-
-\`\`\`
-
-O direito de uso é calculado pelo Plano Com IA e pela cota vigente.
+Quando o recurso entrar no escopo, a expansão deverá ocorrer por nova migration conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
-
-**# 89. IA incluída no plano e ativa**
-
-São condições diferentes:
-
-\- a assinatura vigente concede o recurso *\`ASSISTENTE_IA\`* somente no Plano Com IA;
-
-\- a barbearia decide se o Assistente ficará ativo na Vitrine;
-
-\- a cota mensal precisa possuir saldo;
-
-\- a conta precisa estar ativa e o sistema fora de manutenção.
-
-O Assistente só fica público quando todas essas condições forem verdadeiras. Não manter uma permissão administrativa paralela sem histórico para liberar ou retirar a IA.
-
-\---
-
-**# 90. Rate limit e timeout**
-
-Os valores atuais são regras da aplicação e do controle mensal de uso:
-
-\`\`\`text
-
-10 mensagens por minuto por visitante
-
-20 mensagens por conversa
-
-1.000 respostas por ciclo mensal da barbearia
-
-15 segundos de timeout
-
-\`\`\`
-
-O rate limit e o timeout podem permanecer na aplicação/ambiente. A cota mensal, o consumo, eventual extensão e o ciclo pertencem à tabela *\`uso_ia_mensal\`*. O conteúdo das conversas não deve ser persistido.
-
-\---
-
 **# 91. Vitrine pública**
 
 Visitantes não deverão receber acesso irrestrito às tabelas administrativas.
@@ -3303,13 +3257,12 @@ O Operador do SaaS poderá realizar ações como:
 
 \- consultar plano, validade, pagamentos e histórico permitido;
 
-\- confirmar pagamento, conceder cortesia e aplicar upgrade;
+\- confirmar pagamento e conceder cortesia;
 
-\- agendar downgrade ou cancelar renovação;
+\- cancelar renovação;
 
 \- suspender ou reativar conta;
 
-\- estender excepcionalmente a cota da IA com justificativa.
 
 Isso não significa autorização automática para:
 
@@ -3485,7 +3438,6 @@ Também deverá proteger, quando possível:
 
 \- consistência dos horários;
 
-\- estados válidos da IA;
 
 \- estados das despesas recorrentes.
 
@@ -3913,13 +3865,12 @@ As principais mudanças atuais que também devem existir no SQL são:
 
 \- situação *\`ATIVA/SUSPENSA\`* separada do plano;
 
-\- código imutável *\`EG-XXXXXX\`* e reserva contra reutilização;
+\- código imutável *\`BAR-XXXXXX\`* e reserva contra reutilização;
 
 \- retenção separada de contas excluídas;
 
 \- aceite de documentos legais;
 
-\- uso mensal da IA sem persistência do conteúdo das conversas.
 
 \---
 
@@ -4045,7 +3996,6 @@ A modelagem estará pronta para produção quando:
 
 \- arquivos padrão do sistema estiverem protegidos contra alteração por barbeiros;
 
-\- *\`BANCO\_EXEMPLO.sql\`* estiver sincronizado com a estrutura real.
 
 \---
 
@@ -4058,13 +4008,13 @@ As estruturas abaixo complementam o modelo operacional e são obrigatórias para
 Catálogo comercial dos planos. Campos mínimos:
 
 - `id`;
-- `codigo` único: `GRATIS`, `NORMAL` ou `COM_IA`;
+- `codigo` único: `GRATIS` ou `NORMAL`;
 - `nome`;
 - `preco_mensal`;
 - `ativo`;
 - datas de criação e atualização.
 
-Valores iniciais: Grátis R$ 0,00; Normal R$ 49,90; Com IA R$ 79,90. Permissões não ficam duplicadas nessa tabela; são definidas pelo verificador central de recursos no código.
+Valores da versão inicial: Grátis R$ 0,00 e Normal R$ 49,90. Permissões não ficam duplicadas nessa tabela; são definidas pelo verificador central de recursos no código.
 
 ## `assinaturas`
 
@@ -4079,7 +4029,7 @@ Existe exatamente um registro atual por barbearia, inclusive no Grátis. Campos 
 - `cancelamento_agendado`;
 - datas de criação e atualização.
 
-O plano efetivo deverá ser calculado pela validade em cada acesso. Período encerrado equivale imediatamente ao Grátis. Um downgrade para Normal só é efetivado quando houver pagamento confirmado; sem pagamento, volta ao Grátis.
+O plano efetivo deverá ser calculado pela validade em cada acesso. Período encerrado equivale imediatamente ao Grátis. O Normal somente fica vigente quando houver pagamento confirmado ou cortesia administrativa válida.
 
 ## `pagamentos_assinatura`
 
@@ -4109,7 +4059,7 @@ Registro único do sistema. Deve guardar estado de manutenção, motivo interno,
 
 ## `codigos_reservados`
 
-Protege contra reutilização do código `EG-XXXXXX`. Enquanto a conta existir ou estiver no período de retenção, o código pode permanecer legível. Depois da eliminação final, conservar apenas uma impressão criptográfica não reversível suficiente para rejeitar uma nova geração igual.
+Protege contra reutilização do código `BAR-XXXXXX`. Enquanto a conta existir ou estiver no período de retenção, o código pode permanecer legível. Depois da eliminação final, conservar apenas uma impressão criptográfica não reversível suficiente para rejeitar uma nova geração igual.
 
 ## `retencoes_contas_excluidas`
 
@@ -4122,12 +4072,6 @@ Não possui dados operacionais nem vínculo restaurável com uma barbearia ativa
 - data da eliminação efetiva, quando executada.
 
 Pagamentos e ações essenciais podem apontar para essa retenção após a exclusão. Ao eliminar a retenção, os registros identificáveis relacionados também deverão ser apagados.
-
-## `uso_ia_mensal`
-
-Um registro por barbearia e ciclo. Guardar quantidade de respostas utilizadas, limite base de 1.000, extensão administrativa opcional, aviso de 80%, início e fim do ciclo. Não guardar mensagens ou respostas da conversa.
-
-O máximo de 20 mensagens por conversa e a proteção de taxa são aplicados pela aplicação usando identificadores temporários.
 
 ## `aceites_legais`
 

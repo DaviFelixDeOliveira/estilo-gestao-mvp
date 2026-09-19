@@ -40,7 +40,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Definir integração de CEP com ViaCEP.
 
-\- [x] Definir Gemini API.
+\- [x] Mover o Assistente IA para planejamento futuro, fora da versão inicial.
 
 \- [x] Definir Stitch como ferramenta oficial de prototipação.
 
@@ -206,7 +206,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Documentar Portfólio.
 
-\- [x] Documentar Assistente IA.
+\- [x] Documentar o Assistente IA como recurso futuro em arquivo separado.
 
 \- [x] Atualizar configuração inicial para as 6 etapas oficiais do Onboarding.
 
@@ -362,7 +362,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Documentar formas de pagamento aceitas como informação pública da Vitrine.
 
-\- [x] Documentar IA.
+\- [x] Registrar IA como recurso futuro fora da versão inicial.
 
 \- [x] Documentar área Sua conta separada de Configurações.
 
@@ -418,9 +418,8 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Documentar URL da aplicação.
 
-\- [x] Documentar Gemini API Key.
+\- [x] Remover configuração de provedor de IA da versão inicial.
 
-\- [x] Documentar Gemini Model.
 
 \- [x] Documentar modo de manutenção.
 
@@ -430,9 +429,8 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Separar variáveis públicas e privadas.
 
-\- [x] Definir proteção da IA: 10 mensagens por minuto por visitante, 20 por conversa e 1.000 respostas por ciclo mensal da barbearia.
+\- [x] Registrar limites estudados de IA apenas no documento de planejamento futuro.
 
-\- [x] Definir timeout funcional da IA em 15 segundos.
 
 \- [ ] Criar valores reais no ambiente local.
 
@@ -440,7 +438,6 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [ ] Configurar domínio definitivo.
 
-\- [ ] Confirmar valores reais das variáveis relacionadas à IA.
 
 \- [ ] Revisar ENV após implementação.
 
@@ -780,11 +777,8 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Documentar criação segura do slug.
 
-\- [x] Documentar IA.
+\- [x] Registrar IA como recurso futuro fora da versão inicial.
 
-\- [x] Documentar rate limit da IA.
-
-\- [x] Documentar timeout da IA.
 
 \- [x] Documentar prompt injection.
 
@@ -818,7 +812,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Descrever Vitrine.
 
-\- [x] Descrever IA.
+\- [x] Indicar que IA não faz parte da versão inicial.
 
 \- [x] Descrever direitos dos titulares.
 
@@ -866,7 +860,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [ ] Definir empresa/responsável.
 
-\- [x] Definir modelo comercial inicial com os planos Grátis, Normal e Com IA.
+\- [x] Definir modelo comercial inicial com os planos Grátis e Normal.
 
 \- [ ] Completar inventário de dados.
 
@@ -894,7 +888,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Documentar Portfólio.
 
-\- [x] Documentar IA.
+\- [x] Registrar IA como recurso futuro fora da versão inicial.
 
 \- [x] Documentar disponibilidade.
 
@@ -906,7 +900,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [ ] Definir responsável legal.
 
-\- [x] Definir preços: Normal por R$ 49,90 e Com IA por R$ 79,90 ao mês.
+\- [x] Definir preço inicial do Plano Normal em R$ 49,90 por ciclo mensal.
 
 \- [x] Definir cobrança inicial por Pix com confirmação manual e validade contada do pagamento confirmado.
 
@@ -1176,7 +1170,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [ ] Atualizar Frontend/Backend.
 
-\- [ ] Atualizar Vitrine e IA.
+\- [ ] Atualizar Vitrine; IA permanece no planejamento futuro.
 
 \- [ ] Atualizar Testes e Qualidade.
 
@@ -1194,9 +1188,8 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Definir Plano Grátis e Plano Normal.
 
-\- [x] Definir Plano Com IA.
+\- [x] Retirar plano de IA da versão inicial e preservar seu planejamento para futura avaliação.
 
-\- [x] Definir IA como recurso comercial opcional.
 
 \- [x] Definir preços oficiais dos planos pagos.
 
@@ -1546,7 +1539,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [ ] Prototipar Vitrine pública.
 
-\- [ ] Prototipar Assistente IA.
+\- [ ] Reavaliar e prototipar Assistente IA somente quando o recurso voltar ao escopo.
 
 \- [x] Prototipar Painel Administrativo.
 
@@ -1577,7 +1570,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Bloco 2 — pagamento manual via Pix, validade, renovação, upgrade, downgrade, cancelamento e cortesia.
 
-\- [x] Bloco 3 — código imutável da barbearia no formato *\`EG-XXXXXX\`*.
+\- [x] Bloco 3 — código imutável da barbearia no formato *\`BAR-XXXXXX\`*.
 
 \- [x] Bloco 4 — escopo do ADMIN, situação da conta e suspensão reversível.
 
@@ -1585,7 +1578,7 @@ Ele apenas acompanha o progresso geral do projeto.
 
 \- [x] Bloco 6 — exclusão imediata, retenção por cinco anos e expiração dos backups.
 
-\- [x] Bloco 7 — modelagem oficial de planos, assinaturas, pagamentos, históricos, configurações e uso da IA.
+\- [x] Bloco 7 — modelagem oficial de planos, assinaturas, pagamentos, históricos e configurações.
 
 \- [x] Bloco 8 — piloto assistido, suporte, documentos legais, backup, incidente crítico e critérios de divulgação.
 

@@ -1178,7 +1178,6 @@ Pode ser separado em seções como:
 - Serviços;
 - Produtos;
 - Portfólio;
-- Assistente IA.
 
 Evitar formulário visualmente interminável.
 
@@ -1683,7 +1682,6 @@ Barbearia Imperial
 
 Ativa
 
-Assistente IA: Liberado
 
 [Ver detalhes]
 ```
@@ -1711,8 +1709,6 @@ Identificação
 
 Status
 
-Assistente IA
-
 Ações administrativas
 ```
 
@@ -1727,8 +1723,6 @@ Ações como:
 ```text
 Ativar
 Desativar
-Liberar IA
-Retirar IA
 ```
 
 deverão possuir áreas de toque adequadas.
@@ -1743,7 +1737,6 @@ Diálogos de:
 
 - ativação;
 - desativação;
-- retirada da IA;
 
 deverão funcionar em 320px.
 
@@ -1918,55 +1911,9 @@ Botões deverão:
 
 ---
 
-# 120. Assistente IA Mobile
+# 120. Assistente IA — recurso futuro
 
-Quando fechado:
-
-- não esconder CTAs;
-- respeitar safe areas;
-- ocupar pouco espaço.
-
----
-
-# 121. Assistente IA aberto
-
-No Mobile poderá ocupar grande parte da tela.
-
-Deverá considerar:
-
-- teclado virtual;
-- campo de mensagem;
-- botão Enviar;
-- lista de mensagens;
-- fechamento;
-- safe area.
-
----
-
-# 122. Assistente IA Desktop
-
-Pode utilizar:
-
-- janela flutuante;
-- painel lateral;
-- solução equivalente.
-
-Não deverá bloquear conteúdo principal desnecessariamente.
-
----
-
-# 123. Estados da IA
-
-Deverão funcionar em telas pequenas:
-
-```text
-Aguardando resposta
-Erro
-Timeout
-Limite de uso
-```
-
-Mensagens longas não deverão provocar overflow horizontal.
+O Assistente IA não faz parte da versão inicial. Regras responsivas específicas de chat, teclado, safe area, estados de resposta e painel flutuante serão definidas somente quando o módulo voltar ao escopo.
 
 ---
 
@@ -2283,7 +2230,6 @@ Testar especialmente:
 - upload;
 - geração da Vitrine;
 - relatórios;
-- IA;
 - Painel Administrativo.
 
 ---
@@ -2520,7 +2466,6 @@ Prioridade especial:
 - Relatórios;
 - Vitrine;
 - Perfil/Conta;
-- Assistente IA;
 - Painel Administrativo.
 
 ---
@@ -2607,7 +2552,6 @@ Prioridade recomendada:
 21. Configurações
 22. Perfil / Conta
 23. Vitrine Pública
-24. Assistente IA
 25. Dashboard Administrativo
 26. Lista de Barbearias
 27. Detalhes Administrativos
@@ -2635,7 +2579,6 @@ A responsividade estará suficientemente definida para prototipação quando:
 - geração da Vitrine funcionar no Mobile;
 - Perfil e Conta estiverem adaptados;
 - Vitrine Pública estiver adequada ao celular;
-- Assistente IA considerar teclado e safe area;
 - Painel Administrativo funcionar em Mobile e Desktop;
 - Tema Claro e Tema Escuro funcionarem nos mesmos layouts;
 - Desktop utilizar adequadamente o espaço;

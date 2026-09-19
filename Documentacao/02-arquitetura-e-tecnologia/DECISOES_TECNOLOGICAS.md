@@ -157,7 +157,6 @@ As ações que não podem depender do navegador serão executadas no servidor, c
 - alterar estoque;
 - registrar despesas;
 - acessar informações privadas;
-- preparar dados para o Assistente IA;
 - executar integrações externas.
 
 O navegador nunca será considerado fonte confiável para valores financeiros ou permissões.
@@ -272,28 +271,13 @@ O preenchimento automático será apenas uma ajuda. O formulário deverá contin
 
 ---
 
-### Gemini API
+### Assistente IA — recurso futuro
 
-A API Gemini será utilizada exclusivamente no módulo opcional de **Assistente IA** da Vitrine Digital.
+Nenhuma API de IA faz parte da versão inicial.
 
-O visitante poderá fazer perguntas sobre informações públicas da barbearia, como:
-
-- serviços;
-- preços;
-- produtos divulgados;
-- horários;
-- endereço;
-- atendimento a domicílio;
-- formas de contato.
-
-A API será chamada somente pelo servidor.
-
-A chave da API nunca deverá ser enviada ao navegador.
-
-O modelo utilizado não ficará preso à documentação. Ele será definido por variável de ambiente para permitir atualização sem alterar a arquitetura do sistema.
+Quando esse módulo entrar no escopo, a escolha do provedor, modelo, limites, variáveis e arquitetura deverá ser revisada a partir de `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ---
-
 # 5. Hospedagem e implantação
 
 ### Vercel
@@ -341,5 +325,4 @@ Aplicação Next.js
           ├── PostgreSQL + RLS
           ├── Supabase Storage
           ├── ViaCEP
-          └── Gemini API
 ```

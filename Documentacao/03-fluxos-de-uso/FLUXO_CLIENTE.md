@@ -5,7 +5,7 @@
 
 Este documento consolida todas as regras e fluxos referentes ao **cliente/visitante da Vitrine Digital** do Estilo e Gestão. Aqui, “cliente” significa a pessoa que acessa a Vitrine pública de uma barbearia sem autenticação.
 
-Este documento é a fonte funcional principal para a experiência **pública do cliente/visitante**. Ele cobre conteúdo da Vitrine, serviços, produtos, Portfólio, localização, contatos, Assistente IA, privacidade e estados públicos relevantes. Regras da área privada pertencem ao `FLUXO_BARBEIRO.md`, e regras administrativas ao `FLUXO_ADMIN.md`.
+Este documento é a fonte funcional principal para a experiência **pública do cliente/visitante**. Ele cobre conteúdo da Vitrine, serviços, produtos, Portfólio, localização, contatos, privacidade e estados públicos relevantes. Regras da área privada pertencem ao `FLUXO_BARBEIRO.md`, e regras administrativas ao `FLUXO_ADMIN.md`.
 
 Nenhum fluxo público pode expor custos internos, estoque numérico, dados financeiros, credenciais, IDs técnicos, chaves, dados administrativos ou informações privadas da barbearia.
 
@@ -340,173 +340,15 @@ Não carregar conteúdo privado da barbearia.
 ---
 
 
-# 10. Assistente IA
+# 10. Assistente IA — recurso futuro
 
-## Condições
+O Assistente IA não faz parte da experiência pública da versão inicial.
 
-Mostrar somente quando:
+A Vitrine atual não deve exibir chat, estados de cota, mensagens de indisponibilidade de IA ou integração com provedor de IA.
 
-- Vitrine publicada;
-
-- barbearia ativa;
-
-- IA liberada para aquela barbearia;
-
-- IA ativada pelo barbeiro.
+Quando o recurso entrar no escopo, seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ---
-
-## Campo
-
-- Mensagem - obrigatória;
-
-  - máximo 300 caracteres.
-
----
-
-## Contexto permitido
-
-Somente dados públicos necessários:
-
-- nome público;
-
-- descrição;
-
-- serviços públicos;
-
-- preços públicos;
-
-- produtos públicos;
-
-- horários;
-
-- endereço público;
-
-- atendimento a domicílio;
-
-- formas de pagamento aceitas;
-
-- contatos.
-
----
-
-## Proibido enviar para IA
-
-- custos;
-
-- estoque interno;
-
-- quantidade numérica de estoque;
-
-- estoque mínimo;
-
-- faturamento;
-
-- despesas;
-
-- vendas;
-
-- credenciais;
-
-- e-mail privado;
-
-- IDs internos;
-
-- segredos;
-
-- chaves de API;
-
-- dados de outra barbearia.
-
----
-
-## Fluxo
-
-1\. visitante envia mensagem;
-
-2\. backend valida;
-
-3\. verifica se a IA está disponível;
-
-4\. aplica limite de uso;
-
-5\. coleta somente contexto público permitido;
-
-6\. monta as instruções;
-
-7\. chama Gemini;
-
-8\. devolve resposta.
-
----
-
-## Agendamento
-
-O Assistente IA não deverá:
-
-- consultar agenda;
-
-- reservar horários;
-
-- afirmar disponibilidade;
-
-- prometer atendimento em determinado horário.
-
-Quando necessário:
-
-- direcionar visitante para WhatsApp.
-
----
-
-## Sem informação
-
-*> Não tenho essa informação disponível. Você pode falar diretamente com a barbearia pelo WhatsApp.*
-
----
-
-## Indisponível
-
-*> O assistente está temporariamente indisponível. Você ainda pode falar diretamente com a barbearia pelo WhatsApp.*
-
----
-
-## Histórico
-
-Não persistir o conteúdo das conversas no banco. Ele existe somente durante a conversa atual.
-
----
-
-## Rate limit
-
-- máximo de 10 mensagens por minuto por visitante;
-
-- máximo de 20 mensagens por conversa;
-
-- máximo inicial de 1.000 respostas por ciclo mensal da barbearia;
-
-- alertar o ADMIN em 80% da cota;
-
-- bloquear em 100%, salvo extensão administrativa registrada;
-
-- ao atingir o limite, bloquear temporariamente novas mensagens;
-
-- informar que deverá aguardar antes de tentar novamente.
-
----
-
-## Timeout
-
-- aguardar no máximo 15 segundos pela resposta da IA;
-
-- ao atingir o limite, encerrar a requisição;
-
-- informar que não foi possível obter resposta naquele momento;
-
-- permitir nova tentativa.
-
----
-
-
 # 11. Regras públicas derivadas da configuração da Vitrine
 
 ## URL pública e slug
@@ -576,7 +418,6 @@ Mostrar apenas trabalhos publicados. Um item ocultado pelo barbeiro deixa de apa
 5. Carrega somente dados públicos permitidos.
 6. O cliente pode navegar por apresentação, serviços, Portfólio, produtos, localização, horários, formas de pagamento e contato.
 7. Quando disponíveis, pode abrir WhatsApp, Instagram e Como chegar.
-8. Se o Plano Com IA estiver vigente e o Assistente estiver habilitado, o cliente pode iniciar conversa com a IA.
 
 Em falhas públicas, nunca mostrar erro de banco ou identificadores internos.
 
@@ -596,7 +437,6 @@ A Vitrine pode aproveitar largura maior para distribuir conteúdo em grades, col
 - não depender de hover;
 - respeitar safe areas;
 - manter ações de contato acessíveis;
-- no Assistente IA, o chat não deve cobrir permanentemente a navegação e deve respeitar o teclado virtual.
 
 ---
 
@@ -690,66 +530,13 @@ Quando a Vitrine existe, mas foi despublicada pelo barbeiro:
 
 Não carregar conteúdo privado ou dados que estavam anteriormente públicos.
 
-## 14.7 Assistente IA indisponível
+# 15. Assistente IA e privacidade — recurso futuro
 
-Se a Vitrine estiver acessível, mas o Assistente IA não puder responder:
+Não há tratamento de mensagens de IA na versão inicial porque o recurso não está implementado.
 
-> **O assistente está temporariamente indisponível. Você ainda pode falar diretamente com a barbearia pelo WhatsApp.**
-
-Quando o Assistente não possuir a informação solicitada:
-
-> **Não tenho essa informação disponível. Você pode falar diretamente com a barbearia pelo WhatsApp.**
-
-Essas mensagens só devem apontar para WhatsApp quando houver um contato público válido disponível.
+Quando o módulo for aprovado, as regras de dados públicos, minimização, limites e segurança deverão ser retomadas a partir de `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ---
-
-# 15. Privacidade e limites do Assistente IA
-
-O Assistente IA só pode receber contexto público necessário, incluindo:
-
-- nome público;
-- descrição;
-- serviços públicos;
-- preços públicos;
-- produtos públicos;
-- horários;
-- endereço público;
-- atendimento a domicílio;
-- formas de pagamento aceitas;
-- contatos.
-
-É proibido enviar para a IA:
-
-- custos;
-- estoque interno;
-- quantidade numérica de estoque;
-- estoque mínimo;
-- faturamento;
-- despesas;
-- vendas;
-- credenciais;
-- e-mail privado;
-- IDs internos;
-- segredos;
-- chaves de API;
-- dados de outra barbearia.
-
-O Assistente não consulta agenda, não reserva horários, não afirma disponibilidade e não promete atendimento em determinado horário. Quando necessário, direciona o visitante ao contato público da barbearia.
-
-O conteúdo da conversa não é persistido no banco. Ele existe somente durante a conversa atual.
-
-Regras iniciais de uso:
-
-- máximo de 10 mensagens por minuto por visitante;
-- máximo de 20 mensagens por conversa;
-- máximo inicial de 1.000 respostas por ciclo mensal da barbearia;
-- alerta administrativo em 80% da cota;
-- bloqueio em 100%, salvo extensão administrativa registrada;
-- timeout funcional de 15 segundos por resposta.
-
----
-
 # 16. Estados de carregamento e erro na experiência pública
 
 ## Loading

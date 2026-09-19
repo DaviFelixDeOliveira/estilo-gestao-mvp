@@ -70,7 +70,6 @@ Executar no servidor operações como:
 - alterar estoque;
 - registrar despesa;
 - acessar segredo;
-- chamar Gemini;
 - executar ação administrativa.
 
 ---

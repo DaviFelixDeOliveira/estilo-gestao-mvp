@@ -67,7 +67,7 @@ Sua conta
 
 Categorias pertence a Produtos e não é item independente da navegação principal. **Sua conta** é separada de Configurações. O Logout pertence ao menu da conta.
 
-O Assistente IA permanece no contexto da Vitrine quando o Plano Com IA estiver vigente, o recurso estiver ativo e houver cota disponível.
+O Assistente IA não faz parte da versão inicial. O planejamento futuro está documentado em `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ---
 
@@ -390,7 +390,6 @@ As formas selecionadas poderão ser utilizadas para:
 
 - informar os meios aceitos na Vitrine Digital;
 
-- responder perguntas públicas através do Assistente IA quando o recurso estiver disponível.
 
 A configuração das formas aceitas não substitui o registro da forma de pagamento de cada venda.
 
@@ -713,11 +712,11 @@ O cadastro público não cria operadores do SaaS.
 
 7\. Auth cria o usuário;
 
-8\. backend cria o perfil interno;
+8\. backend cria a barbearia vinculada;
 
-9\. perfil recebe automaticamente `tipo = BARBEIRO`;
+9\. backend cria o perfil interno já associado à barbearia;
 
-10\. backend cria a barbearia vinculada;
+10\. perfil recebe automaticamente `tipo = BARBEIRO`;
 
 11\. operação deverá evitar a criação de duas barbearias para o mesmo usuário;
 
@@ -847,7 +846,6 @@ Não fazem parte do Onboarding inicial:
 
 - comportamento de produtos sem estoque na Vitrine;
 
-- Assistente IA;
 
 - despesas;
 
@@ -1115,7 +1113,6 @@ Elas poderão ser utilizadas posteriormente:
 
 - na Vitrine Digital;
 
-- pelo Assistente IA dentro do contexto público permitido.
 
 Essa configuração é diferente da forma de pagamento registrada em uma venda específica.
 
@@ -3193,7 +3190,6 @@ Permitir:
 
 - visualizar prévia;
 
-- configurar Assistente IA.
 
 ---
 
@@ -3670,30 +3666,28 @@ Os destinos pagos continuam na navegação com indicação de bloqueio. Ao abrir
 
 ## Plano Normal
 
-Libera todos os recursos de gestão da versão inicial, sem Assistente IA.
+Libera todos os recursos de gestão da versão inicial.
 
-## Plano Com IA
+## Assistente IA — recurso futuro
 
-Libera tudo do Normal e o Assistente IA na Vitrine Pública.
+Não existe plano comercial de IA na versão inicial. Qualquer expansão comercial ligada à IA deverá seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 
 # 37. Fluxo de assinatura
 
 ## Visualização
 
-`Sua conta → Minha assinatura` mostra plano efetivo, validade, mudança futura, cancelamento agendado e pagamentos reais. `Alterar plano` abre modal ou drawer com Grátis, Normal e Com IA.
+`Sua conta → Minha assinatura` mostra plano efetivo, validade, cancelamento agendado e pagamentos reais. `Alterar plano` apresenta somente Grátis e Normal na versão inicial.
 
 ## Pagamento manual
 
 O barbeiro não confirma o próprio pagamento. O ADMIN informa data real e valor recebido. A validade começa na data do pagamento, preserva o dia-base e não perde dias em renovação antecipada.
 
-## Upgrade
+## Mudança de plano
 
-Normal para Com IA é aplicado imediatamente após confirmação administrativa, sem alterar o vencimento.
+Grátis passa para Normal após confirmação de pagamento real ou concessão de cortesia administrativa.
 
-## Downgrade
-
-Com IA para Normal fica agendado para o vencimento e pode ser cancelado antes. Se não houver novo pagamento confirmado na data, o plano efetivo passa ao Grátis.
+Normal retorna ao Grátis quando o período termina sem renovação ou quando um cancelamento agendado chega ao vencimento.
 
 ## Cancelamento
 
@@ -3706,7 +3700,7 @@ O primeiro barbeiro recebe um ciclo do Normal ativado pelo ADMIN no momento em q
 
 # 38. Código da barbearia
 
-O backend gera `EG-XXXXXX` após a criação da barbearia. O código é imutável, copiável e visível somente ao responsável e ao ADMIN. A pesquisa administrativa aceita nome ou código. Nenhum código antigo é reutilizado.
+O backend gera `BAR-XXXXXX` após a criação da barbearia. O código é imutável, copiável e visível somente ao responsável e ao ADMIN. A pesquisa administrativa aceita nome ou código. Nenhum código antigo é reutilizado.
 
 
 # 39. Suspensão administrativa e efeito no barbeiro
@@ -3741,27 +3735,18 @@ Após confirmar, o servidor retira a Vitrine do ar, invalida sessões, preserva 
 
 ## Pelo ADMIN
 
-Não existe ação comum de exclusão nos detalhes. A exceção administrativa exige justificativa e confirmação `EXCLUIR EG-XXXXXX`. Para fraude, abuso, conteúdo ilegal ou segurança, suspender primeiro e preservar apenas evidência necessária.
+Não existe ação comum de exclusão nos detalhes. A exceção administrativa exige justificativa e confirmação `EXCLUIR BAR-XXXXXX`. Para fraude, abuso, conteúdo ilegal ou segurança, suspender primeiro e preservar apenas evidência necessária.
 
 ## Depois da exclusão
 
 A conta não aparece na lista de barbearias e não pode ser restaurada. Pagamentos e ações essenciais ficam por cinco anos em área técnica restrita, com código, nome e e-mail. Depois são apagados completamente. Backups antigos aguardam expiração automática e não podem reconstruir intencionalmente a conta.
 
 
-# 41. Assistente IA — regras que afetam o barbeiro
+# 41. Assistente IA — recurso futuro
 
-O conteúdo da conversa existe somente na sessão atual e não é salvo no banco. O backend mantém contador de respostas por ciclo e identificadores temporários de proteção.
+O Assistente IA não faz parte da versão inicial e não gera configurações, cotas ou controles na área do barbeiro nesta etapa.
 
-Regras iniciais:
-
-- 1.000 respostas por ciclo da assinatura;
-- máximo de 20 mensagens por conversa;
-- proteção de 10 mensagens por minuto por visitante;
-- aviso ao ADMIN em 80%;
-- bloqueio em 100%, salvo extensão administrativa;
-- timeout funcional de 15 segundos.
-
-
+Quando o módulo entrar no escopo, seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 # 42. Estados globais finais
 
 ## Manutenção
@@ -3839,7 +3824,7 @@ Os estados abaixo devem existir de forma explícita na implementação e na prot
 
 ## 45.1 Recurso bloqueado no Plano Grátis
 
-A conta continua **Ativa**. O bloqueio ocorre apenas porque o recurso pertence ao Plano Normal ou Com IA.
+A conta continua **Ativa**. O bloqueio ocorre apenas porque o recurso pertence ao Plano Normal.
 
 - destinos pagos permanecem visíveis na navegação;
 - dados históricos dos módulos pagos permanecem disponíveis em modo somente leitura quando existirem;

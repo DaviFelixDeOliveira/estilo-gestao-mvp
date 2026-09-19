@@ -107,16 +107,9 @@ Testar:
 
 ---
 
-# IA
+# IA — recurso futuro
 
-Testar:
-
-- perguntas normais;
-- informação inexistente;
-- tentativa de obter dados privados;
-- prompt injection;
-- indisponibilidade;
-- limite de uso.
+Não faz parte da versão inicial. Criar testes específicos somente quando o módulo voltar ao escopo, seguindo `ASSISTENTE_IA_FUTURO.md`.
 
 ---
 

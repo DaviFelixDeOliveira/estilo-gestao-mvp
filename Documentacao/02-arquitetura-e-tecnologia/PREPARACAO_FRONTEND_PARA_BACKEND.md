@@ -681,7 +681,6 @@ Exemplos:
 
 \- executar ações administrativas;
 
-\- chamar Gemini;
 
 \- utilizar chave administrativa.
 
@@ -2691,112 +2690,29 @@ A regra visual completa pertence aos documentos de Design.
 
 \---
 
-**# 46. Assistente IA**
+**# 46. Assistente IA — recurso futuro**
 
-O frontend nunca chama Gemini diretamente.
+O Assistente IA não faz parte da versão inicial.
 
-Fluxo:
+O frontend atual não deverá criar chat, contratos, estados, chamadas externas ou configurações relacionadas à IA.
 
-\`\`\`text
-
-Visitante
-
- ↓
-
-Frontend
-
- ↓
-
-Endpoint do Estilo e Gestão
-
- ↓
-
-Validação
-
- ↓
-
-Rate limit
-
- ↓
-
-Contexto público
-
- ↓
-
-Gemini API
-
-\`\`\`
-
-A chave da API permanece somente no servidor.
+Quando o recurso entrar no escopo, seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
+**# 47. Contexto da IA — recurso futuro**
 
-**# 47. Contexto da IA**
+Nenhum contexto de IA deverá ser montado na versão inicial.
 
-Não montar contexto utilizando objeto administrativo completo.
-
-Criar função específica.
-
-Exemplo:
-
-\`\`\`ts
-
-getPublicAssistantContext(barbeariaId)
-
-\`\`\`
-
-Essa função deverá retornar somente campos autorizados.
-
-Quando configuradas como informação pública, as formas de pagamento aceitas pela barbearia poderão fazer parte desse contexto.
-
-O frontend nunca deverá possuir uma versão administrativa completa apenas para extrair o contexto da IA.
+Quando esse módulo entrar no escopo, definir um contrato público específico e seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
+**# 48. Limites da IA — recurso futuro**
 
-**# 48. Rate limit e timeout da IA**
+A versão inicial não possui rate limit, cota ou timeout específicos de IA porque o recurso não está implementado.
 
-O comportamento funcional atual prevê:
-
-\`\`\`text
-
-Máximo de 10 mensagens por minuto por visitante
-
-Máximo de 20 mensagens por conversa
-
-Máximo inicial de 1.000 respostas por ciclo mensal da barbearia
-
-\`\`\`
-
-e:
-
-\`\`\`text
-
-Timeout de 15 segundos
-
-\`\`\`
-
-O frontend deverá tratar respostas correspondentes a:
-
-\- proteção temporária contra abuso;
-
-\- conversa encerrada no limite;
-
-\- aviso de 80% da cota mensal;
-
-\- cota mensal esgotada em 100%;
-
-\- timeout;
-
-\- indisponibilidade;
-
-\- sucesso.
-
-A aplicação não deverá expor detalhes técnicos do fornecedor.
-
-O conteúdo das mensagens existe somente durante a conversa atual e não deverá ser enviado para persistência no banco. Somente contadores e identificadores temporários indispensáveis à proteção podem ser mantidos.
+Esses valores deverão ser revistos somente quando o módulo voltar ao escopo, conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
-
 **# 49. Mock do Dashboard**
 
 O mock do Dashboard deve representar os indicadores aprovados sem inventar análises adicionais.
@@ -3015,7 +2931,7 @@ const barbeariasAdminMock = [
 
     nomeMarca: "Barbearia Imperial",
 
-    codigo: "EG-7K2M9Q",
+codigo: "BAR-7K2M9Q",
 
     plano: "NORMAL",
 
@@ -3059,7 +2975,6 @@ O frontend poderá solicitar ações como:
 
 \- alterar plano e validade;
 
-\- agendar ou cancelar downgrade;
 
 \- cancelar assinatura paga;
 
@@ -3454,7 +3369,7 @@ O frontend estará preparado para o backend quando:
 # 59. Contratos de planos e assinatura
 
 ```ts
-export type PlanoCodigo = "GRATIS" | "NORMAL" | "COM_IA"
+export type PlanoCodigo = "GRATIS" | "NORMAL"
 
 export type Recurso =
   | "VITRINE"
@@ -3464,7 +3379,6 @@ export type Recurso =
   | "FINANCEIRO"
   | "RELATORIOS"
   | "EXPORTACOES"
-  | "ASSISTENTE_IA"
 
 export type AssinaturaAtual = {
   planoEfetivo: PlanoCodigo
@@ -3486,10 +3400,6 @@ const recursosPorPlano: Record<PlanoCodigo, ReadonlySet<Recurso>> = {
     "VITRINE", "PORTFOLIO", "PDV", "ESTOQUE",
     "FINANCEIRO", "RELATORIOS", "EXPORTACOES",
   ]),
-  COM_IA: new Set([
-    "VITRINE", "PORTFOLIO", "PDV", "ESTOQUE",
-    "FINANCEIRO", "RELATORIOS", "EXPORTACOES", "ASSISTENTE_IA",
-  ]),
 }
 ```
 
@@ -3502,7 +3412,7 @@ As consultas históricas continuam disponíveis, porém as mutações pagas reto
 ```ts
 export type BloqueioPlano = {
   recurso: Recurso
-  planoMinimo: "NORMAL" | "COM_IA"
+  planoMinimo: "NORMAL"
   titulo: string
   descricao: string
 }
@@ -3517,7 +3427,6 @@ Criar contratos separados para:
 - buscar assinatura efetiva;
 - listar pagamentos reais;
 - solicitar cancelamento ou desfazer cancelamento;
-- solicitar downgrade ou desfazer downgrade;
 - ações administrativas de confirmação e mudança de plano.
 
 Nunca calcular vencimento mensal no componente visual. O backend calcula o ciclo e devolve datas prontas.
@@ -3563,26 +3472,20 @@ export type ExcluirContaInput = {
 
 O cliente deverá bloquear envios repetidos, invalidar cache e sessão após sucesso e redirecionar para uma confirmação neutra. Não oferecer botão de restaurar.
 
-A exceção administrativa utiliza endpoint distinto, justificativa obrigatória e frase `EXCLUIR EG-XXXXXX`.
+A exceção administrativa utiliza endpoint distinto, justificativa obrigatória e frase `EXCLUIR BAR-XXXXXX`.
 
 # 65. Retenção e privacidade
 
 O frontend comum não possui rota para retenções. Uma consulta eventual é técnica, restrita e auditada. Não reutilizar os tipos completos de `Barbearia` para representar uma retenção.
-
 # 66. Assistente IA
 
-O servidor mantém o histórico da conversa somente em memória/contexto da requisição atual. O banco recebe apenas uso agregado do ciclo.
+O Assistente IA não faz parte da versão inicial.
 
-```ts
-export type UsoIa = {
-  respostasUsadas: number
-  limite: number
-  percentual: number
-  bloqueado: boolean
-}
-```
+Não criar contratos, endpoints, tipos, tabelas ou componentes relacionados à IA nesta etapa.
 
-Aplicar máximo de 20 mensagens por conversa, 1.000 respostas por ciclo, aviso em 80%, bloqueio em 100%, rate limit e timeout. Nenhum endpoint administrativo poderá retornar conteúdo de conversa.
+A implementação futura deverá seguir:
+
+`Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`
 
 # 67. Aceites legais
 

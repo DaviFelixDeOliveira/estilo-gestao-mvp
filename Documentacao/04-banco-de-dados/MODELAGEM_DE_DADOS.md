@@ -132,7 +132,7 @@ Horários de funcionamento não representam agenda.
 
 ## Por que existem tabelas de planos e assinaturas?
 
-Mesmo sem cobrança automática por gateway, a versão inicial precisa representar três planos, validade, pagamento manual, cortesia, upgrade, downgrade, cancelamento e histórico.
+Mesmo sem cobrança automática por gateway, a versão inicial precisa representar os planos Grátis e Normal, validade, pagamento manual, cortesia, cancelamento e histórico.
 
 Por isso a modelagem oficial utiliza:
 
@@ -141,7 +141,7 @@ Por isso a modelagem oficial utiliza:
 - `pagamentos_assinatura` para registros permanentes dos pagamentos reais;
 - `historico_administrativo` para mudanças e ações permanentes.
 
-O campo `assistente_ia_ativo` representa somente a escolha da barbearia de exibir o recurso. O direito de uso vem do Plano Com IA e da cota vigente, sem um booleano administrativo paralelo de liberação.
+O Assistente IA não faz parte da modelagem da versão inicial. Quando o recurso entrar no escopo, sua expansão deverá ser feita por nova migration conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 ## Por que não existe tabela Vitrine?
 
@@ -305,7 +305,7 @@ O painel administrativo mínimo previsto precisa de uma estratégia de autentica
 **Decisão aprovada:**
 
 - o operador é identificado por `perfis.tipo = ADMIN`, atribuído somente por operação interna protegida;
-- as ações permitidas são endpoints específicos para consulta administrativa, pagamento, cortesia, plano, suspensão, reativação, manutenção e extensão de cota da IA;
+- as ações permitidas são endpoints específicos para consulta administrativa, pagamento, cortesia, plano, suspensão, reativação e manutenção;
 - o acesso não desativa RLS genericamente e nunca concede leitura dos dados operacionais privados das barbearias.
 
 Não criar RBAC complexo na primeira versão.
@@ -324,14 +324,13 @@ Além das tabelas operacionais já documentadas, a modelagem oficial inclui:
 
 | Estrutura | Responsabilidade |
 | --- | --- |
-| `planos` | Catálogo Grátis, Normal e Com IA, com preço e situação comercial |
+| `planos` | Catálogo Grátis e Normal, com preço e situação comercial |
 | `assinaturas` | Um estado atual por barbearia, inclusive no Grátis |
 | `pagamentos_assinatura` | Um registro imutável por pagamento real |
 | `historico_administrativo` | Eventos de plano, status e ações administrativas |
 | `configuracoes_sistema` | Registro único de manutenção global |
 | `retencoes_contas_excluidas` | Identificação retida por cinco anos após exclusão, sem dados operacionais |
-| `codigos_reservados` | Impede reutilização de códigos `EG-XXXXXX` |
-| `uso_ia_mensal` | Contagem de respostas por ciclo, sem conteúdo das conversas |
+| `codigos_reservados` | Impede reutilização de códigos `BAR-XXXXXX` |
 | `aceites_legais` | Versão e data dos aceites dos documentos legais |
 
 Alterações necessárias:

@@ -44,7 +44,7 @@ O sistema contará com uma área privada para gestão da barbearia, uma Vitrine 
 
 **## Palavras-chave**
 
-SaaS; barbearia; gestão; PDV; estoque; financeiro; vendas; Vitrine Digital; Portfólio; inteligência artificial.
+SaaS; barbearia; gestão; PDV; estoque; financeiro; vendas; Vitrine Digital; Portfólio.
 
 \---
 
@@ -257,7 +257,7 @@ Ela poderá apresentar:
 
 A Vitrine Digital não realizará vendas ou agendamentos no projeto inicial.
 
-Opcionalmente, poderá apresentar um Assistente IA público quando o Plano Com IA estiver vigente, o recurso estiver ativo e houver cota disponível.
+O Assistente IA não faz parte da versão inicial. Seu planejamento futuro está documentado em `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 Também existirá uma área separada para o **\*\*Operador do SaaS\*\***, destinada apenas às funções administrativas necessárias para operação do Estilo e Gestão.
 
@@ -347,9 +347,9 @@ Utilizado para auxiliar no controle de acesso e isolamento dos dados entre barbe
 
 Utilizado para auxiliar o preenchimento dos dados de endereço através do CEP.
 
-**### Gemini API**
+**### Assistente IA — recurso futuro**
 
-Utilizada no Assistente IA opcional da Vitrine Digital.
+Nenhuma integração de IA faz parte da versão inicial. Quando esse módulo entrar no escopo, seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
 
@@ -457,7 +457,6 @@ Nela será possível administrar:
 
 \- Portfólio;
 
-\- Assistente IA quando disponível.
 
 O PDV permitirá montar uma comanda contendo serviços e produtos e calcular automaticamente o valor da venda.
 
@@ -509,16 +508,15 @@ No sistema inicial, a permissão *\`ADMIN\`* será atribuída manualmente no ban
 
 O usuário não poderá alterar o próprio tipo pela aplicação.
 
-**### Assistente IA**
+**### Assistente IA — recurso futuro**
 
-O Assistente IA será um recurso opcional da Vitrine.
+O Assistente IA não faz parte da versão inicial do sistema.
 
-Terá acesso somente ao contexto público permitido e poderá responder perguntas sobre a barbearia.
+Não criar integração, chat, plano comercial, cota ou configuração de IA nesta etapa.
 
-Não realizará agendamentos.
+A implementação futura deverá seguir `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
-
 **# 5.3 Requisitos funcionais**
 
 **## RF01 — Cadastrar conta**
@@ -973,38 +971,15 @@ A Vitrine poderá disponibilizar ações como:
 
 \---
 
-**## RF17 — Responder através do Assistente IA**
+**## RF17 — Assistente IA (recurso futuro)**
 
-**\*\*Descrição:\*\*** Permitir que visitantes façam perguntas ao Assistente IA quando o Plano Com IA estiver vigente, o recurso estiver ativado pela barbearia e houver cota disponível.
+**\*\*Status:\*\*** Fora do escopo da versão inicial.
 
-**\*\*Dados usados:\*\***
+Não implementar chat, endpoints, cotas ou integração com provedor de IA nesta etapa.
 
-\- mensagem do visitante;
-
-\- nome público;
-
-\- descrição pública;
-
-\- serviços públicos;
-
-\- produtos públicos;
-
-\- preços públicos;
-
-\- horários;
-
-\- endereço;
-
-\- atendimento a domicílio;
-
-\- formas de pagamento aceitas;
-
-\- contatos.
-
-O Assistente IA não deverá acessar informações financeiras ou administrativas privadas.
+Quando o recurso for aprovado, utilizar `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md` como ponto oficial de retomada.
 
 \---
-
 **## RF18 — Administrar recursos básicos do SaaS**
 
 **\*\*Descrição:\*\*** Permitir que usuários autorizados com *\`tipo = ADMIN\`* realizem operações administrativas necessárias ao funcionamento do SaaS.
@@ -1029,11 +1004,10 @@ O Operador poderá:
 
 \- confirmar pagamento e conceder cortesia;
 
-\- aplicar upgrade, downgrade ou cancelamento;
+\- confirmar pagamento, conceder cortesia ou cancelar assinatura;
 
 \- suspender ou reativar contas;
 
-\- estender excepcionalmente a cota da IA com justificativa;
 
 \- realizar suporte operacional permitido.
 
@@ -1251,28 +1225,13 @@ O backend deverá validar a permissão.
 
 \---
 
-**## RNF10 — Proteger o Assistente IA**
+**## RNF10 — Assistente IA (requisito futuro)**
 
-**\*\*Descrição:\*\*** Limitar o Assistente IA aos dados públicos autorizados e impedir acesso aos dados administrativos.
+**\*\*Status:\*\*** Fora do escopo da versão inicial.
 
-**\*\*Dados usados:\*\***
-
-\- mensagem;
-
-\- informações públicas;
-
-\- configuração do recurso.
-
-O endpoint deverá considerar também:
-
-\- limite de uso;
-
-\- timeout;
-
-\- tratamento de indisponibilidade.
+As regras de segurança específicas de IA serão definidas e validadas quando o módulo entrar no escopo, conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
-
 **## RNF11 — Aplicar esquema visual consistente**
 
 **\*\*Descrição:\*\*** Utilizar uma identidade visual consistente baseada na marca do Estilo e Gestão.
@@ -2035,34 +1994,13 @@ Somente itens publicados aparecerão na Vitrine.
 
 \---
 
-**## 6.23 Assistente IA**
+**## 6.23 Assistente IA — recurso futuro**
 
-Quando liberado e ativado, a Vitrine poderá apresentar um Assistente IA.
+O Assistente IA não está disponível na versão inicial.
 
-O visitante poderá fazer perguntas sobre informações públicas, como:
-
-\- serviços;
-
-\- preços;
-
-\- produtos;
-
-\- horários;
-
-\- endereço;
-
-\- atendimento a domicílio;
-
-\- formas de pagamento aceitas;
-
-\- formas de contato.
-
-O Assistente não terá acesso a informações financeiras ou administrativas privadas.
-
-Não realizará agendamentos.
+Seu planejamento técnico e funcional está separado em `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 
 \---
-
 **## 6.24 Configurações da barbearia**
 
 O barbeiro poderá editar informações do estabelecimento, como:
@@ -2161,11 +2099,10 @@ Poderá executar operações autorizadas, como:
 
 \- consultar planos, validades e pagamentos de assinatura;
 
-\- confirmar pagamento, aplicar cortesia, upgrade, downgrade ou cancelamento;
+\- confirmar pagamento, aplicar cortesia ou cancelar assinatura;
 
 \- suspender ou reativar contas;
 
-\- estender excepcionalmente a cota da IA com justificativa e histórico.
 
 O operador não deverá possuir acesso irrestrito à operação interna da barbearia.
 
@@ -2197,14 +2134,15 @@ Mantém Vitrine Digital, Portfólio, serviços e produtos para divulgação. Dad
 
 Inclui o núcleo completo de gestão da versão inicial: Dashboard, PDV, estoque, financeiro, relatórios, exportações, Vitrine Digital, Portfólio e configurações.
 
-**## Plano Com IA — R$ 79,90 por mês**
+**## Assistente IA — planejamento futuro**
 
-Inclui todas as funcionalidades do Normal e o Assistente IA público, limitado a informações públicas da barbearia.
+Não existe plano comercial de IA na versão inicial. A versão atual trabalha somente com os planos Grátis e Normal.
 
-A cobrança inicial é feita por Pix com confirmação manual. As regras completas de validade, upgrade, downgrade, cancelamento e cortesia estão consolidadas na seção de decisões aprovadas deste documento.
+Qualquer plano futuro associado à IA deverá ser definido quando o recurso voltar ao escopo, seguindo `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
+
+A cobrança inicial do Plano Normal é feita por Pix com confirmação manual. As regras completas de validade, cancelamento e cortesia estão consolidadas na seção de decisões aprovadas deste documento.
 
 \---
-
 **# 8. Plano de testes**
 
 Antes do lançamento, o sistema deverá ser validado através de diferentes tipos de testes.
@@ -2241,7 +2179,6 @@ Entre eles:
 
 \- testes de segurança;
 
-\- testes do Assistente IA;
 
 \- testes da Vitrine;
 
@@ -2295,7 +2232,6 @@ Aplicar as diretrizes aos dados tratados durante:
 
 \- Vitrine;
 
-\- Assistente IA;
 
 \- suporte;
 
@@ -2375,7 +2311,6 @@ Entre os dados previstos estão:
 
 \- informações de suporte;
 
-\- mensagens enviadas ao Assistente IA quando aplicável.
 
 O inventário deverá ser atualizado conforme a implementação real.
 
@@ -2389,7 +2324,6 @@ Exemplos previstos:
 
 \- Vercel;
 
-\- Google, através da Gemini API, quando o Assistente IA for utilizado.
 
 Somente dados necessários deverão ser compartilhados.
 
@@ -2487,7 +2421,6 @@ A proposta central combina gestão e divulgação:
 
 \- a Vitrine Digital apresenta a barbearia ao público;
 
-\- o Assistente IA pode complementar o atendimento quando contratado;
 
 \- o Painel Administrativo permite ao Operador do SaaS executar apenas as funções necessárias para administração do serviço.
 
@@ -2505,13 +2438,12 @@ Esta seção consolida as decisões dos oito blocos concluídos em 18/09/2026. E
 
 ## Planos
 
-O Estilo e Gestão possui três planos:
+O sistema possui dois planos na versão inicial:
 
 | Plano | Preço mensal | Escopo atual |
 | --- | ---: | --- |
 | Grátis | R$ 0,00 | Vitrine Digital, Portfólio, serviços e produtos para divulgação; consulta aos dados históricos pagos em somente leitura |
 | Normal | R$ 49,90 | Todos os recursos de gestão da versão inicial: Dashboard, PDV, vendas, estoque, financeiro, relatórios, exportações e configurações |
-| Com IA | R$ 79,90 | Tudo do Normal e Assistente IA na Vitrine Pública |
 
 Os recursos são organizados em camadas e verificados centralmente no código. O Plano Grátis permanece funcional para divulgação. Recursos pagos continuam visíveis, mas apresentam um componente reutilizável explicando o bloqueio e o benefício do Plano Normal.
 
@@ -2525,13 +2457,11 @@ Cada pagamento libera um ciclo mensal. O sistema mantém o dia-base original; qu
 
 Não existe tolerância após o vencimento. Cancelar uma assinatura paga mantém os recursos até o final do período e pode ser desfeito antes dessa data. No vencimento, a conta retorna ao Grátis. Cancelar assinatura não exclui a conta.
 
-Upgrade para Com IA pode ser ativado imediatamente sem alterar o vencimento. Downgrade fica agendado para o fim do ciclo e pode ser cancelado antes. Se houver downgrade agendado para Normal, mas nenhum novo pagamento for confirmado no vencimento, a conta volta ao Grátis; o Normal só começa após pagamento confirmado.
-
 O primeiro barbeiro recebe um ciclo mensal do Plano Normal como cortesia administrativa. A cortesia começa quando o sistema pronto é enviado para uso real, não gera pagamento fictício e termina na data correspondente do mês seguinte.
 
 ## Identificação da barbearia
 
-Cada barbearia possui um identificador técnico interno e um código amigável imutável no formato `EG-XXXXXX`, gerado pelo servidor com letras e números não ambíguos. O código é único, não é público, pode ser copiado pelo barbeiro e pode ser pesquisado pelo ADMIN.
+Cada barbearia possui um identificador técnico interno e um código amigável imutável no formato `BAR-XXXXXX`, gerado pelo servidor com letras e números não ambíguos. O código é único, não é público, pode ser copiado pelo barbeiro e pode ser pesquisado pelo ADMIN.
 
 Um código utilizado nunca será atribuído a outra barbearia. Após o fim da retenção de uma conta excluída, poderá permanecer somente uma impressão técnica anônima e não reversível para impedir reutilização.
 
@@ -2539,7 +2469,7 @@ Um código utilizado nunca será atribuído a outra barbearia. Após o fim da re
 
 O painel ADMIN possui inicialmente Dashboard e Barbearias. O Dashboard mostra quantidade de barbearias por plano, receita de assinaturas recebida no mês e próximos vencimentos. Ele nunca usa dados privados de faturamento, despesas, estoque ou relatórios das barbearias.
 
-A lista de barbearias permite pesquisa por nome ou código e filtros por plano e status. A tela de detalhes concentra dados administrativos, pagamentos, assinatura e ações como upgrade, downgrade, cancelamento, cortesia, extensão excepcional, suspensão e reativação.
+A lista de barbearias permite pesquisa por nome ou código e filtros por plano e status. A tela de detalhes concentra dados administrativos, pagamentos, assinatura e ações como confirmação de pagamento, cancelamento, cortesia, suspensão e reativação.
 
 Plano e status são conceitos independentes. A conta pode estar `ATIVA` ou `SUSPENSA` em qualquer plano. A suspensão é administrativa, preserva dados, bloqueia a área autenticada e retira a Vitrine do ar até a reativação.
 
@@ -2549,7 +2479,7 @@ O papel do usuário vem do perfil (`BARBEIRO` ou `ADMIN`), nunca do endereço de
 
 Excluir conta é diferente de cancelar assinatura e diferente de suspender conta. O barbeiro inicia a exclusão em `Sua conta → Zona de perigo`, informa a senha atual e digita exatamente `EXCLUIR MINHA CONTA`. A exclusão é imediata e irreversível, sem período de recuperação.
 
-São removidos do sistema ativo o usuário de autenticação e todos os dados operacionais da barbearia, incluindo perfil, serviços, produtos, categorias, estoque, vendas, despesas, financeiro, Portfólio, Vitrine, configurações, assinatura ativa, dados operacionais de IA e arquivos do Storage. A Vitrine sai do ar imediatamente.
+São removidos do sistema ativo o usuário de autenticação e todos os dados operacionais da barbearia, incluindo perfil, serviços, produtos, categorias, estoque, vendas, despesas, financeiro, Portfólio, Vitrine, configurações, assinatura ativa e arquivos do Storage. A Vitrine sai do ar imediatamente.
 
 Se ainda existir período pago, o acesso termina no momento da exclusão e não há reembolso automático, salvo direito legal aplicável. A interface deverá avisar que cancelar a assinatura é a alternativa para continuar usando o período restante.
 
@@ -2557,19 +2487,20 @@ Pagamentos reais e ações administrativas essenciais podem ser mantidos por cin
 
 Dados apagados do ambiente ativo podem permanecer temporariamente em backups automáticos até a expiração normal desses backups. Eles não poderão ser usados intencionalmente para reconstruir uma conta excluída.
 
-O ADMIN não possui botão comum de exclusão. Uma exclusão administrativa somente pode ocorrer em situação excepcional, com justificativa e confirmação reforçada no formato `EXCLUIR EG-XXXXXX`. Em fraude, abuso ou conteúdo ilegal, a regra é suspender primeiro, preservar apenas a evidência necessária e excluir após análise.
+O ADMIN não possui botão comum de exclusão. Uma exclusão administrativa somente pode ocorrer em situação excepcional, com justificativa e confirmação reforçada no formato `EXCLUIR BAR-XXXXXX`. Em fraude, abuso ou conteúdo ilegal, a regra é suspender primeiro, preservar apenas a evidência necessária e excluir após análise.
 
 Contas excluídas desaparecem da lista normal do ADMIN e não podem ser restauradas. Registros mínimos retidos ficam fora dessa lista, com consulta técnica restrita e registrada somente quando necessária.
 
 ## Assistente IA
 
-O Assistente IA não armazena o conteúdo das conversas no banco. O conteúdo existe somente durante a conversa atual. O sistema guarda apenas contadores de uso e identificadores temporários necessários para proteção contra abuso.
+O Assistente IA é um recurso futuro e não faz parte da versão inicial do sistema.
 
-Cada barbearia no Plano Com IA possui limite inicial de 1.000 respostas por ciclo da assinatura e 20 mensagens por conversa, além de limitação de taxa. O ADMIN é avisado ao atingir 80% e o uso é bloqueado em 100%, salvo extensão administrativa registrada.
+Nenhuma funcionalidade, tabela, integração, plano comercial ou configuração relacionada à IA deverá ser implementada nesta etapa.
 
+A arquitetura deverá permanecer preparada para inclusão futura por meio de novas migrations e novos componentes, conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
 ## Preparação para o primeiro uso real
 
-O primeiro barbeiro participa de um uso assistido com dados reais. Todo o núcleo do Plano Normal deve estar funcional; o Assistente IA não bloqueia essa etapa. Pequenos defeitos visuais podem ser corrigidos durante o acompanhamento, mas não podem existir falhas críticas, operacionais, de segurança, isolamento, cálculo ou risco de perda de dados.
+O primeiro barbeiro participa de um uso assistido com dados reais. Todo o núcleo do Plano Normal deve estar funcional antes dessa etapa. Recursos futuros, incluindo o Assistente IA, não fazem parte dos requisitos para o primeiro uso real. Pequenos defeitos visuais podem ser corrigidos durante o acompanhamento, mas não podem existir falhas críticas, operacionais, de segurança, isolamento, cálculo ou risco de perda de dados.
 
 Antes do primeiro uso deverão existir Termos de Uso e Política de Privacidade publicados, com aceite registrado, backup automático diário e teste de restauração do banco e dos arquivos. O suporte inicial será feito pelo WhatsApp e cada problema será registrado internamente.
 

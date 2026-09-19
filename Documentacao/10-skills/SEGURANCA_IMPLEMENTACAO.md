@@ -39,7 +39,7 @@ Não confiar em dados enviados pelo navegador para determinar:
 
 - salvar senha;
 - expor Secret Key;
-- expor Gemini API Key;
+- expor chave privada de provedor externo;
 - utilizar `NEXT_PUBLIC_` em segredo;
 - desativar RLS para fazer a aplicação funcionar;
 - utilizar chave administrativa em operação comum;
@@ -84,16 +84,9 @@ Sempre:
 
 ---
 
-# IA
+# IA — recurso futuro
 
-Sempre:
-
-- chamar no servidor;
-- usar allowlist pública;
-- limitar entrada;
-- aplicar rate limit;
-- aplicar timeout;
-- possuir fallback.
+Não implementar na versão inicial. Quando o módulo voltar ao escopo, revisar `ASSISTENTE_IA_FUTURO.md` e as diretrizes de segurança antes de criar endpoints ou integrações.
 
 ---
 

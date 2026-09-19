@@ -102,20 +102,41 @@ O barbeiro passa a possuir um link próprio para divulgar seu trabalho.
 
 # 7. Estrutura comercial
 
-O modelo inicial terá dois planos:
+A versão inicial possui dois planos:
 
-1. Plano Normal;
-2. Plano com IA.
+1. Plano Grátis;
+2. Plano Normal.
 
-Os nomes comerciais poderão ser alterados futuramente.
+O Assistente IA permanece como possibilidade futura e não possui plano comercial ativo nesta etapa.
 
 ---
 
-# 8. Plano Normal
+# 8. Plano Grátis
 
 ## Objetivo
 
-Atender o barbeiro que deseja gestão e divulgação, mas não precisa do Assistente IA.
+Permitir que a barbearia mantenha sua presença pública e seus dados históricos mesmo sem uma assinatura paga ativa.
+
+## Recursos previstos
+
+- Vitrine Digital;
+- Portfólio;
+- serviços e produtos para divulgação;
+- consulta de histórico criado durante períodos pagos, em modo somente leitura quando aplicável.
+
+## Preço
+
+```text
+R$ 0,00
+```
+
+---
+
+# 9. Plano Normal
+
+## Objetivo
+
+Atender o barbeiro que deseja o núcleo completo de gestão e divulgação.
 
 ## Recursos previstos
 
@@ -131,94 +152,47 @@ Atender o barbeiro que deseja gestão e divulgação, mas não precisa do Assist
 - configurações;
 - Vitrine Digital;
 - Portfólio;
-- contatos públicos.
+- contatos públicos;
+- exportações previstas para o plano pago.
 
-## Preço
-
-```text
-DECISÃO PENDENTE
-```
-
----
-
-# 9. Plano com IA
-
-## Objetivo
-
-Oferecer todos os recursos do Plano Normal e adicionar atendimento automatizado na Vitrine.
-
-## Recursos
-
-Inclui tudo do Plano Normal mais:
-
-- Assistente IA público;
-- respostas sobre serviços;
-- respostas sobre preços;
-- respostas sobre produtos;
-- respostas sobre horários;
-- respostas sobre localização;
-- direcionamento para WhatsApp.
-
-## Posicionamento comercial
-
-O Assistente IA poderá ser apresentado de forma simples como um:
-
-> **funcionário virtual disponível 24 horas para responder dúvidas básicas dos visitantes.**
-
-Isso representa a proposta comercial do recurso.
-
-Não significa garantia técnica de disponibilidade ininterrupta, pois serviços digitais podem passar por manutenção ou indisponibilidade.
-
-## Preço
+## Preço inicial
 
 ```text
-DECISÃO PENDENTE
+R$ 49,90 por ciclo mensal
 ```
 
 ---
 
 # 10. Comparação dos planos
 
-| Recurso | Plano Normal | Plano com IA |
+| Recurso | Grátis | Normal |
 |---|:---:|:---:|
-| Dashboard | ✓ | ✓ |
-| PDV/Comanda | ✓ | ✓ |
-| Serviços | ✓ | ✓ |
-| Produtos | ✓ | ✓ |
-| Estoque | ✓ | ✓ |
-| Financeiro | ✓ | ✓ |
-| Relatórios | ✓ | ✓ |
 | Vitrine Digital | ✓ | ✓ |
 | Portfólio | ✓ | ✓ |
-| Assistente IA |  | ✓ |
+| Serviços e produtos para divulgação | ✓ | ✓ |
+| Histórico pago em somente leitura | ✓ | ✓ |
+| Dashboard completo |  | ✓ |
+| PDV/Comanda |  | ✓ |
+| Estoque e movimentações |  | ✓ |
+| Financeiro |  | ✓ |
+| Relatórios completos |  | ✓ |
+| Exportações |  | ✓ |
 
-O objetivo é manter apenas uma diferença comercial importante no início.
-
-Isso simplifica:
-
-- venda;
-- entendimento;
-- suporte;
-- desenvolvimento.
+O Assistente IA não faz parte da matriz comercial da versão inicial. Seu planejamento permanece separado em `ASSISTENTE_IA_FUTURO.md`.
 
 ---
 
 # 11. Fonte de receita
 
-A principal receita será:
-
-```text
-assinatura recorrente
-```
+A principal receita da versão inicial será a assinatura recorrente do Plano Normal.
 
 Exemplo conceitual:
 
 ```text
-Receita mensal =
-clientes Plano Normal × preço Normal
-+
-clientes Plano IA × preço IA
+Receita mensal = clientes ativos no Plano Normal × R$ 49,90
 ```
+
+O Plano Grátis não gera receita direta de assinatura.
 
 ---
 
@@ -259,7 +233,6 @@ Os custos podem incluir:
 - banco de dados;
 - armazenamento;
 - autenticação;
-- utilização da Gemini API;
 - serviços de e-mail quando necessários;
 - ferramentas comerciais futuras;
 - impostos;
@@ -284,79 +257,33 @@ O custo por cliente deverá ser acompanhado conforme o sistema ganhar usuários 
 
 ---
 
-# 16. Custo do Plano com IA
+# 16. Custos de recursos futuros
 
-Além dos custos normais, existe consumo da Gemini API.
-
-Conceito:
-
-```text
-Custo Plano IA =
-custo base
-+
-consumo de IA
-```
-
-Por isso, o preço do plano com IA deverá possuir margem suficiente para cobrir esse consumo.
+O Assistente IA não gera custo operacional na versão inicial porque não está implementado. Caso o recurso seja retomado, custos de provedor, limites de uso, margem e preço deverão ser reavaliados antes da oferta comercial.
 
 ---
 
 # 17. Margem bruta
 
-Uma forma simples de acompanhar:
-
-```text
-Margem bruta =
-Receita
--
-Custos variáveis diretamente relacionados
-```
-
-O cálculo real deverá considerar o modelo tributário e financeiro adotado.
+A margem do Plano Normal deve considerar os custos reais de infraestrutura, armazenamento, autenticação, domínio, suporte, impostos e demais fornecedores utilizados pela versão inicial.
 
 ---
 
 # 18. Formação de preço
 
-O preço não deverá ser escolhido apenas observando quanto concorrentes cobram.
-
-Deverão ser considerados:
-
-1. custo mensal da infraestrutura;
-2. custo médio da IA;
-3. impostos;
-4. suporte;
-5. margem desejada;
-6. valor percebido pelo barbeiro;
-7. preço de alternativas do mercado;
-8. capacidade de pagamento do público.
+O preço inicial do Plano Normal é R$ 49,90 por ciclo mensal. A sustentabilidade desse valor deverá ser acompanhada durante o uso real, considerando custos e esforço de suporte.
 
 ---
 
-# 19. Diferença de preço entre planos
+# 19. Expansões comerciais futuras
 
-A diferença deverá cobrir:
-
-- consumo da Gemini API;
-- risco de variação de uso;
-- valor adicional entregue;
-- margem adicional necessária.
-
-Não vender o plano com IA pelo mesmo preço do normal apenas para facilitar a aquisição.
+Novos planos ou recursos pagos somente deverão ser criados quando houver problema validado, demanda real e custo conhecido. O Assistente IA permanece como uma dessas possibilidades futuras.
 
 ---
 
-# 20. Limites da IA
+# 20. Limites de IA — futuro
 
-Antes da comercialização deverão ser definidos limites adequados.
-
-Exemplos de decisões:
-
-- quantidade de mensagens;
-- limite técnico por período;
-- política de abuso.
-
-Esses valores ainda não estão definidos.
+Não há limites de IA ativos na versão inicial. Qualquer definição futura deverá seguir `ASSISTENTE_IA_FUTURO.md`.
 
 ---
 
@@ -371,7 +298,6 @@ A validação deverá observar:
 - utilidade do estoque;
 - compreensão dos relatórios;
 - valor percebido da Vitrine;
-- interesse pelo Assistente IA;
 - disposição para pagar.
 
 ---
@@ -416,7 +342,6 @@ Uma demonstração deverá mostrar rapidamente:
 4. financeiro;
 5. Vitrine;
 6. Portfólio;
-7. Assistente IA no plano correspondente.
 
 O foco deve ser o problema resolvido, não a tecnologia utilizada.
 
@@ -430,13 +355,9 @@ Exemplo conceitual:
 
 ---
 
-# 26. Argumento do Plano com IA
+# 26. Assistente IA — oportunidade futura
 
-Exemplo conceitual:
-
-> Além da gestão e da Vitrine, tenha um funcionário virtual para responder dúvidas básicas dos visitantes a qualquer hora.
-
-O texto comercial definitivo poderá ser alterado após testes com clientes.
+Não faz parte da oferta comercial inicial. A proposta só deverá ser apresentada a clientes quando houver implementação validada, custos conhecidos e decisão explícita de retorno ao escopo.
 
 ---
 
@@ -492,11 +413,7 @@ Quantidade de interessados que se tornam clientes.
 
 ## Plano mais utilizado
 
-Normal ou IA.
-
-## Uso da IA
-
-Ajuda a entender custo e valor do plano adicional.
+Acompanhar a distribuição entre Grátis e Normal.
 
 ---
 
@@ -539,7 +456,7 @@ Essas ideias pertencem ao documento:
 IDEIAS_FUTURAS.md
 ```
 
-Não serão consideradas receita do MVP enquanto não forem aprovadas.
+Não serão consideradas receita da versão inicial enquanto não forem aprovadas.
 
 ---
 
@@ -548,15 +465,13 @@ Não serão consideradas receita do MVP enquanto não forem aprovadas.
 Antes do lançamento comercial deverão ser definidos:
 
 - [ ] nome comercial dos planos;
-- [ ] preço do Plano Normal;
-- [ ] preço do Plano com IA;
-- [ ] periodicidade da assinatura;
-- [ ] meio de cobrança;
+- [x] preço inicial do Plano Normal: R$ 49,90 por ciclo mensal;
+- [x] periodicidade mensal por ciclo de validade;
+- [x] cobrança inicial manual por Pix;
 - [ ] data de vencimento;
-- [ ] política de cancelamento;
-- [ ] política de inadimplência;
+- [x] política inicial de cancelamento definida;
+- [x] sem tolerância após vencimento; retorno ao Grátis quando aplicável;
 - [ ] período gratuito, caso exista;
-- [ ] limite de uso da IA;
 - [ ] canal de suporte;
 - [ ] condições comerciais finais.
 

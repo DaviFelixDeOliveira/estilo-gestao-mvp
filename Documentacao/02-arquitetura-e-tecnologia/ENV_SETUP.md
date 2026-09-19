@@ -1,8 +1,8 @@
-# ENV Setup — Estilo e Gestão
+# ENV Setup — Sistema de Gestão para Barbearias
 
 ## Objetivo
 
-Este documento explica quais variáveis de ambiente o Estilo e Gestão utiliza, para que servem, onde obter seus valores e onde configurá-las.
+Este documento explica quais variáveis de ambiente a aplicação utiliza na versão inicial, para que servem, onde obter seus valores e onde configurá-las.
 
 Nenhuma chave real deve ser escrita neste documento.
 
@@ -38,6 +38,7 @@ Exemplo:
 
 ```text
 estilo-gestao/
+
 ├── app/
 ├── components/
 ├── public/
@@ -127,9 +128,7 @@ Sim.
 
 Essa chave foi criada para uso em aplicações cliente.
 
-A segurança dos dados não depende de esconder essa chave.
-
-Ela depende principalmente de:
+A segurança dos dados não depende de esconder essa chave. Ela depende principalmente de:
 
 - autenticação;
 - RLS;
@@ -153,7 +152,7 @@ Configurar somente quando uma operação administrativa de servidor realmente pr
 
 Permite operações administrativas com privilégios elevados.
 
-Pode ser necessária para funções do Operador SaaS, como gerenciamento administrativo de contas, dependendo da implementação escolhida.
+Pode ser necessária para funções do painel ADMIN, como gerenciamento administrativo de contas, dependendo da implementação escolhida.
 
 ### Onde encontrar
 
@@ -199,7 +198,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ### Função
 
-Representa a URL base do Estilo e Gestão.
+Representa a URL base da aplicação.
 
 Pode ser utilizada para:
 
@@ -219,7 +218,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 Exemplo:
 
 ```env
-NEXT_PUBLIC_APP_URL=https://estiloegestao.com
+NEXT_PUBLIC_APP_URL=https://SEU_DOMINIO
 ```
 
 O domínio definitivo ainda deverá ser configurado.
@@ -232,233 +231,56 @@ Não é segredo.
 
 ---
 
-# 6. Gemini API
+# 6. Assistente IA
 
-O Assistente IA é opcional.
+O Assistente IA é um recurso futuro e **não faz parte da versão inicial**.
 
-Se não estiver sendo desenvolvido ou utilizado, as variáveis da IA não precisam possuir valor funcional.
+Nenhuma variável de ambiente relacionada a esse recurso deve ser criada ou configurada nesta etapa.
 
----
-
-## GEMINI_API_KEY
-
-```env
-GEMINI_API_KEY=
-```
-
-### Função
-
-Autoriza o backend a chamar a Gemini API.
-
-### Onde obter
-
-No Google AI Studio:
-
-1. acesse a área de chaves da Gemini API;
-2. crie ou selecione um projeto;
-3. crie uma API Key;
-4. copie o valor;
-5. salve na variável.
-
-### Pode ir para o navegador?
-
-**Não.**
-
-Nunca criar:
-
-```env
-NEXT_PUBLIC_GEMINI_API_KEY=
-```
-
-A chamada à Gemini deverá ser feita no servidor.
-
----
-
-## GEMINI_MODEL
-
-```env
-GEMINI_MODEL=
-```
-
-### Função
-
-Define qual modelo Gemini será utilizado.
-
-O nome do modelo não deverá ser espalhado pelo código.
-
-A aplicação deverá lê-lo dessa configuração.
-
-Isso permite trocar de modelo futuramente sem alterar diversos arquivos.
-
-### Exemplo
-
-O valor deverá ser escolhido no momento da implementação com base nos modelos disponíveis naquele período.
-
-Não registrar um modelo como definitivo enquanto essa decisão não tiver sido tomada.
-
-### É segredo?
-
-Não necessariamente.
-
-Mesmo assim, como o frontend não precisa utilizá-lo, não utilizar `NEXT_PUBLIC_`.
-
----
-
-# 7. Configurações do Assistente IA
-
-As variáveis abaixo somente deverão ser adicionadas se as regras correspondentes forem configuráveis por ambiente.
-
----
-
-## AI_MAX_MESSAGE_LENGTH
-
-```env
-AI_MAX_MESSAGE_LENGTH=
-```
-
-### Função
-
-Quantidade máxima de caracteres permitidos em uma mensagem enviada ao Assistente IA.
-
-Valor:
-
-`DECISÃO PENDENTE`
-
----
-
-## AI_REQUEST_TIMEOUT_MS
-
-```env
-AI_REQUEST_TIMEOUT_MS=
-```
-
-### Função
-
-Tempo máximo que o backend aguardará uma resposta da API Gemini antes de considerar a chamada indisponível.
-
-Unidade:
-
-milissegundos.
-
-Valor:
-
-`DECISÃO PENDENTE`
-
----
-
-## AI_RATE_LIMIT_MAX
-
-```env
-AI_RATE_LIMIT_MAX=
-```
-
-### Função
-
-Quantidade máxima de mensagens permitidas dentro da janela definida.
-
-Valor:
-
-`DECISÃO PENDENTE`
-
----
-
-## AI_RATE_LIMIT_WINDOW_SECONDS
-
-```env
-AI_RATE_LIMIT_WINDOW_SECONDS=
-```
-
-### Função
-
-Duração da janela utilizada pelo limite de mensagens.
-
-Unidade:
-
-segundos.
-
-Valor:
-
-`DECISÃO PENDENTE`
-
----
-
-# 8. Modo de manutenção
-
-## MAINTENANCE_MODE
-
-```env
-MAINTENANCE_MODE=false
-```
-
-### Função
-
-Permite ativar uma página de manutenção simples.
-
-Valores:
+Quando o módulo entrar novamente no escopo, consultar:
 
 ```text
-false
-true
+Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md
 ```
 
-### false
-
-Sistema opera normalmente.
-
-### true
-
-Sistema exibe a experiência de manutenção definida.
-
-### Observação
-
-Como a Vercel aplica variáveis através de deployments, alterar uma variável poderá exigir novo deployment para que o valor seja refletido.
-
-Se futuramente for necessária ativação instantânea, a configuração poderá ser migrada para uma fonte persistente.
+Esse documento será o ponto oficial para revisar a integração, limites, segurança, variáveis de ambiente e demais decisões necessárias no momento da implementação.
 
 ---
 
-## MAINTENANCE_MESSAGE
+# 7. Modo de manutenção
 
-Opcional:
+O modo de manutenção global **não é controlado por variável de ambiente** na arquitetura atual.
 
-```env
-MAINTENANCE_MESSAGE=
+A fonte de verdade é a configuração persistida no banco de dados, na tabela:
+
+```text
+configuracoes_sistema
 ```
 
-### Função
+Isso permite que o ADMIN ative ou desative a manutenção sem depender de alteração de variável na Vercel ou de novo deployment.
 
-Mensagem pública adicional exibida durante a manutenção.
+A configuração contempla:
 
-Não colocar nessa mensagem:
+- manutenção ativa ou inativa;
+- motivo interno;
+- opção de exibir uma mensagem pública;
+- mensagem pública;
+- previsão de retorno;
+- responsável pela última alteração.
 
-- erro técnico;
-- fornecedor;
-- stack;
-- banco;
-- chave;
-- causa interna de segurança.
+Portanto, não criar na versão inicial variáveis como:
+
+```text
+MAINTENANCE_MODE
+MAINTENANCE_MESSAGE
+MAINTENANCE_RETURN_AT
+```
+
+A aplicação deverá consultar a configuração persistida e aplicar o estado global de manutenção conforme as regras do sistema.
 
 ---
 
-## MAINTENANCE_RETURN_AT
-
-Opcional:
-
-```env
-MAINTENANCE_RETURN_AT=
-```
-
-### Função
-
-Permite informar uma previsão pública de retorno.
-
-Formato definitivo:
-
-`DECISÃO PENDENTE`
-
----
-
-# 9. ViaCEP
+# 8. ViaCEP
 
 O ViaCEP será utilizado para auxiliar no preenchimento de endereços.
 
@@ -482,7 +304,7 @@ A URL do serviço pode ficar centralizada na camada de integração do código.
 
 ---
 
-# 10. Supabase Storage
+# 9. Supabase Storage
 
 O Supabase Storage utiliza o mesmo projeto Supabase.
 
@@ -501,7 +323,7 @@ O acesso administrativo, quando necessário, ocorrerá somente no servidor.
 
 ---
 
-# 11. Supabase Auth
+# 10. Supabase Auth
 
 O Supabase Auth também utiliza as variáveis principais:
 
@@ -516,7 +338,7 @@ No painel do Supabase também deverão ser configuradas as URLs permitidas para 
 
 ---
 
-# 12. URLs de autenticação
+# 11. URLs de autenticação
 
 No Supabase Auth, configurar as URLs utilizadas pelo sistema.
 
@@ -546,17 +368,17 @@ serão definidas durante a implementação.
 
 ---
 
-# 13. E-mail de autenticação
+# 12. E-mail de autenticação
 
 Criação de conta, confirmação e recuperação poderão utilizar o sistema de e-mail do Supabase Auth.
 
-No MVP inicial, não criar variáveis de SMTP no projeto Next.js sem necessidade.
+Na versão inicial, não criar variáveis de SMTP no projeto Next.js sem necessidade.
 
 Se posteriormente for contratado um provedor próprio de e-mail, as credenciais deverão ser configuradas de acordo com o serviço escolhido e documentadas nesta seção.
 
 ---
 
-# 14. Vercel
+# 13. Vercel
 
 As variáveis de produção deverão ser cadastradas no projeto Vercel.
 
@@ -576,7 +398,7 @@ A Vercel permite separar valores por ambiente:
 
 ---
 
-# 15. Desenvolvimento
+# 14. Desenvolvimento
 
 As variáveis locais ficam no:
 
@@ -589,41 +411,28 @@ Exemplo:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
 SUPABASE_SECRET_KEY=
-
-GEMINI_API_KEY=
-GEMINI_MODEL=
-
-MAINTENANCE_MODE=false
-MAINTENANCE_MESSAGE=
-MAINTENANCE_RETURN_AT=
-
-AI_MAX_MESSAGE_LENGTH=
-AI_REQUEST_TIMEOUT_MS=
-AI_RATE_LIMIT_MAX=
-AI_RATE_LIMIT_WINDOW_SECONDS=
 ```
+
+A `SUPABASE_SECRET_KEY` pode permanecer vazia enquanto nenhuma operação administrativa realmente precisar dela.
 
 ---
 
-# 16. Preview
+# 15. Preview
 
 O ambiente Preview é utilizado pelos deployments de teste da Vercel.
 
 Preferir:
 
 - Supabase de desenvolvimento/teste;
-- chaves que não sejam as mesmas da produção quando possível;
-- IA com controle de uso.
+- chaves que não sejam as mesmas da produção quando possível.
 
 Não utilizar dados reais de clientes sem necessidade.
 
 ---
 
-# 17. Produção
+# 16. Produção
 
 O ambiente Production utiliza os valores reais da aplicação.
 
@@ -632,22 +441,17 @@ Exemplo:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=VALOR_PRODUCAO
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=VALOR_PRODUCAO
-
 NEXT_PUBLIC_APP_URL=https://SEU_DOMINIO
-
 SUPABASE_SECRET_KEY=SEGREDO_PRODUCAO
-
-GEMINI_API_KEY=SEGREDO_PRODUCAO
-GEMINI_MODEL=MODELO_ESCOLHIDO
-
-MAINTENANCE_MODE=false
 ```
+
+A Secret Key somente deverá ser configurada se uma operação administrativa server-side realmente exigir seu uso.
 
 Os valores reais nunca devem aparecer em documentação pública.
 
 ---
 
-# 18. `.env.example`
+# 17. `.env.example`
 
 Arquivo recomendado:
 
@@ -667,32 +471,11 @@ SUPABASE_SECRET_KEY=
 # ============================================================
 
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# ============================================================
-# GEMINI — ASSISTENTE IA OPCIONAL
-# ============================================================
-
-GEMINI_API_KEY=
-GEMINI_MODEL=
-
-# Regras ainda dependentes de decisão.
-AI_MAX_MESSAGE_LENGTH=
-AI_REQUEST_TIMEOUT_MS=
-AI_RATE_LIMIT_MAX=
-AI_RATE_LIMIT_WINDOW_SECONDS=
-
-# ============================================================
-# MANUTENÇÃO
-# ============================================================
-
-MAINTENANCE_MODE=false
-MAINTENANCE_MESSAGE=
-MAINTENANCE_RETURN_AT=
 ```
 
 ---
 
-# 19. `.gitignore`
+# 18. `.gitignore`
 
 Confirmar que existe:
 
@@ -710,13 +493,12 @@ Ele deve permanecer no GitHub.
 
 ---
 
-# 20. O que nunca colocar em `NEXT_PUBLIC_*`
+# 19. O que nunca colocar em `NEXT_PUBLIC_*`
 
 Nunca utilizar o prefixo público em:
 
 ```text
 SUPABASE_SECRET_KEY
-GEMINI_API_KEY
 ```
 
 Também nunca colocar em variável pública futura:
@@ -732,9 +514,9 @@ Tudo que utiliza `NEXT_PUBLIC_` pode chegar ao navegador.
 
 ---
 
-# 21. APIs e serviços que precisam ser configurados
+# 20. APIs e serviços que precisam ser configurados
 
-## Obrigatórios para o MVP
+## Obrigatórios para a versão inicial
 
 ### Supabase
 
@@ -762,20 +544,19 @@ Não exige conta nem chave.
 
 ---
 
-## Somente com Assistente IA
+## Recurso futuro: Assistente IA
 
-### Google AI / Gemini API
+Nenhuma configuração é necessária na versão inicial.
 
-Configurar:
+Quando esse recurso for implementado, consultar:
 
-- Projeto/chave;
-- variável `GEMINI_API_KEY`;
-- modelo;
-- controle de uso.
+```text
+ASSISTENTE_IA_FUTURO.md
+```
 
 ---
 
-# 22. Serviços que não precisam de ENV no MVP
+# 21. Serviços que não precisam de ENV na versão inicial
 
 Não criar configuração para serviços que não fazem parte do escopo atual.
 
@@ -797,7 +578,7 @@ Se um deles entrar futuramente, sua configuração deverá ser adicionada soment
 
 ---
 
-# 23. Checklist de configuração
+# 22. Checklist de configuração
 
 ## Local
 
@@ -805,7 +586,6 @@ Se um deles entrar futuramente, sua configuração deverá ser adicionada soment
 - [ ] Inserir URL do Supabase.
 - [ ] Inserir Publishable Key.
 - [ ] Definir URL local.
-- [ ] Inserir Gemini Key somente se necessário.
 - [ ] Confirmar `.env.local` no `.gitignore`.
 - [ ] Reiniciar servidor após alterações.
 
@@ -836,12 +616,11 @@ Se um deles entrar futuramente, sua configuração deverá ser adicionada soment
 - [ ] Nenhuma chave real existe no `.env.example`.
 - [ ] Nenhuma chave real foi commitada.
 - [ ] Secret Key do Supabase é utilizada somente no servidor.
-- [ ] Gemini API é chamada somente pelo servidor.
 - [ ] Produção e desenvolvimento utilizam configurações separadas quando apropriado.
 
 ---
 
-# 24. Regra para novas variáveis
+# 23. Regra para novas variáveis
 
 Uma nova variável de ambiente somente deverá ser criada quando existir uma configuração real que precise mudar entre ambientes ou quando houver um segredo que não possa ficar no código.
 

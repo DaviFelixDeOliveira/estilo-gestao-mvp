@@ -56,9 +56,7 @@ O sistema permite administrar:
 - Portfólio;
 - Vitrine Digital.
 
-Também poderá oferecer um Assistente IA opcional na Vitrine.
-
-O MVP não possui:
+A versão inicial não possui:
 
 - cadastro de clientes;
 - login de clientes;
@@ -216,32 +214,11 @@ O Estilo e Gestão não deverá publicar na Vitrine informações administrativa
 
 ---
 
-# 10. Assistente IA
+# 10. Assistente IA — recurso futuro
 
-Quando o Assistente IA estiver habilitado, o visitante poderá enviar uma mensagem de texto para fazer perguntas sobre a barbearia.
+O Assistente IA não está disponível na versão inicial. Por isso, nesta etapa não há tratamento de mensagens enviadas a um assistente de IA nem compartilhamento desses conteúdos com fornecedor de modelo de IA.
 
-A mensagem poderá ser processada pelo serviço de IA utilizado pelo Estilo e Gestão.
-
-O contexto enviado à IA deverá ser limitado às informações públicas necessárias para responder à pergunta.
-
-Não deverão ser enviados à IA dados financeiros ou administrativos da barbearia.
-
----
-
-# 11. Histórico do Assistente IA
-
-No MVP, a decisão atual é não manter histórico completo e permanente das conversas por padrão.
-
-Ainda assim, informações técnicas necessárias para:
-
-- processamento;
-- segurança;
-- prevenção de abuso;
-- diagnóstico de falhas;
-
-podem ser tratadas pelos serviços envolvidos.
-
-Os detalhes de retenção dos fornecedores deverão ser confirmados antes do lançamento.
+Antes de uma futura disponibilização, esta Política deverá ser revisada para informar de forma específica os dados tratados, finalidades, fornecedores, retenção e eventuais transferências internacionais.
 
 ---
 
@@ -303,7 +280,6 @@ Os dados poderão ser utilizados para:
 - gerar relatórios;
 - manter a Vitrine;
 - armazenar imagens;
-- fornecer o Assistente IA quando habilitado;
 - prestar suporte;
 - proteger o sistema;
 - prevenir abuso e fraude;
@@ -349,10 +325,6 @@ Utilizado para:
 ## Vercel
 
 Utilizada para hospedagem e execução da aplicação web.
-
-## Google
-
-Utilizado na Gemini API quando o Assistente IA estiver habilitado.
 
 ## ViaCEP
 
@@ -518,7 +490,7 @@ A Vitrine, porém, é uma página pública e poderá ser acessada por diferentes
 
 A aplicabilidade das regras específicas relacionadas a crianças e adolescentes deverá ser validada juridicamente antes do lançamento público.
 
-O sistema não deverá criar perfil de cliente menor de idade no MVP.
+O sistema não deverá criar perfil de cliente menor de idade no versão inicial.
 
 ---
 
@@ -570,6 +542,5 @@ Para dúvidas sobre esta Política:
 - [ ] Confirmar tratamento de logs.
 - [ ] Confirmar uso de cookies.
 - [ ] Confirmar regras de imagens.
-- [ ] Confirmar tratamento da IA.
 - [ ] Validar aplicabilidade de regras sobre menores.
 - [ ] Revisão jurídica concluída.

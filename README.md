@@ -100,7 +100,6 @@ O foco inicial não são grandes redes ou operações com vários funcionários.
 ### Integrações
 
 - ViaCEP;
-- Gemini API.
 
 ### Desenvolvimento e hospedagem
 
