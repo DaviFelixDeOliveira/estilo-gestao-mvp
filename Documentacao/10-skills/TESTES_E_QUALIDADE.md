@@ -76,7 +76,7 @@ Prioridades:
 - cadastrar produto;
 - reposição;
 - finalizar venda;
-- cancelar venda;
+- ações futuras de cancelamento de venda, somente após fluxo aprovado;
 - despesa;
 - Vitrine.
 

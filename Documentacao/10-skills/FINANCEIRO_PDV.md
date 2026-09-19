@@ -4,7 +4,7 @@
 
 Orientar a implementação de vendas, estoque e cálculos financeiros sem gerar valores inconsistentes.
 
-A referência funcional completa está em `FLUXO_BARBEIRO_E_CLIENTE.md`.
+A referência funcional completa está em `FLUXO_BARBEIRO.md`.
 
 ---
 
@@ -163,16 +163,11 @@ Preservar:
 
 ---
 
-# 11. Cancelamento
+# 11. Vendas canceladas
 
-Cancelar venda:
+O modelo pode representar vendas com status `CANCELADA`, mas a versão inicial atual não deve expor uma ação **Cancelar venda/Estornar venda** até existir um fluxo funcional aprovado.
 
-- não apaga a venda;
-- altera status;
-- restaura estoque dos produtos;
-- cria reversão;
-- remove venda dos agregados válidos;
-- preserva histórico.
+Quando esse fluxo for aprovado, ele deverá preservar histórico e definir explicitamente os efeitos em estoque, financeiro e agregados antes da implementação.
 
 ---
 

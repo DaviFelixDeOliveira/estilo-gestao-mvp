@@ -66,7 +66,7 @@ Backend
 Executar no servidor operações como:
 
 - finalizar venda;
-- cancelar venda;
+- ações futuras de cancelamento de venda, somente após fluxo aprovado;
 - alterar estoque;
 - registrar despesa;
 - acessar segredo;

@@ -1610,7 +1610,7 @@ Não utilizar atualização otimista em operações críticas sem avaliar risco.
 Evitar em ações como:
 
 - finalizar venda;
-- cancelar venda;
+- ações futuras de cancelamento de venda, somente após fluxo aprovado;
 - alterar estoque.
 
 Nesses casos, confirmar resultado do servidor.
