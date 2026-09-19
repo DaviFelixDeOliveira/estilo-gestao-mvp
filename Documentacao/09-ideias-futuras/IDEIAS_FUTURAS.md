@@ -987,7 +987,7 @@ Quando uma ideia for aprovada:
 
 1. remover ou marcar sua saída deste documento;
 2. atualizar o `DOCUMENTO_VISAO.md` se alterar o escopo geral;
-3. atualizar `FLUXO_BARBEIRO_E_CLIENTE.md`;
+3. atualizar o fluxo funcional do ator afetado (`FLUXO_BARBEIRO.md`, `FLUXO_CLIENTE.md` ou `FLUXO_ADMIN.md`);
 4. atualizar banco se necessário;
 5. atualizar segurança e privacidade quando aplicável;
 6. atualizar o Plano de Testes;
