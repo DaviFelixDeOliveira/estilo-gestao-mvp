@@ -81,22 +81,11 @@ Existe alguma despesa frequente da barbearia que deveria aparecer nessa lista?
 
 # 4. Estoque e reposição
 
-## P05 — Registrar compra de estoque no Financeiro
+## P05 — Registrar compra de estoque no Financeiro — RESOLVIDA
 
-Quando você registrar uma reposição de produto, prefere que o sistema também registre automaticamente o valor da compra como uma saída no Financeiro?
+**Decisão aprovada:** a reposição altera o estoque e registra a movimentação, mas **não cria despesa ou saída financeira automaticamente**.
 
-Exemplo:
-
-- reposição de 20 bebidas;
-- custo total: R$ 80,00;
-- estoque aumenta;
-- Financeiro registra uma saída de R$ 80,00.
-
-**Opção A:** registrar automaticamente.
-
-**Opção B:** perguntar em cada reposição.
-
-**Opção C:** não registrar automaticamente.
+Quando houver gasto que deva aparecer no Financeiro, o barbeiro registra uma despesa separadamente. Uma referência opcional entre a despesa manual e a reposição pode ser usada para rastreabilidade, sem acoplar as duas operações.
 
 ---
 
