@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>PDV / Histórico de Vendas - Estilo &amp; Gestão</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#FAF9F5',
+              surface: '#FFFFFF',
+              border: '#E5E5DF',
+              dark: '#18181B',
+              muted: '#71717A',
+              subtle: '#F4F4F0',
+              accent: '#18181B'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            subtle: '0 1px 3px rgba(0, 0, 0, 0.04)',
+            sheet: '0 -10px 30px rgba(0, 0, 0, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scroll-and-layout">
+    /* Ocultar barra de rolagem nos carrosséis mantendo touch scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Suporte a Safe Area para iPhones recentes */
+    .safe-top {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+  </style>
+</head>
+<body class="bg-brand-bg text-brand-dark font-sans antialiased selection:bg-neutral-200">
+<!-- BEGIN: MobileDeviceFrame -->
+<div class="max-w-[430px] mx-auto min-h-screen flex flex-col relative bg-brand-bg pb-24 shadow-2xl border-x border-[#ECEBE4]">
+<!-- BEGIN: TopHeader -->
+<header class="sticky top-0 z-30 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border px-4 pt-3 pb-2.5 safe-top">
+<!-- Barra de Identidade do App -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<!-- Logo E&G -->
+<div class="w-9 h-9 rounded-xl bg-brand-dark flex items-center justify-center text-white font-extrabold text-sm tracking-tight shadow-sm">
+            E&amp;G
+          </div>
+<div>
+<h1 class="text-sm font-bold tracking-tight text-neutral-900 leading-tight">Histórico de Vendas</h1>
+<p class="text-[11px] font-medium text-neutral-500 leading-tight">Estilo &amp; Gestão</p>
+</div>
+</div>
+<!-- Ações do Cabeçalho: Tema & Avatar Usuário -->
+<div class="flex items-center gap-1.5">
+<button aria-label="Alternar tema" class="w-10 h-10 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-200/60 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</button>
+<button aria-label="Perfil do usuário" class="w-10 h-10 rounded-full bg-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-300/80 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Segmented Control de Navegação do PDV (Nova venda vs Histórico) -->
+<nav aria-label="Alternar modo PDV" class="mt-3 p-1 bg-[#EEEDE7] rounded-xl flex gap-1">
+<a class="flex-1 py-2 text-center text-xs font-semibold rounded-lg text-neutral-600 hover:text-neutral-900 transition" href="#nova-venda">
+          Nova venda
+        </a>
+<a class="flex-1 py-2 text-center text-xs font-bold rounded-lg bg-brand-surface text-brand-dark shadow-sm" href="#historico">
+          Histórico
+        </a>
+</nav>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 px-4 pt-3.5 space-y-3.5">
+<!-- Seção: Busca Rápida e Contador -->
+<section aria-label="Busca e Estatística Rápida" class="flex items-center gap-2">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-brand-surface rounded-xl border border-brand-border text-xs placeholder:text-neutral-400 focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 shadow-subtle transition" placeholder="Buscar venda..." type="search"/>
+</div>
+<div class="h-11 px-3 bg-neutral-200/60 rounded-xl flex items-center justify-center shrink-0 border border-neutral-300/40">
+<span class="text-xs font-bold text-neutral-700">24 vendas</span>
+</div>
+</section>
+<!-- Seção: Carrossel de Filtros Operacionais -->
+<section aria-label="Filtros da listagem" class="space-y-2">
+<!-- Filtro por Período -->
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-4 px-4">
+<span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400 mr-1 shrink-0">Período:</span>
+<button class="h-8 px-3 rounded-full text-xs font-semibold bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">
+            Hoje
+          </button>
+<button class="h-8 px-3 rounded-full text-xs font-semibold bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">
+            Semana
+          </button>
+<button class="h-8 px-3.5 rounded-full text-xs font-bold bg-brand-dark text-white border border-brand-dark shrink-0 shadow-sm active:scale-95 transition">
+            Mês
+          </button>
+<button class="h-8 px-3 rounded-full text-xs font-semibold bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">
+            Ano
+          </button><button class="h-8 px-3 rounded-full text-xs font-semibold bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">Personalizado</button>
+</div>
+<!-- Filtro por Status -->
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-4 px-4">
+<span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400 mr-1 shrink-0">Status:</span>
+<button class="h-7 px-3 rounded-md text-xs font-bold bg-neutral-300/80 text-neutral-800 shrink-0 active:scale-95 transition">
+            Todas
+          </button>
+<button class="h-7 px-3 rounded-md text-xs font-medium bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">
+            Concluídas
+          </button>
+<button class="h-7 px-3 rounded-md text-xs font-medium bg-brand-surface border border-brand-border text-neutral-600 shrink-0 active:scale-95 transition">
+            Canceladas
+          </button>
+</div>
+</section>
+<!-- BEGIN: SalesCardList -->
+<section aria-label="Lista de Comandas e Vendas" class="space-y-2.5 pt-1">
+<!-- Card Venda #00128 -->
+<article class="bg-brand-surface rounded-2xl p-4 border border-brand-border shadow-subtle flex flex-col justify-between gap-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm text-neutral-900 tracking-tight">#00128</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Concluída
+                </span>
+</div>
+<p class="text-xs text-neutral-500 mt-1">14/09 às 18:30 • <span class="font-medium text-neutral-700">Pix</span></p>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-neutral-400 font-medium">Total</span>
+<span class="text-base font-extrabold text-neutral-900">R$ 99,00</span>
+</div>
+</div>
+<div class="pt-2.5 border-t border-dashed border-neutral-100 flex items-center justify-between">
+<span class="text-[11px] text-neutral-400">3 itens registrados</span>
+<button class="min-h-[40px] px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200/80 text-xs font-bold text-neutral-800 active:scale-95 transition" onclick="openDrawer()" type="button">
+<span>Ver detalhes</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Card Venda #00127 -->
+<article class="bg-brand-surface rounded-2xl p-4 border border-brand-border shadow-subtle flex flex-col justify-between gap-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm text-neutral-900 tracking-tight">#00127</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Concluída
+                </span>
+</div>
+<p class="text-xs text-neutral-500 mt-1">14/09 às 17:15 • <span class="font-medium text-neutral-700">Crédito</span></p>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-neutral-400 font-medium">Total</span>
+<span class="text-base font-extrabold text-neutral-900">R$ 70,00</span>
+</div>
+</div>
+<div class="pt-2.5 border-t border-dashed border-neutral-100 flex items-center justify-between">
+<span class="text-[11px] text-neutral-400">1 item registrado</span>
+<button class="min-h-[40px] px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200/80 text-xs font-bold text-neutral-800 active:scale-95 transition" onclick="openDrawer()" type="button">
+<span>Ver detalhes</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Card Venda #00126 (Cancelada) -->
+<article class="bg-brand-surface/90 rounded-2xl p-4 border border-rose-200/70 shadow-subtle flex flex-col justify-between gap-3 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-rose-400"></div>
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm text-neutral-800 tracking-tight">#00126</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                  Cancelada
+                </span>
+</div>
+<p class="text-xs text-neutral-500 mt-1">14/09 às 16:00 • <span class="font-medium text-neutral-700">Dinheiro</span></p>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-neutral-400 font-medium">Total</span>
+<span class="text-base font-bold text-neutral-500 line-through">R$ 35,00</span>
+</div>
+</div>
+<div class="pt-2.5 border-t border-dashed border-neutral-100 flex items-center justify-between">
+<span class="text-[11px] text-rose-600 font-medium">1 item registrado</span>
+<button class="min-h-[40px] px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200/80 text-xs font-bold text-neutral-800 active:scale-95 transition" onclick="openDrawer()" type="button">
+<span>Ver detalhes</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Card Venda #00125 -->
+<article class="bg-brand-surface rounded-2xl p-4 border border-brand-border shadow-subtle flex flex-col justify-between gap-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm text-neutral-900 tracking-tight">#00125</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Concluída
+                </span>
+</div>
+<p class="text-xs text-neutral-500 mt-1">14/09 às 14:45 • <span class="font-medium text-neutral-700">Débito</span></p>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-neutral-400 font-medium">Total</span>
+<span class="text-base font-extrabold text-neutral-900">R$ 45,00</span>
+</div>
+</div>
+<div class="pt-2.5 border-t border-dashed border-neutral-100 flex items-center justify-between">
+<span class="text-[11px] text-neutral-400">1 item registrado</span>
+<button class="min-h-[40px] px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200/80 text-xs font-bold text-neutral-800 active:scale-95 transition" onclick="openDrawer()" type="button">
+<span>Ver detalhes</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Card Venda #00124 (Correspondente ao Drawer Detalhes) -->
+<article class="bg-brand-surface rounded-2xl p-4 border border-brand-border shadow-subtle flex flex-col justify-between gap-3 ring-2 ring-neutral-900/5">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm text-neutral-900 tracking-tight">#00124</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Concluída
+                </span>
+</div>
+<p class="text-xs text-neutral-500 mt-1">14/09 às 13:20 • <span class="font-medium text-neutral-700">Pix</span></p>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-neutral-400 font-medium">Total</span>
+<span class="text-base font-extrabold text-neutral-900">R$ 120,00</span>
+</div>
+</div>
+<div class="pt-2.5 border-t border-dashed border-neutral-100 flex items-center justify-between">
+<span class="text-[11px] text-neutral-400">4 itens registrados</span>
+<button class="min-h-[40px] px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-brand-dark hover:bg-neutral-800 text-xs font-bold text-white active:scale-95 transition shadow-sm" onclick="openDrawer()" type="button">
+<span>Ver detalhes</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+</article>
+</section>
+<!-- END: SalesCardList -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: QuickSaleDetailDrawer -->
+<!-- Backdrop do Bottom Sheet -->
+<div class="fixed inset-0 bg-neutral-900/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-backdrop" onclick="closeDrawer()"></div>
+<!-- Drawer Conteúdo -->
+<aside aria-label="Detalhes da comanda selecionada" class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto z-50 bg-brand-surface rounded-t-3xl shadow-sheet border-t border-neutral-200 transform translate-y-full transition-transform duration-300 ease-out safe-bottom" id="sale-drawer">
+<!-- Puxador tátil do Drawer -->
+<div class="pt-3 pb-1 flex justify-center cursor-grab active:cursor-grabbing">
+<div class="w-12 h-1.5 bg-neutral-300 rounded-full"></div>
+</div>
+<div class="px-5 pt-2 pb-6 space-y-4">
+<!-- Topo do Drawer com Identificador e Status -->
+<div class="flex items-start justify-between border-b border-brand-border pb-3">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-lg font-extrabold text-neutral-900 tracking-tight">Venda #00124</h2>
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                Concluída
+              </span>
+</div>
+<p class="text-xs text-neutral-500 mt-0.5">14 de Setembro de 2026 às 13:20</p>
+</div>
+<!-- Botão Fechar Drawer -->
+<button aria-label="Fechar detalhes" class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 active:scale-95 transition" onclick="closeDrawer()" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Forma de Pagamento Utilizada -->
+<div class="bg-neutral-50 rounded-xl p-3 flex items-center justify-between border border-neutral-200/80">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-neutral-900 flex items-center justify-center text-white">
+<!-- Ícone Pix/Digital -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<p class="text-xs font-semibold text-neutral-800">Pagamento</p>
+<p class="text-[11px] text-neutral-500">Pix</p>
+</div>
+</div>
+
+</div>
+<!-- Itens Detalhados da Venda -->
+<div class="space-y-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Itens da venda</span>
+<div class="divide-y divide-neutral-100 bg-brand-surface rounded-xl border border-brand-border px-3.5">
+<div class="py-2.5 flex items-center justify-between text-xs">
+<div>
+<p class="font-semibold text-neutral-800">Corte Degradê</p>
+<p class="text-[10px] text-neutral-400">Serviço • 1 un.</p>
+</div>
+<span class="font-bold text-neutral-900">R$ 45,00</span>
+</div>
+<div class="py-2.5 flex items-center justify-between text-xs">
+<div>
+<p class="font-semibold text-neutral-800">Refrigerante Lata</p>
+<p class="text-[10px] text-neutral-400">Bebida • 2 × R$ 6,00</p>
+</div>
+<span class="font-bold text-neutral-900">R$ 12,00</span>
+</div>
+<div class="py-2.5 flex items-center justify-between text-xs">
+<div>
+<p class="font-semibold text-neutral-800">Pomada Modeladora Matte</p>
+<p class="text-[10px] text-neutral-400">Produto • 1 un.</p>
+</div>
+<span class="font-bold text-neutral-900">R$ 42,00</span>
+</div>
+<div class="py-2.5 flex items-center justify-between text-xs">
+<div>
+<p class="font-semibold text-neutral-800">Água Mineral 500ml</p>
+<p class="text-[10px] text-neutral-400">Bebida • 1 un.</p>
+</div>
+<span class="font-bold text-neutral-900">R$ 4,00</span>
+</div>
+</div>
+</div>
+<!-- Sumário e Total -->
+<div class="bg-neutral-100/90 rounded-xl p-3.5 flex items-center justify-between">
+<div>
+<span class="text-xs text-neutral-500 font-medium">Total da venda</span>
+
+</div>
+<span class="text-xl font-extrabold text-neutral-900 tracking-tight">R$ 103,00</span>
+</div>
+<!-- Botão Ação Fechar Primária -->
+<button class="w-full h-12 rounded-xl bg-brand-dark text-white font-bold text-sm tracking-wide active:scale-[0.98] transition" onclick="closeDrawer()" type="button">
+          Fechar
+        </button>
+</div>
+</aside>
+<!-- END: QuickSaleDetailDrawer -->
+<!-- BEGIN: FixedBottomNav -->
+<nav aria-label="Navegação Principal do Sistema" class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-brand-surface/95 backdrop-blur-md border-t border-brand-border safe-bottom z-40">
+<div class="flex items-center justify-around h-16">
+<!-- 1. Dashboard -->
+<a class="flex-1 min-h-[44px] flex flex-col items-center justify-center text-neutral-400 hover:text-neutral-700 active:scale-95 transition" href="#dashboard">
+<svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="7" rx="1.5" stroke-width="1.8" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1.5" stroke-width="1.8" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1.5" stroke-width="1.8" width="7" x="14" y="14"></rect>
+<rect height="7" rx="1.5" stroke-width="1.8" width="7" x="3" y="14"></rect>
+</svg>
+<span class="text-[10px] font-semibold tracking-tight">Dashboard</span>
+</a>
+<!-- 2. PDV (ATIVO) -->
+<a class="flex-1 min-h-[44px] flex flex-col items-center justify-center text-brand-dark font-bold relative active:scale-95 transition" href="#pdv">
+<div class="relative">
+<svg class="w-5 h-5 mb-0.5 text-brand-dark" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<!-- Badge Indicador Ativo -->
+<span class="absolute -top-1 -right-1.5 w-2 h-2 bg-brand-dark rounded-full border-2 border-white"></span>
+</div>
+<span class="text-[10px] font-extrabold tracking-tight">PDV</span>
+</a>
+<!-- 3. Operação -->
+<a class="flex-1 min-h-[44px] flex flex-col items-center justify-center text-neutral-400 hover:text-neutral-700 active:scale-95 transition" href="#operacao">
+<svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span class="text-[10px] font-semibold tracking-tight">Operação</span>
+</a>
+<!-- 4. Configurações -->
+<a class="flex-1 min-h-[44px] flex flex-col items-center justify-center text-neutral-400 hover:text-neutral-700 active:scale-95 transition" href="#configuracoes">
+<svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<circle cx="12" cy="12" r="3" stroke-width="1.8"></circle>
+</svg>
+<span class="text-[10px] font-semibold tracking-tight">Configurações</span>
+</a>
+</div>
+</nav>
+<!-- END: FixedBottomNav -->
+</div>
+<!-- END: MobileDeviceFrame -->
+<!-- BEGIN: ClientScript -->
+<script data-purpose="drawer-interactivity">
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+    const saleDrawer = document.getElementById('sale-drawer');
+
+    function openDrawer() {
+      // Abre o drawer e adiciona o fundo escurecido
+      drawerBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+      drawerBackdrop.classList.add('opacity-100');
+      
+      saleDrawer.classList.remove('translate-y-full');
+      saleDrawer.classList.add('translate-y-0');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      // Fecha o drawer
+      drawerBackdrop.classList.remove('opacity-100');
+      drawerBackdrop.classList.add('opacity-0', 'pointer-events-none');
+      
+      saleDrawer.classList.remove('translate-y-0');
+      saleDrawer.classList.add('translate-y-full');
+      document.body.style.overflow = '';
+    }
+  </script>
+<!-- END: ClientScript -->
+</body></html>

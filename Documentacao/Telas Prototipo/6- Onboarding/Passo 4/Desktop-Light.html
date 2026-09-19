@@ -1,0 +1,444 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estilo e Gestão - Onboarding - Passo 4: Serviços</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#FEF2F2',
+              100: '#FEE2E2',
+              200: '#FECACA',
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C',
+              800: '#991B1B',
+            },
+            surface: {
+              bg: '#F9F9F6',
+              card: '#FFFFFF',
+              input: '#FAFAF8',
+              border: '#E8E8E3',
+              subtle: '#F2F2EC',
+            },
+            content: {
+              title: '#1C1C1A',
+              body: '#4A4A45',
+              muted: '#7A7A73',
+              border: '#E2E2DC',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Stylesheet for fine-grained typography and scroll behavior -->
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F9F9F6;
+      color: #1C1C1A;
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#F9F9F6] text-[#1C1C1A]">
+<!-- BEGIN: TopBrandHeader -->
+<header class="w-full bg-white border-b border-[#E8E8E3] sticky top-0 z-30 px-6 py-3.5">
+<div class="max-w-[1400px] mx-auto flex items-center justify-between">
+<!-- Left side: Brand Logo and Flow Title -->
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-black rounded-lg flex items-center justify-center text-white font-extrabold text-sm tracking-wider shadow-sm">
+          EG
+        </div>
+<div class="flex items-center gap-2.5">
+<span class="text-base font-bold text-[#1C1C1A] tracking-tight">Estilo e Gestão</span>
+<span class="text-[11px] font-semibold text-gray-500 bg-[#EFEFE9] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            Onboarding Profissional
+          </span>
+</div>
+</div>
+<!-- Right side: Theme switch & Profile -->
+<div class="flex items-center gap-3">
+<button aria-label="Alternar tema" class="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button aria-label="Perfil do usuário" class="w-9 h-9 rounded-full bg-[#1C1C1A] text-white flex items-center justify-center hover:bg-gray-800 transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: TopBrandHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-[1400px] w-full mx-auto px-6 py-7">
+<!-- BEGIN: StepperFlowNavigation -->
+<nav aria-label="Progresso do Onboarding" class="w-full pb-8">
+<ol class="flex items-center justify-between text-xs w-full">
+<!-- Step 1: Concluído -->
+<li class="flex items-center gap-2.5 text-gray-700">
+<span class="w-6 h-6 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#10B981]/30 flex items-center justify-center text-[11px] font-bold">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<div class="flex flex-col">
+<span class="font-semibold text-gray-900 text-xs">1. Dados da barbearia</span>
+<span class="text-[11px] text-[#10B981] font-medium">Concluído</span>
+</div>
+</li>
+<li aria-hidden="true" class="flex-1 h-[2px] bg-[#10B981]/40 mx-3"></li>
+<!-- Step 2: Concluído -->
+<li class="flex items-center gap-2.5 text-gray-700">
+<span class="w-6 h-6 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#10B981]/30 flex items-center justify-center text-[11px] font-bold">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<div class="flex flex-col">
+<span class="font-semibold text-gray-900 text-xs">2. Endereço</span>
+<span class="text-[11px] text-[#10B981] font-medium">Concluído</span>
+</div>
+</li>
+<li aria-hidden="true" class="flex-1 h-[2px] bg-[#10B981]/40 mx-3"></li>
+<!-- Step 3: Concluído -->
+<li class="flex items-center gap-2.5 text-gray-700">
+<span class="w-6 h-6 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#10B981]/30 flex items-center justify-center text-[11px] font-bold">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<div class="flex flex-col">
+<span class="font-semibold text-gray-900 text-xs">3. Horários</span>
+<span class="text-[11px] text-[#10B981] font-medium">Concluído</span>
+</div>
+</li>
+<li aria-hidden="true" class="flex-1 h-[2px] bg-brand-600 mx-3"></li>
+<!-- Step 4: Ativo / Atual -->
+<li aria-current="step" class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold ring-4 ring-brand-100">
+            4
+          </span>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-gray-950 text-xs">4. Serviços</span>
+<span class="text-[10px] font-bold text-brand-600 bg-brand-50 px-1.5 py-0.2 rounded border border-brand-200">67%</span>
+</div>
+<span class="text-[11px] text-brand-600 font-medium">Em andamento</span>
+</div>
+</li>
+<li aria-hidden="true" class="flex-1 h-[2px] bg-gray-200 mx-3"></li>
+<!-- Step 5: Pendente -->
+<li class="flex items-center gap-2.5 text-gray-400">
+<span class="w-6 h-6 rounded-full bg-gray-100 border border-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold">
+            5
+          </span>
+<div class="flex flex-col">
+<span class="font-medium text-gray-500 text-xs">5. Produtos e pagamentos</span>
+<span class="text-[11px] text-gray-400">Pendente</span>
+</div>
+</li>
+<li aria-hidden="true" class="flex-1 h-[2px] bg-gray-200 mx-3"></li>
+<!-- Step 6: Pendente -->
+<li class="flex items-center gap-2.5 text-gray-400">
+<span class="w-6 h-6 rounded-full bg-gray-100 border border-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold">
+            6
+          </span>
+<div class="flex flex-col">
+<span class="font-medium text-gray-500 text-xs">6. Aparência</span>
+<span class="text-[11px] text-gray-400">Pendente</span>
+</div>
+</li>
+</ol>
+</nav>
+<!-- END: StepperFlowNavigation -->
+<!-- BEGIN: HeaderSection -->
+<section aria-labelledby="section-heading" class="mb-8">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-bold tracking-wider text-gray-600 uppercase bg-[#EFEFE9] px-3 py-1 rounded-full border border-gray-200/60">
+            Configuração do seu espaço • Passo 4 de 6
+          </span>
+<span class="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-brand-700 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse"></span>
+            Passo 4 de 6 • 67% concluído
+          </span>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-gray-500">
+<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Seu progresso é salvo automaticamente.</span>
+</div>
+</div>
+<h1 class="text-3xl font-extrabold text-[#1C1C1A] tracking-tight sm:text-4xl mt-1" id="section-heading">
+        Quais serviços você oferece?
+      </h1>
+<p class="text-sm sm:text-base text-gray-600 mt-2 max-w-3xl">
+        Cadastre os principais serviços da sua barbearia. Você poderá adicionar, editar ou remover serviços depois.
+      </p>
+</section>
+<!-- END: HeaderSection -->
+<!-- BEGIN: TwoColumnWorkspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: Main Services Configuration Card -->
+<section aria-label="Gerenciamento de serviços" class="lg:col-span-8 bg-white border border-[#E8E8E3] rounded-2xl shadow-sm p-6 sm:p-7">
+<!-- Header of card -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-100">
+<div>
+<h2 class="text-lg font-bold text-gray-900 tracking-tight">Seus serviços</h2>
+<p class="text-xs sm:text-sm text-gray-500 mt-0.5">
+              Adicione os serviços que poderão ser utilizados no PDV e exibidos na Vitrine.
+            </p>
+</div>
+
+</div>
+<!-- Form for Adding / Editing Service -->
+<div class="my-6 p-5 sm:p-6 bg-[#FAFAF7] rounded-xl border border-[#E6E6DF]" data-purpose="service-form" id="form-novo-servico" style="display: block;">
+<div class="flex items-center justify-between pb-3 border-b border-gray-200/80 mb-5">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-600"></span>
+              Novo Serviço
+            </span>
+<span class="text-xs text-gray-400 font-medium">* Campos obrigatórios</span>
+</div>
+<form action="#" class="space-y-4" id="service-form-element" method="POST" onsubmit="event.preventDefault();">
+<!-- Row: Nome e Preço -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+<div class="sm:col-span-8">
+<label class="block text-xs font-semibold text-gray-800 mb-1.5" for="service-name">
+                  Nome do serviço <span class="text-brand-600">*</span>
+</label>
+<input class="w-full text-sm rounded-lg border-gray-300 bg-white shadow-xs placeholder:text-gray-400 focus:border-brand-600 focus:ring-brand-600 py-2.5 px-3" id="service-name" name="service-name" placeholder="Ex.: Corte masculino" required="" type="text" value="">
+</div>
+<div class="sm:col-span-4">
+<label class="block text-xs font-semibold text-gray-800 mb-1.5" for="service-price">
+                  Preço <span class="text-brand-600">*</span>
+</label>
+<div class="relative rounded-lg shadow-xs">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="text-gray-500 text-xs font-bold">R$</span>
+</div>
+<input class="w-full text-sm font-semibold rounded-lg border-gray-300 bg-white pl-9 pr-3 py-2.5 focus:border-brand-600 focus:ring-brand-600" id="service-price" name="service-price" placeholder="0,00" required="" type="text" value="">
+</div>
+</div>
+</div>
+<!-- Row: Descrição -->
+<div>
+<label class="block text-xs font-semibold text-gray-800 mb-1.5" for="service-description">
+                Descrição <span class="text-gray-400 font-normal">(opcional)</span>
+</label>
+<input class="w-full text-sm rounded-lg border-gray-300 bg-white shadow-xs placeholder:text-gray-400 focus:border-brand-600 focus:ring-brand-600 py-2.5 px-3" id="service-description" name="service-description" placeholder="Ex.: Corte tradicional ou degradê conforme preferência do cliente." type="text" value="">
+</div>
+<!-- Row: Custo de Insumos -->
+<div>
+<label class="block text-xs font-semibold text-gray-800 mb-1" for="service-cost">
+                Custo estimado de insumos <span class="text-gray-400 font-normal">(opcional)</span>
+</label>
+<div class="relative w-full sm:w-56 rounded-lg shadow-xs mb-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="text-gray-500 text-xs font-bold">R$</span>
+</div>
+<input class="w-full text-sm rounded-lg border-gray-300 bg-white pl-9 pr-3 py-2 focus:border-brand-600 focus:ring-brand-600" id="service-cost" name="service-cost" placeholder="0,00" type="text" value="">
+</div>
+<p class="text-[11px] text-gray-500">
+                Valor aproximado dos materiais consumidos diretamente durante este serviço (ex.: gilete, loção, toalha descartável).
+              </p>
+</div>
+<!-- Row: Toggle Vitrine -->
+<div class="pt-2">
+<div class="flex items-center justify-between p-3.5 bg-white rounded-lg border border-gray-200">
+<div class="flex flex-col pr-4">
+<span class="text-xs font-bold text-gray-900">Exibir na Vitrine</span>
+<span class="text-[11px] text-gray-500 mt-0.5">Quando ativado, o serviço poderá aparecer publicamente na Vitrine da barbearia.</span>
+</div>
+<!-- Switch Button -->
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" id="service-vitrine" type="checkbox">
+<div class="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-black"></div>
+</label>
+</div>
+</div>
+<!-- Action Buttons for Form -->
+<div class="flex items-center justify-end gap-2.5 pt-3">
+<button class="px-4 py-2 text-xs font-semibold text-gray-600 bg-transparent hover:bg-gray-200/60 rounded-lg transition-colors" id="btn-cancelar-servico" onclick="document.getElementById('form-novo-servico').style.display='none'; document.getElementById('service-empty-state').style.display='block';" type="button">
+                Cancelar
+              </button>
+<button class="px-4 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition-colors" id="btn-salvar-servico" type="button">
+                Adicionar serviço
+              </button>
+</div>
+</form>
+</div>
+<!-- Section: List of Added Services -->
+<div class="mt-4" data-purpose="services-list">
+  <!-- Empty State Container -->
+  <div id="service-empty-state" class="p-8 sm:p-10 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-[#FAFAF7]/70 flex flex-col items-center justify-center" style="display: none;">
+    <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 mb-3.5 border border-gray-200/80 shadow-xs">
+      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879a3 3 0 11-4.242-4.242L9.879 9.879m4.242 4.242L9.879 9.879"></path>
+      </svg>
+    </div>
+    <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-1">Nenhum serviço cadastrado ainda.</h3>
+    <p class="text-xs sm:text-sm text-gray-500 max-w-md mb-5 leading-relaxed">
+      Adicione os serviços que sua barbearia oferece para utilizá-los no PDV e, quando desejar, na Vitrine.
+    </p>
+    <button type="button" onclick="document.getElementById('form-novo-servico').style.display='block'; document.getElementById('service-empty-state').style.display='none'; document.getElementById('service-name').focus();" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Adicionar primeiro serviço
+    </button>
+  </div>
+  <!-- Dynamic List Container (Empty Initially) -->
+  <div id="services-items-container" class="space-y-3" style="display: none;"></div>
+</div>
+<!-- Footer helper of main card -->
+<div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-gray-500"><svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Você poderá adicionar, editar ou gerenciar seus serviços depois nas configurações.</span></div>
+</section>
+<!-- RIGHT COLUMN: Desktop Preview Panel & Helper Cards -->
+<aside aria-label="Painel lateral de prévia" class="lg:col-span-4 space-y-5">
+<!-- Preview Card 1: Prévia dos serviços na Vitrine -->
+<div class="bg-white border border-[#E8E8E3] rounded-2xl shadow-sm p-5">
+<div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<h3 class="text-sm font-bold text-gray-900">Prévia dos serviços</h3>
+</div>
+<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
+              Vitrine Pública
+            </span>
+</div>
+<p class="text-xs text-gray-500 mb-4">
+            Veja como os serviços públicos poderão aparecer na sua Vitrine:
+          </p>
+<!-- Mock public showcase mini list -->
+<div id="preview-services-container" class="bg-[#F8F8F5] rounded-xl p-5 border border-gray-200/70 text-center flex flex-col items-center justify-center">
+<div class="w-9 h-9 rounded-full bg-gray-200/70 text-gray-500 flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</div>
+<p class="text-xs font-bold text-gray-800 mb-0.5">Nenhum serviço público cadastrado ainda.</p>
+<p class="text-[11px] text-gray-500 leading-relaxed max-w-[210px]">Os serviços marcados para exibição aparecerão aqui.</p>
+</div>
+</div>
+<!-- Preview Card 2: Informações de Vitrine (Blue Tinted Box) -->
+<div class="bg-[#EEF4FF] border border-[#D5E3FF] rounded-2xl p-4 sm:p-5 flex items-start gap-3.5">
+<div class="w-7 h-7 rounded-full bg-[#3B82F6]/15 text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+<div>
+<h4 class="text-xs font-bold text-[#1E40AF]">Serviços na Vitrine</h4>
+<p class="text-xs text-[#3B5A9A] mt-1 leading-relaxed">
+              Serviços marcados para exibição poderão aparecer com nome, descrição e preço no perfil público da sua barbearia.
+            </p>
+</div>
+</div>
+<!-- Preview Card 3: Próximas Etapas -->
+<div class="bg-white border border-[#E8E8E3] rounded-2xl shadow-sm p-5">
+<h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-3">
+            Próximas etapas
+          </h3>
+<div class="space-y-2.5">
+<!-- Etapa 5 -->
+<div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#F8F8F5] border border-gray-100">
+<span class="w-6 h-6 rounded-lg bg-gray-200/80 text-gray-700 text-xs font-bold flex items-center justify-center shrink-0">
+                5
+              </span>
+<div>
+<p class="text-xs font-bold text-gray-800">Produtos e pagamentos</p>
+<p class="text-[11px] text-gray-500">Produtos e formas de pagamento</p>
+</div>
+</div>
+<!-- Etapa 6 -->
+<div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#F8F8F5] border border-gray-100">
+<span class="w-6 h-6 rounded-lg bg-gray-200/80 text-gray-700 text-xs font-bold flex items-center justify-center shrink-0">
+                6
+              </span>
+<div>
+<p class="text-xs font-bold text-gray-800">Aparência e conclusão</p>
+<p class="text-[11px] text-gray-500">Tema do sistema e conclusão</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- END: TwoColumnWorkspace -->
+<!-- BEGIN: BottomNavigationActions -->
+<div class="mt-10 pt-6 border-t border-[#E8E8E3] flex items-center justify-between">
+<!-- Back button -->
+<a class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-colors shadow-xs" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Voltar
+      </a>
+<!-- Next step button -->
+<a class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl transition-colors shadow-md shadow-brand-600/20" href="#">
+        Continuar
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</div>
+<!-- END: BottomNavigationActions -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: SiteFooter -->
+<footer class="mt-12 bg-white border-t border-[#E8E8E3] py-5 px-6">
+<div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+<p class="text-center md:text-left">
+        © 2025 Estilo e Gestão. Todos os direitos reservados. • Plataforma de Gestão Operacional para Barbearias
+      </p>
+<nav aria-label="Links de apoio" class="flex flex-wrap items-center justify-center gap-5">
+<a class="inline-flex items-center gap-1.5 hover:text-gray-800 transition-colors" href="#">
+<svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Central de Ajuda
+        </a>
+<a class="inline-flex items-center gap-1.5 hover:text-gray-800 transition-colors" href="#">
+<svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Suporte Operacional
+        </a>
+<a class="hover:text-gray-800 transition-colors" href="#">Termos de Uso</a>
+<a class="hover:text-gray-800 transition-colors" href="#">Privacidade</a>
+</nav>
+</div>
+</footer>
+<!-- END: SiteFooter -->
+
+
+</body></html>

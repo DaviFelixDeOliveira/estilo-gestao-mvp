@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Criar Conta - Estilo e Gestão</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#B42318',
+              primaryHover: '#991B1B',
+              surface: '#F4F4F0',
+              card: '#FFFFFF',
+              dark: '#2F2F2D',
+              muted: '#666662',
+              subtle: '#8C8C85',
+              border: '#E9E9E4',
+              barberBlue: '#2563EB',
+              barberRed: '#DC2626'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          boxShadow: {
+            'soft-card': '0 4px 20px -2px rgba(47, 47, 45, 0.05), 0 2px 6px -1px rgba(47, 47, 45, 0.02)',
+            'input-focus': '0 0 0 3px rgba(180, 35, 24, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-typography">
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #F4F4F0;
+      color: #2F2F2D;
+    }
+  </style>
+<style data-purpose="barber-accent">
+    /* Subtle barber pole top pattern band */
+    .barber-pole-stripe {
+      background: repeating-linear-gradient(
+        -45deg,
+        #B42318,
+        #B42318 10px,
+        #FFFFFF 10px,
+        #FFFFFF 16px,
+        #2563EB 16px,
+        #2563EB 26px,
+        #FFFFFF 26px,
+        #FFFFFF 32px
+      );
+      height: 3px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-0 sm:p-4 selection:bg-red-100 selection:text-brand-primary">
+<!-- BEGIN: MobileContainer -->
+<!-- Outer viewport shell strictly fitted for iPhone / iOS viewport standard ~390px -->
+<main class="relative w-full max-w-[420px] min-h-screen sm:min-h-[844px] bg-[#F4F4F0] flex flex-col justify-between overflow-hidden shadow-2xl sm:rounded-3xl border-0 sm:border border-[#E9E9E4]" data-purpose="registration-screen">
+<!-- BEGIN: TopBarberAccent -->
+<!-- Distinctive Barber Pole Stripe Indicator -->
+<div aria-hidden="true" class="barber-pole-stripe fixed sm:absolute top-0 left-0 right-0 z-30"></div>
+<!-- END: TopBarberAccent -->
+<!-- BEGIN: BackgroundAtmosphere -->
+<!-- Integrated Light Barbershop Background with High-readability Warm Off-white Gradient Overlays -->
+<div aria-hidden="true" class="absolute inset-0 z-0 pointer-events-none overflow-hidden" data-purpose="background-cover">
+<img alt="Barbearia Estilo e Gestão ambiente" class="w-full h-full object-cover object-center opacity-85 filter brightness-95 contrast-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqq9AFFUG4b8CUT387mgB21vwwZXpD9HYBeju_LIJK0jZnmf4xRH-AE3AbPnFC6zW-2qiABWI74MuA3tGGukspknqOJ5oqQR5mlfC1L-JGyLb7JW4vMxEYcsHl0xvXS1RK9APd89ntLpWopi0nH_flSe7dFB9lLLN2Yx3RGK0F8GXtoJ6Cx4a6_tJFfBigodru5PQUct9DYBe6RZ4kFhdiQW7NP8wzotqHTc4drDBt07dK0POKkgB2gfF_2RDdoC-F7wU">
+<!-- Off-white top and bottom fade gradients ensuring 100% crisp field and copy contrast -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#F4F4F0]/50 via-[#F4F4F0]/30 to-[#F4F4F0]/80"></div>
+<div class="absolute inset-0 backdrop-blur-[0.5px]"></div>
+</div>
+<!-- END: BackgroundAtmosphere -->
+<!-- BEGIN: ContentArea -->
+<div class="relative z-10 flex-1 flex flex-col px-6 pt-7 pb-6 justify-between">
+<!-- Top Section: Header & Brand Identity -->
+<div>
+<!-- BEGIN: NavigationAndLogoHeader -->
+<header class="flex flex-col items-center justify-center text-center mt-2 mb-5">
+<!-- Back button with login navigation preview -->
+<div class="w-full flex items-center justify-start mb-2">
+<a class="inline-flex items-center text-brand-muted hover:text-brand-dark text-sm font-medium transition-colors py-1 group" href="#login" title="Voltar para login">
+<svg class="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+<span class="">Voltar</span>
+</a>
+</div>
+<!-- Estilo e Gestão Logo -->
+<div class="flex items-center justify-center" data-purpose="brand-logo-wrapper">
+<img alt="Logo Estilo e Gestão" class="h-[62px] w-auto object-contain drop-shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZkvUlGrgszn75-rNT-OTFb_2OWAr5C-zkKyLajBvmIRIhj9z8dR5kcYR3ZMtxsxN7ki1EZFMZezIO62lwtQ4L7Ye7Twn3CbbVJAkFCAmwo5dP6JlXNQpbiYMnc67PY6svaPSWWR_Ze3JkPnjJ2CmEfs8SEZzvC7i3VYkck2WROuNDwBJXlgCZVE6RuLJViZLAmWJ1TgLMtBAAdx8AgQwAu-EZ7VPy6q5zHTDiNwNwyy_nJ3i4gyfxTc8FlHebj5skY_o">
+</div>
+<!-- Screen Titles -->
+<div class="mt-4 space-y-1">
+<h1 class="text-2xl font-extrabold tracking-tight text-brand-dark">Crie sua conta</h1>
+<p class="text-[13.5px] leading-relaxed text-brand-muted font-medium max-w-[280px] mx-auto">
+              Comece a organizar sua barbearia com o Estilo e Gestão.
+            </p>
+</div>
+</header>
+<!-- END: NavigationAndLogoHeader -->
+<!-- BEGIN: RegistrationForm -->
+<!-- Pure Authentication form (No social log, No onboarding bloat) -->
+<section class="bg-white/90 backdrop-blur-md rounded-2xl p-5 border border-brand-border shadow-soft-card">
+<form class="space-y-4" data-purpose="signup-form" id="registerForm" novalidate="">
+<!-- Global error feedback container -->
+<div class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-brand-primary font-semibold flex items-center space-x-2" id="formErrorMessage">
+<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" fill-rule="evenodd"></path>
+</svg>
+<span id="formErrorText" class="">Verifique as informações preenchidas.</span>
+</div>
+<!-- Field 1: Email -->
+<div class="space-y-1.5" data-purpose="input-group-email">
+<label class="block text-xs font-bold uppercase tracking-wider text-brand-dark" for="email">
+                E-mail
+              </label>
+<div class="relative">
+<input autocomplete="email" class="w-full px-3.5 py-3 text-sm rounded-xl border border-brand-border bg-white text-brand-dark placeholder-brand-subtle focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all" id="email" name="email" placeholder="seu@email.com" required="" type="email">
+</div>
+<p class="hidden text-[11px] font-semibold text-brand-primary mt-1" id="emailError"></p>
+</div>
+<!-- Field 2: Senha -->
+<div class="space-y-1.5" data-purpose="input-group-password">
+<label class="block text-xs font-bold uppercase tracking-wider text-brand-dark" for="password">
+                Senha
+              </label>
+<div class="relative flex items-center">
+<input autocomplete="new-password" class="w-full pl-3.5 pr-11 py-3 text-sm rounded-xl border border-brand-border bg-white text-brand-dark placeholder-brand-subtle focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all font-mono tracking-tight" id="password" name="password" placeholder="••••••••" required="" type="password">
+<!-- Toggle Password Visibility Button -->
+<button aria-label="Mostrar ou ocultar senha" class="absolute right-3 p-1 text-brand-subtle hover:text-brand-dark focus:outline-none transition-colors" id="togglePassword" type="button">
+<svg class="w-5 h-5" fill="none" id="eyeIcon1" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<svg class="w-5 h-5 hidden" fill="none" id="eyeOffIcon1" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</button>
+</div>
+<!-- Password Requirements Checklist -->
+<div class="pt-1.5 px-0.5 space-y-1.5" data-purpose="password-rules-checklist">
+<div class="flex items-center space-x-1.5 text-xs text-brand-muted transition-colors duration-200" id="ruleLength">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-subtle rule-dot"></span>
+<span class="text-[11.5px] font-medium">Mínimo de 8 caracteres</span>
+</div>
+<div class="flex items-center space-x-1.5 text-xs text-brand-muted transition-colors duration-200" id="ruleLetter">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-subtle rule-dot"></span>
+<span class="text-[11.5px] font-medium">Pelo menos 1 letra</span>
+</div>
+<div class="flex items-center space-x-1.5 text-xs text-brand-muted transition-colors duration-200" id="ruleNumber">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-subtle rule-dot"></span>
+<span class="text-[11.5px] font-medium">Pelo menos 1 número</span>
+</div>
+</div>
+</div>
+<!-- Field 3: Confirmar Senha -->
+<div class="space-y-1.5" data-purpose="input-group-confirm-password">
+<label class="block text-xs font-bold uppercase tracking-wider text-brand-dark" for="confirmPassword">
+                Confirmar senha
+              </label>
+<div class="relative flex items-center">
+<input autocomplete="new-password" class="w-full pl-3.5 pr-11 py-3 text-sm rounded-xl border border-brand-border bg-white text-brand-dark placeholder-brand-subtle focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all font-mono tracking-tight" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required="" type="password">
+<!-- Toggle Confirm Password Visibility Button -->
+<button aria-label="Mostrar ou ocultar confirmação de senha" class="absolute right-3 p-1 text-brand-subtle hover:text-brand-dark focus:outline-none transition-colors" id="toggleConfirmPassword" type="button">
+<svg class="w-5 h-5" fill="none" id="eyeIcon2" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<svg class="w-5 h-5 hidden" fill="none" id="eyeOffIcon2" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</button>
+</div>
+<p class="hidden text-[11px] font-semibold text-brand-primary mt-1" id="confirmPasswordError"></p>
+</div>
+<!-- Primary Call to Action Button -->
+<div class="pt-2">
+<button class="w-full h-12 bg-brand-primary hover:bg-brand-primaryHover active:scale-[0.99] text-white font-bold text-[15px] rounded-xl shadow-md transition-all duration-150 flex items-center justify-center focus:ring-4 focus:ring-brand-primary/25 focus:outline-none" id="submitBtn" type="submit">
+<span id="btnText" class="">Criar conta</span>
+<!-- Loading state spinner -->
+<svg class="hidden animate-spin ml-2.5 h-4 w-4 text-white" fill="none" id="btnSpinner" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</button>
+</div>
+</form>
+</section>
+<!-- END: RegistrationForm -->
+<!-- BEGIN: SecondaryLoginRedirect -->
+<!-- Link to go back to Login -->
+<div class="mt-5 text-center">
+<p class="text-[13.5px] text-brand-muted font-medium">
+            Já tem uma conta? 
+            <a class="text-brand-primary font-bold hover:text-brand-primaryHover underline-offset-4 hover:underline transition-colors ml-1" href="#login">
+              Entrar
+            </a>
+</p>
+</div>
+<!-- END: SecondaryLoginRedirect -->
+</div>
+<!-- BEGIN: Footer -->
+<!-- Discreet System Copyright & Legal note -->
+<footer class="mt-6 pt-3 text-center border-t border-brand-border/60">
+<p class="text-[11px] text-brand-subtle tracking-wide">
+          © 2026 Estilo e Gestão. Todos os direitos reservados.
+        </p>
+</footer>
+<!-- END: Footer -->
+</div>
+<!-- END: ContentArea -->
+</main>
+<!-- END: MobileContainer -->
+<!-- BEGIN: InteractiveHandlersScript -->
+<script data-purpose="form-interactivity">
+    // Interactive Password Visibility Toggles
+    function setupPasswordToggle(inputId, toggleBtnId, eyeId, eyeOffId) {
+      const input = document.getElementById(inputId);
+      const button = document.getElementById(toggleBtnId);
+      const eyeIcon = document.getElementById(eyeId);
+      const eyeOffIcon = document.getElementById(eyeOffId);
+
+      if (!input || !button) return;
+
+      button.addEventListener('click', function() {
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.classList.toggle('hidden', isPassword);
+        eyeOffIcon.classList.toggle('hidden', !isPassword);
+      });
+    }
+
+    setupPasswordToggle('password', 'togglePassword', 'eyeIcon1', 'eyeOffIcon1');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword', 'eyeIcon2', 'eyeOffIcon2');
+
+    // Live Password Requirements Validator
+    const passwordInput = document.getElementById('password');
+    const ruleLength = document.getElementById('ruleLength');
+    const ruleLetter = document.getElementById('ruleLetter');
+    const ruleNumber = document.getElementById('ruleNumber');
+
+    function updateRule(element, isValid) {
+      const dot = element.querySelector('.rule-dot');
+      if (isValid) {
+        element.classList.remove('text-brand-muted');
+        element.classList.add('text-emerald-600', 'font-semibold');
+        dot.classList.remove('bg-brand-subtle');
+        dot.classList.add('bg-emerald-600');
+      } else {
+        element.classList.remove('text-emerald-600', 'font-semibold');
+        element.classList.add('text-brand-muted');
+        dot.classList.remove('bg-emerald-600');
+        dot.classList.add('bg-brand-subtle');
+      }
+    }
+
+    passwordInput.addEventListener('input', function() {
+      const val = this.value;
+      const hasLength = val.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(val);
+      const hasNumber = /[0-9]/.test(val);
+
+      updateRule(ruleLength, hasLength);
+      updateRule(ruleLetter, hasLetter);
+      updateRule(ruleNumber, hasNumber);
+    });
+
+    // Form Validation and Submission Handling
+    const registerForm = document.getElementById('registerForm');
+    const emailInput = document.getElementById('email');
+    const confirmInput = document.getElementById('confirmPassword');
+    const formErrorMessage = document.getElementById('formErrorMessage');
+    const formErrorText = document.getElementById('formErrorText');
+    const emailError = document.getElementById('emailError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    registerForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Reset errors
+      formErrorMessage.classList.add('hidden');
+      emailError.classList.add('hidden');
+      confirmPasswordError.classList.add('hidden');
+      emailInput.classList.remove('border-brand-primary');
+      passwordInput.classList.remove('border-brand-primary');
+      confirmInput.classList.remove('border-brand-primary');
+
+      const emailVal = emailInput.value.trim();
+      const passVal = passwordInput.value;
+      const confirmVal = confirmInput.value;
+
+      let hasError = false;
+
+      // Validate email
+      if (!isValidEmail(emailVal)) {
+        emailError.textContent = 'Informe um endereço de e-mail válido.';
+        emailError.classList.remove('hidden');
+        emailInput.classList.add('border-brand-primary');
+        hasError = true;
+      }
+
+      // Validate password criteria
+      const hasLength = passVal.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(passVal);
+      const hasNumber = /[0-9]/.test(passVal);
+
+      if (!hasLength || !hasLetter || !hasNumber) {
+        passwordInput.classList.add('border-brand-primary');
+        formErrorText.textContent = 'A senha precisa atender a todos os requisitos listados.';
+        formErrorMessage.classList.remove('hidden');
+        hasError = true;
+      }
+
+      // Validate password confirmation
+      if (passVal !== confirmVal) {
+        confirmPasswordError.textContent = 'As senhas digitadas não coincidem.';
+        confirmPasswordError.classList.remove('hidden');
+        confirmInput.classList.add('border-brand-primary');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Simulate loading state
+      submitBtn.disabled = true;
+      btnText.textContent = 'Criando conta...';
+      btnSpinner.classList.remove('hidden');
+      submitBtn.classList.add('opacity-90', 'cursor-not-allowed');
+
+      setTimeout(function() {
+        submitBtn.classList.remove('bg-brand-primary', 'hover:bg-brand-primaryHover');
+        submitBtn.classList.add('bg-emerald-600');
+        btnText.textContent = 'Conta criada com sucesso!';
+        btnSpinner.classList.add('hidden');
+      }, 1200);
+    });
+  </script>
+<!-- END: InteractiveHandlersScript -->
+
+
+</body></html>

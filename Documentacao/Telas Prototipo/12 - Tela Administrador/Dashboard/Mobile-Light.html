@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Admin - Dashboard - Estilo &amp; Gestão</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F4F4F0',
+              card: '#FFFFFF',
+              border: '#E2E2DD',
+              text: '#2F2F2D',
+              muted: '#666662',
+              accent: '#175CD3',
+              success: '#2F6B4F',
+              warning: '#B54708',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F4F4F0;
+      color: #2F2F2D;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#F4F4F0] text-[#2F2F2D] antialiased">
+<!-- TOPBAR MOBILE DEDICADA DO ADMIN -->
+<header class="h-14 px-4 bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#E2E2DD] flex items-center justify-between sticky top-0 z-30">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#2F2F2D] text-[#FFFFFF] font-bold text-xs flex items-center justify-center tracking-tight shadow-sm">
+        E&amp;G
+      </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-[#2F2F2D] leading-tight">Estilo &amp; Gestão</span>
+<span class="text-[10px] font-semibold text-[#175CD3] uppercase tracking-wider">Administração</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<!-- Alternador de tema -->
+<button aria-label="Alternar tema" class="w-8 h-8 rounded-lg border border-[#E2E2DD] bg-[#FFFFFF] text-[#666662] hover:text-[#2F2F2D] transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<!-- Botão de conta [AD] -->
+<button aria-label="Conta Administrador" class="w-8 h-8 rounded-lg bg-[#2F2F2D] text-[#FFFFFF] font-bold text-xs flex items-center justify-center shadow-sm" type="button">
+        AD
+      </button>
+</div>
+</header>
+<!-- CONTEÚDO PRINCIPAL (COLUNA ÚNICA MOBILE 390PX) -->
+<main class="flex-1 p-4 max-w-[390px] mx-auto w-full flex flex-col gap-5 pb-28">
+<!-- Cabeçalho -->
+<div class="pt-1">
+<h1 class="text-2xl font-bold tracking-tight text-[#2F2F2D]">Dashboard</h1>
+<p class="text-xs text-[#666662] mt-0.5">Visão geral do Estilo e Gestão</p>
+</div>
+<!-- CARDS PRINCIPAIS (5 INDICADORES) -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- 1. Total de barbearias -->
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col justify-between">
+<span class="text-[11px] font-semibold text-[#666662]">Total de barbearias</span>
+<div class="mt-2.5">
+<div class="text-2xl font-bold text-[#2F2F2D] tracking-tight leading-none">1</div>
+<span class="text-[10px] text-[#666662] font-normal block mt-1">Cadastradas no sistema</span>
+</div>
+</div>
+<!-- 2. Plano Grátis -->
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col justify-between">
+<span class="text-[11px] font-semibold text-[#666662]">Plano Grátis</span>
+<div class="mt-2.5">
+<div class="text-2xl font-bold text-[#2F2F2D] tracking-tight leading-none">0</div>
+<span class="text-[10px] text-[#666662] font-normal block mt-1">Contas ativas</span>
+</div>
+</div>
+<!-- 3. Plano Normal -->
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col justify-between">
+<span class="text-[11px] font-semibold text-[#666662]">Plano Normal</span>
+<div class="mt-2.5">
+<div class="text-2xl font-bold text-[#2F6B4F] tracking-tight leading-none">1</div>
+<span class="text-[10px] text-[#2F6B4F] font-semibold block mt-1">Assinatura ativa</span>
+</div>
+</div>
+<!-- 4. Plano Com IA -->
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col justify-between">
+<span class="text-[11px] font-semibold text-[#666662]">Plano Com IA</span>
+<div class="mt-2.5">
+<div class="text-2xl font-bold text-[#2F2F2D] tracking-tight leading-none">0</div>
+<span class="text-[10px] text-[#666662] font-normal block mt-1">Assistentes ativos</span>
+</div>
+</div>
+<!-- 5. Receita de assinaturas no mês (Largura total) -->
+<div class="col-span-2 p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold text-[#666662]">Receita de assinaturas no mês</span>
+<span class="text-[10px] font-bold text-[#175CD3] bg-[#EAF3FF] px-2 py-0.5 rounded-full">Mensal</span>
+</div>
+<div class="mt-2">
+<div class="text-2xl font-bold text-[#2F2F2D] tracking-tight leading-none">R$ 0,00</div>
+<span class="text-[10px] text-[#666662] mt-1 block">Período gratuito administrativo</span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO: PRÓXIMOS VENCIMENTOS -->
+<div class="flex flex-col gap-2">
+<div class="flex items-end justify-between gap-2"><div><h2 class="text-xs font-bold text-[#2F2F2D] uppercase tracking-wider px-0.5">Próximos vencimentos</h2><p class="text-[10px] text-[#666662] mt-0.5">Acompanhamento de períodos de plano próximos do término.</p></div><span class="text-[10px] text-[#666662]">1 registro</span></div>
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div class="min-w-0">
+<h3 class="text-sm font-bold text-[#2F2F2D] truncate">Navalha &amp; Fio</h3>
+<span class="text-[10px] text-[#666662] font-medium tracking-wide">EG-7K2M9Q</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#EAF5EF] text-[#2F6B4F] shrink-0 border border-[#2F6B4F]/20">
+            Plano Normal
+          </span>
+</div>
+<div class="pt-2 border-t border-[#E2E2DD] flex items-center justify-between text-xs text-[#666662]">
+<span class="flex items-center gap-1.5 text-[11px]">
+<span class="material-symbols-outlined text-[15px] text-[#666662]">calendar_today</span>
+            Vence em 16/10/2026
+          </span>
+
+</div>
+</div>
+<p class="text-[10px] text-[#666662] leading-relaxed px-0.5">Ao término sem renovação, a conta retorna automaticamente para o Plano Grátis, mantendo-se ativa.</p>
+</div>
+<!-- SEÇÃO: PLANOS E RENOVAÇÕES -->
+<div class="flex flex-col gap-2">
+<div><h2 class="text-xs font-bold text-[#2F2F2D] uppercase tracking-wider px-0.5">Planos e renovações</h2><p class="text-[10px] text-[#666662] mt-0.5">Acompanhe alterações de plano, renovações e ações pendentes.</p></div>
+<div class="py-5 px-4 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col items-center justify-center text-center">
+<div class="w-8 h-8 rounded-full bg-[#F4F4F0] flex items-center justify-center text-[#666662] mb-1.5">
+<span class="material-symbols-outlined text-[18px]">rule</span>
+</div>
+<p class="text-xs text-[#2F2F2D] font-semibold">Nenhuma alteração de plano pendente.</p>
+</div>
+</div>
+<!-- SEÇÃO: STATUS DO SISTEMA -->
+<div class="flex flex-col gap-2">
+<h2 class="text-xs font-bold text-[#2F2F2D] uppercase tracking-wider px-0.5">Status do sistema</h2>
+<div class="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E2DD] shadow-sm flex flex-col gap-3">
+<!-- Indicador de Status -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2F6B4F] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#2F6B4F]"></span>
+</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-[#2F2F2D] flex items-center gap-1">
+                Operando normalmente
+                <span class="material-symbols-outlined text-[15px] text-[#2F6B4F]">check_circle</span>
+</span>
+<span class="text-[10px] text-[#666662]">O Estilo e Gestão está funcionando normalmente.</span>
+</div>
+</div>
+
+</div>
+<!-- Botão de Ação: Manutenção -->
+<button class="w-full py-2.5 px-3 rounded-lg border border-[#E2E2DD] hover:bg-[#F4F4F0] active:bg-[#E2E2DD] text-[#2F2F2D] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors" onclick="document.getElementById('maintenance-sheet').classList.remove('hidden')" type="button">
+<span class="material-symbols-outlined text-[16px] text-[#B54708]">build</span>
+<span>Ativar manutenção</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BOTTOM NAVIGATION ADMIN (RIGOROSAMENTE 2 ITENS: DASHBOARD E BARBEARIAS) -->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#FFFFFF] border-t border-[#E2E2DD] z-40 flex items-center justify-around px-8 shadow-lg max-w-[390px] mx-auto">
+<!-- Item 1: Dashboard (Ativo) -->
+<a class="flex flex-col items-center gap-1 text-[#2F2F2D] font-bold text-[10px] flex-1" href="#">
+<div class="w-9 h-7 rounded-xl bg-[#2F2F2D] text-[#FFFFFF] flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+</div>
+<span class="leading-none">Dashboard</span>
+</a>
+<!-- Item 2: Barbearias (Inativo) -->
+<a class="flex flex-col items-center gap-1 text-[#666662] hover:text-[#2F2F2D] font-medium text-[10px] flex-1 transition-colors" href="#">
+<div class="w-9 h-7 rounded-xl bg-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-[#666662]">store</span>
+</div>
+<span class="leading-none">Barbearias</span>
+</a>
+</nav>
+<!-- BOTTOM SHEET DE MANUTENÇÃO -->
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-xs" id="maintenance-sheet">
+  <div class="w-full max-w-[390px] bg-white rounded-t-2xl p-5 border-t border-[#E2E2DD] shadow-2xl flex flex-col gap-4 max-h-[88vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-[#E2E2DD] rounded-full mx-auto"></div>
+    <div class="flex items-start justify-between"><div><h3 class="text-base font-bold text-[#2F2F2D]">Ativar manutenção</h3><p class="text-xs text-[#666662] mt-0.5">Configure como a manutenção será informada aos usuários.</p></div><button class="text-[#666662] p-1" onclick="document.getElementById('maintenance-sheet').classList.add('hidden')" type="button">✕</button></div>
+    <fieldset class="flex flex-col gap-2 text-xs"><legend class="font-semibold text-[#2F2F2D] mb-1">Motivo</legend>
+      <label class="flex items-center gap-2"><input checked name="motivo-m" type="radio"> Melhorias no sistema</label>
+      <label class="flex items-center gap-2"><input name="motivo-m" type="radio"> Correção de bugs</label>
+      <label class="flex items-center gap-2"><input name="motivo-m" type="radio"> Segurança e privacidade</label>
+      <label class="flex items-center gap-2"><input name="motivo-m" type="radio"> Outro</label>
+      <input class="w-full p-2.5 rounded-lg border border-[#E2E2DD] bg-[#F4F4F0]" placeholder="Informe o motivo personalizado, se necessário" type="text">
+    </fieldset>
+    <label class="flex items-center gap-2 text-xs font-medium text-[#2F2F2D]"><input checked type="checkbox"> Mostrar motivo aos usuários</label>
+    <fieldset class="flex flex-col gap-2 text-xs"><legend class="font-semibold text-[#2F2F2D] mb-1">Previsão de retorno</legend>
+      <label class="flex items-center gap-2"><input checked name="retorno-m" type="radio"> Definir previsão de retorno</label>
+      <input class="w-full p-2.5 rounded-lg border border-[#E2E2DD] bg-[#F4F4F0]" type="datetime-local">
+      <label class="flex items-center gap-2"><input name="retorno-m" type="radio"> Tempo indeterminado</label>
+    </fieldset>
+    <div class="grid grid-cols-2 gap-2.5 pt-2"><button class="py-2.5 rounded-lg border border-[#E2E2DD] text-[#666662] font-semibold text-xs" onclick="document.getElementById('maintenance-sheet').classList.add('hidden')" type="button">Cancelar</button><button class="py-2.5 rounded-lg bg-[#2F2F2D] text-white font-semibold text-xs" onclick="document.getElementById('maintenance-sheet').classList.add('hidden')" type="button">Ativar manutenção</button></div>
+  </div>
+</div>
+</body></html>

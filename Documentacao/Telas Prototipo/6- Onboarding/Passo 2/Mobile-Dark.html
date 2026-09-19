@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e8e8e4",
+            "dark-bg": "#0F0F11",
+            "dark-surface": "#18181B",
+            "dark-surface-secondary": "#222226",
+            "dark-border": "#2E2E33",
+            "dark-text-primary": "#F4F4F0",
+            "dark-text-secondary": "#A1A1AA",
+            "danger": "#B42318",
+            "danger-hover": "#911C13",
+            "danger-glow": "rgba(180, 35, 24, 0.18)",
+            "success": "#2F6B4F",
+            "dark-success": "#6FB892",
+            "primary": "#1a1a19"
+          },
+          fontFamily: {
+            "sans": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          spacing: {
+            "margin": "1rem",
+            "space-2xs": "0.25rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem"
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    @layer base {
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background-color: #0F0F11;
+        color: #F4F4F0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      body {
+        overscroll-behavior-y: none;
+      }
+      .pb-safe {
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-[#0F0F11] font-sans antialiased text-[#F4F4F0] flex flex-col selection:bg-danger selection:text-white min-h-screen">
+<!-- Sleek Dark Mobile Header -->
+<header class="fixed top-0 inset-x-0 z-50 bg-[#0F0F11]/90 backdrop-blur-xl border-b border-[#2E2E33]/60 pt-safe">
+<div class="h-14 px-4 max-w-[430px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<button aria-label="Voltar" class="w-10 h-10 flex items-center justify-center rounded-xl text-[#A1A1AA] hover:text-[#F4F4F0] hover:bg-[#18181B] active:bg-[#222226] transition-colors" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/60 p-1 flex items-center justify-center shrink-0 shadow-inner">
+<img alt="Estilo e Gestão Logo" class="h-6 w-auto object-contain invert brightness-200" src="https://lh3.googleusercontent.com/aida/AEtjO1U5CtWci7y8BULX9IeO_PzrDnNQ7htK9zPShsoMEsngrEn0enf5VMSBa5XGROvir8DSHegPQcQTcot2ZUQNWIKBOaxMrW06vwKvg0FLaEPSdESTrHWrJ-cSbxMiw50ZLEYqGabjbJLEQsUkwEqQiR-amKh6YWt3ZxvOS_RcJP4jcrFEufKWy9rX7aDBfKK5kCMIPRwaqV7fQoQmE21C_803fRvz0et1huqpoHkmK8kQHMPATqPVKwgTc8G7KlJ8ZPshDPIQGxmBOQ"/>
+</div>
+<div class="flex flex-col">
+<span class="text-[13px] font-bold tracking-tight text-[#F4F4F0] leading-tight">Estilo e Gestão</span>
+<span class="text-[11px] font-medium text-[#A1A1AA] leading-none">Endereço</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5">
+<button aria-label="Alternar tema" class="w-10 h-10 flex items-center justify-center rounded-xl text-[#A1A1AA] hover:text-amber-400 hover:bg-[#18181B] active:bg-[#222226] transition-colors" onclick="document.documentElement.classList.toggle('dark')" type="button">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="flex-1 flex flex-col w-full max-w-[430px] mx-auto pt-[68px] pb-28">
+<div class="flex flex-col w-full px-4">
+<!-- Progress Bar Tracker -->
+<div class="pt-2 pb-3 flex flex-col gap-1.5"><div class="flex items-center justify-between text-[12px]"><span class="font-semibold text-zinc-300 tracking-wide flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-danger"></span>Passo 2 de 6 <span class="text-zinc-600 font-normal">•</span> <span class="text-zinc-400 font-normal">Endereço</span></span><span class="text-[#A1A1AA] font-medium">33% concluído</span></div><div class="w-full h-1.5 bg-[#222226] rounded-full overflow-hidden p-[1px]"><div class="h-full bg-gradient-to-r from-red-600 to-danger rounded-full transition-all duration-500 ease-out shadow-[0_0_8px_rgba(180,35,24,0.5)]" style="width: 33.33%;"></div></div></div>
+<!-- Title & Intro Header -->
+<div class="pt-2 pb-4 flex flex-col"><div class="inline-flex items-center gap-1.5 self-start px-2.5 py-1 mb-2.5 rounded-full bg-[#18181B] border border-zinc-800 text-zinc-300 text-[11px] font-medium tracking-wide"><span class="material-symbols-outlined text-[14px] text-danger" style="font-variation-settings: 'FILL' 1;">location_on</span><span>Configuração do seu espaço</span></div><h1 class="text-[26px] font-bold leading-tight tracking-tight text-[#F4F4F0]">Agora, onde fica sua barbearia?</h1><p class="text-[13px] text-[#A1A1AA] mt-1.5 leading-relaxed">Informe o endereço do estabelecimento. Esses dados poderão ser alterados depois nas configurações.</p></div>
+<!-- FORM START -->
+<form class="flex flex-col gap-4" id="step-one-form" onsubmit="event.preventDefault();"><!-- SEÇÃO 01: Localização da barbearia -->
+<section class="flex flex-col gap-4 bg-[#18181B] p-4 rounded-2xl border border-[#2E2E33]/70 shadow-lg shadow-black/40">
+<div class="flex items-center justify-between pb-2.5 border-b border-[#2E2E33]/80">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-danger text-[20px]">pin_drop</span>
+<h2 class="text-[15px] font-bold tracking-tight text-[#F4F4F0]">Localização da barbearia</h2>
+</div>
+<span class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">01 / 02</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="cep-input">CEP <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="flex gap-2">
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">search</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="cep-input" maxlength="9" name="cep" placeholder="11730-000" required="" type="text" value="11730-000"/>
+</div>
+<button class="px-4 h-11 rounded-xl bg-[#222226] hover:bg-zinc-800 border border-zinc-700/60 text-[#F4F4F0] text-[13px] font-semibold flex items-center gap-1.5 transition-all active:scale-[0.98] shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px] text-danger">travel_explore</span>
+<span>Buscar</span>
+</button>
+</div>
+<span class="text-[11px] text-[#A1A1AA]">Buscaremos o endereço automaticamente quando possível.</span>
+</div>
+</section>
+<!-- SEÇÃO 02: Endereço completo -->
+<section class="flex flex-col gap-4 bg-[#18181B] p-4 rounded-2xl border border-[#2E2E33]/70 shadow-lg shadow-black/40">
+<div class="flex items-center justify-between pb-2.5 border-b border-[#2E2E33]/80">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-danger text-[20px]">home_work</span>
+<h2 class="text-[15px] font-bold tracking-tight text-[#F4F4F0]">Endereço completo</h2>
+</div>
+<span class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">02 / 02</span>
+</div>
+<!-- Rua / Logradouro -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="street-input">Rua / Logradouro <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">signpost</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="street-input" name="street" placeholder="Avenida São Paulo" required="" type="text" value="Avenida São Paulo"/>
+</div>
+</div>
+<!-- O endereço tem número? -->
+<div class="flex flex-col gap-2">
+<span class="text-[13px] font-semibold text-[#F4F4F0]">O endereço tem número? <span class="text-danger font-bold">*</span></span>
+<div aria-label="O endereço tem número?" class="grid grid-cols-2 gap-2.5" role="radiogroup">
+<label class="relative flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all bg-[#0F0F11] border-2 border-danger shadow-md group" id="label-numero-sim">
+<input checked="" class="sr-only" name="hasNumber" type="radio" value="sim"/>
+<div class="flex items-center gap-2">
+<span class="text-[13px] font-bold text-[#F4F4F0]">Sim</span>
+</div>
+<div class="w-5 h-5 rounded-full bg-danger flex items-center justify-center shrink-0 text-white shadow-sm">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+</div>
+</label>
+<label class="relative flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all bg-[#0F0F11] border-2 border-[#2E2E33] hover:border-zinc-600 group" id="label-numero-nao">
+<input class="sr-only" name="hasNumber" type="radio" value="nao"/>
+<div class="flex items-center gap-2">
+<span class="text-[13px] font-bold text-[#A1A1AA]">Não (Sem número)</span>
+</div>
+<div class="w-5 h-5 rounded-full bg-[#222226] border border-zinc-700 flex items-center justify-center shrink-0 text-transparent">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Número -->
+<div class="flex flex-col gap-1.5" id="number-wrapper">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="number-input">Número <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">numbers</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="number-input" name="number" placeholder="125" required="" type="text" value="125"/>
+</div>
+</div>
+<!-- Complemento -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="complement-input">Complemento</label>
+<span class="px-2 py-0.5 rounded-full bg-[#222226] text-[#A1A1AA] text-[11px] font-medium border border-zinc-700/40">Opcional</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">apartment</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="complement-input" name="complement" placeholder="Ex.: Sala 2, Fundos, Loja B" type="text"/>
+</div>
+<span class="text-[11px] text-[#A1A1AA]">Use somente se precisar adicionar uma referência ao endereço.</span>
+</div>
+<!-- Bairro -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="district-input">Bairro <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">domain</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="district-input" name="district" placeholder="Centro" required="" type="text" value="Centro"/>
+</div>
+</div>
+<!-- Cidade e Estado em 2 colunas -->
+<div class="grid grid-cols-1 gap-3">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="city-input">Cidade <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">location_city</span>
+<input class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] placeholder:text-zinc-600 focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33]" id="city-input" name="city" placeholder="Mongaguá" required="" type="text" value="Mongaguá"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[13px] font-semibold text-[#F4F4F0]" for="state-select">Estado <span class="text-danger font-bold">*</span></label>
+<span class="text-[11px] text-zinc-500 font-normal">Obrigatório</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[#A1A1AA] text-[19px] pointer-events-none">map</span>
+<select class="w-full h-11 pl-10 pr-3.5 rounded-xl bg-[#0F0F11] text-[#F4F4F0] text-[14px] focus:outline-none focus:ring-1.5 focus:ring-danger focus:border-transparent transition-all border border-[#2E2E33] cursor-pointer appearance-none" id="state-select" name="state">
+<option selected="" value="SP">SP — São Paulo</option>
+<option value="RJ">RJ — Rio de Janeiro</option>
+<option value="MG">MG — Minas Gerais</option>
+<option value="PR">PR — Paraná</option>
+<option value="SC">SC — Santa Catarina</option>
+<option value="RS">RS — Rio Grande do Sul</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<!-- Card Compacto de Apoio: Prévia do endereço -->
+<section class="flex flex-col bg-gradient-to-b from-[#18181B] to-[#141416] p-4 rounded-2xl border border-[#2E2E33]/80 shadow-md">
+<div class="flex items-center justify-between pb-2 border-b border-[#2E2E33]/60 mb-3">
+<div class="flex items-center gap-1.5 text-zinc-300">
+<span class="material-symbols-outlined text-[16px] text-danger">location_on</span>
+<span class="text-[12px] font-semibold uppercase tracking-wider">Prévia do endereço</span>
+</div>
+<span class="text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Endereço verificado
+    </span>
+</div>
+<div class="p-3 bg-[#0F0F11] rounded-xl border border-zinc-800/80 flex items-start gap-3">
+<div class="w-11 h-11 rounded-xl bg-red-950/40 border border-red-950/50 flex items-center justify-center text-danger shrink-0">
+<span class="material-symbols-outlined text-[22px]">store</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<h4 class="text-[14px] font-bold text-[#F4F4F0] truncate">Barbearia Imperial</h4>
+<p class="text-[12px] text-zinc-300 mt-1 leading-snug">
+        Avenida São Paulo, 125 - Centro, Mongaguá - SP (CEP 11730-000)
+      </p>
+</div>
+</div>
+<p class="text-[11px] text-zinc-400 mt-2.5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-zinc-500">info</span>
+<span>O endereço poderá ser usado para ajudar clientes a localizar sua barbearia.</span>
+</p>
+</section></form>
+</div>
+</main>
+<!-- Sticky Bottom CTA Area with Safe Padding -->
+<div class="fixed bottom-0 inset-x-0 z-40 bg-[#0F0F11]/95 backdrop-blur-xl border-t border-[#2E2E33]/70 pt-3 pb-safe">
+<div class="max-w-[430px] mx-auto px-4 flex flex-col gap-2">
+<button class="w-full h-12 min-h-[48px] bg-danger hover:bg-danger-hover active:scale-[0.98] text-white rounded-xl font-bold text-[15px] flex items-center justify-center gap-2 transition-all shadow-[0_4px_16px_rgba(180,35,24,0.35)]" form="step-one-form" id="btn-continuar" type="submit">
+<span class="">Continuar</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<div class="flex items-center justify-center gap-1.5 text-zinc-400 pb-1"><span class="material-symbols-outlined text-[15px] text-emerald-400">cloud_done</span><span class="text-[11px] font-medium">Seu progresso é salvo automaticamente.</span></div>
+</div>
+</div>
+<script>
+    function updateRadioSelection(input) {
+      const isNao = input.value === 'nao';
+      const labelNao = document.getElementById('label-domicilio-nao');
+      const labelSim = document.getElementById('label-domicilio-sim');
+      const indicatorNao = document.getElementById('radio-indicator-nao');
+      const indicatorSim = document.getElementById('radio-indicator-sim');
+      const iconNao = document.getElementById('icon-domicilio-nao');
+      const iconSim = document.getElementById('icon-domicilio-sim');
+
+      if (isNao) {
+        labelNao.classList.remove('border-[#2E2E33]');
+        labelNao.classList.add('border-danger');
+        indicatorNao.classList.remove('bg-[#222226]', 'border', 'border-zinc-700', 'text-transparent');
+        indicatorNao.classList.add('bg-danger', 'text-white');
+        iconNao.classList.remove('text-zinc-400');
+        iconNao.classList.add('text-danger');
+
+        labelSim.classList.remove('border-danger');
+        labelSim.classList.add('border-[#2E2E33]');
+        indicatorSim.classList.remove('bg-danger', 'text-white');
+        indicatorSim.classList.add('bg-[#222226]', 'border', 'border-zinc-700', 'text-transparent');
+        iconSim.classList.remove('text-danger');
+        iconSim.classList.add('text-zinc-400');
+      } else {
+        labelSim.classList.remove('border-[#2E2E33]');
+        labelSim.classList.add('border-danger');
+        indicatorSim.classList.remove('bg-[#222226]', 'border', 'border-zinc-700', 'text-transparent');
+        indicatorSim.classList.add('bg-danger', 'text-white');
+        iconSim.classList.remove('text-zinc-400');
+        iconSim.classList.add('text-danger');
+
+        labelNao.classList.remove('border-danger');
+        labelNao.classList.add('border-[#2E2E33]');
+        indicatorNao.classList.remove('bg-danger', 'text-white');
+        indicatorNao.classList.add('bg-[#222226]', 'border', 'border-zinc-700', 'text-transparent');
+        iconNao.classList.remove('text-danger');
+        iconNao.classList.add('text-zinc-400');
+      }
+      updateLivePreview();
+    }
+
+    // Phone mask
+    const whatsappInput = document.getElementById('whatsapp-number');
+    if (whatsappInput) {
+      whatsappInput.addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+        if (!x[2]) {
+          e.target.value = x[1] ? `(${x[1]}` : '';
+        } else {
+          e.target.value = !x[3] ? `(${x[1]}) ${x[2]}` : `(${x[1]}) ${x[2]}-${x[3]}`;
+        }
+        updateLivePreview();
+      });
+    }
+
+    // Instagram auto-prefix
+    const instaInput = document.getElementById('instagram-handle');
+    if (instaInput) {
+      instaInput.addEventListener('input', function(e) {
+        let val = e.target.value.trim();
+        if (val && !val.startsWith('@')) {
+          e.target.value = '@' + val;
+        }
+        updateLivePreview();
+      });
+    }
+
+    // Live preview sync
+    function updateLivePreview() {
+      const shopVal = document.getElementById('shop-name').value.trim();
+      const ownerVal = document.getElementById('owner-name').value.trim();
+      const displayVal = document.getElementById('display-name').value.trim();
+      const whatsVal = document.getElementById('whatsapp-number').value.trim();
+      const instaVal = document.getElementById('instagram-handle').value.trim();
+      const radioSim = document.querySelector('input[name="domicilio"][value="sim"]');
+      const isDomicilio = radioSim && radioSim.checked;
+
+      const previewName = document.getElementById('preview-card-name');
+      const previewSub = document.getElementById('preview-card-sub');
+      const previewContact = document.getElementById('preview-card-contact');
+
+      if (previewName) {
+        previewName.textContent = shopVal || 'Barbearia Imperial';
+      }
+
+      const profName = displayVal || ownerVal || 'João Barber';
+      const modText = isDomicilio ? 'Atende a Domicílio' : 'Barbearia Fixa';
+      if (previewSub) {
+        previewSub.textContent = `Por ${profName} • ${modText}`;
+      }
+
+      if (previewContact) {
+        if (instaVal) {
+          previewContact.textContent = `${instaVal}`;
+        } else if (whatsVal) {
+          previewContact.textContent = `WhatsApp: ${whatsVal}`;
+        } else {
+          previewContact.textContent = 'WhatsApp configurado';
+        }
+      }
+    }
+
+    // Logo image upload & preview
+    const logoInput = document.getElementById('logo-input');
+    const logoBox = document.getElementById('logo-preview-box');
+    const previewCardLogo = document.getElementById('preview-card-logo');
+
+    if (logoInput && logoBox) {
+      logoInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            logoBox.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover rounded-xl" alt="Logo preview" />`;
+            if (previewCardLogo) {
+              previewCardLogo.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover rounded-xl" alt="Preview logo" />`;
+            }
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+    }
+  </script>
+</body></html>

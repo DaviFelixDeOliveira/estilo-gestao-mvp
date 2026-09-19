@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estilo &amp; Gestão - Histórico de Vendas</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#FAF9F5',
+              surface: '#FFFFFF',
+              border: '#E2E2DD',
+              borderSubtle: '#EEEEEA',
+              text: '#2F2F2D',
+              secondary: '#666662',
+              muted: '#9E9E98',
+              accent: '#18181B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Scrollbars and Precision Borders -->
+<style data-purpose="custom-layout">
+    body {
+      background-color: #FAF9F5;
+      color: #2F2F2D;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5D5CE;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B0B0A8;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#FAF9F5] text-brand-text flex overflow-hidden">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-white border-r border-[#E2E2DD] flex flex-col justify-between shrink-0 h-screen select-none z-20" data-purpose="desktop-sidebar">
+<!-- Top Area: Logo & Navigation Links -->
+<div class="flex flex-col">
+<!-- Brand Logo Header -->
+<div class="h-16 px-5 border-b border-[#E2E2DD] flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#2F2F2D] text-white flex items-center justify-center font-bold text-base shadow-sm">
+            EG
+          </div>
+<div>
+<h1 class="text-xs font-extrabold uppercase tracking-wider text-[#2F2F2D] leading-none">Estilo &amp; Gestão</h1>
+<p class="text-[11px] text-[#666662] mt-0.5">Barbearia Club</p>
+</div>
+</div>
+<button aria-label="Recolher menu lateral" class="text-[#666662] hover:text-[#2F2F2D] p-1 rounded hover:bg-[#FAF9F5] transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h10M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Navigation Menu Items -->
+<nav class="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)]">
+<!-- Dashboard Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] rounded-md transition" href="#">
+<svg class="w-4 h-4 text-[#666662]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Dashboard
+        </a>
+<!-- PDV Section (Active Root) -->
+<div class="pt-1">
+<div class="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-white bg-[#2F2F2D] rounded-md shadow-sm">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>PDV</span>
+</div>
+<svg class="w-3.5 h-3.5 text-white transform rotate-180" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- PDV Submenu -->
+<div class="mt-1 ml-4 pl-3 border-l border-[#E2E2DD] space-y-0.5">
+<a class="block px-3 py-1.5 text-xs font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] rounded transition" href="#">
+              Nova venda
+            </a>
+<a class="block px-3 py-1.5 text-xs font-bold text-[#2F2F2D] bg-[#EEEEEA] rounded transition" href="#">
+              Histórico de vendas
+            </a>
+</div>
+</div>
+<!-- Operação Group -->
+<div class="pt-2">
+<button class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] rounded-md transition" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-[#666662]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Operação</span>
+</div>
+<svg class="w-3.5 h-3.5 text-[#9E9E98]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<div class="ml-4 pl-3 border-l border-[#E2E2DD] mt-0.5 space-y-0.5">
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Serviços</a>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Produtos</a>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Estoque</a>
+</div>
+</div>
+<!-- Configuração Group -->
+<div class="pt-2">
+<button class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] rounded-md transition" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-[#666662]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Configurações</span>
+</div>
+<svg class="w-3.5 h-3.5 text-[#9E9E98]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<div class="ml-4 pl-3 border-l border-[#E2E2DD] mt-0.5 space-y-0.5">
+<span class="block px-3 pt-1 text-[10px] font-bold uppercase tracking-wider text-[#9E9E98]">Negócio</span>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Financeiro</a>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Relatórios</a>
+<span class="block px-3 pt-2 text-[10px] font-bold uppercase tracking-wider text-[#9E9E98]">Barbearia</span>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Dados gerais</a>
+<a class="block px-3 py-1 text-xs text-[#666662] hover:text-[#2F2F2D]" href="#">Formas de pagamento</a>
+</div>
+</div>
+</nav>
+</div>
+<!-- Bottom User Footer -->
+<div class="p-3 border-t border-[#E2E2DD] bg-[#FAF9F5]/60 flex items-center justify-between">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-full bg-[#2F2F2D] text-white flex items-center justify-center font-semibold text-xs shrink-0">
+          MB
+        </div>
+<div class="truncate">
+<p class="text-xs font-semibold text-[#2F2F2D] truncate">Mestre Barbeiro</p>
+<p class="text-[10px] text-[#666662] truncate">Perfil e preferências</p>
+</div>
+</div>
+<button class="text-[#666662] hover:text-[#2F2F2D] p-1.5 rounded hover:bg-white transition" title="Encerrar sessão" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- BEGIN: TopBar -->
+<header class="h-16 bg-white border-b border-[#E2E2DD] px-8 flex items-center justify-between shrink-0" data-purpose="topbar">
+<!-- Breadcrumb Path -->
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#666662]">
+<a class="hover:text-[#2F2F2D] transition" href="#">Estilo &amp; Gestão</a>
+<span class="text-[#9E9E98]">/</span>
+<a class="hover:text-[#2F2F2D] transition" href="#">PDV</a>
+<span class="text-[#9E9E98]">/</span>
+<span class="text-[#2F2F2D] font-semibold">Histórico de vendas</span>
+</nav>
+<!-- Right Header Actions -->
+<div class="flex items-center gap-4">
+<!-- Theme Toggle Button -->
+<button aria-label="Alternar tema" class="w-9 h-9 flex items-center justify-center rounded-lg border border-[#E2E2DD] text-[#666662] hover:bg-[#FAF9F5] transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- User Info Chip -->
+<div class="flex items-center gap-2.5 pl-3 border-l border-[#E2E2DD]">
+<div class="w-8 h-8 rounded-full bg-[#2F2F2D] text-white flex items-center justify-center text-xs font-semibold">
+            MB
+          </div>
+<div class="text-left leading-tight hidden sm:block">
+<p class="text-xs font-bold text-[#2F2F2D]">Mestre Barbeiro</p>
+<p class="text-[10px] text-[#666662]">Unidade Centro</p>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: BodyContentAndDrawer -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Center Table Column -->
+<main class="flex-1 overflow-y-auto p-8 space-y-6">
+<!-- Page Title & Primary Quick Action -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-extrabold text-[#2F2F2D] tracking-tight">Histórico de vendas</h2>
+<p class="text-sm text-[#666662] mt-0.5">Consulte e acompanhe os registros de comandas finalizadas e canceladas.</p>
+</div>
+<a class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2F2F2D] hover:bg-[#3A3A38] text-white text-xs font-semibold rounded-lg shadow-sm transition" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>+ Nova venda</span>
+</a>
+</div>
+<!-- Filter & Search Toolbar Card -->
+<div class="bg-white p-4 rounded-xl border border-[#E2E2DD] shadow-sm space-y-3.5" data-purpose="filter-bar">
+<!-- Top Row: Simple Search by Order ID and Period Segmentation -->
+<div class="flex flex-col lg:flex-row items-center justify-between gap-3">
+<!-- Operational Search Input -->
+<div class="relative w-full lg:w-80">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9E9E98]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-3 py-2 bg-[#FAF9F5] border border-[#E2E2DD] rounded-lg text-xs text-[#2F2F2D] placeholder-[#9E9E98] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#2F2F2D] focus:border-[#2F2F2D] transition" placeholder="Buscar venda por número..." type="text"/>
+</div>
+<!-- Time Period Segmented Filter -->
+<div class="flex items-center bg-[#FAF9F5] p-1 rounded-lg border border-[#E2E2DD] w-full lg:w-auto overflow-x-auto">
+<button class="px-3 py-1.5 text-xs font-medium text-[#666662] hover:text-[#2F2F2D] rounded-md transition whitespace-nowrap" type="button">Hoje</button>
+<button class="px-3 py-1.5 text-xs font-medium text-[#666662] hover:text-[#2F2F2D] rounded-md transition whitespace-nowrap" type="button">Semana</button>
+<button class="px-3 py-1.5 text-xs font-semibold text-[#2F2F2D] bg-white rounded-md shadow-xs transition whitespace-nowrap" type="button">Mês</button>
+<button class="px-3 py-1.5 text-xs font-medium text-[#666662] hover:text-[#2F2F2D] rounded-md transition whitespace-nowrap" type="button">Ano</button>
+<button class="px-3 py-1.5 text-xs font-medium text-[#666662] hover:text-[#2F2F2D] rounded-md transition whitespace-nowrap" type="button">Personalizado</button>
+</div>
+</div>
+<!-- Bottom Row: Status Filter Chips & Payment Dropdown Filter -->
+<div class="pt-3 border-t border-[#EEEEEA] flex flex-wrap items-center justify-between gap-3">
+<!-- Status Tabs -->
+<div class="flex items-center gap-1.5">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-[#2F2F2D] text-white" type="button">
+<span>Todas</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">24</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] border border-transparent hover:border-[#E2E2DD] transition" type="button">
+<span>Concluídas</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-[#EEEEEA]">22</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] border border-transparent hover:border-[#E2E2DD] transition" type="button">
+<span>Canceladas</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-[#EEEEEA]">2</span>
+</button>
+</div>
+<!-- Payment Type Filter Dropdown -->
+<div class="flex items-center gap-2">
+<label class="text-xs text-[#666662]" for="payment-filter">Pagamento:</label>
+<select class="bg-[#FAF9F5] border border-[#E2E2DD] text-xs text-[#2F2F2D] rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-[#2F2F2D] focus:border-[#2F2F2D]" id="payment-filter">
+<option value="all">Todas as formas</option>
+<option value="pix">Pix</option>
+<option value="dinheiro">Dinheiro</option>
+<option value="credito">Crédito</option>
+<option value="debito">Débito</option>
+<option value="outro">Outro</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Orders Table Card -->
+<div class="bg-white rounded-xl border border-[#E2E2DD] shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#FAF9F5] border-b border-[#E2E2DD] text-[11px] font-bold uppercase tracking-wider text-[#666662]">
+<th class="py-3 px-4" scope="col">Identificador</th>
+<th class="py-3 px-4" scope="col">Data e Hora</th>
+<th class="py-3 px-4" scope="col">Itens Resumo</th>
+<th class="py-3 px-4" scope="col">Forma de Pagamento</th>
+<th class="py-3 px-4" scope="col">Status</th>
+<th class="py-3 px-4 text-right" scope="col">Total</th>
+<th class="py-3 px-4 text-center" scope="col">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#EEEEEA] text-xs">
+<!-- Row 1: Sale #00128 -->
+<tr class="hover:bg-[#FAF9F5]/70 transition group">
+<td class="py-3.5 px-4 font-bold text-[#2F2F2D]">#00128</td>
+<td class="py-3.5 px-4 text-[#666662]">14/09/2026 • 18:30</td>
+<td class="py-3.5 px-4 text-[#2F2F2D]">1 Serviço (Corte + Barba)</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#FAF9F5] border border-[#E2E2DD] text-[11px] font-medium text-[#2F2F2D]">
+                      Crédito
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Concluída
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right font-extrabold text-[#2F2F2D]">R$ 70,00</td>
+<td class="py-3.5 px-4 text-center">
+<button class="inline-flex items-center gap-1 px-2 py-1 text-xs text-[#666662] hover:text-[#2F2F2D] hover:bg-[#EEEEEA] rounded transition" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ver</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Sale #00127 -->
+<tr class="hover:bg-[#FAF9F5]/70 transition group">
+<td class="py-3.5 px-4 font-bold text-[#2F2F2D]">#00127</td>
+<td class="py-3.5 px-4 text-[#666662]">14/09/2026 • 17:50</td>
+<td class="py-3.5 px-4 text-[#2F2F2D]">Corte Degradê + 1 Bebida</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#FAF9F5] border border-[#E2E2DD] text-[11px] font-medium text-[#2F2F2D]">
+                      Pix
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Concluída
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right font-extrabold text-[#2F2F2D]">R$ 51,00</td>
+<td class="py-3.5 px-4 text-center">
+<button class="inline-flex items-center gap-1 px-2 py-1 text-xs text-[#666662] hover:text-[#2F2F2D] hover:bg-[#EEEEEA] rounded transition" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ver</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Sale #00126 (Cancelled) -->
+<tr class="hover:bg-[#FAF9F5]/70 transition group bg-red-50/20">
+<td class="py-3.5 px-4 font-bold text-[#2F2F2D]">#00126</td>
+<td class="py-3.5 px-4 text-[#666662]">14/09/2026 • 17:15</td>
+<td class="py-3.5 px-4 text-[#666662] line-through">Barba Tradicional</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#FAF9F5] border border-[#E2E2DD] text-[11px] font-medium text-[#666662]">
+                      Dinheiro
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                      Cancelada
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right font-extrabold text-[#9E9E98] line-through">R$ 35,00</td>
+<td class="py-3.5 px-4 text-center">
+<button class="inline-flex items-center gap-1 px-2 py-1 text-xs text-[#666662] hover:text-[#2F2F2D] hover:bg-[#EEEEEA] rounded transition" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ver</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Sale #00125 -->
+<tr class="hover:bg-[#FAF9F5]/70 transition group">
+<td class="py-3.5 px-4 font-bold text-[#2F2F2D]">#00125</td>
+<td class="py-3.5 px-4 text-[#666662]">14/09/2026 • 17:00</td>
+<td class="py-3.5 px-4 text-[#2F2F2D]">Acabamento Pezinho</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#FAF9F5] border border-[#E2E2DD] text-[11px] font-medium text-[#2F2F2D]">
+                      Débito
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Concluída
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right font-extrabold text-[#2F2F2D]">R$ 20,00</td>
+<td class="py-3.5 px-4 text-center">
+<button class="inline-flex items-center gap-1 px-2 py-1 text-xs text-[#666662] hover:text-[#2F2F2D] hover:bg-[#EEEEEA] rounded transition" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ver</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Sale #00124 (SELECTED ROW - Corresponds to open drawer) -->
+<tr class="bg-amber-50/40 border-l-4 border-l-[#2F2F2D]">
+<td class="py-3.5 px-4 font-extrabold text-[#2F2F2D]">#00124</td>
+<td class="py-3.5 px-4 text-[#666662]">14/09/2026 • 16:42</td>
+<td class="py-3.5 px-4 text-[#2F2F2D] font-medium">1 Serviço, 2 Bebidas, 1 Pomada</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white border border-[#E2E2DD] text-[11px] font-semibold text-[#2F2F2D]">
+                      Pix
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Concluída
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right font-extrabold text-[#2F2F2D]">R$ 99,00</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-white bg-[#2F2F2D] rounded shadow-xs">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Aberto</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="px-4 py-3 bg-[#FAF9F5] border-t border-[#E2E2DD] flex items-center justify-between text-xs text-[#666662]">
+<p>Mostrando <span class="font-bold text-[#2F2F2D]">1 - 5</span> de <span class="font-bold text-[#2F2F2D]">24</span> vendas</p>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded border border-[#E2E2DD] bg-white text-[#9E9E98] cursor-not-allowed" disabled="" type="button">Anterior</button>
+<button class="px-2.5 py-1 rounded bg-[#2F2F2D] text-white font-semibold" type="button">1</button>
+<button class="px-2.5 py-1 rounded border border-[#E2E2DD] bg-white text-[#2F2F2D] hover:bg-[#FAF9F5]" type="button">2</button>
+<button class="px-2.5 py-1 rounded border border-[#E2E2DD] bg-white text-[#2F2F2D] hover:bg-[#FAF9F5]" type="button">3</button>
+<button class="px-2.5 py-1 rounded border border-[#E2E2DD] bg-white text-[#2F2F2D] hover:bg-[#FAF9F5]" type="button">Próximo</button>
+</div>
+</div>
+</div>
+</main>
+<!-- END: Center Table Column -->
+<!-- BEGIN: Detail Drawer / Inspection Panel -->
+<aside class="w-96 bg-white border-l border-[#E2E2DD] flex flex-col shrink-0 h-full shadow-lg z-10" data-purpose="sale-inspection-drawer">
+<!-- Drawer Header -->
+<div class="p-5 border-b border-[#E2E2DD] flex items-center justify-between bg-white">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-base font-bold text-[#2F2F2D]">Venda #00124</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Concluída
+              </span>
+</div>
+<p class="text-xs text-[#666662] mt-0.5">14/09/2026 às 16:42</p>
+</div>
+<!-- Close Drawer Action -->
+<button aria-label="Fechar detalhes da venda" class="p-1.5 rounded-lg text-[#666662] hover:text-[#2F2F2D] hover:bg-[#FAF9F5] transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Drawer Body: Order Breakdown Snapshot -->
+<div class="flex-1 overflow-y-auto p-5 space-y-6">
+<!-- Summary Info Box -->
+<div class="grid grid-cols-1 gap-3 p-3.5 bg-[#FAF9F5] rounded-xl border border-[#E2E2DD]">
+<div>
+<span class="text-[10px] uppercase font-bold tracking-wider text-[#666662] block">Pagamento</span>
+<span class="text-xs font-semibold text-[#2F2F2D] mt-0.5 flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Pix
+              </span>
+</div>
+
+</div>
+<!-- Items List Snapshot -->
+<div>
+<div class="flex items-center justify-between pb-2 border-b border-[#EEEEEA] mb-3">
+<h4 class="text-xs font-bold uppercase tracking-wider text-[#666662]">Itens da Comanda</h4>
+<span class="text-[11px] text-[#666662]">3 itens</span>
+</div>
+<!-- Item Rows -->
+<div class="space-y-3">
+<!-- Item 1 -->
+<div class="flex items-start justify-between text-xs pb-2.5 border-b border-[#EEEEEA]/70">
+<div>
+<p class="font-semibold text-[#2F2F2D]">Corte Degradê</p>
+<p class="text-[11px] text-[#666662] mt-0.5">1 × R$ 45,00</p>
+</div>
+<span class="font-bold text-[#2F2F2D]">R$ 45,00</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start justify-between text-xs pb-2.5 border-b border-[#EEEEEA]/70">
+<div>
+<p class="font-semibold text-[#2F2F2D]">Refrigerante Lata</p>
+<p class="text-[11px] text-[#666662] mt-0.5">2 × R$ 6,00</p>
+</div>
+<span class="font-bold text-[#2F2F2D]">R$ 12,00</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-start justify-between text-xs pb-2.5 border-b border-[#EEEEEA]/70">
+<div>
+<p class="font-semibold text-[#2F2F2D]">Pomada Modeladora</p>
+<p class="text-[11px] text-[#666662] mt-0.5">1 × R$ 42,00</p>
+</div>
+<span class="font-bold text-[#2F2F2D]">R$ 42,00</span>
+</div>
+</div>
+</div>
+<!-- Financial Calculation Receipt Area -->
+<div class="space-y-2 pt-2">
+<div class="flex items-center justify-between text-xs text-[#666662]">
+<span>Subtotal</span>
+<span>R$ 99,00</span>
+</div>
+
+<div class="pt-2 border-t border-[#E2E2DD] flex items-baseline justify-between">
+<span class="text-sm font-bold text-[#2F2F2D]">Total da venda</span>
+<span class="text-xl font-extrabold text-[#2F2F2D]">R$ 99,00</span>
+</div>
+</div>
+</div>
+<!-- Drawer Footer: Action Buttons -->
+<div class="p-4 border-t border-[#E2E2DD] bg-[#FAF9F5] space-y-2">
+
+<button class="w-full py-2 bg-transparent hover:bg-[#EEEEEA] text-[#666662] hover:text-[#2F2F2D] text-xs font-semibold rounded-lg transition" type="button">
+            Fechar detalhes
+          </button>
+</div>
+</aside>
+<!-- END: Detail Drawer -->
+</div>
+<!-- END: BodyContentAndDrawer -->
+</div>
+<!-- END: MainContentWrapper -->
+</body></html>

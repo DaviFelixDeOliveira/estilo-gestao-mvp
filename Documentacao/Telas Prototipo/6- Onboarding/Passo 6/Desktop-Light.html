@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "dark-success-surface": "#173B2D", "on-tertiary-fixed": "#1b1c19", "border-subtle": "#E9E9E4", "on-tertiary-container": "#979792", "success": "#2F6B4F", "surface": "#faf9f5", "text-primary": "#2F2F2D", "danger": "#B42318", "dark-warning-surface": "#4A2C0A", "on-secondary": "#ffffff", "on-background": "#1a1c1a", "info": "#175CD3", "interactive-hover": "#3A3A38", "dark-primary": "#F4F4F0", "surface-secondary": "#E9E9E4", "on-surface": "#1a1c1a", "dark-info": "#53B1FD", "info-surface": "#EAF3FF", "warning-surface": "#FFF4E5", "background": "#faf9f5", "dark-text-secondary": "#B8B8B2", "on-primary-fixed-variant": "#474745", "secondary-container": "#e4e2df", "on-error": "#ffffff", "dark-surface": "#222220", "surface-container-low": "#f4f4f0", "tertiary-fixed": "#e4e2dd", "tertiary": "#1a1a18", "on-surface-variant": "#464742", "surface-container-lowest": "#ffffff", "primary-container": "#2f2f2d", "dark-border": "#3F3F3B", "on-primary-fixed": "#1b1c1a", "on-tertiary": "#ffffff", "dark-surface-secondary": "#2B2B29", "surface-base": "#F4F4F0", "tertiary-container": "#2f2f2c", "dark-danger": "#F97066", "on-error-container": "#93000a", "on-secondary-container": "#656462", "dark-text-primary": "#F4F4F0", "surface-dim": "#dadad6", "primary-fixed-dim": "#c8c6c3", "secondary-fixed": "#e4e2df", "on-primary-container": "#989693", "surface-elevated": "#FFFFFF", "dark-warning": "#FDB022", "text-secondary": "#666662", "on-secondary-fixed-variant": "#474745", "error": "#ba1a1a", "tertiary-fixed-dim": "#c8c6c1", "inverse-surface": "#2f312e", "surface-container-highest": "#e2e3df", "surface-bright": "#faf9f5", "inverse-primary": "#c8c6c3", "dark-info-surface": "#12365A", "dark-danger-surface": "#4A1D1A", "secondary-fixed-dim": "#c8c6c3", "secondary": "#5f5e5c", "surface-variant": "#e2e3df", "warning": "#B54708", "outline": "#777871", "danger-surface": "#FEECEB", "on-tertiary-fixed-variant": "#474743", "surface-tint": "#5f5e5c", "primary-fixed": "#e5e2df", "inverse-on-surface": "#f1f1ed", "dark-success": "#6FB892", "dark-primary-hover": "#E9E9E4", "primary": "#1a1a19", "on-primary": "#ffffff", "on-secondary-fixed": "#1b1c1a", "success-surface": "#EAF5EF", "outline-variant": "#c7c7c0", "dark-bg": "#181817", "surface-container-high": "#e8e8e4", "error-container": "#ffdad6", "surface-container": "#eeeeea" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "margin-tablet": "1.5rem", "space-sm": "0.75rem", "space-2xs": "0.25rem", "space-xl": "2rem", "space-md": "1rem", "margin-desktop": "2rem", "gutter-desktop": "1.5rem", "space-xs": "0.5rem", "gutter": "1rem", "margin": "1rem", "space-2xl": "3rem" }, fontFamily: { "headline-xl-mobile": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "metric-display": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "helper-text": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "metric-display": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "helper-text": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-body-md text-text-primary min-h-screen">
+<!-- Global Header identical to Step 5 (SCREEN_11) -->
+<header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-elevated/95 backdrop-blur-md border-b border-border-subtle shadow-[0_1px_8px_rgba(47,47,45,0.04)]"><div class="max-w-7xl mx-auto h-16 px-gutter-desktop flex items-center justify-between"><div class="flex items-center gap-space-md"><img alt="Logo Barbeiro Sem fundo Texto Preto.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U5CtWci7y8BULX9IeO_PzrDnNQ7htK9zPShsoMEsngrEn0enf5VMSBa5XGROvir8DSHegPQcQTcot2ZUQNWIKBOaxMrW06vwKvg0FLaEPSdESTrHWrJ-cSbxMiw50ZLEYqGabjbJLEQsUkwEqQiR-amKh6YWt3ZxvOS_RcJP4jcrFEufKWy9rX7aDBfKK5kCMIPRwaqV7fQoQmE21C_803fRvz0et1huqpoHkmK8kQHMPATqPVKwgTc8G7KlJ8ZPshDPIQGxmBOQ"/><span class="font-headline-sm text-headline-sm text-text-primary tracking-tight">Estilo e Gestão</span><span class="inline-flex items-center px-space-xs py-space-2xs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider">ONBOARDING PROFISSIONAL</span></div><div class="flex items-center gap-space-md"><button aria-label="Alternar Tema" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">dark_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header>
+<main class="w-full min-h-screen pt-16 bg-background"><div class="max-w-7xl mx-auto px-gutter-desktop py-space-xl"><div class="flex flex-col w-full">
+<!-- Progress Stepper Header -->
+<section class="w-full mb-space-xl">
+<div class="flex flex-col gap-space-sm sm:flex-row sm:items-center sm:justify-between pb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-space-2xs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm tracking-wider uppercase">
+          CONFIGURAÇÃO DO SEU ESPAÇO • PASSO 6 DE 6 • ÚLTIMA ETAPA
+        </span>
+</div>
+<div class="flex items-center gap-space-2xs text-text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-success">cloud_done</span>
+<span>Seu progresso é salvo automaticamente.</span>
+</div>
+</div>
+<!-- Stepper Navigation Bar -->
+<div class="grid grid-cols-2 md:grid-cols-6 gap-space-xs pt-space-xs">
+<!-- Step 1 Done -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-primary transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px] text-success font-semibold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">1. Barbearia</span>
+</div>
+</div>
+<!-- Step 2 Done -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-primary transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px] text-success font-semibold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">2. Endereço</span>
+</div>
+</div>
+<!-- Step 3 Done -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-primary transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px] text-success font-semibold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">3. Horários</span>
+</div>
+</div>
+<!-- Step 4 Done -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-primary transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px] text-success font-semibold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">4. Serviços</span>
+</div>
+</div>
+<!-- Step 5 Done -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-primary transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px] text-success font-semibold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-text-secondary truncate">5. Produtos e pagamentos</span>
+</div>
+</div>
+<!-- Step 6 Active -->
+<div class="flex flex-col gap-space-2xs group cursor-default">
+<div class="h-1.5 w-full rounded-full bg-danger transition-all"></div>
+<div class="flex items-center gap-space-2xs">
+<span class="w-3.5 h-3.5 rounded-full bg-danger text-on-error flex items-center justify-center font-label-sm text-[10px]">6</span>
+<span class="font-label-sm text-label-sm text-text-primary font-bold truncate">6. Aparência</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Page Header Title -->
+<header class="mb-space-xl">
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">
+        Como você prefere usar o Estilo e Gestão?
+      </h1>
+<p class="font-body-lg text-body-lg text-text-secondary max-w-3xl">
+        Escolha a aparência do sistema e confira suas configurações antes de concluir a configuração inicial.
+      </p>
+</div>
+</header>
+<!-- Main Content 2-Column Bento Structure -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN (Primary Content) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Card 1: Aparência do sistema -->
+<div class="rounded-xl bg-surface-elevated shadow-sm p-space-lg">
+<div class="flex flex-col gap-space-2xs mb-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-text-primary flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-text-primary text-[20px]">palette</span>
+              Aparência do sistema
+            </h2>
+<span class="font-label-sm text-label-sm px-space-xs py-space-2xs rounded-full bg-secondary-container text-text-primary">Interface do Barbeiro</span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary">
+            Escolha como o painel do Estilo e Gestão será exibido para você.
+          </p>
+</div>
+<!-- 3 Selectable Theme Options -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md" id="theme-selector-group">
+<!-- Option 1: Claro -->
+<label class="theme-option relative flex flex-col rounded-xl bg-surface-container-low p-space-md cursor-pointer transition-all hover:bg-surface-container" data-theme="light">
+<input class="sr-only" name="system_theme" type="radio" value="light"/>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-lg text-label-lg text-text-primary font-semibold">Claro</span>
+<span class="theme-check-icon w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-transparent text-[14px]">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+</div>
+<!-- Graphic Preview Light -->
+<div class="w-full h-24 rounded-lg bg-surface shadow-inner p-2 flex flex-col gap-1.5 mb-space-sm overflow-hidden pointer-events-none">
+<div class="h-2.5 w-1/3 rounded bg-surface-secondary"></div>
+<div class="grid grid-cols-3 gap-1 h-8">
+<div class="rounded bg-surface-elevated shadow-sm"></div>
+<div class="rounded bg-surface-elevated shadow-sm"></div>
+<div class="rounded bg-surface-elevated shadow-sm"></div>
+</div>
+<div class="h-4 w-full rounded bg-surface-elevated shadow-sm flex items-center px-1">
+<div class="h-1.5 w-8 rounded bg-surface-secondary"></div>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary">
+              Usa a aparência clara com tons neutros suaves e alto contraste.
+            </span>
+</label>
+<!-- Option 2: Escuro -->
+<label class="theme-option relative flex flex-col rounded-xl bg-surface-container-low p-space-md cursor-pointer transition-all hover:bg-surface-container" data-theme="dark">
+<input class="sr-only" name="system_theme" type="radio" value="dark"/>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-lg text-label-lg text-text-primary font-semibold">Escuro</span>
+<span class="theme-check-icon w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-transparent text-[14px]">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+</div>
+<!-- Graphic Preview Dark -->
+<div class="w-full h-24 rounded-lg bg-dark-bg p-2 flex flex-col gap-1.5 mb-space-sm overflow-hidden pointer-events-none">
+<div class="h-2.5 w-1/3 rounded bg-dark-surface-secondary"></div>
+<div class="grid grid-cols-3 gap-1 h-8">
+<div class="rounded bg-dark-surface"></div>
+<div class="rounded bg-dark-surface"></div>
+<div class="rounded bg-dark-surface"></div>
+</div>
+<div class="h-4 w-full rounded bg-dark-surface flex items-center px-1">
+<div class="h-1.5 w-8 rounded bg-dark-border"></div>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary">
+              Ideal para ambientes com iluminação pontual e descanso visual.
+            </span>
+</label>
+<!-- Option 3: Padrão do sistema (Selected by default, NO recomendado badge) -->
+<label class="theme-option relative flex flex-col rounded-xl bg-surface-container p-space-md cursor-pointer transition-all shadow-sm" data-theme="system">
+<input checked="" class="sr-only" name="system_theme" type="radio" value="system"/>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-lg text-label-lg text-text-primary font-bold">Padrão do sistema</span>
+<span class="theme-check-icon w-5 h-5 rounded-full bg-danger text-on-error flex items-center justify-center text-[14px]">
+<span class="material-symbols-outlined text-[14px] text-on-error">check</span>
+</span>
+</div>
+<!-- Graphic Preview Hybrid / Adaptive -->
+<div class="w-full h-24 rounded-lg overflow-hidden flex mb-space-sm shadow-inner pointer-events-none">
+<!-- Left half light -->
+<div class="w-1/2 bg-surface p-2 flex flex-col gap-1.5">
+<div class="h-2.5 w-3/4 rounded bg-surface-secondary"></div>
+<div class="h-8 rounded bg-surface-elevated shadow-sm"></div>
+<div class="h-4 rounded bg-surface-elevated shadow-sm"></div>
+</div>
+<!-- Right half dark -->
+<div class="w-1/2 bg-dark-bg p-2 flex flex-col gap-1.5">
+<div class="h-2.5 w-3/4 rounded bg-dark-surface-secondary"></div>
+<div class="h-8 rounded bg-dark-surface"></div>
+<div class="h-4 rounded bg-dark-surface"></div>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-text-primary font-medium">
+              Acompanha automaticamente a preferência de aparência do seu dispositivo.
+            </span>
+</label>
+</div>
+</div>
+<!-- Card 2: Revise sua configuração -->
+<div class="rounded-xl bg-surface-elevated shadow-sm p-space-lg">
+<div class="flex flex-col gap-space-2xs mb-space-lg">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-text-primary flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-text-primary text-[20px]">fact_check</span>
+              Revise sua configuração
+            </h2>
+<span class="px-space-xs py-space-2xs rounded-full bg-success-surface text-success font-label-sm text-label-sm font-semibold">
+              Configurações revisadas
+            </span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary">
+            Confira um resumo antes de concluir. Você poderá alterar qualquer informação depois nas configurações.
+          </p>
+</div>
+<!-- Summary List -->
+<div class="flex flex-col gap-space-sm">
+<!-- Item 1: Dados da barbearia -->
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-sm min-w-0 pr-space-sm">
+<div class="w-7 h-7 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-text-primary">Dados da barbearia</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Barbearia Imperial • Atendimento no local</span>
+</div>
+</div>
+<a class="shrink-0 h-9 px-space-md rounded-lg bg-surface-elevated hover:bg-surface-container text-text-primary font-label-md text-label-md flex items-center gap-space-2xs shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Editar
+            </a>
+</div>
+<!-- Item 2: Endereço -->
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-sm min-w-0 pr-space-sm">
+<div class="w-7 h-7 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-text-primary">Endereço</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Avenida São Paulo, 125, Centro - Mongaguá/SP</span>
+</div>
+</div>
+<a class="shrink-0 h-9 px-space-md rounded-lg bg-surface-elevated hover:bg-surface-container text-text-primary font-label-md text-label-md flex items-center gap-space-2xs shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Editar
+            </a>
+</div>
+<!-- Item 3: Horários -->
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-sm min-w-0 pr-space-sm">
+<div class="w-7 h-7 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-text-primary">Horários</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Segunda a Sábado configurados • Domingo fechado</span>
+</div>
+</div>
+<a class="shrink-0 h-9 px-space-md rounded-lg bg-surface-elevated hover:bg-surface-container text-text-primary font-label-md text-label-md flex items-center gap-space-2xs shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Editar
+            </a>
+</div>
+<!-- Item 4: Serviços -->
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-sm min-w-0 pr-space-sm">
+<div class="w-7 h-7 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-text-primary">Serviços</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">4 serviços cadastrados • Visíveis na Vitrine pública</span>
+</div>
+</div>
+<a class="shrink-0 h-9 px-space-md rounded-lg bg-surface-elevated hover:bg-surface-container text-text-primary font-label-md text-label-md flex items-center gap-space-2xs shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Editar
+            </a>
+</div>
+<!-- Item 5: Produtos e pagamentos -->
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-space-sm min-w-0 pr-space-sm">
+<div class="w-7 h-7 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-text-primary">Produtos e pagamentos</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Vende produtos e bebidas • Pix, Dinheiro, Débito e Crédito</span>
+</div>
+</div>
+<a class="shrink-0 h-9 px-space-md rounded-lg bg-surface-elevated hover:bg-surface-container text-text-primary font-label-md text-label-md flex items-center gap-space-2xs shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Editar
+            </a>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (Summary & Context Side-Panel) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Card 1: Tudo pronto para começar -->
+<div class="rounded-xl bg-surface-elevated shadow-sm p-space-lg">
+<div class="flex items-center justify-between mb-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-text-primary">
+            Tudo pronto para começar
+          </h3>
+<span class="inline-flex items-center gap-1 px-space-xs py-space-2xs rounded-full bg-success-surface text-success font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+            Última etapa
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary mb-space-md">
+          Suas configurações iniciais estão prontas. Você poderá gerenciar os detalhes no painel a qualquer momento.
+        </p>
+<!-- Compact Checklist Box -->
+<div class="p-space-md rounded-lg bg-surface flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-primary">
+<span class="material-symbols-outlined text-[16px] text-success">check_circle</span>
+<span>Dados da barbearia</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-primary">
+<span class="material-symbols-outlined text-[16px] text-success">check_circle</span>
+<span>Endereço</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-primary">
+<span class="material-symbols-outlined text-[16px] text-success">check_circle</span>
+<span>Horários</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-primary">
+<span class="material-symbols-outlined text-[16px] text-success">check_circle</span>
+<span>Serviços</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-primary">
+<span class="material-symbols-outlined text-[16px] text-success">check_circle</span>
+<span>Produtos e pagamentos</span>
+</div>
+</div>
+<div class="w-full flex items-center justify-between pt-space-xs">
+<span class="font-body-sm text-body-sm text-text-secondary">Etapa do Setup</span>
+<span class="font-label-sm text-label-sm text-text-primary font-bold">Passo 6 de 6</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden mt-space-2xs">
+<div class="h-full w-full bg-success rounded-full"></div>
+</div>
+</div>
+<!-- Card 2: Informações importantes -->
+<div class="rounded-xl bg-surface-elevated shadow-sm p-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-info-surface text-info flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<h4 class="font-label-lg text-label-lg text-text-primary">
+              Informações importantes
+            </h4>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+              O tema escolhido é uma preferência da sua conta e não altera a aparência pública da Vitrine. O sistema abrirá diretamente no seu painel operacional.
+            </p>
+</div>
+</div>
+</div>
+<!-- Card 3: Próximo passo -->
+<div class="rounded-xl bg-surface-elevated shadow-sm p-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-secondary-container text-text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">PRÓXIMO PASSO</span>
+<h4 class="font-label-lg text-label-lg text-text-primary">
+              Acesso ao painel
+            </h4>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+              Ao concluir, você terá acesso ao Dashboard e aos recursos de gestão da sua barbearia.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Actions Bar -->
+<footer class="w-full mt-space-2xl pt-space-lg pb-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-elevated rounded-xl shadow-sm px-space-lg">
+<!-- Back Button -->
+<a class="w-full sm:w-auto h-11 px-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container text-text-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Voltar</span>
+</a>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<!-- Final Primary Completion Button (Solid Red Theme) -->
+<button class="w-full sm:w-auto min-h-[44px] h-11 px-space-xl rounded-xl bg-danger hover:bg-danger/90 active:bg-danger text-on-error font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-colors shadow-sm" id="complete-onboarding-btn" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span>Concluir configuração</span>
+</button>
+</div>
+</footer>
+</div></div></main>
+<!-- Success Feedback Toast Element (Hidden by default) -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-space-sm bg-surface-elevated border border-border-subtle shadow-xl px-space-lg py-space-md rounded-xl" id="success-toast">
+<div class="w-8 h-8 rounded-full bg-success-surface text-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-text-primary">Sucesso!</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Configuração concluída com sucesso.</span>
+</div>
+</div>
+<!-- Global Footer matching Step 5 (SCREEN_11) -->
+<footer class="w-full bg-surface-elevated border-t border-border-subtle py-space-lg"><div class="max-w-7xl mx-auto px-gutter-desktop flex flex-col sm:flex-row items-center justify-between gap-space-md text-text-secondary font-body-sm text-body-sm"><span>© 2026 Estilo e Gestão. Todos os direitos reservados. • Plataforma de Gestão Operacional para Barbearias</span><div class="flex flex-wrap items-center gap-x-space-md gap-y-space-xs text-text-secondary font-label-sm text-label-sm"><a class="hover:text-text-primary transition-colors" href="#">Central de Ajuda</a><span>•</span><a class="hover:text-text-primary transition-colors" href="#">Suporte Operacional</a><span>•</span><a class="hover:text-text-primary transition-colors" href="#">Termos de Uso</a><span>•</span><a class="hover:text-text-primary transition-colors" href="#">Privacidade</a></div></div></footer>
+<!-- Interactive Scripts -->
+<script>
+  (function() {
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(card => {
+      card.addEventListener('click', () => {
+        themeOptions.forEach(c => {
+          c.classList.remove('bg-surface-container', 'shadow-sm');
+          c.classList.add('bg-surface-container-low');
+          const icon = c.querySelector('.theme-check-icon');
+          if (icon) {
+            icon.classList.remove('bg-danger', 'text-on-error');
+            icon.classList.add('bg-surface-container-high', 'text-transparent');
+          }
+        });
+
+        card.classList.remove('bg-surface-container-low');
+        card.classList.add('bg-surface-container', 'shadow-sm');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+
+        const activeIcon = card.querySelector('.theme-check-icon');
+        if (activeIcon) {
+          activeIcon.classList.remove('bg-surface-container-high', 'text-transparent');
+          activeIcon.classList.add('bg-danger', 'text-on-error');
+        }
+      });
+    });
+
+    const finishBtn = document.getElementById('complete-onboarding-btn');
+    const toast = document.getElementById('success-toast');
+    if (finishBtn) {
+      finishBtn.addEventListener('click', function() {
+        this.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">progress_activity</span><span>Concluindo...</span>';
+        this.disabled = true;
+        setTimeout(() => {
+          if (toast) {
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+          }
+          this.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Configuração concluída</span>';
+          this.classList.remove('bg-danger');
+          this.classList.add('bg-success');
+        }, 1000);
+      });
+    }
+  })();
+</script>
+</body></html>

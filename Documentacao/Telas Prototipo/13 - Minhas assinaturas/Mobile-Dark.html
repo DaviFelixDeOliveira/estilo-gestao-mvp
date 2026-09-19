@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark h-full" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Estilo e Gestão - Minha assinatura</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              graphite: '#F4F4F0',
+              secondary: '#E9E9E4',
+              muted: '#B8B8B2',
+              bgDark: '#181817',
+              cardDark: '#222220',
+              borderDark: '#3F3F3B',
+              secondaryDark: '#2B2B29',
+              green: '#6FB892',
+              greenDark: '#173B2D',
+              danger: '#F97066',
+              dangerDark: '#4A1D1A',
+              warning: '#FDB022',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+    }
+  </style>
+</head>
+<body class="h-full bg-[#181817] text-[#F4F4F0] antialiased selection:bg-[#F4F4F0] selection:text-[#181817] flex flex-col justify-between">
+<div class="flex-1 flex flex-col min-h-screen pb-24">
+<!-- HEADER MOBILE AUTENTICADO -->
+<header class="h-14 px-4 bg-[#222220] border-b border-[#3F3F3B] sticky top-0 z-20 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<a class="w-8 h-8 rounded-lg bg-[#2B2B29] border border-[#3F3F3B] flex items-center justify-center text-[#B8B8B2] hover:text-white transition" href="#">
+<i class="w-4 h-4" data-lucide="arrow-left"></i>
+</a>
+<div>
+<span class="text-[10px] text-[#B8B8B2] font-semibold uppercase tracking-wider block -mb-0.5">Sua Conta</span>
+<span class="text-xs font-bold text-white">Minha assinatura</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-lg border border-[#3F3F3B] bg-[#2B2B29] flex items-center justify-center text-amber-300" title="Alternar tema">
+<i class="w-4 h-4" data-lucide="sun"></i>
+</button>
+<div class="w-8 h-8 rounded-full bg-[#3F3F3B] text-white flex items-center justify-center font-bold text-xs">
+          JS
+        </div>
+</div>
+</header>
+<!-- CONTEÚDO PRINCIPAL (MOBILE DARK) -->
+<main class="p-4 space-y-4 max-w-lg mx-auto w-full">
+<!-- Título -->
+<div>
+<h2 class="text-xl font-bold text-[#F4F4F0] tracking-tight">Minha assinatura</h2>
+<p class="text-xs text-[#B8B8B2] mt-0.5">Consulte seu plano atual e gerencie sua assinatura com total autonomia.</p>
+</div>
+<!-- CARD 1: PLANO ATUAL -->
+<div class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm space-y-3.5">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#173B2D] text-[#6FB892] border border-[#6FB892]/30">
+<span class="w-1.5 h-1.5 rounded-full bg-[#6FB892]"></span>
+            Plano Normal • Ativo
+          </span>
+<div class="text-right">
+<span class="text-[10px] text-[#B8B8B2] block">Validade</span>
+<span class="text-xs font-extrabold text-[#F4F4F0]">16/10/2026</span>
+</div>
+</div>
+<div class="bg-[#2B2B29] border border-[#3F3F3B] rounded-xl p-3.5 space-y-2">
+<span class="text-[10px] font-bold text-[#B8B8B2] uppercase tracking-wider block">Recursos inclusos no seu ciclo:</span>
+<div class="space-y-1.5 text-xs text-[#F4F4F0]">
+<div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Gestão operacional completa</span></div>
+<div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>PDV e emissão de comandas</span></div>
+<div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Controle de estoque e despesas</span></div>
+<div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Relatórios em PDF e PNG</span></div>
+<div class="flex items-center gap-2"><i class="w-3.5 h-3.5 text-[#6FB892] shrink-0" data-lucide="check"></i><span>Vitrine Digital e Portfólio</span></div>
+</div>
+<div class="pt-2 border-t border-[#3F3F3B] flex items-center gap-1.5 text-[11px] text-[#B8B8B2]">
+<i class="w-3.5 h-3.5 shrink-0" data-lucide="info"></i>
+<span>Assistente de IA não incluído</span>
+</div>
+</div>
+<button class="w-full py-2.5 px-4 rounded-xl bg-[#F4F4F0] text-[#181817] hover:bg-[#E9E9E4] transition font-bold text-xs flex items-center justify-center gap-2 shadow-sm" onclick="openModal('modal-compare')">
+<i class="w-4 h-4 text-amber-600" data-lucide="sparkles"></i>
+<span>Conhecer e alterar plano</span>
+</button>
+</div>
+<!-- CARD 2: GARANTIA DE CONTINUIDADE E RETORNO AO GRÁTIS -->
+<div class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm space-y-3">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-[#6FB892]" data-lucide="shield-check"></i>
+<h3 class="text-xs font-bold text-[#F4F4F0]">Garantia &amp; Continuidade</h3>
+</div>
+<p class="text-xs text-[#B8B8B2] leading-relaxed">
+          Se o plano não for renovado, sua conta continuará no <strong>Plano Grátis</strong> após o término do período atual (<strong>16/10/2026</strong>).
+        </p>
+<div class="bg-[#2B2B29] rounded-xl p-3 space-y-2 text-[11px] text-[#F4F4F0]">
+<div class="flex items-start gap-2">
+<i class="w-3.5 h-3.5 text-[#6FB892] shrink-0 mt-0.5" data-lucide="check"></i>
+<span>Os dados históricos dos recursos pagos não são apagados</span>
+</div>
+<div class="flex items-start gap-2">
+<i class="w-3.5 h-3.5 text-[#6FB892] shrink-0 mt-0.5" data-lucide="check"></i>
+<span>Histórico de vendas e despesas em modo somente leitura</span>
+</div>
+<div class="flex items-start gap-2">
+<i class="w-3.5 h-3.5 text-[#6FB892] shrink-0 mt-0.5" data-lucide="check"></i>
+<span>Vitrine Digital, Portfólio e gerenciamento de serviços e produtos para exibição continuam disponíveis</span>
+</div>
+<div class="flex items-start gap-2">Sem cobranças automáticas: sem renovação, a conta passa normalmente para o Plano Grátis</div>
+</div>
+</div>
+<!-- CARD 3: HISTÓRICO DE PAGAMENTOS -->
+<div class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-[#B8B8B2]" data-lucide="receipt"></i>
+<h3 class="text-xs font-bold text-[#F4F4F0]">Histórico de pagamentos</h3>
+</div>
+<span class="text-[10px] text-[#B8B8B2]">0 registros</span>
+</div>
+<div class="border border-dashed border-[#3F3F3B] rounded-xl p-6 text-center bg-[#2B2B29]/30 flex flex-col items-center justify-center">
+<div class="w-9 h-9 rounded-full bg-[#222220] border border-[#3F3F3B] flex items-center justify-center text-[#B8B8B2] mb-2">
+<i class="w-4 h-4" data-lucide="clock"></i>
+</div>
+<h4 class="text-xs font-bold text-[#F4F4F0]">Nenhum pagamento registrado ainda.</h4>
+<p class="text-[11px] text-[#B8B8B2] mt-1 max-w-xs">
+            Os pagamentos confirmados aparecerão aqui com data, plano, valor e validade correspondente.
+          </p>
+</div>
+</div>
+<!-- CARD 4: CANCELAMENTO DE ASSINATURA -->
+<div class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm space-y-3">
+<div>
+<h3 class="text-xs font-bold text-[#F4F4F0]">Deseja encerrar o período pago?</h3>
+<p class="text-[11px] text-[#B8B8B2] mt-1 leading-relaxed">
+            Ao cancelar, o Plano Normal permanece ativo até <strong>16/10/2026</strong>. Após essa data sua conta passará para o Plano Grátis.
+          </p>
+</div>
+<button class="w-full py-2.5 px-4 rounded-xl border border-red-900/60 text-red-400 hover:bg-red-950/40 transition text-xs font-bold flex items-center justify-center gap-2" onclick="openModal('modal-cancel')">
+<i class="w-4 h-4" data-lucide="x-circle"></i>
+<span>Cancelar assinatura</span>
+</button>
+</div>
+</main>
+<!-- BARRA INFERIOR FIXA DO BARBEIRO (MOBILE - 4 ITENS OFICIAIS) -->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#222220] border-t border-[#3F3F3B] px-3 grid grid-cols-4 items-center z-30 select-none">
+<!-- 1. Dashboard -->
+<a class="flex flex-col items-center justify-center gap-1 text-[#B8B8B2] hover:text-white py-1" href="#">
+<i class="w-5 h-5" data-lucide="layout-grid"></i>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<!-- 2. PDV -->
+<a class="flex flex-col items-center justify-center gap-1 text-[#B8B8B2] hover:text-white py-1" href="#">
+<i class="w-5 h-5" data-lucide="calculator"></i>
+<span class="text-[10px] font-medium">PDV</span>
+</a>
+<!-- 3. Operação -->
+<a class="flex flex-col items-center justify-center gap-1 text-[#B8B8B2] hover:text-white py-1" href="#">
+<i class="w-5 h-5" data-lucide="scissors"></i>
+<span class="text-[10px] font-medium">Operação</span>
+</a>
+<!-- 4. Configurações (Ativo) -->
+<a class="flex flex-col items-center justify-center gap-1 text-white py-1 font-bold" href="#">
+<div class="relative">
+<i class="w-5 h-5 text-emerald-400" data-lucide="settings"></i>
+<span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500"></span>
+</div>
+<span class="text-[10px]">Configurações</span>
+</a>
+</nav>
+</div>
+<!-- MODAL / BOTTOM SHEET DE COMPARAÇÃO DE PLANOS (MOBILE DARK) -->
+<dialog class="p-0 rounded-2xl max-w-sm w-full bg-[#222220] border border-[#3F3F3B] shadow-2xl text-[#F4F4F0]" id="modal-compare">
+<div class="p-4 border-b border-[#3F3F3B] flex items-center justify-between sticky top-0 bg-[#222220] z-10">
+<div>
+<h3 class="text-sm font-bold text-[#F4F4F0]">Conhecer e alterar plano</h3>
+<p class="text-[10px] text-[#B8B8B2]">Planos disponíveis para sua barbearia</p>
+</div>
+<button class="p-1.5 text-[#B8B8B2] hover:text-white rounded-lg hover:bg-[#2B2B29]" onclick="closeModal('modal-compare')">
+<i class="w-4 h-4" data-lucide="x"></i>
+</button>
+</div>
+<div class="p-4 space-y-4 max-h-[75vh] overflow-y-auto">
+<!-- PLANO NORMAL (ATUAL) -->
+<div class="rounded-xl border-2 border-[#F4F4F0] p-4 bg-[#2B2B29] relative space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Plano Normal</span>
+<span class="px-2 py-0.5 rounded-full bg-[#F4F4F0] text-[#181817] text-[10px] font-extrabold">Plano Atual</span>
+</div>
+<p class="text-[11px] text-[#B8B8B2] leading-tight">
+          Gestão completa da barbearia (PDV, comandas, controle de estoque, financeiro, despesas e relatórios em PDF/PNG).
+        </p>
+<div class="pt-2 border-t border-[#3F3F3B] text-[10px] text-[#B8B8B2] italic">
+          Não inclui Assistente de Inteligência Artificial.
+        </div>
+</div>
+<!-- PLANO COM IA -->
+<div class="rounded-xl border border-indigo-500/40 bg-gradient-to-b from-indigo-950/40 to-[#222220] p-4 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+            Plano Com IA
+            <i class="w-3.5 h-3.5 text-amber-400" data-lucide="sparkles"></i>
+</span>
+<span class="text-[10px] text-amber-400 font-semibold">Atendimento 24h</span>
+</div>
+<p class="text-[11px] text-[#B8B8B2] leading-tight">
+          Tudo do Plano Normal + Assistente de Inteligência Artificial integrado na sua Vitrine para tirar dúvidas de clientes.
+        </p>
+<button class="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition" onclick="upgradeFlow()">
+          Fazer upgrade para Com IA
+        </button>
+</div>
+<!-- PLANO GRÁTIS -->
+<div class="rounded-xl border border-[#3F3F3B] p-4 bg-[#1E1E1C] space-y-2 opacity-80">
+<span class="text-xs font-bold text-[#B8B8B2] uppercase tracking-wider">Plano Grátis</span>
+<p class="text-[11px] text-[#B8B8B2] leading-tight">
+          Vitrine pública, portfólio de cortes e consulta ao histórico anterior em modo somente leitura (sem novas vendas no PDV).
+        </p>
+</div>
+<div class="p-2.5 rounded-lg bg-[#2B2B29] text-[10px] text-[#B8B8B2] leading-relaxed flex items-start gap-2 border border-[#3F3F3B]">
+<i class="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" data-lucide="info"></i>
+<span>O upgrade pode ser ativado imediatamente sem alterar a validade atual (16/10/2026). O valor adicional será tratado separadamente.</span>
+</div>
+</div>
+</dialog>
+<!-- MODAL DE CONFIRMAÇÃO DE CANCELAMENTO (MOBILE DARK) -->
+<dialog class="p-0 rounded-2xl max-w-xs w-full bg-[#222220] border border-[#3F3F3B] shadow-2xl text-[#F4F4F0]" id="modal-cancel">
+<div class="p-5 space-y-3.5 text-center">
+<div class="w-10 h-10 rounded-full bg-amber-950/40 border border-amber-600/40 text-amber-400 flex items-center justify-center mx-auto">
+<i class="w-5 h-5" data-lucide="alert-triangle"></i>
+</div>
+<div>
+<h3 class="text-sm font-bold text-[#F4F4F0]">Cancelar assinatura?</h3>
+<p class="text-xs text-[#B8B8B2] mt-1 leading-relaxed">
+          Seu Plano Normal continuará ativo até <strong>16/10/2026</strong>. Depois dessa data, sua conta passará para o Plano Grátis.
+        </p>
+</div>
+<div class="bg-[#2B2B29] p-2.5 rounded-lg text-left text-[10px] space-y-1 text-[#F4F4F0]">
+<div>✓ Sua conta <strong>não</strong> será excluída</div>
+<div>✓ Vitrine Digital continuará ativa</div>
+<div>✓ Histórico de dados mantido em modo leitura</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="py-2 rounded-lg border border-[#3F3F3B] text-xs font-bold text-[#F4F4F0] hover:bg-[#2B2B29]" onclick="closeModal('modal-cancel')">
+          Voltar
+        </button>
+<button class="py-2 rounded-lg bg-red-600 text-xs font-bold text-white hover:bg-red-500" onclick="confirmCancel()">
+          Confirmar
+        </button>
+</div>
+</div>
+</dialog>
+<script>
+    lucide.createIcons();
+    function openModal(id) { document.getElementById(id).showModal(); }
+    function closeModal(id) { document.getElementById(id).close(); }
+    function upgradeFlow() {
+      alert('Solicitação de upgrade para o Plano Com IA registrada. O suporte entrará em contato para ativação mantendo a validade de 16/10/2026.');
+      closeModal('modal-compare');
+    }
+    function confirmCancel() {
+      alert('Cancelamento agendado. Seu Plano Normal permanece ativo até 16/10/2026. Após essa data sua conta migrará para o Plano Grátis mantendo todos os dados.');
+      closeModal('modal-cancel');
+    }
+  </script>
+</body>
+</html>

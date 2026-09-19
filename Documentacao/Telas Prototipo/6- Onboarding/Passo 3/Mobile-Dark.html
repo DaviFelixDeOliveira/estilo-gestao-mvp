@@ -1,0 +1,440 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>Estilo e Gestão - Horários de Funcionamento</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "dark-bg": "#121214",
+            "dark-card": "#19191C",
+            "dark-surface-secondary": "#232328",
+            "dark-border": "#2E2E33",
+            "brand-red": "#E53935",
+            "brand-red-hover": "#C62828",
+            "dark-text-primary": "#F4F4F5",
+            "dark-text-secondary": "#9CA3AF",
+            "dark-text-muted": "#6B7280"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body {
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .pb-safe {
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+    }
+    .pt-safe {
+      padding-top: max(env(safe-area-inset-top, 0px), 12px);
+    }
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="bg-[#121214] text-[#F4F4F5] antialiased min-h-screen flex flex-col">
+<!-- Compact Mobile Header -->
+<header class="sticky top-0 z-40 bg-[#121214]/90 backdrop-blur-md border-b border-[#2E2E33]/60 pt-safe">
+<div class="px-4 h-14 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<a aria-label="Voltar para Etapa 2" class="w-9 h-9 flex items-center justify-center rounded-lg text-[#F4F4F5] hover:bg-[#232328] active:scale-95 transition-colors" href="javascript:history.back()">
+<span class="material-symbols-outlined text-[22px]">chevron_left</span>
+</a>
+<span class="text-xs font-bold tracking-widest text-[#F4F4F5] uppercase">ESTILO E GESTÃO</span>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Alternar tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-[#9CA3AF] hover:text-[#F4F4F5] hover:bg-[#232328] active:scale-95 transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+
+</div>
+</div>
+<!-- Stepper & Progress -->
+<div class="px-4 pb-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-xs">
+<span class="text-[#9CA3AF] font-medium">Passo 3 de 6 • Horários (Etapa final: Tema do sistema e conclusão)</span>
+<span class="text-[#F4F4F5] font-semibold">50% concluído</span>
+</div>
+<div class="w-full h-1 bg-[#232328] rounded-full overflow-hidden">
+<div class="h-full bg-brand-red rounded-full transition-all duration-300" style="width: 50%;"></div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 py-5 max-w-md mx-auto w-full flex flex-col gap-5 pb-8">
+<!-- Top Badge & Narrative -->
+<div class="flex flex-col gap-2">
+<div class="inline-flex items-center gap-1.5 self-start px-2.5 py-1 rounded-full bg-[#19191C] border border-[#2E2E33] text-[#9CA3AF] text-xs font-semibold">
+<span class="material-symbols-outlined text-[15px] text-[#F59E0B]" style="font-variation-settings: &quot;FILL&quot; 1;">storefront</span>
+<span class="">Configuração do seu espaço</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-[#F4F4F5] mt-1">
+        Quando sua barbearia funciona?
+      </h1>
+<p class="text-sm text-[#9CA3AF] leading-relaxed">
+        Defina os dias e horários em que sua barbearia funciona. Essas informações poderão aparecer na sua Vitrine pública.
+      </p>
+</div>
+<!-- Schedule Section Header -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#9CA3AF]">schedule</span>
+<h2 class="text-sm font-semibold text-[#F4F4F5]">Horários da semana</h2>
+</div>
+
+</div>
+<!-- Days Accordion List -->
+<div class="flex flex-col gap-2.5" id="schedule-list"><!-- Segunda-feira (Exemplo Aberto e Configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-seg">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('seg')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#F4F4F5]">
+        Seg
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Segunda-feira</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-seg" style="transform: rotate(180deg);">expand_more</span>
+        </div>
+        <p class="text-xs text-emerald-400 font-medium" id="label-status-seg">Aberto • 09:00 - 19:00</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+      <span class="text-[11px] font-semibold text-emerald-400 bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Aberto</span>
+    </div>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 flex flex-col gap-3" id="content-seg">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] shadow-sm border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <span class="text-[11px] font-medium text-[#9CA3AF]">1º Turno</span>
+      <div class="flex items-center gap-2">
+        <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+          <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" value="09:00">
+        </div>
+        <span class="text-xs text-[#6B7280]">até</span>
+        <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+          <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" value="19:00">
+        </div>
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1 mt-0.5" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+    <div class="pt-2 border-t border-[#2E2E33]/50 flex flex-col gap-2">
+      <button type="button" onclick="document.getElementById('copy-box-seg').classList.toggle('hidden')" class="text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5] flex items-center gap-1.5 self-start">
+        <span class="material-symbols-outlined text-[15px]">content_copy</span> Aplicar a outros dias
+      </button>
+      <div id="copy-box-seg" class="hidden flex flex-col gap-2 p-2.5 bg-[#232328] border border-[#2E2E33] rounded-lg">
+        <div class="text-[11px] font-medium text-[#9CA3AF]">Replicar horários para:</div>
+        <div class="flex flex-wrap gap-1.5">
+          <label class="inline-flex items-center gap-1 bg-[#19191C] border border-[#2E2E33] px-2 py-1 rounded text-xs text-[#9CA3AF] cursor-pointer"><input type="checkbox" class="sr-only"> Ter</label>
+          <label class="inline-flex items-center gap-1 bg-[#19191C] border border-[#2E2E33] px-2 py-1 rounded text-xs text-[#9CA3AF] cursor-pointer"><input type="checkbox" class="sr-only"> Qua</label>
+          <label class="inline-flex items-center gap-1 bg-[#19191C] border border-[#2E2E33] px-2 py-1 rounded text-xs text-[#9CA3AF] cursor-pointer"><input type="checkbox" class="sr-only"> Qui</label>
+          <label class="inline-flex items-center gap-1 bg-[#19191C] border border-[#2E2E33] px-2 py-1 rounded text-xs text-[#9CA3AF] cursor-pointer"><input type="checkbox" class="sr-only"> Sex</label>
+          <label class="inline-flex items-center gap-1 bg-[#19191C] border border-[#2E2E33] px-2 py-1 rounded text-xs text-[#9CA3AF] cursor-pointer"><input type="checkbox" class="sr-only"> Sáb</label>
+        </div>
+        <button type="button" class="mt-1 py-1.5 px-3 bg-[#19191C] hover:bg-[#2E2E33] text-xs font-semibold text-[#F4F4F5] rounded-md border border-[#2E2E33] flex items-center justify-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-[15px]">check</span> Confirmar replicação
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terça-feira (Não configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-ter">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('ter')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#9CA3AF]">Ter</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Terça-feira</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-ter">expand_more</span>
+        </div>
+        <p class="text-xs text-[#9CA3AF] font-medium">Não configurado</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#9CA3AF] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Configurar</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-ter">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex items-center gap-2 pt-1">
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" value="09:00">
+      </div>
+      <span class="text-xs text-[#6B7280]">até</span>
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" value="19:00">
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+  </div>
+</div>
+
+<!-- Quarta-feira (Não configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-qua">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('qua')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#9CA3AF]">Qua</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Quarta-feira</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-qua">expand_more</span>
+        </div>
+        <p class="text-xs text-[#9CA3AF] font-medium">Não configurado</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#9CA3AF] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Configurar</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-qua">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex items-center gap-2 pt-1">
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+      <span class="text-xs text-[#6B7280]">até</span>
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+  </div>
+</div>
+
+<!-- Quinta-feira (Não configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-qui">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('qui')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#9CA3AF]">Qui</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Quinta-feira</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-qui">expand_more</span>
+        </div>
+        <p class="text-xs text-[#9CA3AF] font-medium">Não configurado</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#9CA3AF] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Configurar</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-qui">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex items-center gap-2 pt-1">
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+      <span class="text-xs text-[#6B7280]">até</span>
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+  </div>
+</div>
+
+<!-- Sexta-feira (Não configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-sex">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('sex')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#9CA3AF]">Sex</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Sexta-feira</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-sex">expand_more</span>
+        </div>
+        <p class="text-xs text-[#9CA3AF] font-medium">Não configurado</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#9CA3AF] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Configurar</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-sex">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex items-center gap-2 pt-1">
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+      <span class="text-xs text-[#6B7280]">até</span>
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+  </div>
+</div>
+
+<!-- Sábado (Não configurado) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] overflow-hidden transition-all duration-200" id="card-sab">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('sab')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#9CA3AF]">Sáb</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#F4F4F5]">Sábado</span>
+          <span class="material-symbols-outlined text-[16px] text-[#9CA3AF] transition-transform duration-200" id="arrow-sab">expand_more</span>
+        </div>
+        <p class="text-xs text-[#9CA3AF] font-medium">Não configurado</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#9CA3AF] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Configurar</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-sab">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Fechado</button>
+    </div>
+    <div class="flex items-center gap-2 pt-1">
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+      <span class="text-xs text-[#6B7280]">até</span>
+      <div class="flex-1 flex items-center bg-[#232328] border border-[#2E2E33] rounded-lg px-2.5 py-1.5">
+        <input class="bg-transparent text-xs text-[#F4F4F5] w-full focus:outline-none border-none p-0" type="time" placeholder="--:--">
+      </div>
+    </div>
+    <button class="text-xs font-semibold text-brand-red hover:text-red-400 self-start flex items-center gap-1" type="button">
+      <span class="material-symbols-outlined text-[15px]">add</span> Adicionar intervalo
+    </button>
+  </div>
+</div>
+
+<!-- Domingo (Fechado) -->
+<div class="rounded-xl bg-[#19191C]/70 border border-[#2E2E33]/70 overflow-hidden transition-all duration-200" id="card-dom">
+  <div class="p-3.5 flex items-center justify-between cursor-pointer" onclick="toggleDayAccordion('dom')">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-[#232328] border border-[#2E2E33] flex items-center justify-center text-xs font-bold text-[#6B7280]">Dom</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-[#9CA3AF]">Domingo</span>
+          <span class="material-symbols-outlined text-[16px] text-[#6B7280] transition-transform duration-200" id="arrow-dom">expand_more</span>
+        </div>
+        <p class="text-xs text-[#6B7280] font-medium" id="status-dom">Fechado neste dia</p>
+      </div>
+    </div>
+    <span class="text-[11px] font-medium text-[#6B7280] bg-[#232328] border border-[#2E2E33] px-2.5 py-1 rounded-full">Fechado</span>
+  </div>
+  <div class="px-3.5 pb-3.5 pt-1 border-t border-[#2E2E33]/70 hidden flex-col gap-3" id="content-dom">
+    <div class="flex items-center gap-2 bg-[#232328]/60 p-1 rounded-lg border border-[#2E2E33]">
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-medium text-[#9CA3AF] hover:text-[#F4F4F5]">Aberto</button>
+      <button type="button" class="flex-1 py-1 px-3 text-xs font-semibold rounded-md bg-[#19191C] text-[#F4F4F5] border border-[#2E2E33]">Fechado</button>
+    </div>
+    <p class="text-xs text-[#9CA3AF]">Sua barbearia estará fechada aos domingos. Selecione Aberto para configurar horários de funcionamento.</p>
+  </div>
+</div></div>
+<!-- Prévia dos Horários (Vitrine do Cliente) -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] p-4 flex flex-col gap-3 shadow-md">
+<div class="flex items-center justify-between border-b border-[#2E2E33] pb-2.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-blue-400" style="font-variation-settings: &quot;FILL&quot; 1;">verified</span>
+<span class="text-xs font-bold tracking-wider text-[#9CA3AF] uppercase">PRÉVIA DOS HORÁRIOS</span>
+</div>
+<span class="text-[11px] font-semibold text-blue-400 bg-blue-950/60 border border-blue-800/50 px-2 py-0.5 rounded-full">
+          Vitrine do Cliente
+        </span>
+</div>
+<div class="py-4 px-2 text-center flex flex-col items-center justify-center gap-1.5"><span class="material-symbols-outlined text-[24px] text-[#6B7280]">hourglass_empty</span><p class="text-xs text-[#9CA3AF]">Nenhum horário configurado ainda. Os horários definidos aparecerão aqui.</p></div>
+</div>
+<!-- Information Card: Horários na Vitrine -->
+<div class="rounded-xl bg-[#19191C] border border-[#2E2E33] p-3.5 flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-amber-400 shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-0.5">
+<h3 class="text-xs font-semibold text-[#F4F4F5]">Horários na Vitrine</h3>
+<p class="text-xs text-[#9CA3AF] leading-relaxed">
+          Esses horários ajudam os clientes a saber quando sua barbearia normalmente está aberta.
+        </p>
+</div>
+</div>
+<!-- Main CTA and Autosave Status -->
+<div class="flex flex-col gap-2.5 pt-2"><div class="flex items-center gap-3">
+  <a href="javascript:history.back()" class="h-12 px-5 bg-[#19191C] hover:bg-[#232328] active:scale-[0.98] text-[#F4F4F5] border border-[#2E2E33] font-semibold text-sm rounded-xl inline-flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0">
+    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+    <span class="">Voltar</span>
+  </a>
+  <button class="flex-1 h-12 bg-brand-red hover:bg-brand-red-hover active:scale-[0.98] text-white font-semibold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-red-950/30 transition-all whitespace-nowrap" type="button">
+    <span class="">Continuar</span>
+    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+  </button>
+</div>
+<div class="flex items-center justify-center gap-1.5 text-xs text-[#9CA3AF] pt-1 whitespace-nowrap">
+  <span class="material-symbols-outlined text-[15px] text-emerald-400">cloud_done</span>
+  <span class="">Seu progresso é salvo automaticamente.</span>
+</div></div>
+</main>
+<script>
+    function toggleDayAccordion(dayId) {
+      const content = document.getElementById('content-' + dayId);
+      const arrow = document.getElementById('arrow-' + dayId);
+      if (!content) return;
+
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        content.classList.add('flex');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        content.classList.remove('flex');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function toggleDayStatus(dayId, checkbox) {
+      const card = document.getElementById('card-' + dayId);
+      if (checkbox.checked) {
+        card.classList.remove('opacity-85');
+      } else {
+        card.classList.add('opacity-85');
+      }
+    }
+
+    function copyScheduleNotice() {
+      const feedback = document.createElement('div');
+      feedback.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2.5 bg-[#232328] border border-[#2E2E33] text-[#F4F4F5] text-xs font-semibold rounded-full shadow-2xl flex items-center gap-2 z-50 transition-opacity duration-300';
+      feedback.innerHTML = '<span class="material-symbols-outlined text-[16px] text-emerald-400">check_circle</span> Horários copiados com sucesso!';
+      document.body.appendChild(feedback);
+      setTimeout(() => {
+        feedback.style.opacity = '0';
+        setTimeout(() => feedback.remove(), 300);
+      }, 2200);
+    }
+  </script>
+
+
+
+
+</body></html>

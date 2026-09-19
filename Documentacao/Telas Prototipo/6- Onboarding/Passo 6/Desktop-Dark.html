@@ -1,0 +1,552 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base { 
+      html, body { margin: 0; padding: 0; } 
+      body { overscroll-behavior: none; } 
+      main > :first-child { margin-top: 0 !important; } 
+      main > :last-child { margin-bottom: 0 !important; } 
+    } 
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "dark-bg": "#111215",
+            "dark-surface": "#18191E",
+            "dark-surface-secondary": "#1F2128",
+            "dark-border": "#2C2E38",
+            "dark-text-primary": "#F4F4F0",
+            "dark-text-secondary": "#A1A1AA",
+            "dark-success": "#6FB892",
+            "dark-success-surface": "#173B2D",
+            "danger": "#DC2626",
+            "danger-hover": "#B91C1C",
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+          },
+          spacing: {
+            "space-2xs": "0.25rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-2xl": "3rem",
+            "gutter-desktop": "1.5rem",
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#111215] font-sans text-sm text-[#F4F4F0] min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
+<!-- Header: Identical to Step 5 Web Dark (SCREEN_12) -->
+<header class="fixed top-0 left-0 right-0 z-50 h-16 bg-[#111215]/90 backdrop-blur-md border-b border-[#2C2E38]">
+<div class="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<img alt="Logo Barbeiro Sem fundo Texto Preto.png" class="h-8 w-auto object-contain brightness-0 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1U5CtWci7y8BULX9IeO_PzrDnNQ7htK9zPShsoMEsngrEn0enf5VMSBa5XGROvir8DSHegPQcQTcot2ZUQNWIKBOaxMrW06vwKvg0FLaEPSdESTrHWrJ-cSbxMiw50ZLEYqGabjbJLEQsUkwEqQiR-amKh6YWt3ZxvOS_RcJP4jcrFEufKWy9rX7aDBfKK5kCMIPRwaqV7fQoQmE21C_803fRvz0et1huqpoHkmK8kQHMPATqPVKwgTc8G7KlJ8ZPshDPIQGxmBOQ">
+<span class="font-bold text-base tracking-tight text-white">Estilo e Gestão</span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#1F2128] text-[#A1A1AA] text-[11px] font-semibold uppercase tracking-wider border border-[#2C2E38]">ONBOARDING PROFISSIONAL</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#173B2D] text-[#6FB892] text-xs font-semibold">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+<span class="">Salvo automaticamente</span>
+</div>
+<button aria-label="Alternar Tema" class="w-9 h-9 rounded-lg flex items-center justify-center text-[#A1A1AA] hover:text-white hover:bg-[#1F2128] transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+
+</div>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="w-full flex-grow pt-16 bg-[#111215]">
+<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="flex flex-col w-full">
+<style>
+          .theme-card-active {
+            background: #1F2128;
+            border: 2px solid #DC2626;
+            box-shadow: 0 8px 24px -4px rgba(220, 38, 38, 0.25);
+          }
+          .theme-card-inactive {
+            background: #18191E;
+            border: 1px solid #2C2E38;
+          }
+          .theme-card-inactive:hover {
+            background: #1F2128;
+            border-color: #3F4250;
+          }
+        </style>
+<!-- Stepper / Header Meta -->
+<div class="w-full mb-8">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1F2128] text-[#A1A1AA] text-xs font-semibold tracking-wider border border-[#2C2E38]">
+<span class="w-2 h-2 rounded-full bg-danger animate-pulse"></span>
+                CONFIGURAÇÃO DO SEU ESPAÇO • PASSO 6 DE 6 • ÚLTIMA ETAPA
+              </span>
+</div>
+<div class="flex items-center gap-1.5 text-[#A1A1AA] text-xs">
+<span class="material-symbols-outlined text-[16px] text-dark-success">cloud_done</span>
+<span class="">Seu progresso é salvo automaticamente.</span>
+</div>
+</div>
+<!-- Multi-step Progress Bar Indicator -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-dark-success"></div>
+<div class="flex items-center gap-1 text-[#A1A1AA] text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px] text-dark-success font-bold">check</span>
+<span class="">1. Dados</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-dark-success"></div>
+<div class="flex items-center gap-1 text-[#A1A1AA] text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px] text-dark-success font-bold">check</span>
+<span class="">2. Endereço</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-dark-success"></div>
+<div class="flex items-center gap-1 text-[#A1A1AA] text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px] text-dark-success font-bold">check</span>
+<span class="">3. Horários</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-dark-success"></div>
+<div class="flex items-center gap-1 text-[#A1A1AA] text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px] text-dark-success font-bold">check</span>
+<span class="">4. Serviços</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-dark-success"></div>
+<div class="flex items-center gap-1 text-[#A1A1AA] text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px] text-dark-success font-bold">check</span>
+<span class="truncate">5. Produtos e pagamentos</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="h-1.5 w-full rounded-full bg-danger"></div>
+<div class="flex items-center gap-1.5 text-white text-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-danger"></span>
+<span class="">6. Aparência</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Page Header Title Group -->
+<div class="mb-8">
+<h1 class="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+            Como você prefere usar o Estilo e Gestão?
+          </h1>
+<p class="text-base text-[#A1A1AA] mt-2 max-w-3xl">
+            Escolha a aparência do sistema e confira suas configurações antes de concluir a configuração inicial.
+          </p>
+</div>
+<!-- Main Split Dual Column Architecture -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN (7 Cols) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Section 1: Appearance Selector Card -->
+<section class="bg-[#18191E] border border-[#2C2E38] rounded-xl p-6 shadow-sm flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight">
+                    Aparência do sistema
+                  </h2>
+<p class="text-sm text-[#A1A1AA] mt-1">
+                    Escolha como o painel do Estilo e Gestão será exibido para você.
+                  </p>
+</div>
+<span class="material-symbols-outlined text-[#A1A1AA] text-[24px]">palette</span>
+</div>
+<!-- 3 Interactive Theme Visual Option Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2" id="theme-options">
+<!-- Option 1: Claro -->
+<button class="theme-card-inactive rounded-xl p-4 text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[190px] relative group focus:outline-none" id="theme-btn-light" onclick="selectTheme('light')" type="button">
+<div class="flex flex-col gap-3 w-full">
+<div class="w-full h-20 rounded-lg bg-[#FAF9F5] p-2 flex flex-col justify-between overflow-hidden shadow-sm">
+<div class="flex items-center justify-between pb-1">
+<div class="w-8 h-2 rounded bg-[#D5D5D0]"></div>
+<div class="flex gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-[#E0DFD8]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#1A1A18]"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-1.5 my-auto">
+<div class="h-6 rounded bg-[#FFFFFF] shadow-xs flex flex-col justify-center px-1">
+<div class="w-4 h-1 rounded bg-[#C0C0BA] mb-0.5"></div>
+<div class="w-6 h-1.5 rounded bg-[#1A1A18]"></div>
+</div>
+<div class="h-6 rounded bg-[#FFFFFF] shadow-xs flex flex-col justify-center px-1">
+<div class="w-4 h-1 rounded bg-[#C0C0BA] mb-0.5"></div>
+<div class="w-5 h-1.5 rounded bg-[#1A1A18]"></div>
+</div>
+<div class="h-6 rounded bg-[#FFFFFF] shadow-xs flex flex-col justify-center px-1">
+<div class="w-3 h-1 rounded bg-[#C0C0BA] mb-0.5"></div>
+<div class="w-4 h-1.5 rounded bg-[#1A1A18]"></div>
+</div>
+</div>
+<div class="h-2 w-full rounded bg-[#E8E7E0]"></div>
+</div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-bold text-sm text-white">Claro</span>
+<span class="hidden material-symbols-outlined text-danger text-[18px]" id="check-light">check_circle</span>
+</div>
+<p class="text-xs text-[#A1A1AA] mt-1">
+                        Usa a aparência clara do Estilo e Gestão.
+                      </p>
+</div>
+</div>
+</button>
+<!-- Option 2: Escuro (Default Active) -->
+<button class="theme-card-active rounded-xl p-4 text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[190px] relative group focus:outline-none" id="theme-btn-dark" onclick="selectTheme('dark')" type="button">
+<div class="flex flex-col gap-3 w-full">
+<div class="w-full h-20 rounded-lg bg-[#111215] p-2 flex flex-col justify-between overflow-hidden border border-[#2C2E38]">
+<div class="flex items-center justify-between pb-1">
+<div class="w-8 h-2 rounded bg-[#2C2E38]"></div>
+<div class="flex gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-[#1F2128]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-danger"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-1.5 my-auto">
+<div class="h-6 rounded bg-[#18191E] flex flex-col justify-center px-1 border border-[#2C2E38]/60">
+<div class="w-4 h-1 rounded bg-[#3F4250] mb-0.5"></div>
+<div class="w-6 h-1.5 rounded bg-[#F4F4F0]"></div>
+</div>
+<div class="h-6 rounded bg-[#18191E] flex flex-col justify-center px-1 border border-[#2C2E38]/60">
+<div class="w-4 h-1 rounded bg-[#3F4250] mb-0.5"></div>
+<div class="w-5 h-1.5 rounded bg-[#F4F4F0]"></div>
+</div>
+<div class="h-6 rounded bg-[#18191E] flex flex-col justify-center px-1 border border-[#2C2E38]/60">
+<div class="w-3 h-1 rounded bg-[#3F4250] mb-0.5"></div>
+<div class="w-4 h-1.5 rounded bg-danger"></div>
+</div>
+</div>
+<div class="h-2 w-full rounded bg-[#1F2128]"></div>
+</div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-bold text-sm text-white">Escuro</span>
+<span class="material-symbols-outlined text-danger text-[18px]" id="check-dark">check_circle</span>
+</div>
+<p class="text-xs text-[#A1A1AA] mt-1">
+                        Usa a aparência escura do Estilo e Gestão.
+                      </p>
+</div>
+</div>
+</button>
+<!-- Option 3: Padrão do sistema -->
+<button class="theme-card-inactive rounded-xl p-4 text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[190px] relative group focus:outline-none" id="theme-btn-system" onclick="selectTheme('system')" type="button">
+<div class="flex flex-col gap-3 w-full">
+<div class="w-full h-20 rounded-lg overflow-hidden flex border border-[#2C2E38]">
+<!-- Half Light -->
+<div class="w-1/2 h-full bg-[#FAF9F5] p-2 flex flex-col justify-between">
+<div class="w-6 h-2 rounded bg-[#D5D5D0]"></div>
+<div class="h-6 rounded bg-[#FFFFFF] flex flex-col justify-center px-1 shadow-xs">
+<div class="w-4 h-1 rounded bg-[#C0C0BA] mb-0.5"></div>
+<div class="w-5 h-1.5 rounded bg-[#1A1A18]"></div>
+</div>
+<div class="h-2 w-full rounded bg-[#E8E7E0]"></div>
+</div>
+<!-- Half Dark -->
+<div class="w-1/2 h-full bg-[#111215] p-2 flex flex-col justify-between border-l border-[#2C2E38]">
+<div class="flex justify-end">
+<div class="w-2.5 h-2.5 rounded-full bg-danger"></div>
+</div>
+<div class="h-6 rounded bg-[#18191E] flex flex-col justify-center px-1">
+<div class="w-3 h-1 rounded bg-[#3F4250] mb-0.5"></div>
+<div class="w-5 h-1.5 rounded bg-[#F4F4F0]"></div>
+</div>
+<div class="h-2 w-full rounded bg-[#1F2128]"></div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-bold text-sm text-white">Padrão do sistema</span>
+<span class="hidden material-symbols-outlined text-danger text-[18px]" id="check-system">check_circle</span>
+</div>
+<p class="text-xs text-[#A1A1AA] mt-1">
+                        Acompanha a preferência do seu dispositivo.
+                      </p>
+</div>
+</div>
+</button>
+</div>
+</section>
+<!-- Section 2: Review Configuration Checklist Card -->
+<section class="bg-[#18191E] border border-[#2C2E38] rounded-xl p-6 shadow-sm flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight">
+                    Revise sua configuração
+                  </h2>
+<p class="text-sm text-[#A1A1AA] mt-1">
+                    Confira um resumo antes de concluir. Você poderá alterar essas informações depois.
+                  </p>
+</div>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-[#173B2D] text-dark-success text-xs font-semibold border border-dark-success/30">
+                  Configurações revisadas
+                </span>
+</div>
+<!-- Dense Utilitarian Checklist Rows -->
+<div class="flex flex-col gap-2 pt-1">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38]/60 hover:border-[#3F4250] transition-colors gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#173B2D] text-dark-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-semibold text-sm text-white truncate">Dados da barbearia</p>
+<p class="text-xs text-[#A1A1AA] truncate">Barbearia Imperial • Atendimento no local</p>
+</div>
+</div>
+<a class="px-2.5 py-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#2C2E38] text-xs font-semibold transition-colors shrink-0 flex items-center gap-1" href="#">
+                    Editar
+                    <span class="material-symbols-outlined text-[14px]">edit</span>
+</a>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38]/60 hover:border-[#3F4250] transition-colors gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#173B2D] text-dark-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-semibold text-sm text-white truncate">Endereço</p>
+<p class="text-xs text-[#A1A1AA] truncate">Avenida São Paulo, 125, Centro - Mongaguá/SP</p>
+</div>
+</div>
+<a class="px-2.5 py-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#2C2E38] text-xs font-semibold transition-colors shrink-0 flex items-center gap-1" href="#">
+                    Editar
+                    <span class="material-symbols-outlined text-[14px]">edit</span>
+</a>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38]/60 hover:border-[#3F4250] transition-colors gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#173B2D] text-dark-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-semibold text-sm text-white truncate">Horários</p>
+<p class="text-xs text-[#A1A1AA] truncate">Segunda a Sábado configurados • Domingo fechado</p>
+</div>
+</div>
+<a class="px-2.5 py-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#2C2E38] text-xs font-semibold transition-colors shrink-0 flex items-center gap-1" href="#">
+                    Editar
+                    <span class="material-symbols-outlined text-[14px]">edit</span>
+</a>
+</div>
+<!-- Item 4 -->
+<div class="flex items-center justify-between p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38]/60 hover:border-[#3F4250] transition-colors gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#173B2D] text-dark-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-semibold text-sm text-white truncate">Serviços</p>
+<p class="text-xs text-[#A1A1AA] truncate">4 serviços cadastrados • Visíveis na Vitrine</p>
+</div>
+</div>
+<a class="px-2.5 py-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#2C2E38] text-xs font-semibold transition-colors shrink-0 flex items-center gap-1" href="#">
+                    Editar
+                    <span class="material-symbols-outlined text-[14px]">edit</span>
+</a>
+</div>
+<!-- Item 5 -->
+<div class="flex items-center justify-between p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38]/60 hover:border-[#3F4250] transition-colors gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#173B2D] text-dark-success flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-semibold text-sm text-white truncate">Produtos e pagamentos</p>
+<p class="text-xs text-[#A1A1AA] truncate">Vende produtos e bebidas • Pix, Dinheiro, Débito e Crédito</p>
+</div>
+</div>
+<a class="px-2.5 py-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#2C2E38] text-xs font-semibold transition-colors shrink-0 flex items-center gap-1" href="#">
+                    Editar
+                    <span class="material-symbols-outlined text-[14px]">edit</span>
+</a>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col gap-4">
+<!-- Right Card 1: Tudo pronto para começar -->
+<section class="bg-[#18191E] border border-[#2C2E38] rounded-xl p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-[#173B2D] text-dark-success text-xs font-semibold border border-dark-success/30">
+<span class="w-1.5 h-1.5 rounded-full bg-dark-success mr-1.5"></span>
+                  Última etapa
+                </span>
+<span class="material-symbols-outlined text-[#A1A1AA] text-[20px]">verified</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white tracking-tight">
+                  Tudo pronto para começar
+                </h3>
+<p class="text-sm text-[#A1A1AA] mt-1">
+                  Suas configurações iniciais estão prontas. Você poderá alterar essas informações depois nas configurações do sistema.
+                </p>
+</div>
+<!-- Checklist bullets -->
+<div class="flex flex-col gap-2.5 pt-1">
+<div class="flex items-center gap-2 text-[#F4F4F0] text-xs">
+<span class="material-symbols-outlined text-[18px] text-dark-success">check_circle</span>
+<span class="">Dados da barbearia salvos e validados</span>
+</div>
+<div class="flex items-center gap-2 text-[#F4F4F0] text-xs">
+<span class="material-symbols-outlined text-[18px] text-dark-success">check_circle</span>
+<span class="">Localização e endereço conferidos</span>
+</div>
+<div class="flex items-center gap-2 text-[#F4F4F0] text-xs">
+<span class="material-symbols-outlined text-[18px] text-dark-success">check_circle</span>
+<span class="">Escala e jornada de atendimento ativas</span>
+</div>
+<div class="flex items-center gap-2 text-[#F4F4F0] text-xs">
+<span class="material-symbols-outlined text-[18px] text-dark-success">check_circle</span>
+<span class="">Catálogo de serviços e tempo estimado</span>
+</div>
+<div class="flex items-center gap-2 text-[#F4F4F0] text-xs">
+<span class="material-symbols-outlined text-[18px] text-dark-success">check_circle</span>
+<span class="">Formas de pagamento e vendas no balcão</span>
+</div>
+</div>
+<!-- Mini Progress Summary -->
+<div class="p-3.5 rounded-lg bg-[#1F2128] border border-[#2C2E38] flex items-center justify-between mt-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#18191E] border border-[#2C2E38] flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">storefront</span>
+</div>
+<div>
+<p class="font-bold text-sm text-white">Barbearia Imperial</p>
+<p class="text-xs text-[#A1A1AA]">Plano Profissional Ativo</p>
+</div>
+</div>
+<span class="font-bold text-lg text-dark-success">100%</span>
+</div>
+</section>
+<!-- Right Card 2: Informações importantes -->
+<section class="bg-[#18191E] border border-[#2C2E38] rounded-xl p-5 shadow-sm flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-[#1F2128] text-[#A1A1AA] flex items-center justify-center shrink-0 mt-0.5 border border-[#2C2E38]">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-white">Informações importantes</h4>
+<p class="text-xs text-[#A1A1AA] mt-1 leading-relaxed">
+                  O tema escolhido é pessoal da sua conta e não afeta as cores da sua Vitrine pública. O sistema abrirá diretamente no seu painel.
+                </p>
+</div>
+</section>
+<!-- Right Card 3: Próximo passo -->
+<section class="bg-[#18191E] border border-[#2C2E38] rounded-xl p-5 shadow-sm flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-danger/15 text-danger flex items-center justify-center shrink-0 mt-0.5 border border-danger/20">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+</div>
+<div>
+<p class="text-[11px] font-bold text-danger uppercase tracking-wider">PRÓXIMO PASSO</p>
+<h4 class="font-bold text-sm text-white mt-0.5">Acesso ao painel</h4>
+<p class="text-xs text-[#A1A1AA] mt-1 leading-relaxed">
+                  Ao concluir, você terá acesso ao Dashboard e aos recursos de gestão da sua barbearia.
+                </p>
+</div>
+</section>
+</div>
+</div>
+<!-- Bottom Navigation Sticky Action Bar -->
+<div class="w-full mt-10 pt-6 border-t border-[#2C2E38] flex flex-col sm:flex-row items-center justify-between gap-4">
+<!-- Secondary Back Action -->
+<a class="w-full sm:w-auto h-11 px-6 rounded-xl bg-[#18191E] border border-[#2C2E38] text-white hover:bg-[#1F2128] text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="">Voltar</span>
+</a>
+<!-- Primary Final Action: Red Brand CTA -->
+<div class="flex items-center gap-4 w-full sm:w-auto">
+<button class="w-full sm:w-auto h-11 px-8 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] active:bg-[#991B1B] text-white text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-danger focus:ring-offset-2 focus:ring-offset-[#111215] cursor-pointer" id="btn-concluir" onclick="handleFinish()" type="button">
+<span id="btn-text" class="">Concluir configuração</span>
+<span class="material-symbols-outlined text-[18px]" id="btn-icon">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Toast Notification Notification Container -->
+<div class="fixed bottom-6 right-6 hidden z-50 bg-[#18191E] border border-dark-success text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300" id="toast">
+<span class="material-symbols-outlined text-dark-success text-[20px]">check_circle</span>
+<span class="text-sm font-medium">Configuração concluída com sucesso.</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer: Step 5 Dark Footer (SCREEN_12) -->
+<footer class="w-full bg-[#111215] border-t border-[#2C2E38] py-6 mt-auto">
+<div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[#A1A1AA] text-xs">
+<span class="">© 2025 Estilo e Gestão. Todos os direitos reservados.</span>
+
+</div>
+</footer>
+<script>
+    function selectTheme(mode) {
+      const themes = ['light', 'dark', 'system'];
+      themes.forEach(t => {
+        const btn = document.getElementById('theme-btn-' + t);
+        const check = document.getElementById('check-' + t);
+        if (t === mode) {
+          btn.className = 'theme-card-active rounded-xl p-4 text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[190px] relative group focus:outline-none';
+          if (check) check.classList.remove('hidden');
+        } else {
+          btn.className = 'theme-card-inactive rounded-xl p-4 text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[190px] relative group focus:outline-none';
+          if (check) check.classList.add('hidden');
+        }
+      });
+    }
+
+    function handleFinish() {
+      const btn = document.getElementById('btn-concluir');
+      const text = document.getElementById('btn-text');
+      const icon = document.getElementById('btn-icon');
+      const toast = document.getElementById('toast');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-80', 'cursor-not-allowed');
+      text.innerText = 'Concluindo...';
+      icon.innerText = 'progress_activity';
+      icon.classList.add('animate-spin');
+
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        icon.innerText = 'check';
+        text.innerText = 'Concluído!';
+        toast.classList.remove('hidden');
+
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 3500);
+      }, 1000);
+    }
+  </script>
+
+
+
+
+</body></html>

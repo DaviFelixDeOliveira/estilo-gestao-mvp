@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+<html class="dark" data-theme="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>Dashboard — Estilo e Gestão</title>
+<style>
+    :root {
+      --bg: #F4F4F0;
+      --surface: #FFFFFF;
+      --surface-2: #E9E9E4;
+      --surface-3: #F8F8F4;
+      --text: #2F2F2D;
+      --muted: #666662;
+      --border: #E2E2DD;
+      --primary: #2F2F2D;
+      --primary-hover: #3A3A38;
+      --danger: #B42318;
+      --danger-bg: #FEECEB;
+      --warning: #B54708;
+      --warning-bg: #FFF4E5;
+      --success: #2F6B4F;
+      --success-bg: #EAF5EF;
+      --info: #175CD3;
+      --info-bg: #EAF3FF;
+      --shadow: 0 12px 32px rgba(47,47,45,.08);
+      --sidebar-w: 252px;
+      --radius: 14px;
+    }
+    [data-theme="dark"] {
+      --bg: #181817;
+      --surface: #222220;
+      --surface-2: #2B2B29;
+      --surface-3: #1E1E1C;
+      --text: #F4F4F0;
+      --muted: #B8B8B2;
+      --border: #3F3F3B;
+      --primary: #F4F4F0;
+      --primary-hover: #E9E9E4;
+      --danger: #F97066;
+      --danger-bg: #4A1D1A;
+      --warning: #FDB022;
+      --warning-bg: #4A2C0A;
+      --success: #6FB892;
+      --success-bg: #173B2D;
+      --info: #53B1FD;
+      --info-bg: #12365A;
+      --shadow: 0 16px 38px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    .icon { display: block; flex: none; }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+    }
+
+    /* Sidebar approved styling */
+    .sidebar {
+      width: var(--sidebar-w);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+      transition: width .2s ease;
+    }
+    .sidebar.collapsed {
+      --sidebar-w: 76px;
+      width: 76px;
+    }
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .brand-copy,
+    .sidebar.collapsed .account-copy,
+    .sidebar.collapsed .nav-caret,
+    .sidebar.collapsed .submenu {
+      display: none;
+    }
+    .sidebar.collapsed .brand {
+      justify-content: center;
+      position: relative;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .sidebar.collapsed .nav-item { justify-content: center; }
+    .sidebar.collapsed .account { justify-content: center; }
+    .sidebar.collapsed .brand-mark { transition: opacity .15s ease, transform .15s ease; }
+    .sidebar.collapsed .sidebar-toggle {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      margin-left: 0;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+      background: var(--surface-2);
+      color: var(--text);
+      transition: opacity .15s ease, background .15s ease;
+    }
+    .sidebar.collapsed .brand:hover .brand-mark,
+    .sidebar.collapsed .brand:focus-within .brand-mark {
+      opacity: 0;
+      transform: scale(.96);
+    }
+    .sidebar.collapsed .brand:hover .sidebar-toggle,
+    .sidebar.collapsed .brand:focus-within .sidebar-toggle {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sidebar.collapsed .sidebar-toggle:hover { background: var(--surface-3); }
+
+    .brand {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px 10px;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--surface);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+    [data-theme="dark"] .brand-mark {
+      color: #181817;
+    }
+    .brand-title {
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .sidebar-toggle {
+      margin-left: auto;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+    }
+    .sidebar-toggle:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .nav-item {
+      min-height: 44px;
+      border-radius: 10px;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 650;
+      border: 0;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover {
+      background: var(--surface-3);
+      color: var(--text);
+    }
+    .nav-item.active {
+      background: var(--primary);
+      color: var(--surface);
+    }
+    [data-theme="dark"] .nav-item.active {
+      color: #181817;
+    }
+    .nav-caret {
+      margin-left: auto;
+      transition: transform .15s;
+    }
+    .group-open > .nav-item .nav-caret {
+      transform: rotate(90deg);
+    }
+    .submenu {
+      margin: 4px 0 8px 29px;
+      padding-left: 10px;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sub-item {
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    .sub-item:hover {
+      background: var(--surface-3);
+      color: var(--text);
+    }
+    .sub-item.active {
+      color: var(--text);
+      background: var(--surface-2);
+      font-weight: 750;
+    }
+
+    .sidebar-spacer { flex: 1; }
+    .account-wrap { position: relative; }
+    .account {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid var(--border);
+      background: var(--surface-3);
+      border-radius: 12px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text);
+      text-align: left;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .account-title { font-size: 12px; font-weight: 750; }
+    .account-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    /* Main view */
+    .main {
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+      width: calc(100% - var(--sidebar-w));
+      transition: margin-left .2s ease, width .2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+    }
+    .crumb {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+    }
+    .icon-btn:hover { background: var(--surface-3); }
+
+    .content {
+      padding: 32px;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Onboarding Completed Banner */
+    .welcome-banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+    }
+    .welcome-title {
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    .welcome-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      max-width: 680px;
+    }
+    .btn-primary {
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--surface);
+      border: 0;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .15s ease;
+    }
+    [data-theme="dark"] .btn-primary {
+      color: #181817;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Filter Toolbar */
+    .filter-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface-2);
+      border-radius: 10px;
+    }
+    .filter-tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .filter-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(47,47,45,.06);
+    }
+
+    /* Metric Cards Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 128px;
+    }
+    .metric-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .metric-icon-wrap {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--surface-3);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+    }
+    .metric-val {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 10px 0 4px;
+      color: var(--text);
+    }
+    .metric-empty-val {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+    .metric-caption {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Operational Grid */
+    .operational-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .op-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .op-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--surface-3);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .op-copy { flex: 1; min-width: 0; }
+    .op-title { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+    .op-val { font-size: 17px; font-weight: 800; margin-top: 2px; }
+
+    /* Layout Dual Column: Charts & Guidance */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    /* Chart Containers */
+    .charts-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .chart-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+    }
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 750;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .segmented-control {
+      display: flex;
+      gap: 4px;
+      padding: 3px;
+      background: var(--surface-2);
+      border-radius: 8px;
+    }
+    .segmented-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .segmented-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 2px rgba(47,47,45,.06);
+    }
+
+    /* Empty Canvas Area */
+    .chart-empty-box {
+      height: 240px;
+      border: 1px dashed var(--border);
+      background: var(--surface-3);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .chart-empty-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .chart-empty-title {
+      font-size: 13px;
+      font-weight: 750;
+      margin: 0 0 5px;
+    }
+    .chart-empty-desc {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 360px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Quick Launch & Guidance Column */
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .side-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .action-card {
+      border: 1px solid var(--border);
+      background: var(--surface-3);
+      border-radius: 11px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .action-card:hover {
+      background: var(--surface-2);
+      border-color: var(--muted);
+    }
+    .action-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .action-copy { flex: 1; min-width: 0; }
+    .action-title { font-size: 12px; font-weight: 750; }
+    .action-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* Alert / Inventory Box */
+    .alert-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .alert-state {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .alert-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--success-bg);
+      color: var(--success);
+      display: grid;
+      place-items: center;
+    }
+    .alert-copy { font-size: 12px; line-height: 1.5; color: var(--muted); }
+    .alert-strong { color: var(--text); font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="app">
+<!-- Desktop Sidebar (Locked and matching attached approved code.html) -->
+<aside class="sidebar">
+<div class="brand">
+<div class="brand-mark">E&amp;G</div>
+<div class="brand-copy">
+<div class="brand-title">Estilo e Gestão</div>
+<div class="brand-sub">Gestão da barbearia</div>
+</div>
+<button aria-label="Recolher ou expandir sidebar" class="sidebar-toggle">
+<svg aria-hidden="true" class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><rect height="18" rx="2" width="18" x="3" y="3"></rect><path d="M9 3v18"></path></svg>
+</button>
+</div>
+<nav aria-label="Navegação principal" class="nav">
+<button class="nav-item active" type="button">
+<svg aria-hidden="true" class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><rect height="9" rx="1" width="7" x="3" y="3"></rect><rect height="5" rx="1" width="7" x="14" y="3"></rect><rect height="9" rx="1" width="7" x="14" y="12"></rect><rect height="5" rx="1" width="7" x="3" y="16"></rect></svg>
+<span class="nav-label">Dashboard</span>
+</button>
+<button class="nav-item" type="button">
+<svg aria-hidden="true" class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line><line x1="6" x2="10" y1="15" y2="15"></line></svg>
+<span class="nav-label">PDV</span>
+</button>
+<div class="nav-group">
+<button class="nav-item" type="button">
+<svg aria-hidden="true" class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+<span class="nav-label">Operação</span>
+<span class="nav-caret"><svg aria-hidden="true" class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="14"><path d="m9 18 6-6-6-6"></path></svg></span>
+</button>
+</div>
+<div class="nav-group">
+<button class="nav-item" type="button">
+<svg aria-hidden="true" class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+<span class="nav-label">Configurações</span>
+<span class="nav-caret"><svg aria-hidden="true" class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="14"><path d="m9 18 6-6-6-6"></path></svg></span>
+</button>
+</div>
+</nav>
+<div class="sidebar-spacer"></div>
+<div class="account-wrap">
+<button aria-label="Abrir menu da conta" class="account" type="button">
+<span class="avatar">
+<svg aria-hidden="true" class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="M19 21a7 7 0 0 0-14 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
+</span>
+<span class="account-copy">
+<span class="account-title">Sua conta</span>
+<span class="account-sub">Perfil pessoal</span>
+</span>
+<span class="nav-caret"><svg aria-hidden="true" class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="14"><path d="m9 18 6-6-6-6"></path></svg></span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="main">
+<header class="topbar">
+<div class="crumb">
+<span class="">Estilo e Gestão</span>
+<svg aria-hidden="true" class="icon" fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="12"><path d="m9 18 6-6-6-6"></path></svg>
+<span class="" style="color:var(--text);font-weight:700;">Dashboard</span>
+</div>
+<div class="header-actions">
+<button aria-label="Aparência" class="icon-btn">
+<svg aria-hidden="true" class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+</button>
+<button aria-label="Conta" class="icon-btn">
+<svg aria-hidden="true" class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M19 21a7 7 0 0 0-14 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
+</button>
+</div>
+</header>
+<div class="content">
+<!-- Welcome / First Access Banner -->
+<section class="welcome-banner">
+<div>
+<h1 class="welcome-title">
+              Barbearia pronta para operar
+              <span class="badge-status">
+<svg class="icon" fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="12"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Onboarding concluído
+              </span>
+</h1>
+<p class="welcome-desc">
+              Suas configurações iniciais estão salvas. Assim que você registrar atendimentos no PDV ou despesas no Financeiro, os indicadores gerenciais e gráficos serão consolidados automaticamente aqui.
+            </p>
+</div>
+<button class="btn-primary" type="button">
+<svg class="icon" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            Abrir nova comanda
+          </button>
+</section>
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+<div class="filter-tabs" role="tablist">
+<button class="filter-tab active" role="tab">Hoje</button>
+<button class="filter-tab" role="tab">Semana</button>
+<button class="filter-tab" role="tab">Mês</button>
+<button class="filter-tab" role="tab">Ano</button>
+<button class="filter-tab" role="tab">Personalizado</button>
+</div>
+<span class="" style="font-size:12px;color:var(--muted);">Período de visualização ativo</span>
+</div>
+<!-- Metric Cards Grid (No fake data; accurately shows 'Sem movimentações') -->
+<section aria-label="Indicadores principais" class="metrics-grid">
+<div class="metric-card">
+<div class="metric-head">
+<span class="">Faturamento</span>
+<span class="metric-icon-wrap">
+<svg class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+</span>
+</div>
+<div>
+<div class="metric-val metric-empty-val">— —</div>
+<div class="metric-caption">Nenhuma venda no período</div>
+</div>
+</div>
+<div class="metric-card">
+<div class="metric-head">
+<span class="">Entradas</span>
+<span class="metric-icon-wrap">
+<svg class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+</span>
+</div>
+<div>
+<div class="metric-val metric-empty-val">— —</div>
+<div class="metric-caption">Nenhum recebimento em caixa</div>
+</div>
+</div>
+<div class="metric-card">
+<div class="metric-head">
+<span class="">Saídas</span>
+<span class="metric-icon-wrap">
+<svg class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+</span>
+</div>
+<div>
+<div class="metric-val metric-empty-val">— —</div>
+<div class="metric-caption">Sem despesas registradas</div>
+</div>
+</div>
+<div class="metric-card">
+<div class="metric-head">
+<span class="">Resultado estimado</span>
+<span class="metric-icon-wrap">
+<svg class="icon" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path><path d="M12 16V8"></path></svg>
+</span>
+</div>
+<div>
+<div class="metric-val metric-empty-val">— —</div>
+<div class="metric-caption">Aguardando movimentação inicial</div>
+</div>
+</div>
+</section>
+<!-- Operational Summary (Empty state indicators) -->
+<section aria-label="Indicadores operacionais" class="operational-grid">
+<div class="op-card">
+<div class="op-icon">
+<svg class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" x2="8.12" y1="4" y2="15.88"></line><line x1="14.47" x2="20" y1="14.48" y2="20"></line><line x1="8.12" x2="12" y1="8.12" y2="12"></line></svg>
+</div>
+<div class="op-copy">
+<div class="op-title">Serviços realizados</div>
+<div class="op-val">0</div>
+</div>
+</div>
+<div class="op-card">
+<div class="op-icon">
+<svg class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" x2="6" y1="2" y2="4"></line><line x1="10" x2="10" y1="2" y2="4"></line><line x1="14" x2="14" y1="2" y2="4"></line></svg>
+</div>
+<div class="op-copy">
+<div class="op-title">Bebidas vendidas</div>
+<div class="op-val">0</div>
+</div>
+</div>
+<div class="op-card">
+<div class="op-icon">
+<svg class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+</div>
+<div class="op-copy">
+<div class="op-title">Outros produtos vendidos</div>
+<div class="op-val">0</div>
+</div>
+</div>
+<div class="op-card">
+<div class="op-icon">
+<svg class="icon" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+</div>
+<div class="op-copy">
+<div class="op-title">Estoque baixo</div>
+<div class="op-val">0</div>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Split: Charts + Guidance -->
+<div class="dashboard-layout">
+<!-- Charts Column (Honest Empty State Containers) -->
+<div class="charts-column">
+<!-- Main Trend Chart Panel -->
+<section class="chart-panel">
+<div class="panel-head">
+<div>
+<h2 class="panel-title">Evolução no período</h2>
+<div class="panel-subtitle">Acompanhamento contínuo dos registros da barbearia</div>
+</div>
+<div class="segmented-control" role="tablist">
+<button class="segmented-btn active">Faturamento</button>
+<button class="segmented-btn">Entradas</button>
+<button class="segmented-btn">Saídas</button>
+<button class="segmented-btn">Resultado</button>
+</div>
+</div>
+<div class="chart-empty-box">
+<div class="chart-empty-icon">
+<svg class="icon" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="22"><path d="M3 3v18h18"></path><path d="m7 16 4-5 4 3 5-7"></path></svg>
+</div>
+<div class="chart-empty-title">Ainda não existem dados suficientes para este período</div>
+<p class="chart-empty-desc">
+                  Ao finalizar suas primeiras vendas no PDV, o gráfico de linha consolidará aqui o fluxo horário e diário da sua barbearia.
+                </p>
+</div>
+</section>
+<!-- Secondary Detail Breakdown Panel -->
+</div>
+<!-- Quick Action & Stock Panel Column -->
+<div class="side-column">
+<!-- First Steps / Quick Actions -->
+<section class="side-panel">
+<h2 class="panel-title">Comece a operar</h2>
+<div class="panel-subtitle">Atalhos rápidos para alimentar o sistema</div>
+<div class="action-list">
+<a class="action-card" href="#">
+<div class="action-icon">
+<svg class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line><line x1="6" x2="10" y1="15" y2="15"></line></svg>
+</div>
+<div class="action-copy">
+<div class="action-title"><strong data-end="639" data-start="625">Nova venda</strong></div>
+<div class="action-sub">Atendimento de balcão e produtos</div>
+</div>
+<svg class="icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+<a class="action-card" href="#">
+<div class="action-icon">
+<svg class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M20 7V6a2 2 0 0 0-2-2H5a3 3 0 0 0 0 6h15v8a2 2 0 0 1-2 2H5a3 3 0 0 1-3-3V7"></path><path d="M16 14h.01"></path></svg>
+</div>
+<div class="action-copy">
+<div class="action-title">Cadastrar despesa</div>
+<div class="action-sub">Aluguel, energia ou insumos</div>
+</div>
+<svg class="icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+<a class="action-card" href="#">
+<div class="action-icon">
+<svg class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+</div>
+<div class="action-copy">
+<div class="action-title">Gerenciar estoque</div>
+<div class="action-sub">Entrada de produtos com custo</div>
+</div>
+<svg class="icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+<a class="action-card" href="#">
+<div class="action-icon">
+<svg class="icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><rect height="18" rx="2" width="18" x="3" y="3"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+</div>
+<div class="action-copy">
+<div class="action-title">Configurar Vitrine Digital</div>
+<div class="action-sub">Gerar URL pública da barbearia</div>
+</div>
+<svg class="icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+</div>
+</section>
+<!-- Inventory / Low Stock Monitor -->
+<section class="alert-panel">
+<h2 class="panel-title">Situação do estoque</h2>
+<div class="panel-subtitle">Monitoramento de itens com estoque baixo</div>
+<div class="alert-state">
+<div class="alert-icon-wrap">
+<svg class="icon" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="16"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<div class="alert-copy">
+<span class="alert-strong">Nenhum alerta de estoque baixo.</span><br/>
+                  Todos os itens cadastrados estão acima da margem mínima ou ainda não possuem movimentação registrada.
+                </div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

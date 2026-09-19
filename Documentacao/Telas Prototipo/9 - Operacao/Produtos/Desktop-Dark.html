@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estilo &amp; Gestão - Produtos (Modo Escuro)</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#181817',
+              surface: '#222220',
+              input: '#2B2B29',
+              border: '#3F3F3B',
+              textPrimary: '#F4F4F0',
+              textMuted: '#B8B8B2',
+              textSubtle: '#7E7E77',
+              emeraldBadgeBg: '#132E22',
+              emeraldBadgeText: '#4ADE80',
+              amberBadgeBg: '#4A2C0A',
+              amberBadgeText: '#FDB022',
+              redBadgeBg: '#3F1818',
+              redBadgeText: '#F87171',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #181817;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3F3F3B;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5A5A54;
+    }
+  </style>
+</head>
+<body class="h-full bg-brand-bg text-brand-textPrimary font-sans antialiased overflow-hidden flex flex-col">
+<!-- BEGIN: AppContainer -->
+<div class="flex h-full w-full overflow-hidden">
+<!-- BEGIN: MainSidebar -->
+<aside class="w-64 flex-shrink-0 bg-brand-bg border-r border-brand-border flex flex-col justify-between" data-purpose="sidebar-navigation">
+<!-- Top Section: Brand & Nav Links -->
+<div class="flex flex-col">
+<!-- Brand Header -->
+<div class="h-16 px-5 flex items-center justify-between border-b border-brand-border/60">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-brand-surface border border-brand-border flex items-center justify-center font-bold text-sm tracking-wider text-brand-textPrimary">
+              EG
+            </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold uppercase tracking-wider text-brand-textPrimary leading-tight">Estilo &amp; Gestão</span>
+<span class="text-[11px] text-brand-textSubtle">Barbearia Club</span>
+</div>
+</div>
+<button aria-label="Recolher menu" class="text-brand-textSubtle hover:text-brand-textPrimary transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+<!-- Main Navigation Links -->
+<nav aria-label="Navegação Principal" class="p-3 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm text-brand-textMuted hover:text-brand-textPrimary hover:bg-brand-surface transition" href="#">
+<svg class="w-5 h-5 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- PDV -->
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-brand-textMuted hover:text-brand-textPrimary hover:bg-brand-surface transition" type="button">
+<div class="flex items-center space-x-3">
+<svg class="w-5 h-5 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>PDV</span>
+</div>
+<svg class="w-4 h-4 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Operação (Ativo e Expandido) -->
+<div class="space-y-1">
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-brand-textPrimary font-medium bg-brand-surface transition" type="button">
+<div class="flex items-center space-x-3">
+<svg class="w-5 h-5 text-brand-textPrimary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Operação</span>
+</div>
+<svg class="w-4 h-4 text-brand-textPrimary transform rotate-180" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<!-- Submenu -->
+<div class="pl-8 pr-1 py-1 space-y-1">
+<a class="block px-3 py-1.5 rounded-lg text-xs font-medium text-brand-textMuted hover:text-brand-textPrimary hover:bg-brand-surface/70 transition" href="#">
+                Serviços
+              </a>
+<!-- PRODUTOS: Ativo com fundo claro e texto escuro para destaque no dark mode -->
+<a class="block px-3 py-1.5 rounded-lg text-xs font-bold bg-[#F4F4F0] text-[#181817] transition shadow-sm" href="#">
+                Produtos
+              </a>
+<a class="block px-3 py-1.5 rounded-lg text-xs font-medium text-brand-textMuted hover:text-brand-textPrimary hover:bg-brand-surface/70 transition" href="#">
+                Estoque
+              </a>
+</div>
+</div>
+<!-- Configurações -->
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-brand-textMuted hover:text-brand-textPrimary hover:bg-brand-surface transition" type="button">
+<div class="flex items-center space-x-3">
+<svg class="w-5 h-5 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Configurações</span>
+</div>
+<svg class="w-4 h-4 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</nav>
+<!-- Secondary Categories Navigation -->
+<div class="px-5 pt-4 pb-2">
+<span class="text-[10px] font-semibold tracking-wider text-brand-textSubtle uppercase">Negócio</span>
+<div class="mt-2 space-y-1.5 text-xs text-brand-textMuted">
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Financeiro</a>
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Relatórios</a>
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Vitrine Digital</a>
+</div>
+</div>
+<div class="px-5 pt-3 pb-2">
+<span class="text-[10px] font-semibold tracking-wider text-brand-textSubtle uppercase">Barbearia</span>
+<div class="mt-2 space-y-1.5 text-xs text-brand-textMuted">
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Dados da barbearia</a>
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Endereço</a>
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Horários</a>
+<a class="block py-1 hover:text-brand-textPrimary transition" href="#">Formas de pagamento</a>
+</div>
+</div>
+</div>
+<!-- Bottom User Profile Card -->
+<div class="p-3 border-t border-brand-border">
+<div class="flex items-center justify-between p-2 rounded-lg bg-brand-surface/40">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-full bg-brand-input border border-brand-border flex items-center justify-center text-brand-textPrimary font-semibold text-xs">
+<svg class="w-4 h-4 text-brand-textMuted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-brand-textPrimary leading-tight">Mestre Barbeiro</span>
+<span class="text-[10px] text-brand-textSubtle">Operador Caixa</span>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<button aria-label="Ajuda" class="p-1 text-brand-textSubtle hover:text-brand-textPrimary transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<button aria-label="Sair" class="p-1 text-brand-textSubtle hover:text-brand-textPrimary transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: MainSidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- Topbar -->
+<header class="h-16 border-b border-brand-border flex items-center justify-between px-8 flex-shrink-0 bg-brand-bg" data-purpose="topbar">
+<!-- Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-xs">
+<span class="text-brand-textMuted">Estilo &amp; Gestão</span>
+<span class="text-brand-textSubtle">›</span>
+<span class="text-brand-textMuted">Operação</span>
+<span class="text-brand-textSubtle">›</span>
+<span class="text-brand-textPrimary font-medium">Produtos</span>
+</nav>
+<!-- Right Side Quick Actions -->
+<div class="flex items-center space-x-4">
+<!-- Theme Switcher -->
+<button aria-label="Modo Escuro Ativado" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-brand-amberBadgeText hover:bg-brand-input transition" type="button">
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20">
+<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+</svg>
+</button>
+<!-- User Avatar Badge -->
+<div class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-xs font-semibold text-brand-textPrimary">
+            MB
+          </div>
+</div>
+</header>
+<!-- Scrollable Main Viewport -->
+<main class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+<!-- Header: Title & Action Buttons -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<h1 class="text-2xl font-bold text-brand-textPrimary tracking-tight">Produtos</h1>
+<p class="text-sm text-brand-textMuted mt-1">
+              Cadastre e gerencie os produtos e bebidas vendidos no balcão e exibidos na Vitrine Digital.
+            </p>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-4 py-2 text-xs font-semibold rounded-lg bg-brand-surface hover:bg-brand-input border border-brand-border text-brand-textPrimary transition" type="button">
+              + Categorias
+            </button>
+<button class="px-4 py-2 text-xs font-bold rounded-lg bg-[#F4F4F0] hover:bg-white text-[#181817] shadow-sm transition flex items-center space-x-1.5" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Novo produto</span>
+</button>
+</div>
+</div>
+<!-- Filter & Search Panel -->
+<section class="p-4 rounded-xl bg-brand-surface border border-brand-border space-y-3.5" data-purpose="table-filters">
+<!-- Search input -->
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-brand-textSubtle">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-2 bg-brand-input border border-brand-border rounded-lg text-sm text-brand-textPrimary placeholder-brand-textSubtle focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary" placeholder="Buscar produto por nome ou categoria..." type="text"/>
+</div>
+<!-- Filter Pills Row -->
+<div class="flex flex-wrap items-center justify-between gap-3 text-xs pt-1">
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-brand-textSubtle font-medium mr-1">Tipo:</span>
+<button class="px-3 py-1 rounded-md bg-brand-input text-brand-textPrimary border border-brand-border font-medium" type="button">
+                Todos (6)
+              </button>
+<button class="px-3 py-1 rounded-md hover:bg-brand-input text-brand-textMuted border border-transparent hover:border-brand-border font-medium transition" type="button">
+                Bebidas (3)
+              </button>
+<button class="px-3 py-1 rounded-md hover:bg-brand-input text-brand-textMuted border border-transparent hover:border-brand-border font-medium transition" type="button">
+                Produtos (3)
+              </button>
+<div class="h-4 w-[1px] bg-brand-border mx-1"></div>
+<span class="text-brand-textSubtle font-medium mr-1">Status:</span>
+<button class="px-3 py-1 rounded-md bg-brand-input text-brand-textPrimary border border-brand-border font-medium" type="button">
+                Todos
+              </button>
+<button class="px-3 py-1 rounded-md hover:bg-brand-input text-brand-textMuted border border-transparent hover:border-brand-border font-medium transition" type="button">
+                Ativos (5)
+              </button>
+<button class="px-3 py-1 rounded-md hover:bg-brand-input text-brand-textMuted border border-transparent hover:border-brand-border font-medium transition" type="button">
+                Inativos (1)
+              </button>
+</div>
+<!-- Categorias Dropdown -->
+<div class="flex items-center space-x-2">
+<button class="px-3 py-1.5 rounded-lg bg-brand-input text-brand-textMuted border border-brand-border flex items-center space-x-2 hover:text-brand-textPrimary transition" type="button">
+<span>Todas as categorias</span>
+<svg class="w-3.5 h-3.5 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</section>
+<!-- Products Table Container -->
+<section class="rounded-xl border border-brand-border bg-brand-surface overflow-hidden" data-purpose="products-table-container">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs">
+<!-- Table Head -->
+<thead class="uppercase tracking-wider font-semibold text-brand-textSubtle border-b border-brand-border bg-brand-bg/50">
+<tr>
+<th class="py-3 px-4" scope="col">Produto</th>
+<th class="py-3 px-3" scope="col">Categoria</th>
+<th class="py-3 px-3" scope="col">Tipo</th>
+<th class="py-3 px-3" scope="col">Preço</th>
+<th class="py-3 px-3" scope="col">Estoque</th>
+<th class="py-3 px-3" scope="col">Vitrine</th>
+<th class="py-3 px-3" scope="col">Status</th>
+<th class="py-3 px-4 text-right" scope="col">Ações</th>
+</tr>
+</thead>
+<!-- Table Body -->
+<tbody class="divide-y divide-brand-border text-brand-textMuted">
+<!-- Row 1: Pomada Modeladora Matte (Ativo e focado no Drawer) -->
+<tr class="bg-brand-input/30 hover:bg-brand-input/60 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium text-brand-textPrimary">Pomada Modeladora Matte</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Pomada</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Produto</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 42,00</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">8 un.</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textMuted border border-brand-border">Visível</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-emeraldBadgeBg text-brand-emeraldBadgeText">Ativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary font-semibold hover:underline" type="button">Editar</button>
+<button class="text-brand-redBadgeText hover:underline" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 2: Cerveja Artesanal IPA 355ml -->
+<tr class="hover:bg-brand-input/40 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium text-brand-textPrimary">Cerveja Artesanal IPA 355ml</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Bebida</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Bebida</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 14,00</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">12 un.</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textMuted border border-brand-border">Visível</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-emeraldBadgeBg text-brand-emeraldBadgeText">Ativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary hover:underline" type="button">Editar</button>
+<button class="text-brand-redBadgeText hover:underline" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 3: Refrigerante Lata 350ml -->
+<tr class="hover:bg-brand-input/40 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium text-brand-textPrimary">Refrigerante Lata 350ml</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Bebida</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Bebida</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 6,00</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">24 un.</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textMuted border border-brand-border">Visível</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-emeraldBadgeBg text-brand-emeraldBadgeText">Ativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary hover:underline" type="button">Editar</button>
+<button class="text-brand-redBadgeText hover:underline" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 4: Balm Modelador 100g (Estoque Baixo) -->
+<tr class="hover:bg-brand-input/40 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium text-brand-textPrimary">Balm Modelador 100g</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Óleo/Balm</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Produto</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 35,00</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-amberBadgeBg text-brand-amberBadgeText">
+                      2 un. (Estoque baixo)
+                    </span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textMuted border border-brand-border">Visível</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-emeraldBadgeBg text-brand-emeraldBadgeText">Ativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary hover:underline" type="button">Editar</button>
+<button class="text-brand-redBadgeText hover:underline" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 5: Energético Lata 250ml (Sem Estoque) -->
+<tr class="hover:bg-brand-input/40 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium text-brand-textPrimary">Energético Lata 250ml</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Bebida</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Bebida</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 12,00</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-redBadgeBg text-brand-redBadgeText">
+                      0 un. (Esgotado)
+                    </span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textSubtle border border-brand-border">Indisponível</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-emeraldBadgeBg text-brand-emeraldBadgeText">Ativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary hover:underline" type="button">Editar</button>
+<button class="text-brand-redBadgeText hover:underline" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 6: Cera Fixadora Efeito Brilho (Inativo) -->
+<tr class="hover:bg-brand-input/40 transition opacity-70">
+<td class="py-3.5 px-4">
+<div class="flex items-center space-x-2.5">
+<span class="w-2 h-2 rounded-full bg-brand-textSubtle"></span>
+<span class="font-medium text-brand-textPrimary">Cera Fixadora Efeito Brilho</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Cera</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input border border-brand-border text-brand-textMuted">Produto</span>
+</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">R$ 38,00</td>
+<td class="py-3.5 px-3 font-medium text-brand-textPrimary">5 un.</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded text-[11px] bg-brand-input text-brand-textSubtle border border-brand-border">Oculto</span>
+</td>
+<td class="py-3.5 px-3">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-input text-brand-textSubtle border border-brand-border">Inativo</span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-3">
+<button class="text-brand-textPrimary hover:underline" type="button">Editar</button>
+<button class="text-brand-emeraldBadgeText hover:underline" type="button">Ativar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Pagination Footer -->
+<footer class="flex items-center justify-between pt-2 pb-6 text-xs text-brand-textMuted" data-purpose="table-pagination">
+<span>Mostrando 6 de 6 produtos cadastrados</span>
+<div class="flex items-center space-x-2">
+<button class="px-3 py-1.5 rounded-lg border border-brand-border bg-brand-surface text-brand-textSubtle cursor-not-allowed" disabled="" type="button">
+              Anterior
+            </button>
+<span class="px-3 py-1.5 rounded-lg font-bold text-brand-textPrimary bg-brand-surface border border-brand-border">
+              1
+            </span>
+<button class="px-3 py-1.5 rounded-lg border border-brand-border bg-brand-surface text-brand-textSubtle cursor-not-allowed" disabled="" type="button">
+              Próximo
+            </button>
+</div>
+</footer>
+</main>
+</div>
+<!-- END: MainContentWrapper -->
+<!-- BEGIN: EditProductDrawer -->
+<aside class="w-[430px] flex-shrink-0 bg-brand-bg border-l border-brand-border flex flex-col h-full z-20 shadow-2xl" data-purpose="edit-product-drawer">
+<!-- Drawer Header -->
+<div class="p-5 border-b border-brand-border flex items-start justify-between">
+<div>
+<div class="flex items-center space-x-2">
+<h2 class="text-base font-bold text-brand-textPrimary">Editar produto</h2>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-brand-surface text-brand-textSubtle border border-brand-border">
+              #PRD-01
+            </span>
+</div>
+<p class="text-xs text-brand-textSubtle mt-1">
+            Atualize os dados e regras de venda deste item.
+          </p>
+</div>
+<button aria-label="Fechar painel" class="text-brand-textSubtle hover:text-brand-textPrimary p-1 rounded-md hover:bg-brand-surface transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Drawer Scrollable Form Content -->
+<div class="flex-1 overflow-y-auto p-5 space-y-5">
+<!-- Type Selector Tabs -->
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-2">Tipo de item</label>
+<div class="grid grid-cols-2 gap-2 bg-brand-surface p-1 rounded-lg border border-brand-border">
+<button class="py-1.5 text-xs font-medium text-brand-textMuted rounded-md hover:text-brand-textPrimary transition" type="button">
+              Bebida
+            </button>
+<button class="py-1.5 text-xs font-bold bg-[#F4F4F0] text-[#181817] rounded-md shadow-sm transition" type="button">
+              Produto
+            </button>
+</div>
+</div>
+<!-- Product Name -->
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-1.5" for="product-name">
+            Nome do produto <span class="text-red-400">*</span>
+</label>
+<input class="w-full px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-xs font-medium text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary" id="product-name" type="text" value="Pomada Modeladora Matte"/>
+</div>
+<!-- Category Dropdown -->
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-1.5" for="product-category">
+            Categoria <span class="text-red-400">*</span>
+</label>
+<select class="w-full px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-xs text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary" id="product-category">
+<option selected="">Pomada</option>
+<option>Cera</option>
+<option>Óleo/Balm</option>
+<option>Shampoo</option>
+<option>Bebida</option>
+</select>
+</div>
+<!-- Description -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-semibold text-brand-textMuted" for="product-description">Descrição</label>
+<span class="text-[10px] text-brand-textSubtle">(opcional)</span>
+</div>
+<textarea class="w-full px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-xs text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary leading-relaxed resize-none" id="product-description" rows="3">Pomada de fixação forte e acabamento matte sem brilho, ideal para cortes degradê e penteados clássicos.</textarea>
+</div>
+<!-- Pricing: Sale Price & Unit Cost -->
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-1.5" for="product-price">
+              Preço de venda <span class="text-red-400">*</span>
+</label>
+<input class="w-full px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-xs font-bold text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary" id="product-price" type="text" value="R$ 42,00"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-1.5" for="product-cost">
+              Custo unitário
+            </label>
+<input class="w-full px-3 py-2 bg-brand-surface border border-brand-border rounded-lg text-xs text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary focus:border-brand-textPrimary" id="product-cost" type="text" value="R$ 18,00"/>
+</div>
+</div>
+<!-- Estoque Informativo & Alerta -->
+<div class="p-3 bg-brand-surface rounded-lg border border-brand-border space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs text-brand-textMuted font-medium">Estoque atual</span>
+<span class="text-xs font-bold text-brand-textPrimary bg-brand-input px-2 py-0.5 rounded border border-brand-border">
+              8 unidades em estoque
+            </span>
+</div>
+<p class="text-[11px] text-brand-textSubtle leading-normal">
+            Para registrar compras ou correções de estoque, utilize o módulo <span class="text-brand-textMuted font-semibold">Operação &gt; Estoque</span>.
+          </p>
+<div class="pt-2 border-t border-brand-border/60">
+<label class="block text-[11px] font-semibold text-brand-textMuted mb-1" for="min-stock">
+              Estoque mínimo de alerta
+            </label>
+<input class="w-full px-2.5 py-1.5 bg-brand-input border border-brand-border rounded-md text-xs text-brand-textPrimary focus:outline-none focus:ring-1 focus:ring-brand-textPrimary" id="min-stock" type="text" value="3 unidades"/>
+</div>
+</div>
+<!-- Gerenciamento de Imagem do Produto -->
+<div>
+<label class="block text-xs font-semibold text-brand-textMuted mb-2">Foto do produto</label>
+<div class="flex items-start space-x-3 p-3 bg-brand-surface rounded-lg border border-brand-border">
+<!-- Miniatura do Produto -->
+<div class="w-16 h-16 rounded-md bg-brand-input border border-brand-border flex-shrink-0 flex items-center justify-center overflow-hidden relative">
+<svg class="w-8 h-8 text-brand-textSubtle" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<!-- Controles de Imagem -->
+<div class="flex-1 space-y-2">
+<div class="flex items-center space-x-2">
+<button class="px-2.5 py-1 rounded bg-brand-input hover:bg-brand-border border border-brand-border text-[11px] font-semibold text-brand-textPrimary transition" type="button">
+                  Trocar imagem
+                </button>
+<button class="px-2.5 py-1 rounded text-[11px] text-brand-redBadgeText hover:underline" type="button">
+                  Remover
+                </button>
+</div>
+<p class="text-[10px] text-brand-textSubtle leading-relaxed">
+                Ao remover, você pode optar por usar a imagem padrão da categoria Pomada ou ficar sem imagem.
+              </p>
+</div>
+</div>
+</div>
+<!-- Toggles de Configuração -->
+<div class="space-y-3 pt-1">
+<!-- Toggle 1: Vitrine Digital -->
+<div class="flex items-center justify-between">
+<div class="pr-2">
+<span class="block text-xs font-semibold text-brand-textPrimary">Visível na Vitrine Digital</span>
+<span class="block text-[11px] text-brand-textSubtle">Exibe este item no cardápio online e QR code</span>
+</div>
+<button aria-checked="true" class="w-11 h-6 bg-[#F4F4F0] rounded-full relative p-0.5 transition-colors focus:outline-none" role="switch" type="button">
+<span class="w-5 h-5 bg-[#181817] rounded-full block transform translate-x-5 transition-transform"></span>
+</button>
+</div>
+<!-- Toggle 2: Produto Ativo -->
+<div class="flex items-center justify-between">
+<div class="pr-2">
+<span class="block text-xs font-semibold text-brand-textPrimary">Produto ativo para venda</span>
+<span class="block text-[11px] text-brand-textSubtle">Permite seleção direta no PDV e balcão</span>
+</div>
+<button aria-checked="true" class="w-11 h-6 bg-[#F4F4F0] rounded-full relative p-0.5 transition-colors focus:outline-none" role="switch" type="button">
+<span class="w-5 h-5 bg-[#181817] rounded-full block transform translate-x-5 transition-transform"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="p-5 border-t border-brand-border bg-brand-bg space-y-3">
+<button class="w-full py-2.5 text-xs font-bold rounded-lg bg-[#F4F4F0] hover:bg-white text-[#181817] shadow-sm transition" type="button">
+          Salvar alterações
+        </button>
+<button class="w-full text-center text-xs text-brand-redBadgeText hover:underline py-1" type="button">
+          Desativar produto
+        </button>
+</div>
+</aside>
+<!-- END: EditProductDrawer -->
+</div>
+<!-- END: AppContainer -->
+</body></html>

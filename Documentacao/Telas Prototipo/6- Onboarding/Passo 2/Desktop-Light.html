@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estilo e Gestão - Onboarding Profissional</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400..600,0..1,0" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .drag-over {
+      border-color: #B42318 !important;
+      background-color: #FEECEB !important;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-low": "#f4f4f0",
+            "text-primary": "#2F2F2D",
+            "background": "#faf9f5",
+            "dark-text-primary": "#F4F4F0",
+            "warning": "#B54708",
+            "warning-surface": "#FFF4E5",
+            "info": "#175CD3",
+            "info-surface": "#EAF3FF",
+            "surface-base": "#F4F4F0",
+            "surface-secondary": "#E9E9E4",
+            "surface-container-high": "#e8e8e4",
+            "surface-container-highest": "#e2e3df",
+            "surface-container": "#eeeeea",
+            "surface-elevated": "#FFFFFF",
+            "surface": "#faf9f5",
+            "danger": "#B42318",
+            "danger-surface": "#FEECEB",
+            "brand-red": "#B42318",
+            "brand-red-hover": "#991B1B",
+            "outline": "#777871",
+            "outline-variant": "#d4d4cb",
+            "border-subtle": "#E9E9E4",
+            "text-secondary": "#666662",
+            "success": "#2F6B4F",
+            "success-surface": "#EAF5EF",
+            "primary": "#1a1a19"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"]
+          },
+          boxShadow: {
+            subtle: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02)",
+            card: "0 2px 8px -1px rgba(0,0,0,0.05), 0 1px 3px -1px rgba(0,0,0,0.03)",
+            dropdown: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-sans text-[#2F2F2D] antialiased flex flex-col min-h-screen">
+<!-- ================= TOP HEADER ================= -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-border-subtle">
+<div class="h-16 max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+<!-- Brand & Status Pill -->
+<div class="flex items-center gap-3.5">
+<a class="flex items-center gap-2.5 transition-opacity hover:opacity-90" href="#">
+<img alt="Logo Estilo e Gestão" class="h-9 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs7Cva37LVTAVuYP1maFu2ThlK8HineZp6v6qL2J-l9cw0FLsDKgqaxUGp2tf-8sfHH2RKNR5OtjhLgLxIkq3c9pipzJ8EBg6p7Sms0XQ8iHMOHfLwaQnkpuXi-sd4YpET4H9DGBvZvYwZv6Q03N-vn4dOrqd4E_bSuxI-i3NZrvRrfs_CDfZLr93gF7kbG-6BxQ37sHn8WdGaKk__LXqIZ8PVLOmTirRUUw-4K_64iU7lM_PwpGh59g-h2cQyKV5zx3U"/>
+<div class="flex flex-col leading-tight">
+<span class="font-extrabold text-[16px] text-text-primary tracking-tight">BANCO_EXEMPLO(1)Estilo e Gestão</span>
+<span class="text-[10px] font-semibold text-text-secondary uppercase tracking-widest">Workspace</span>
+</div>
+</a>
+<div class="h-5 w-[1px] bg-border-subtle hidden sm:block"></div>
+<div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-text-primary text-[12px] font-medium border border-border-subtle">
+<span class="w-2 h-2 rounded-full bg-danger animate-pulse"></span>
+<span class="">Onboarding Profissional</span>
+</div>
+</div>
+<!-- Center Onboarding Progress Quick-Badge -->
+<!-- Right Side SaaS Controls -->
+<div class="flex items-center gap-2 sm:gap-3">
+<!-- Help & Support -->
+<!-- Light / Dark toggle simulation -->
+<button aria-label="Alternar tema" class="w-9 h-9 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-container transition-colors border border-border-subtle" type="button">
+<span class="material-symbols-outlined text-[19px]">light_mode</span>
+</button>
+<!-- Divider -->
+<div class="h-6 w-[1px] bg-border-subtle"></div>
+<!-- User Profile Pill / Dropdown trigger -->
+</div>
+</div>
+</header>
+<!-- ================= MAIN CONTENT ================= -->
+<main class="flex-1 w-full pt-20 pb-12 bg-background">
+<div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+<!-- ================= 2. PROGRESS TRACKER ================= -->
+<section class="w-full mb-8"><div class="bg-surface-elevated rounded-2xl p-5 sm:p-6 border border-border-subtle shadow-card"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4"><div><div class="flex items-center gap-2 mb-1"><span class="text-[11px] font-bold uppercase tracking-wider text-danger px-2 py-0.5 rounded bg-danger-surface">Configuração Inicial</span><span class="text-text-secondary text-[12px]">•</span><span class="text-[13px] font-semibold text-text-primary">Passo 2 de 6</span></div><h2 class="text-[20px] sm:text-[22px] font-bold text-text-primary tracking-tight flex items-center gap-2">Endereço <span class="text-[13px] font-semibold px-2 py-0.5 rounded-full bg-surface-container text-text-secondary">33% concluído</span></h2></div><div class="inline-flex items-center gap-2 self-start sm:self-auto bg-surface-base px-3 py-1.5 rounded-full border border-border-subtle"><span class="material-symbols-outlined text-danger text-[18px]">verified_user</span><span class="text-[12px] font-medium text-text-secondary">Esses dados formam a base da sua Vitrine pública</span></div></div><div class="w-full bg-[#EEEEEE] h-2 rounded-full overflow-hidden mb-6"><div class="h-full rounded-full bg-gradient-to-r from-danger to-[#DC2626] transition-all duration-500 ease-out" style="width: 33.33%;"></div></div><nav aria-label="Progresso do Onboarding" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-success-surface border border-success/20 transition-all"><div class="w-7 h-7 rounded-full bg-success text-white flex items-center justify-center font-bold text-[12px] shrink-0 shadow-sm"><span class="material-symbols-outlined text-[16px]">check</span></div><div class="min-w-0"><p class="text-[12px] font-bold text-success truncate">1. Dados</p><p class="text-[11px] font-medium text-success/80 truncate">Concluído</p></div></div><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-danger-surface border border-danger/20 transition-all"><div class="w-7 h-7 rounded-full bg-danger text-white flex items-center justify-center font-bold text-[12px] shrink-0 shadow-sm">2</div><div class="min-w-0"><p class="text-[12px] font-bold text-danger truncate">2. Endereço</p><p class="text-[11px] font-medium text-danger/80 truncate">Ativo</p></div></div><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-base/70 border border-transparent hover:border-border-subtle transition-all"><div class="w-7 h-7 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center font-bold text-[12px] shrink-0">3</div><div class="min-w-0"><p class="text-[12px] font-semibold text-text-secondary truncate">3. Horários</p><p class="text-[11px] text-[#888884] truncate">Pendente</p></div></div><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-base/70 border border-transparent hover:border-border-subtle transition-all"><div class="w-7 h-7 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center font-bold text-[12px] shrink-0">4</div><div class="min-w-0"><p class="text-[12px] font-semibold text-text-secondary truncate">4. Serviços</p><p class="text-[11px] text-[#888884] truncate">Pendente</p></div></div><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-base/70 border border-transparent hover:border-border-subtle transition-all"><div class="w-7 h-7 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center font-bold text-[12px] shrink-0">5</div><div class="min-w-0"><p class="text-[12px] font-semibold text-text-secondary truncate">5. Produtos e pagamentos</p><p class="text-[11px] text-[#888884] truncate">Pendente</p></div></div><div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-base/70 border border-transparent hover:border-border-subtle transition-all"><div class="w-7 h-7 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center font-bold text-[12px] shrink-0">6</div><div class="min-w-0"><p class="text-[12px] font-semibold text-text-secondary truncate">6. Aparência</p><p class="text-[11px] text-[#888884] truncate">Pendente</p></div></div></nav></div></section>
+<!-- Introduction Headline -->
+<header class="mb-8"><div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-text-primary text-[12px] font-semibold mb-2.5"><span class="material-symbols-outlined text-[15px] text-danger">location_on</span><span>Configuração do seu espaço</span></div><h1 class="text-[28px] sm:text-[34px] font-extrabold text-text-primary tracking-tight leading-tight">Agora, onde fica sua barbearia?</h1><p class="mt-1.5 text-[15px] text-text-secondary max-w-3xl leading-relaxed">Informe o endereço do estabelecimento. Esses dados poderão ser alterados depois nas configurações.</p></header>
+<!-- Main Grid: Form (8 cols) + Side Live Preview (4 cols) -->
+<form class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16" id="onboardingForm" onsubmit="event.preventDefault();"><div class="lg:col-span-8 flex flex-col gap-6"><fieldset class="bg-surface-elevated rounded-2xl p-6 sm:p-7 border border-border-subtle shadow-card"><div class="flex items-center justify-between pb-4 mb-6 border-b border-border-subtle"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-danger-surface text-danger flex items-center justify-center"><span class="material-symbols-outlined text-[22px]">pin_drop</span></div><div><legend class="text-[17px] font-bold text-text-primary">Localização da Barbearia</legend><p class="text-[12px] text-text-secondary">Comece pelo CEP para preencher parte do endereço automaticamente.</p></div></div><span class="text-[11px] font-bold px-2.5 py-1 rounded bg-surface-base text-text-secondary uppercase tracking-wider border border-border-subtle">Seção 01</span></div><div class="flex flex-col gap-1.5 max-w-md"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="cepInput">CEP <span class="text-danger">*</span></label><div class="flex items-center gap-2"><div class="relative flex-1"><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10 font-mono" id="cepInput" maxlength="9" name="cep" placeholder="11730-000" required="" type="text" value="11730-000"/></div><button class="h-11 px-4 bg-surface-container hover:bg-surface-container-high text-text-primary text-[13px] font-bold rounded-xl border border-border-subtle transition-all shrink-0" type="button">Buscar</button></div><div class="flex items-center gap-1.5 mt-1"><span class="material-symbols-outlined text-[15px] text-success">check_circle</span><span class="text-[11.5px] text-success font-medium">Endereço preenchido automaticamente</span></div><p class="text-[11.5px] text-text-secondary leading-normal mt-0.5">Buscaremos o endereço automaticamente quando possível.</p></div></fieldset><fieldset class="bg-surface-elevated rounded-2xl p-6 sm:p-7 border border-border-subtle shadow-card"><div class="flex items-center justify-between pb-4 mb-6 border-b border-border-subtle"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-danger-surface text-danger flex items-center justify-center"><span class="material-symbols-outlined text-[22px]">home_work</span></div><div><legend class="text-[17px] font-bold text-text-primary">Endereço Completo</legend><p class="text-[12px] text-text-secondary">Confira os dados e informe o número ou referência.</p></div></div><span class="text-[11px] font-bold px-2.5 py-1 rounded bg-surface-base text-text-secondary uppercase tracking-wider border border-border-subtle">Seção 02</span></div><div class="flex flex-col gap-5"><div class="flex flex-col gap-1.5"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="streetInput">Rua / Logradouro <span class="text-danger">*</span></label><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10" id="streetInput" name="street" placeholder="Ex.: Av. São Paulo" required="" type="text" value="Avenida São Paulo"/></div><div class="flex flex-col gap-2.5 pt-1"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1">O endereço tem número? <span class="text-danger">*</span></label><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><label class="relative flex items-center gap-3 p-3.5 rounded-xl cursor-pointer border-2 border-danger bg-danger-surface/40 transition-all select-none"><input checked="" class="sr-only" name="hasNumber" type="radio" value="sim"/><span class="material-symbols-outlined text-danger text-[20px]">check_circle</span><span class="text-[13.5px] font-bold text-text-primary">Sim, tem número</span></label><label class="relative flex items-center gap-3 p-3.5 rounded-xl cursor-pointer border-2 border-border-subtle bg-surface-base hover:bg-white transition-all select-none"><input class="sr-only" name="hasNumber" type="radio" value="nao"/><span class="material-symbols-outlined text-outline-variant text-[20px]">radio_button_unchecked</span><span class="text-[13.5px] font-bold text-text-primary">Não (Sem número)</span></label></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><div class="flex flex-col gap-1.5"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="numberInput">Número <span class="text-danger">*</span></label><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10" id="numberInput" name="number" placeholder="Ex.: 125" required="" type="text" value="125"/></div><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="text-[13px] font-bold text-text-primary" for="complementInput">Complemento</label><span class="bg-surface-base text-text-secondary text-[11px] font-semibold px-2 py-0.5 rounded border border-border-subtle">Opcional</span></div><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10" id="complementInput" name="complement" placeholder="Ex.: Sala 2, Fundos, Loja B" type="text"/><p class="text-[11.5px] text-text-secondary leading-normal">Use somente se precisar adicionar uma referência ao endereço.</p></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-5"><div class="flex flex-col gap-1.5"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="neighborhoodInput">Bairro <span class="text-danger">*</span></label><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10" id="neighborhoodInput" name="neighborhood" placeholder="Centro" required="" type="text" value="Centro"/></div><div class="flex flex-col gap-1.5"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="cityInput">Cidade <span class="text-danger">*</span></label><input class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all placeholder:text-[#9E9E98] focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10" id="cityInput" name="city" placeholder="Mongaguá" required="" type="text" value="Mongaguá"/></div><div class="flex flex-col gap-1.5"><label class="text-[13px] font-bold text-text-primary flex items-center gap-1" for="stateSelect">Estado <span class="text-danger">*</span></label><select class="w-full h-11 px-3.5 rounded-xl border border-border-subtle bg-surface-base/50 text-text-primary text-[14px] outline-none transition-all focus:bg-white focus:border-danger focus:ring-2 focus:ring-danger/10 cursor-pointer" id="stateSelect" name="state" required=""><option selected="" value="SP">SP — São Paulo</option><option value="RJ">RJ — Rio de Janeiro</option><option value="MG">MG — Minas Gerais</option><option value="PR">PR — Paraná</option><option value="SC">SC — Santa Catarina</option><option value="RS">RS — Rio Grande do Sul</option></select></div></div></div></fieldset><div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 bg-surface-elevated rounded-2xl border border-border-subtle shadow-card"><div class="flex items-center gap-2.5 text-text-secondary"><span class="w-8 h-8 rounded-full bg-success-surface text-success flex items-center justify-center"><span class="material-symbols-outlined text-[19px]">cloud_done</span></span><div><p class="text-[13px] font-semibold text-text-primary leading-tight">Salvamento contínuo</p><p class="text-[11.5px] text-text-secondary">Seu progresso é salvo automaticamente.</p></div></div><div class="flex items-center gap-3 w-full sm:w-auto"><button class="w-full sm:w-auto h-12 px-6 bg-white hover:bg-surface-container active:scale-[0.98] text-text-primary text-[14px] font-bold rounded-xl border border-border-subtle transition-all flex items-center justify-center gap-2" id="btnBack" type="button"><span class="material-symbols-outlined text-[19px]">arrow_back</span><span>Voltar</span></button><button class="w-full sm:w-auto h-12 px-8 bg-brand-red hover:bg-brand-red-hover active:scale-[0.98] text-white text-[14px] font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 group" id="btnContinue" type="submit"><span>Continuar</span><span class="material-symbols-outlined text-[19px] transition-transform group-hover:translate-x-1">arrow_forward</span></button></div></div></div><aside class="lg:col-span-4 flex flex-col gap-6"><div class="bg-surface-elevated rounded-2xl p-5 sm:p-6 border border-border-subtle shadow-card sticky top-24"><div class="flex items-center justify-between pb-3.5 mb-4 border-b border-border-subtle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary text-[20px]">map</span><h3 class="text-[15px] font-bold text-text-primary">Prévia do endereço</h3></div><div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success-surface text-success text-[11px] font-bold border border-success/20"><span class="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span><span>Tempo Real</span></div></div><p class="text-[12px] text-text-secondary mb-4">Como aparecerá na sua Vitrine:</p><div class="rounded-2xl border border-border-subtle bg-surface-base p-3.5 shadow-inner"><div class="bg-white rounded-xl p-4 border border-border-subtle shadow-subtle flex flex-col gap-3.5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-danger-surface text-danger flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">location_on</span></div><div class="min-w-0 flex-1"><h4 class="text-[14px] font-bold text-text-primary truncate">Barbearia Imperial</h4><p class="text-[12.5px] font-semibold text-text-primary mt-0.5">Avenida São Paulo, 125</p><p class="text-[12px] text-text-secondary">Centro • Mongaguá - SP</p><p class="text-[11px] text-[#888884] font-mono mt-0.5">CEP 11730-000</p></div></div><div class="w-full py-2 px-3 rounded-lg bg-surface-container text-text-secondary text-[11.5px] font-medium text-center flex items-center justify-center gap-1.5 border border-border-subtle"><span class="material-symbols-outlined text-[15px]">check_circle</span><span>Endereço verificado</span></div></div></div><div class="mt-4 p-3.5 rounded-xl bg-info-surface border border-info/15 flex gap-2.5"><span class="material-symbols-outlined text-info text-[20px] shrink-0 mt-0.5">info</span><p class="text-[12px] text-text-primary leading-relaxed"><strong class="font-semibold block text-text-primary mb-0.5">Endereço na Vitrine</strong>O endereço poderá ser usado para ajudar clientes a localizar sua barbearia.</p></div><div class="mt-5 pt-4 border-t border-border-subtle flex flex-col gap-2"><span class="text-[11px] font-bold uppercase tracking-wider text-text-secondary">Próximas etapas</span><div class="flex items-center gap-2 text-text-secondary text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span><span>3. Horários de funcionamento</span></div><div class="flex items-center gap-2 text-text-secondary text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span><span>4. Serviços</span></div><div class="flex items-center gap-2 text-text-secondary text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span><span>5. Produtos e pagamentos</span></div><div class="flex items-center gap-2 text-text-secondary text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span><span>6. Aparência e conclusão</span></div></div></div></aside></form>
+</div>
+</main>
+<!-- ================= FOOTER ================= -->
+<footer class="w-full bg-white border-t border-border-subtle py-6 mt-auto">
+<div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-text-secondary">
+<div class="flex items-center gap-2">
+<span class="font-bold text-text-primary">Estilo e Gestão</span>
+<span class="">•</span>
+<span class="">Plataforma SaaS para Barbearias e Profissionais</span>
+</div>
+<p class="">© 2026 Estilo e Gestão. Todos os direitos reservados.</p>
+</div>
+</footer>
+<!-- ================= CLIENT SCRIPTS ================= -->
+<script>
+    (function() {
+      // Elements
+      const shopInput = document.getElementById('barbershopName');
+      const respInput = document.getElementById('responsibleName');
+      const profInput = document.getElementById('professionalNickname');
+      const waInput = document.getElementById('whatsappContact');
+      const igInput = document.getElementById('instagramUser');
+      
+      const previewShop = document.getElementById('previewShopName');
+      const previewOwner = document.getElementById('previewOwner');
+      const previewInitials = document.getElementById('previewInitials');
+      const previewPhone = document.getElementById('previewPhone');
+      const previewInsta = document.getElementById('previewInsta');
+      const previewDelivery = document.getElementById('previewBadgeDelivery');
+
+      // Live Mirroring: Shop name & initials
+      if (shopInput && previewShop && previewInitials) {
+        shopInput.addEventListener('input', (e) => {
+          const val = e.target.value.trim();
+          previewShop.textContent = val || 'Sua Barbearia';
+          if (val) {
+            const words = val.split(' ').filter(Boolean);
+            if (words.length > 1) {
+              previewInitials.textContent = (words[0][0] + words[1][0]).toUpperCase();
+            } else {
+              previewInitials.textContent = val.substring(0, 2).toUpperCase();
+            }
+          } else {
+            previewInitials.textContent = 'EG';
+          }
+        });
+      }
+
+      // Live Mirroring: Responsible / Professional nickname
+      if (respInput && previewOwner) {
+        const updateOwner = () => {
+          const resp = respInput.value.trim();
+          const prof = profInput ? profInput.value.trim() : '';
+          if (prof) {
+            previewOwner.textContent = 'Responsável: ' + prof;
+          } else if (resp) {
+            previewOwner.textContent = 'Responsável: ' + resp;
+          } else {
+            previewOwner.textContent = 'Responsável: Não informado';
+          }
+        };
+        respInput.addEventListener('input', updateOwner);
+        if (profInput) profInput.addEventListener('input', updateOwner);
+      }
+
+      // Live Mirroring: WhatsApp Mask
+      if (waInput && previewPhone) {
+        waInput.addEventListener('input', (e) => {
+          let v = e.target.value.replace(/\D/g, '');
+          if (v.length > 11) v = v.substring(0, 11);
+          if (v.length > 6) {
+            v = '(' + v.substring(0, 2) + ') ' + v.substring(2, 7) + '-' + v.substring(7);
+          } else if (v.length > 2) {
+            v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+          } else if (v.length > 0) {
+            v = '(' + v;
+          }
+          e.target.value = v;
+          previewPhone.textContent = v || 'Pendente';
+        });
+      }
+
+      // Live Mirroring: Instagram
+      if (igInput && previewInsta) {
+        igInput.addEventListener('input', (e) => {
+          let v = e.target.value.trim().replace(/^@+/, '');
+          e.target.value = v;
+          previewInsta.textContent = v ? '@' + v : 'Pendente';
+        });
+      }
+
+      // Radio Selection: Delivery Mode
+      const cardNo = document.getElementById('cardOptionNo');
+      const cardYes = document.getElementById('cardOptionYes');
+      const radioInputs = document.querySelectorAll('input[name="homeService"]');
+      const checkNo = document.getElementById('checkIconNo');
+      const checkYes = document.getElementById('checkIconYes');
+
+      function updateRadioStyle() {
+        const isYes = document.querySelector('input[name="homeService"]:checked')?.value === 'sim';
+        if (isYes) {
+          cardYes.classList.remove('border-border-subtle', 'bg-surface-base');
+          cardYes.classList.add('border-danger', 'bg-danger-surface/40');
+          checkYes.textContent = 'check_circle';
+          checkYes.classList.remove('text-outline-variant');
+          checkYes.classList.add('text-danger');
+
+          cardNo.classList.remove('border-danger', 'bg-danger-surface/40');
+          cardNo.classList.add('border-border-subtle', 'bg-surface-base');
+          checkNo.textContent = 'radio_button_unchecked';
+          checkNo.classList.remove('text-danger');
+          checkNo.classList.add('text-outline-variant');
+
+          if (previewDelivery) {
+            previewDelivery.innerHTML = '<span class="material-symbols-outlined text-[12px]">commute</span> Atendimento a domicílio';
+            previewDelivery.className = 'inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-warning-surface text-warning';
+          }
+        } else {
+          cardNo.classList.remove('border-border-subtle', 'bg-surface-base');
+          cardNo.classList.add('border-danger', 'bg-danger-surface/40');
+          checkNo.textContent = 'check_circle';
+          checkNo.classList.remove('text-outline-variant');
+          checkNo.classList.add('text-danger');
+
+          cardYes.classList.remove('border-danger', 'bg-danger-surface/40');
+          cardYes.classList.add('border-border-subtle', 'bg-surface-base');
+          checkYes.textContent = 'radio_button_unchecked';
+          checkYes.classList.remove('text-danger');
+          checkYes.classList.add('text-outline-variant');
+
+          if (previewDelivery) {
+            previewDelivery.innerHTML = '<span class="material-symbols-outlined text-[12px]">store</span> Somente na barbearia';
+            previewDelivery.className = 'inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-surface-container text-text-secondary';
+          }
+        }
+      }
+
+      radioInputs.forEach(radio => radio.addEventListener('change', updateRadioStyle));
+
+      // Logo Upload: Click + Drag and Drop Handling
+      const dropZone = document.getElementById('dropZoneContainer');
+      const uploadTrigger = document.getElementById('uploadTriggerBtn');
+      const fileInput = document.getElementById('logoFileInput');
+      const logoPreviewImg = document.getElementById('logoPreviewImg');
+      const logoPlaceholderIcon = document.getElementById('logoPlaceholderIcon');
+      const previewAvatarImg = document.getElementById('previewAvatarImg');
+
+      function handleFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          if (logoPreviewImg && logoPlaceholderIcon) {
+            logoPreviewImg.src = evt.target.result;
+            logoPreviewImg.classList.remove('hidden');
+            logoPlaceholderIcon.classList.add('hidden');
+          }
+          if (previewAvatarImg && previewInitials) {
+            previewAvatarImg.src = evt.target.result;
+            previewAvatarImg.classList.remove('hidden');
+            previewInitials.classList.add('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      if (uploadTrigger && fileInput) {
+        uploadTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          fileInput.click();
+        });
+      }
+
+      if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('drag-over');
+          }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-over');
+          }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files.length > 0) {
+            handleFile(files[0]);
+          }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFile(e.target.files[0]);
+          }
+        });
+      }
+
+      // Submit Form Validation & Feedback
+      const continueBtn = document.getElementById('btnContinue');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', () => {
+          const reqInputs = [respInput, shopInput, waInput];
+          let isValid = true;
+          reqInputs.forEach(i => {
+            if (i && !i.value.trim()) {
+              isValid = false;
+              i.classList.add('border-danger', 'ring-2', 'ring-danger/20');
+              setTimeout(() => {
+                i.classList.remove('border-danger', 'ring-2', 'ring-danger/20');
+              }, 2500);
+            }
+          });
+
+          if (!isValid) {
+            alert('Por favor, preencha os campos obrigatórios marcados com * (Responsável, Nome da Barbearia e WhatsApp).');
+          } else {
+            continueBtn.disabled = true;
+            continueBtn.innerHTML = '<span class="material-symbols-outlined text-[19px] animate-spin">progress_activity</span><span>Salvando dados...</span>';
+            setTimeout(() => {
+              continueBtn.innerHTML = '<span class="material-symbols-outlined text-[19px]">check</span><span>Etapa concluída!</span>';
+              continueBtn.classList.remove('bg-brand-red', 'hover:bg-brand-red-hover');
+              continueBtn.classList.add('bg-success');
+            }, 700);
+          }
+        });
+      }
+    })();
+  </script>
+</body></html>

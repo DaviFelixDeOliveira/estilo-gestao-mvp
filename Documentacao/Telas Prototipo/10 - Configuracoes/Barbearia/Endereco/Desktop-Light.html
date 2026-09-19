@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "dark-text-primary": "#F4F4F0",
+            "danger-surface": "#FEECEB",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#474745",
+            "on-tertiary-container": "#979792",
+            "success-surface": "#EAF5EF",
+            "surface-container": "#eeeeea",
+            "outline": "#777871",
+            "on-tertiary-fixed": "#1b1c19",
+            "success": "#2F6B4F",
+            "on-primary-fixed": "#1b1c1a",
+            "on-primary-container": "#989693",
+            "surface-container-highest": "#e2e3df",
+            "dark-info": "#53B1FD",
+            "tertiary": "#1a1a18",
+            "secondary-fixed": "#e4e2df",
+            "surface-secondary": "#E9E9E4",
+            "surface-container-low": "#f4f4f0",
+            "danger": "#B42318",
+            "info": "#175CD3",
+            "inverse-on-surface": "#f1f1ed",
+            "dark-surface-secondary": "#2B2B29",
+            "surface-variant": "#e2e3df",
+            "dark-warning-surface": "#4A2C0A",
+            "tertiary-fixed": "#e4e2dd",
+            "inverse-surface": "#2f312e",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#464742",
+            "dark-danger": "#F97066",
+            "dark-border": "#3F3F3B",
+            "dark-primary-hover": "#E9E9E4",
+            "text-primary": "#2F2F2D",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#c8c6c1",
+            "warning": "#B54708",
+            "inverse-primary": "#c8c6c3",
+            "tertiary-container": "#2f2f2c",
+            "surface-dim": "#dadad6",
+            "outline-variant": "#c7c7c0",
+            "primary-container": "#2f2f2d",
+            "on-secondary": "#ffffff",
+            "primary": "#2F2F2D",
+            "surface": "#faf9f5",
+            "surface-bright": "#faf9f5",
+            "surface-tint": "#5f5e5c",
+            "on-background": "#1a1c1a",
+            "dark-surface": "#222220",
+            "surface-base": "#F4F4F0",
+            "on-primary": "#ffffff",
+            "on-surface": "#1a1c1a",
+            "dark-danger-surface": "#4A1D1A",
+            "info-surface": "#EAF3FF",
+            "on-secondary-fixed": "#1b1c1a",
+            "on-secondary-fixed-variant": "#474745",
+            "background": "#faf9f5",
+            "surface-elevated": "#FFFFFF",
+            "surface-container-lowest": "#ffffff",
+            "warning-surface": "#FFF4E5",
+            "dark-warning": "#FDB022",
+            "secondary": "#5f5e5c",
+            "dark-info-surface": "#12365A",
+            "primary-fixed": "#e5e2df",
+            "dark-success": "#6FB892",
+            "dark-success-surface": "#173B2D",
+            "on-secondary-container": "#656462",
+            "surface-container-high": "#e8e8e4",
+            "text-secondary": "#666662",
+            "secondary-container": "#e4e2df",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#c8c6c3",
+            "dark-bg": "#181817",
+            "on-tertiary-fixed-variant": "#474743",
+            "on-tertiary": "#ffffff",
+            "border-subtle": "#E9E9E4",
+            "dark-primary": "#F4F4F0",
+            "secondary-fixed-dim": "#c8c6c3",
+            "interactive-hover": "#3A3A38",
+            "dark-text-secondary": "#B8B8B2"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-2xs": "0.25rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-2xl": "3rem"
+          },
+          "fontFamily": {
+            "sans": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background font-sans text-[14px] text-text-primary antialiased selection:bg-primary/10">
+<!-- ================= SIDEBAR ================= -->
+<aside class="fixed left-0 top-0 bottom-0 w-72 bg-surface-container-lowest border-r border-border-subtle z-50 flex flex-col justify-between">
+<div class="flex flex-col flex-1 overflow-hidden">
+<!-- Brand Logo / Identity Header -->
+<div class="h-16 px-space-md flex items-center gap-space-xs border-b border-border-subtle shrink-0">
+<div class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-sm tracking-tighter shrink-0 shadow-sm">
+          E&amp;G
+        </div>
+<div class="flex flex-col min-w-0">
+<span class="font-semibold text-[14px] text-text-primary leading-tight truncate">Estilo &amp; Gestão</span>
+<span class="text-[11px] text-text-secondary font-medium tracking-wide truncate">Plataforma Barbeiro</span>
+</div>
+</div>
+<!-- Navigation Content -->
+<div class="flex-1 overflow-y-auto px-space-sm py-space-sm space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-space-xs px-space-sm py-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-container-low transition-colors font-medium text-[13px]" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- PDV (Accordion) -->
+<div>
+<div class="flex items-center justify-between px-space-sm py-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-container-low transition-colors cursor-pointer font-medium text-[13px]">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px]">point_of_sale</span>
+<span>PDV</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Operação (Accordion) -->
+<div>
+<div class="flex items-center justify-between px-space-sm py-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-container-low transition-colors cursor-pointer font-medium text-[13px]">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px]">storefront</span>
+<span>Operação</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Configurações (Expanded) -->
+<div class="pt-2">
+<div class="flex items-center justify-between px-space-sm py-2 rounded-lg text-text-primary bg-surface-container-low font-semibold text-[13px]">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-text-primary">settings</span>
+<span>Configurações</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">expand_less</span>
+</div>
+<div class="pl-space-xs flex flex-col gap-space-xs mt-space-xs">
+<!-- Grupo: NEGÓCIO -->
+<div class="flex flex-col gap-0.5">
+<span class="px-space-sm py-1 text-[10px] font-bold text-text-secondary tracking-wider uppercase">NEGÓCIO</span>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Financeiro</a>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Relatórios</a>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Vitrine Digital</a>
+</div>
+<!-- Grupo: BARBEARIA -->
+<div class="flex flex-col gap-0.5 pt-1">
+<span class="px-space-sm py-1 text-[10px] font-bold text-text-secondary tracking-wider uppercase">BARBEARIA</span>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Dados da barbearia</a>
+<a aria-current="page" class="px-space-sm py-1.5 rounded-lg text-[13px] font-semibold bg-[#2F2F2D] text-white shadow-sm transition-colors flex items-center justify-between" href="#">
+<span>Endereço</span>
+</a>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Horários</a>
+<a class="px-space-sm py-1.5 rounded-lg text-text-secondary text-[13px] hover:text-text-primary hover:bg-surface-container-low transition-colors" href="#">Formas de pagamento</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Footer: Mestre Barbeiro - Sua conta -->
+<div class="p-space-sm border-t border-border-subtle bg-surface-container-lowest">
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-full bg-[#2F2F2D] text-white flex items-center justify-center font-semibold text-xs shrink-0">
+<span class="material-symbols-outlined text-[18px]">content_cut</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-[13px] font-semibold text-text-primary truncate">Mestre Barbeiro</span>
+<span class="text-[11px] text-text-secondary truncate">Sua conta</span>
+</div>
+</div>
+<button class="p-1 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" title="Mais opções" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- ================= MAIN LAYOUT WRAPPER ================= -->
+<div class="pl-72 flex flex-col min-h-screen">
+<!-- TOPBAR -->
+<header class="sticky top-0 z-40 h-16 bg-surface/90 backdrop-blur border-b border-border-subtle flex items-center justify-between px-space-lg">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-1.5 text-[13px] text-text-secondary">
+<a class="hover:text-text-primary transition-colors" href="#">Configurações</a>
+<span class="material-symbols-outlined text-[16px] text-text-secondary">chevron_right</span>
+<span>Barbearia</span>
+<span class="material-symbols-outlined text-[16px] text-text-secondary">chevron_right</span>
+<span class="font-semibold text-text-primary">Endereço</span>
+</div>
+<!-- Right Controls: Theme Switcher & User Avatar -->
+<div class="flex items-center gap-space-md">
+<button aria-label="Alternar modo claro e escuro" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-container-low transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">dark_mode</span>
+</button>
+<div class="h-5 w-[1px] bg-border-subtle"></div>
+<div class="flex items-center gap-2 cursor-pointer select-none">
+<div class="w-8 h-8 rounded-full bg-[#2F2F2D] text-white flex items-center justify-center shadow-sm text-xs font-semibold">
+            CS
+          </div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="text-[12px] font-semibold text-text-primary leading-tight">Mestre Barbeiro</span>
+<span class="text-[11px] text-text-secondary leading-tight">Sua conta</span>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN PAGE CONTENT -->
+<main class="flex-1 bg-background px-space-lg py-space-lg">
+<div class="max-w-4xl mx-auto flex flex-col gap-space-lg">
+<!-- Header Section -->
+<section class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pt-1">
+<div class="flex flex-col">
+<h1 class="text-[26px] font-bold text-text-primary tracking-tight">Endereço</h1>
+<p class="text-[14px] text-text-secondary mt-0.5">Atualize o endereço da sua barbearia.</p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="h-10 px-5 rounded-xl bg-[#2F2F2D] text-white text-[13px] font-semibold inline-flex items-center justify-center gap-1.5 shadow-sm hover:bg-interactive-hover active:scale-[0.98] transition-all cursor-pointer" id="btn-save-header" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Salvar alterações</span>
+</button>
+</div>
+</section>
+<!-- Main Address Form Card -->
+<div class="bg-surface-elevated rounded-2xl border border-border-subtle p-6 sm:p-8 shadow-sm flex flex-col gap-6">
+<!-- Card Header / Localização Física -->
+<div class="flex flex-col gap-1 border-b border-border-subtle pb-5">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-bold text-text-secondary uppercase tracking-wider">LOCALIZAÇÃO FÍSICA</span>
+</div>
+<h2 class="text-[18px] font-bold text-text-primary">Endereço do estabelecimento</h2>
+<p class="text-[13px] text-text-secondary">Informe a localização onde seus clientes são atendidos presencialmente.</p>
+</div>
+<!-- Form Body -->
+<form class="flex flex-col gap-6" id="form-address" onsubmit="event.preventDefault();">
+<!-- Campo CEP -->
+<div class="flex flex-col gap-1.5">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-cep">
+<span>CEP</span>
+<span class="text-danger">*</span>
+</label>
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+<div class="relative flex-1">
+<span class="material-symbols-outlined text-[18px] text-text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">pin_drop</span>
+<input class="w-full h-11 pl-10 pr-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-cep" maxlength="9" placeholder="00000-000" type="text" value="11730-000"/>
+</div>
+<button class="h-11 px-5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-text-primary font-semibold text-[13px] inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 border border-border-subtle" id="btn-search-cep" type="button">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<span>Buscar CEP</span>
+</button>
+</div>
+<!-- Feedback elegante em verde -->
+<div class="pt-0.5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-surface text-success text-[12px] font-medium border border-success/20">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Endereço encontrado</span>
+</span>
+</div>
+</div>
+<!-- Campo Rua / Logradouro -->
+<div class="flex flex-col gap-1.5">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-rua">
+<span>Rua / Logradouro</span>
+<span class="text-danger">*</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined text-[18px] text-text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">signpost</span>
+<input class="w-full h-11 pl-10 pr-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-rua" type="text" value="Avenida Governador Mário Covas Júnior"/>
+</div>
+</div>
+<!-- Pergunta: O endereço tem número? -->
+<div class="flex flex-col gap-2 pt-1">
+<label class="text-[14px] font-bold text-text-primary flex items-center gap-1">
+<span>O endereço tem número?</span>
+<span class="text-danger">*</span>
+</label>
+<p class="text-[12px] text-text-secondary -mt-1">
+                Defina se o imóvel conta com numeração predial oficial.
+              </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+<!-- Radio Option Sim (Active) -->
+<label class="relative flex items-start gap-3 p-3.5 rounded-xl border-2 border-[#2F2F2D] bg-surface-container-lowest cursor-pointer transition-all shadow-sm" id="label-radio-sim">
+<input checked="" class="sr-only" name="has_number" onchange="toggleNumberInput(true)" type="radio" value="sim"/>
+<div class="w-4 h-4 rounded-full border-2 border-[#2F2F2D] flex items-center justify-center shrink-0 mt-0.5">
+<div class="w-2 h-2 rounded-full bg-[#2F2F2D]"></div>
+</div>
+<div class="flex flex-col">
+<span class="text-[13px] font-bold text-text-primary leading-tight">Sim</span>
+<span class="text-[12px] text-text-secondary mt-0.5 leading-snug">O local possui número de identificação predial</span>
+</div>
+</label>
+<!-- Radio Option Não -->
+<label class="relative flex items-start gap-3 p-3.5 rounded-xl border border-border-subtle bg-surface-container-low/50 hover:bg-surface-container-low cursor-pointer transition-all" id="label-radio-nao">
+<input class="sr-only" name="has_number" onchange="toggleNumberInput(false)" type="radio" value="nao"/>
+<div class="w-4 h-4 rounded-full border border-outline-variant flex items-center justify-center shrink-0 mt-0.5">
+<div class="w-2 h-2 rounded-full bg-transparent"></div>
+</div>
+<div class="flex flex-col">
+<span class="text-[13px] font-bold text-text-primary leading-tight">Não</span>
+<span class="text-[12px] text-text-secondary mt-0.5 leading-snug">O endereço não possui número</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Row: Número & Complemento -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Número -->
+<div class="flex flex-col gap-1.5" id="container-numero">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-numero">
+<span>Número</span>
+<span class="text-danger">*</span>
+</label>
+<input class="w-full h-11 px-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-numero" placeholder="Ex.: 120" required="" type="text" value="120"/>
+</div>
+<!-- Complemento -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary" for="input-complemento">
+                    Complemento
+                  </label>
+<span class="text-[11px] font-semibold text-text-secondary bg-surface-container px-2 py-0.5 rounded">Opcional</span>
+</div>
+<input class="w-full h-11 px-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-complemento" placeholder="Ex.: Sala 2, Fundos, Galeria" type="text" value="Sala 2"/>
+</div>
+</div>
+<!-- Row: Bairro, Cidade, Estado -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+<!-- Bairro (5 cols) -->
+<div class="sm:col-span-5 flex flex-col gap-1.5">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-bairro">
+<span>Bairro</span>
+<span class="text-danger">*</span>
+</label>
+<input class="w-full h-11 px-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-bairro" placeholder="Nome do bairro" type="text" value="Centro"/>
+</div>
+<!-- Cidade (5 cols) -->
+<div class="sm:col-span-5 flex flex-col gap-1.5">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-cidade">
+<span>Cidade</span>
+<span class="text-danger">*</span>
+</label>
+<input class="w-full h-11 px-4 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all" id="input-cidade" placeholder="Nome da cidade" type="text" value="Mongaguá"/>
+</div>
+<!-- Estado (2 cols) -->
+<div class="sm:col-span-2 flex flex-col gap-1.5">
+<label class="text-[12px] font-bold uppercase tracking-wider text-text-primary flex items-center gap-1" for="input-uf">
+<span>Estado</span>
+<span class="text-danger">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-11 pl-3.5 pr-8 rounded-xl border border-border-subtle bg-surface-container-lowest text-text-primary text-[14px] font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-text-primary transition-all cursor-pointer" id="input-uf">
+<option selected="" value="SP">SP</option>
+<option value="RJ">RJ</option>
+<option value="MG">MG</option>
+<option value="PR">PR</option>
+<option value="SC">SC</option>
+<option value="RS">RS</option>
+<option value="BA">BA</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-text-secondary absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Card Informativo - Contexto da Vitrine Pública -->
+<div class="rounded-xl bg-[#F4F8FD] border border-[#D0E1FB] p-4 flex items-start gap-3 mt-1">
+<div class="w-8 h-8 rounded-lg bg-surface-elevated text-info flex items-center justify-center shrink-0 shadow-sm border border-[#D0E1FB]">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div class="flex flex-col gap-1 text-[13px] text-text-secondary leading-relaxed">
+<p>
+<strong class="text-text-primary font-semibold">Visibilidade na Vitrine Digital:</strong>
+                  Este endereço poderá aparecer na sua Vitrine pública para ajudar seus clientes a localizar a barbearia.
+                </p>
+
+</div>
+</div>
+<!-- Rodapé do Formulário -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border-subtle">
+<span class="text-[12px] text-text-secondary flex items-center gap-1 self-start sm:self-center">
+<span class="text-danger font-bold">*</span> Campos de preenchimento obrigatório
+              </span>
+<div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+<button class="h-10 px-4 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-container-low font-medium text-[13px] transition-colors cursor-pointer" type="reset">
+                  Descartar
+                </button>
+<button class="h-10 px-6 rounded-xl bg-[#2F2F2D] text-white font-semibold text-[13px] shadow-sm hover:bg-interactive-hover active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-1.5" onclick="triggerSaveAnimation()" type="submit">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Salvar alterações</span>
+</button>
+</div>
+</div>
+</form>
+</div>
+<!-- Quick Location Summary Card -->
+<div class="rounded-xl bg-surface-container-low border border-border-subtle p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-elevated border border-border-subtle flex items-center justify-center text-text-primary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[20px]">store</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] uppercase tracking-wider text-text-secondary font-bold">Resumo do Endereço Atual</span>
+<span class="text-[13px] font-semibold text-text-primary">Av. Gov. Mário Covas Júnior, 120 - Sala 2, Centro • Mongaguá/SP</span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-elevated border border-border-subtle text-text-primary text-[12px] font-medium shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-success">verified</span>
+              CEP localizado
+            </span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    function toggleNumberInput(hasNumber) {
+      const numInput = document.getElementById('input-numero');
+      const container = document.getElementById('container-numero');
+      const labelSim = document.getElementById('label-radio-sim');
+      const labelNao = document.getElementById('label-radio-nao');
+
+      if (hasNumber) {
+        numInput.disabled = false;
+        numInput.value = '120';
+        container.classList.remove('opacity-40');
+        
+        // Sim is active
+        labelSim.className = "relative flex items-start gap-3 p-3.5 rounded-xl border-2 border-[#2F2F2D] bg-surface-container-lowest cursor-pointer transition-all shadow-sm";
+        labelNao.className = "relative flex items-start gap-3 p-3.5 rounded-xl border border-border-subtle bg-surface-container-low/50 hover:bg-surface-container-low cursor-pointer transition-all";
+        
+        labelSim.querySelector('div.w-4').className = "w-4 h-4 rounded-full border-2 border-[#2F2F2D] flex items-center justify-center shrink-0 mt-0.5";
+        labelSim.querySelector('div.w-2').className = "w-2 h-2 rounded-full bg-[#2F2F2D]";
+        
+        labelNao.querySelector('div.w-4').className = "w-4 h-4 rounded-full border border-outline-variant flex items-center justify-center shrink-0 mt-0.5";
+        labelNao.querySelector('div.w-2').className = "w-2 h-2 rounded-full bg-transparent";
+      } else {
+        numInput.disabled = true;
+        numInput.value = '';
+        numInput.placeholder = '';
+        container.classList.add('opacity-40');
+        
+        // Nao is active
+        labelNao.className = "relative flex items-start gap-3 p-3.5 rounded-xl border-2 border-[#2F2F2D] bg-surface-container-lowest cursor-pointer transition-all shadow-sm";
+        labelSim.className = "relative flex items-start gap-3 p-3.5 rounded-xl border border-border-subtle bg-surface-container-low/50 hover:bg-surface-container-low cursor-pointer transition-all";
+        
+        labelNao.querySelector('div.w-4').className = "w-4 h-4 rounded-full border-2 border-[#2F2F2D] flex items-center justify-center shrink-0 mt-0.5";
+        labelNao.querySelector('div.w-2').className = "w-2 h-2 rounded-full bg-[#2F2F2D]";
+        
+        labelSim.querySelector('div.w-4').className = "w-4 h-4 rounded-full border border-outline-variant flex items-center justify-center shrink-0 mt-0.5";
+        labelSim.querySelector('div.w-2').className = "w-2 h-2 rounded-full bg-transparent";
+      }
+    }
+
+    function triggerSaveAnimation() {
+      const saveButtons = [document.getElementById('btn-save-header'), document.querySelector('button[type="submit"]')];
+      saveButtons.forEach(btn => {
+        if (!btn) return;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Salvando...</span>';
+        setTimeout(() => {
+          btn.innerHTML = '<span class="material-symbols-outlined text-[18px] text-success">check_circle</span><span>Salvo com sucesso!</span>';
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 2200);
+        }, 700);
+      });
+    }
+
+    document.getElementById('btn-save-header')?.addEventListener('click', triggerSaveAnimation);
+
+    // CEP lookup feedback emulation
+    document.getElementById('btn-search-cep')?.addEventListener('click', function() {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Buscando...</span>';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 600);
+    });
+  </script>
+<script>
+// Regra oficial de endereço do MVP: nunca usar ou salvar "S/N".
+// Sem número => temNumero=false e numero=null no backend.
+function toggleNumberInput(hasNumber) {
+  const numInput = document.getElementById('input-numero') || document.getElementById('numero-input') || document.getElementById('numero');
+  const container = document.getElementById('container-numero');
+  if (!numInput || !container) return;
+
+  if (hasNumber) {
+    container.classList.remove('hidden');
+    numInput.disabled = false;
+    numInput.required = true;
+    if (!numInput.value && numInput.dataset.lastValue) numInput.value = numInput.dataset.lastValue;
+  } else {
+    if (numInput.value) numInput.dataset.lastValue = numInput.value;
+    numInput.value = '';
+    numInput.placeholder = '';
+    numInput.required = false;
+    numInput.disabled = true;
+    container.classList.add('hidden');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const selected = document.querySelector('input[name="has_number"]:checked');
+  toggleNumberInput(!selected || selected.value === 'sim');
+});
+</script></body></html>

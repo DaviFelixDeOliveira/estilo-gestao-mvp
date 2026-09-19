@@ -1,0 +1,261 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Onboarding 4 - Serviços - Mobile - Modo Escuro | Estilo e Gestão</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#DC2626',
+              redHover: '#B91C1C',
+              darkBg: '#111215',
+              surface: '#18191E',
+              surfaceElevated: '#1F2128',
+              border: '#2A2C34',
+              subtext: '#9CA3AF'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+<!-- Base Custom Styles -->
+<style data-purpose="custom-scroll-and-layout">
+    body {
+      background-color: #111215;
+      color: #F3F4F6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Hide scrollbars for clean mobile app feel */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#111215] text-gray-100 antialiased min-h-screen flex justify-center selection:bg-red-600 selection:text-white">
+<!-- BEGIN: MobileDeviceFrame -->
+<main class="w-full max-w-[430px] min-h-screen bg-[#111215] flex flex-col justify-between border-x border-[#1F2128]/50 shadow-2xl relative pb-8" data-purpose="mobile-container">
+<!-- BEGIN: TopBarAndStepper -->
+<header class="sticky top-0 z-30 bg-[#111215]/95 backdrop-blur-md pt-3 pb-2 px-5 border-b border-[#1F2128]" data-purpose="top-navigation-and-progress">
+<!-- Top Bar: Back arrow, Brand Title, Sun Icon Theme Toggle -->
+<div class="flex items-center justify-between py-2">
+<button aria-label="Voltar para a etapa anterior" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-gray-300 hover:text-white active:bg-[#1F2128] transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<h1 class="text-xs font-bold tracking-widest text-gray-100 uppercase">
+          ESTILO E GESTÃO
+        </h1>
+<button aria-label="Alternar tema" class="w-10 h-10 -mr-2 rounded-full flex items-center justify-center text-gray-300 hover:text-amber-400 active:bg-[#1F2128] transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Step Counter & Percentage -->
+<div class="flex items-end justify-between pt-2 pb-1.5 text-[11px] leading-tight text-gray-400 font-medium">
+<span class="max-w-[70%]">Passo 4 de 6 • Serviços (Etapa final: Tema e conclusão)</span>
+<span class="font-bold text-gray-200 text-right">67%<br><span class="text-[10px] font-normal text-gray-400 uppercase">concluído</span></span>
+</div>
+<!-- Linear Stepper / Progress Bar (67% filled) -->
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="67" class="w-full bg-[#262832] h-1 rounded-full overflow-hidden mt-1 mb-1" role="progressbar">
+<div class="bg-[#DC2626] h-full rounded-full transition-all duration-500 ease-out" style="width: 67%;"></div>
+</div>
+</header>
+<!-- END: TopBarAndStepper -->
+<!-- BEGIN: MainContent -->
+<div class="flex-1 px-5 pt-5 pb-6 space-y-6">
+<!-- Badge Tag & Page Heading -->
+<section class="space-y-2" data-purpose="header-section">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#18191E] border border-[#2A2C34] text-[11px] font-semibold text-gray-300">
+<svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.651V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009 9.35c.69 0 1.332-.233 1.849-.624a3.001 3.001 0 003.802 0A2.993 2.993 0 0016.5 9.35a3.001 3.001 0 003.75-.615" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Configuração do seu espaço</span>
+</div>
+<h2 class="text-2xl font-extrabold tracking-tight text-white pt-1">
+          Quais serviços você oferece?
+        </h2>
+<p class="text-xs text-gray-400 leading-relaxed">Você poderá adicionar, editar ou gerenciar seus serviços depois nas configurações.</p>
+</section>
+<!-- Section Title & Add Action Trigger -->
+<section class="space-y-4" data-purpose="services-manager">
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.498-.535.81-.722m-7.002 0c.312.187.589.432.81.722.215.283.401.604.401.959v.614h5.38v-.614zM4.5 9h15v10.5a1.5 1.5 0 01-1.5 1.5h-12a1.5 1.5 0 01-1.5-1.5V9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-xs font-bold uppercase tracking-wider text-gray-300">Seção 01 • Seus serviços</span>
+</div>
+<button class="text-xs font-semibold text-red-500 hover:text-red-400 transition-colors flex items-center gap-1" type="button" onclick="document.getElementById('service-form').style.display='block'; document.getElementById('empty-services-state').style.display='none';">
+<span class="text-base leading-none">+</span> Adicionar serviço
+          </button>
+</div>
+<!-- Form Card (Add/Edit Service) -->
+<!-- BEGIN: ServiceFormCard -->
+<div id="service-form" class="bg-[#18191E] border border-[#2A2C34] rounded-xl p-4 shadow-sm space-y-4" data-purpose="service-input-card" style="display: none;">
+<div class="flex items-center justify-between border-b border-[#2A2C34] pb-2.5">
+<span class="text-xs font-semibold text-gray-200">Novo Serviço</span>
+<span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-[#262832] text-gray-400">Rascunho</span>
+</div>
+<!-- Service Name -->
+<div class="space-y-1.5">
+<label class="block text-xs font-semibold text-gray-300" for="service-name">
+              Nome do serviço <span class="text-red-500">*</span>
+</label>
+<input class="w-full h-11 px-3.5 bg-[#1F2128] border border-[#2A2C34] rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" id="service-name" placeholder="Ex.: Corte masculino" type="text" value="">
+</div>
+<!-- Service Price -->
+<div class="space-y-1.5">
+<label class="block text-xs font-semibold text-gray-300" for="service-price">
+              Preço <span class="text-red-500">*</span>
+</label>
+<div class="relative">
+<input class="w-full h-11 px-3.5 bg-[#1F2128] border border-[#2A2C34] rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" id="service-price" placeholder="R$ 0,00" type="text" value="">
+</div>
+</div>
+<!-- Service Description -->
+<div class="space-y-1.5">
+<label class="block text-xs font-semibold text-gray-300" for="service-desc">
+              Descrição <span class="text-gray-500 font-normal">(opcional)</span>
+</label>
+<textarea class="w-full p-3 bg-[#1F2128] border border-[#2A2C34] rounded-lg text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all resize-none" id="service-desc" placeholder="Ex.: Corte tradicional ou degradê conforme preferência do cliente." rows="2"></textarea>
+</div>
+<!-- Consumables Cost -->
+<div class="space-y-1">
+<label class="block text-xs font-semibold text-gray-300" for="service-cost">
+              Custo estimado de insumos <span class="text-gray-500 font-normal">(opcional)</span>
+</label>
+<input class="w-full h-11 px-3.5 bg-[#1F2128] border border-[#2A2C34] rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" id="service-cost" placeholder="R$ 0,00" type="text" value="">
+<p class="text-[11px] text-gray-400 pt-0.5">
+              Valor aproximado dos materiais consumidos diretamente por atendimento (ex.: lâmina, gel, papel gola).
+            </p>
+</div>
+<!-- Showcase Visibility Toggle -->
+<div class="flex items-center justify-between pt-2 pb-1 border-t border-[#2A2C34]">
+<div class="space-y-0.5 pr-4">
+<label class="text-xs font-semibold text-gray-200 cursor-pointer" for="toggle-showcase">Exibir na Vitrine</label>
+<p class="text-[11px] text-gray-400">Mostrar este serviço no seu catálogo público para clientes</p>
+</div>
+<!-- Switch Toggle -->
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" id="toggle-showcase" type="checkbox">
+<div class="w-11 h-6 bg-[#2A2C34] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#DC2626]"></div>
+</label>
+</div>
+<!-- Action Buttons (Add / Cancel) -->
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 h-10 px-4 bg-[#DC2626] hover:bg-[#B91C1C] text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center shadow-md active:scale-[0.99]" type="button">
+              Salvar serviço
+            </button>
+<button class="h-10 px-4 bg-[#1F2128] hover:bg-[#2A2C34] text-gray-300 text-xs font-semibold rounded-lg border border-[#2A2C34] transition-colors" onclick="document.getElementById('service-form').style.display='none'; document.getElementById('empty-services-state').style.display='block';" type="button">
+              Cancelar
+            </button>
+</div>
+</div>
+<!-- END: ServiceFormCard -->
+<!-- BEGIN: AddedServicesList -->
+<div class="space-y-2.5 pt-2" data-purpose="services-list" id="services-container">
+<div id="empty-services-state" class="bg-[#18191E] border border-[#2A2C34] border-dashed rounded-xl p-5 text-center space-y-3">
+<div class="w-10 h-10 rounded-full bg-[#1F2128] border border-[#2A2C34] flex items-center justify-center mx-auto text-gray-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.498-.535.81-.722m-7.002 0c.312.187.589.432.81.722.215.283.401.604.401.959v.614h5.38v-.614zM4.5 9h15v10.5a1.5 1.5 0 01-1.5 1.5h-12a1.5 1.5 0 01-1.5-1.5V9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h3 class="text-sm font-semibold text-gray-200">Nenhum serviço cadastrado ainda.</h3>
+<p class="text-xs text-gray-400 leading-relaxed max-w-[320px] mx-auto">
+Adicione os serviços que sua barbearia oferece para utilizá-los no PDV e, quando desejar, na Vitrine.
+</p>
+</div>
+<button class="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#DC2626] hover:bg-[#B91C1C] rounded-lg transition-colors shadow-sm active:scale-[0.99]" onclick="document.getElementById('service-form').style.display='block'; document.getElementById('empty-services-state').style.display='none';" type="button">
+<span class="">+ Adicionar primeiro serviço</span>
+</button>
+</div>
+</div>
+<!-- END: AddedServicesList -->
+<!-- BEGIN: PublicPreviewCard -->
+<section class="bg-[#18191E] border border-[#2A2C34] rounded-xl p-4 mt-4" data-purpose="vitrine-preview">
+<div class="flex items-center justify-between pb-3 border-b border-[#2A2C34]">
+<span class="text-xs font-bold tracking-wider text-gray-300 uppercase">PRÉVIA DOS SERVIÇOS</span>
+<span class="text-[10px] font-semibold text-blue-400 bg-blue-950/50 border border-blue-800/40 px-2 py-0.5 rounded-full">
+              Vitrine do Cliente
+            </span>
+</div>
+<!-- Preview Content Mock -->
+<div class="pt-4 pb-2 text-center space-y-1">
+<p class="text-xs font-semibold text-gray-300">Nenhum serviço público cadastrado ainda.</p>
+<p class="text-[11px] text-gray-400">Os serviços marcados para exibição aparecerão aqui.</p>
+</div>
+</section>
+<!-- END: PublicPreviewCard -->
+<!-- BEGIN: InfoBox -->
+<aside class="bg-[#18191E] border border-[#2A2C34] rounded-xl p-3.5 flex items-start gap-3" data-purpose="showcase-info-callout">
+<div class="text-amber-500 shrink-0 mt-0.5">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs font-bold text-gray-200">Serviços na Vitrine</h4>
+<p class="text-[11px] leading-relaxed text-gray-400">
+              Serviços marcados para exibição poderão aparecer com nome, descrição e preço no perfil público da sua barbearia.
+            </p>
+</div>
+</aside>
+<!-- END: InfoBox -->
+</section>
+</div>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigationActions -->
+<footer class="sticky bottom-0 bg-[#111215]/95 backdrop-blur-md pt-3 pb-2 px-5 border-t border-[#1F2128] space-y-3" data-purpose="bottom-bar">
+<!-- Navigation Buttons Row -->
+<div class="flex items-center gap-3">
+<!-- Back Button -->
+<button class="h-12 px-5 bg-[#18191E] hover:bg-[#1F2128] active:bg-[#252830] text-gray-200 text-sm font-semibold rounded-xl border border-[#2A2C34] flex items-center justify-center gap-1.5 transition-colors shrink-0" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Voltar</span>
+</button>
+<!-- Continue Button (Solid Red Brand Button) -->
+<button class="h-12 flex-1 bg-[#DC2626] hover:bg-[#B91C1C] active:bg-red-800 text-white text-sm font-bold rounded-xl shadow-lg shadow-red-950/50 flex items-center justify-center gap-1.5 transition-all whitespace-nowrap active:scale-[0.99]" type="button">
+<span class="">Continuar</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Autosave Status Indicator -->
+<div class="flex items-center justify-center gap-1.5 text-[11px] text-emerald-400 font-medium">
+<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Seu progresso é salvo automaticamente.</span>
+</div>
+</footer>
+<!-- END: BottomNavigationActions -->
+</main>
+<!-- END: MobileDeviceFrame -->
+
+
+</body></html>

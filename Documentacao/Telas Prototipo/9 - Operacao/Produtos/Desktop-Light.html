@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estilo &amp; Gestão - Operação / Produtos</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F4F4F0',
+              surface: '#FFFFFF',
+              border: '#E9E9E4',
+              dark: '#2F2F2D',
+              darkHover: '#3A3A38',
+              muted: '#666662',
+              lightMuted: '#9B9B97',
+              accentGreen: '#2F6B4F',
+              accentGreenLight: '#EAF5EF',
+              accentWarning: '#B54708',
+              accentWarningLight: '#FFF4E5',
+              accentDanger: '#B42318',
+              accentDangerLight: '#FEE4E2',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Scrollbar and Fine Utilities -->
+<style data-purpose="custom-layout-styles">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F4F4F0;
+      color: #2F2F2D;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F4F4F0;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #D5D5D0;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #B0B0A8;
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden antialiased bg-brand-bg text-brand-dark">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-brand-surface border-r border-brand-border flex flex-col justify-between shrink-0 h-full select-none z-20" data-purpose="main-sidebar">
+<div class="flex flex-col">
+<!-- Logo & Store Identification -->
+<div class="p-4 border-b border-brand-border flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-brand-dark text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-sm">
+            E&amp;G
+          </div>
+<div>
+<h1 class="text-xs font-bold uppercase tracking-wider text-brand-dark leading-tight">Estilo &amp; Gestão</h1>
+<p class="text-[11px] text-brand-muted leading-tight">Barbearia Club</p>
+</div>
+</div>
+<button aria-label="Recolher menu" class="text-brand-muted hover:text-brand-dark p-1.5 rounded hover:bg-brand-bg transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Menu principal" class="p-3 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center px-3 py-2 text-xs font-medium text-brand-muted rounded-md hover:bg-brand-bg hover:text-brand-dark transition-colors" href="#">
+<svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Dashboard
+        </a>
+<!-- PDV -->
+<div class="flex items-center justify-between px-3 py-2 text-xs font-medium text-brand-muted rounded-md hover:bg-brand-bg hover:text-brand-dark cursor-pointer transition-colors">
+<div class="flex items-center">
+<svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>PDV</span>
+</div>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Operação (Expanded Group) -->
+<div class="pt-1">
+<div class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-brand-dark bg-brand-bg rounded-md">
+<div class="flex items-center">
+<svg class="w-4 h-4 mr-3 text-brand-dark" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Operação</span>
+</div>
+<svg class="w-3.5 h-3.5 rotate-180 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Submenu -->
+<div class="mt-1 pl-7 pr-2 space-y-1">
+<a class="block px-3 py-1.5 text-xs font-medium text-brand-muted hover:text-brand-dark rounded-md hover:bg-brand-bg transition-colors" href="#">
+              Serviços
+            </a>
+<!-- Active Sublink: Produtos -->
+<a class="block px-3 py-1.5 text-xs font-semibold text-white bg-brand-dark rounded-md shadow-sm" href="#">
+              Produtos
+            </a>
+<a class="block px-3 py-1.5 text-xs font-medium text-brand-muted hover:text-brand-dark rounded-md hover:bg-brand-bg transition-colors" href="#">
+              Estoque
+            </a>
+<a class="block px-3 py-1.5 text-[11px] text-brand-lightMuted hover:text-brand-muted rounded-md hover:bg-brand-bg transition-colors" href="#">
+              ↳ Categorias
+            </a>
+</div>
+</div>
+<!-- Configurações -->
+<div class="flex items-center justify-between px-3 py-2 text-xs font-medium text-brand-muted rounded-md hover:bg-brand-bg hover:text-brand-dark cursor-pointer transition-colors mt-2">
+<div class="flex items-center">
+<svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Configurações</span>
+</div>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</nav>
+</div>
+<!-- User Profile Footer -->
+<div class="p-3 border-t border-brand-border flex items-center justify-between bg-white">
+<div class="flex items-center space-x-2.5 overflow-hidden">
+<div class="w-8 h-8 rounded-full bg-brand-dark text-white flex items-center justify-center font-semibold text-xs shrink-0">
+          MB
+        </div>
+<div class="truncate">
+<p class="text-xs font-semibold text-brand-dark truncate leading-tight">Mestre Barbeiro</p>
+<p class="text-[11px] text-brand-muted truncate leading-tight">Operador Geral</p>
+</div>
+</div>
+<button aria-label="Sair da conta" class="text-brand-muted hover:text-brand-dark p-1.5 rounded hover:bg-brand-bg transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Content Area -->
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+<!-- Topbar Navigation -->
+<header class="h-14 bg-brand-surface border-b border-brand-border px-6 flex items-center justify-between shrink-0" data-purpose="topbar">
+<!-- Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex items-center text-xs space-x-2 text-brand-muted">
+<span>Estilo &amp; Gestão</span>
+<span>/</span>
+<span>Operação</span>
+<span>/</span>
+<span class="text-brand-dark font-medium">Produtos</span>
+</nav>
+<!-- User & Quick Actions -->
+<div class="flex items-center space-x-4">
+<!-- Theme Switcher (Light Mode Active) -->
+<button aria-label="Modo Claro" class="p-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-dark hover:bg-brand-surface transition-colors shadow-xs" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<div class="h-4 w-px bg-brand-border"></div>
+<!-- Current User Info -->
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 rounded-full bg-brand-dark text-white flex items-center justify-center font-medium text-[11px]">
+            MB
+          </div>
+<div class="hidden sm:block text-left">
+<span class="text-xs font-semibold text-brand-dark block leading-none">Mestre Barbeiro</span>
+<span class="text-[10px] text-brand-muted leading-tight">Unidade Centro</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content + Drawer Layout Container -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Central View (Products Table & Filter System) -->
+<main class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-brand-bg" data-purpose="products-main">
+<div class="max-w-6xl mx-auto space-y-5">
+<!-- Header of Products Page -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-xl font-bold tracking-tight text-brand-dark">Produtos</h2>
+<p class="text-xs text-brand-muted mt-0.5">Cadastre e gerencie os produtos e bebidas vendidos no balcão e disponíveis na Vitrine Digital.</p>
+</div>
+<div class="flex items-center space-x-2.5">
+<a class="inline-flex items-center justify-center px-3.5 py-2 text-xs font-semibold rounded-lg border border-brand-border bg-white text-brand-dark hover:bg-brand-bg transition-colors shadow-xs" href="#">
+                + Categorias
+              </a>
+<button class="inline-flex items-center justify-center px-3.5 py-2 text-xs font-semibold rounded-lg bg-brand-dark text-white hover:bg-brand-darkHover transition-colors shadow-sm" type="button">
+                + Novo produto
+              </button>
+</div>
+</div>
+<!-- Search & Filter Card -->
+<div class="bg-brand-surface rounded-xl border border-brand-border p-4 shadow-xs space-y-3.5">
+<!-- Search Input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-brand-lightMuted">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="block w-full pl-10 pr-4 py-2 text-xs bg-white rounded-lg border border-brand-border text-brand-dark placeholder-brand-lightMuted focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark transition-all" placeholder="Buscar produto por nome ou categoria..." type="text"/>
+</div>
+<!-- Quick Filter Badges and Dropdowns -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-brand-border/60">
+<!-- Type Filters -->
+<div class="flex items-center space-x-1.5">
+<span class="text-[11px] font-medium text-brand-muted mr-1">Tipo:</span>
+<button class="px-2.5 py-1 text-xs font-semibold rounded-full bg-brand-dark text-white" type="button">Todos <span class="opacity-75 font-normal ml-0.5">6</span></button>
+<button class="px-2.5 py-1 text-xs font-medium rounded-full bg-brand-bg text-brand-muted hover:text-brand-dark hover:bg-brand-border/50 transition-colors" type="button">Bebidas <span class="opacity-75 font-normal ml-0.5">3</span></button>
+<button class="px-2.5 py-1 text-xs font-medium rounded-full bg-brand-bg text-brand-muted hover:text-brand-dark hover:bg-brand-border/50 transition-colors" type="button">Produtos <span class="opacity-75 font-normal ml-0.5">3</span></button>
+</div>
+<!-- Status Filters & Dropdown -->
+<div class="flex items-center space-x-3">
+<div class="flex items-center space-x-1">
+<span class="text-[11px] font-medium text-brand-muted mr-1">Status:</span>
+<button class="px-2 py-0.5 text-xs font-medium text-brand-dark hover:underline" type="button">Todos</button>
+<button class="px-2 py-0.5 text-xs text-brand-muted hover:text-brand-dark" type="button">Ativos 5</button>
+<button class="px-2 py-0.5 text-xs text-brand-muted hover:text-brand-dark" type="button">Inativos 1</button>
+</div>
+<div class="h-4 w-px bg-brand-border"></div>
+<!-- Category Dropdown Select -->
+<div class="relative">
+<select class="text-xs bg-brand-bg border border-brand-border rounded-lg py-1 pl-2.5 pr-7 font-medium text-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark">
+<option>Todas as categorias</option>
+<option>Bebidas</option>
+<option>Pomadas</option>
+<option>Cuidados &amp; Balm</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Products Table Card -->
+<div class="bg-brand-surface rounded-xl border border-brand-border shadow-xs overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="bg-brand-bg/50 border-b border-brand-border text-[11px] font-bold text-brand-muted uppercase tracking-wider">
+<th class="py-3 px-4" scope="col">Produto</th>
+<th class="py-3 px-3" scope="col">Categoria</th>
+<th class="py-3 px-3" scope="col">Tipo</th>
+<th class="py-3 px-3" scope="col">Preço</th>
+<th class="py-3 px-3" scope="col">Estoque</th>
+<th class="py-3 px-3" scope="col">Vitrine</th>
+<th class="py-3 px-3" scope="col">Status</th>
+<th class="py-3 px-4 text-right" scope="col">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-brand-border">
+<!-- Item 1: Pomada Matte -->
+<tr class="hover:bg-brand-bg/40 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="relative w-9 h-9 rounded-lg bg-stone-100 border border-brand-border flex items-center justify-center shrink-0 overflow-hidden text-brand-muted">
+<!-- Cosmetic Jar Icon fallback -->
+<svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark">Pomada Modeladora Matte</p>
+<span class="text-[10px] inline-flex items-center px-1.5 py-0.2 rounded bg-stone-100 text-stone-600 border border-stone-200">Foto própria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Pomada</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-brand-bg text-brand-dark">Produto</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 42,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 18,00</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-bg text-brand-dark border border-brand-border">8 un.</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        Visível
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">Ativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-muted hover:text-brand-accentDanger">Desativar</button>
+</td>
+</tr>
+<!-- Item 2: Cerveja Artesanal IPA -->
+<tr class="hover:bg-brand-bg/40 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 overflow-hidden text-amber-700">
+<!-- Bottle Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10 2h4m-3 0v4m2-4v4m1 3l1 2v9a2 2 0 01-2 2h-4a2 2 0 01-2-2v-9l1-2V6h6v3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark">Cerveja Artesanal IPA 355ml</p>
+<span class="text-[10px] text-brand-lightMuted">Padrão da categoria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Bebida</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-100">Bebida</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 14,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 6,50</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-bg text-brand-dark border border-brand-border">12 un.</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        Visível
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">Ativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-muted hover:text-brand-accentDanger">Desativar</button>
+</td>
+</tr>
+<!-- Item 3: Refrigerante Lata -->
+<tr class="hover:bg-brand-bg/40 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-stone-100 border border-brand-border flex items-center justify-center shrink-0 overflow-hidden text-brand-muted">
+<!-- Can Icon -->
+<svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="16" rx="2" stroke-width="1.5" width="10" x="7" y="4"></rect>
+<line stroke-width="1.5" x1="7" x2="17" y1="8" y2="8"></line>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark">Refrigerante Lata 350ml</p>
+<span class="text-[10px] text-brand-lightMuted">Padrão da categoria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Bebida</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-100">Bebida</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 6,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 2,80</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-bg text-brand-dark border border-brand-border">24 un.</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        Visível
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">Ativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-muted hover:text-brand-accentDanger">Desativar</button>
+</td>
+</tr>
+<!-- Item 4: Balm Modelador (Alerta Estoque Baixo) -->
+<tr class="hover:bg-brand-bg/40 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-stone-100 border border-brand-border flex items-center justify-center shrink-0 overflow-hidden text-brand-muted">
+<!-- Dropper / Balm Icon -->
+<svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v4h-6V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark">Balm Modelador para Barba 100g</p>
+<span class="text-[10px] text-brand-lightMuted">Padrão da categoria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Óleo/Balm</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-brand-bg text-brand-dark">Produto</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 35,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 14,00</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-brand-accentWarningLight text-brand-accentWarning border border-amber-200">
+                        2 un. • Baixo
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        Visível
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">Ativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-muted hover:text-brand-accentDanger">Desativar</button>
+</td>
+</tr>
+<!-- Item 5: Energético Lata (Sem Estoque) -->
+<tr class="hover:bg-brand-bg/40 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-stone-100 border border-brand-border flex items-center justify-center shrink-0 overflow-hidden text-brand-muted">
+<svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="16" rx="2" stroke-width="1.5" width="10" x="7" y="4"></rect>
+<path d="M12 9v6m-2-3h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark">Energético Lata 250ml</p>
+<span class="text-[10px] text-brand-lightMuted">Padrão da categoria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Bebida</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-100">Bebida</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 12,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 5,00</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-stone-100 text-stone-600 border border-stone-200">
+                        0 un. • Esgotado
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-muted bg-stone-100 px-2 py-0.5 rounded-full">
+                        Indisponível
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-accentGreen bg-brand-accentGreenLight px-2 py-0.5 rounded-full">Ativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-muted hover:text-brand-accentDanger">Desativar</button>
+</td>
+</tr>
+<!-- Item 6: Cera Fixadora (Inativo / Oculto) -->
+<tr class="hover:bg-brand-bg/40 transition-colors opacity-75">
+<td class="py-3 px-4">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-stone-100 border border-brand-border flex items-center justify-center shrink-0 overflow-hidden text-brand-lightMuted">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="12" rx="2" stroke-width="1.5" width="16" x="4" y="6"></rect>
+</svg>
+</div>
+<div>
+<p class="font-semibold text-brand-dark line-through decoration-brand-muted">Cera Fixadora Efeito Brilho</p>
+<span class="text-[10px] text-brand-lightMuted">Padrão da categoria</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 text-brand-muted">Cera</td>
+<td class="py-3 px-3">
+<span class="text-[10px] font-medium px-2 py-0.5 rounded bg-brand-bg text-brand-dark">Produto</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-semibold text-brand-dark">R$ 38,00</span>
+<span class="block text-[10px] text-brand-lightMuted font-normal">Custo: R$ 16,00</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-brand-bg text-brand-dark border border-brand-border">5 un.</span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-brand-muted bg-stone-100 px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        Oculto
+                      </span>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center text-[11px] font-medium text-stone-600 bg-stone-100 px-2 py-0.5 rounded-full">Inativo</span>
+</td>
+<td class="py-3 px-4 text-right space-x-2">
+<button class="font-medium text-brand-dark hover:underline">Editar</button>
+<button class="text-brand-dark font-medium hover:underline">Ativar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination and Summary -->
+<div class="px-4 py-3 border-t border-brand-border flex items-center justify-between bg-white text-xs text-brand-muted">
+<span>Mostrando <strong>1 – 6</strong> de <strong>6</strong> produtos</span>
+<div class="flex items-center space-x-1">
+<button class="px-2.5 py-1 text-xs rounded border border-brand-border text-brand-lightMuted cursor-not-allowed bg-brand-bg/50" disabled="" type="button">Anterior</button>
+<button class="w-7 h-7 rounded bg-brand-dark text-white font-medium text-xs flex items-center justify-center" type="button">1</button>
+<button class="px-2.5 py-1 text-xs rounded border border-brand-border text-brand-lightMuted cursor-not-allowed bg-brand-bg/50" disabled="" type="button">Próximo</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- END: Central View -->
+<!-- BEGIN: Right Drawer - "Novo produto" Form -->
+<aside class="w-[430px] border-l border-brand-border bg-white shrink-0 flex flex-col h-full shadow-lg z-30" data-purpose="new-product-drawer">
+<!-- Drawer Header -->
+<div class="p-4 border-b border-brand-border flex items-center justify-between shrink-0">
+<div>
+<h3 class="text-sm font-bold text-brand-dark">Novo produto</h3>
+<p class="text-xs text-brand-muted">Preencha os dados cadastrais do item para venda e estoque.</p>
+</div>
+<button aria-label="Fechar painel" class="text-brand-muted hover:text-brand-dark p-1 rounded-md hover:bg-brand-bg transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Drawer Body (Form scrollable) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4">
+<!-- Tipo Segmented Switcher -->
+<div>
+<label class="block text-xs font-semibold text-brand-dark mb-1.5">Tipo de item *</label>
+<div class="grid grid-cols-2 gap-1 p-1 bg-brand-bg rounded-lg border border-brand-border">
+<button class="py-1.5 text-xs font-medium text-brand-muted hover:text-brand-dark rounded-md transition-colors" type="button">
+                Bebida
+              </button>
+<button class="py-1.5 text-xs font-semibold text-brand-dark bg-white rounded-md shadow-xs transition-all" type="button">
+                Produto
+              </button>
+</div>
+</div>
+<!-- Nome do Produto -->
+<div>
+<label class="block text-xs font-semibold text-brand-dark mb-1" for="product-name">Nome do produto *</label>
+<input class="w-full text-xs rounded-lg border border-brand-border px-3 py-2 text-brand-dark placeholder-brand-lightMuted focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="product-name" placeholder="Ex: Pomada Matte Efeito Seco" type="text"/>
+</div>
+<!-- Categoria Dropdown -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="block text-xs font-semibold text-brand-dark" for="product-category">Categoria *</label>
+<a class="text-[11px] font-medium text-brand-muted hover:text-brand-dark hover:underline" href="#">+ Criar categoria</a>
+</div>
+<select class="w-full text-xs rounded-lg border border-brand-border px-3 py-2 text-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark bg-white" id="product-category">
+<option value="">Selecione uma categoria...</option>
+<option selected="" value="pomada">Pomada</option>
+<option value="bebida">Bebida</option>
+<option value="shampoo">Shampoo</option>
+<option value="cera">Cera</option>
+<option value="oleo">Óleo/Balm</option>
+<option value="acessorios">Acessórios</option>
+</select>
+</div>
+<!-- Descrição (Opcional) -->
+<div>
+<label class="block text-xs font-semibold text-brand-dark mb-1" for="product-desc">Descrição (opcional)</label>
+<textarea class="w-full text-xs rounded-lg border border-brand-border px-3 py-2 text-brand-dark placeholder-brand-lightMuted focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="product-desc" placeholder="Breve descrição do produto para comanda e vitrine..." rows="2"></textarea>
+</div>
+<!-- Preços: Venda e Custo -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<label class="block text-xs font-semibold text-brand-dark mb-1" for="price-sale">Preço de venda *</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs text-brand-muted font-medium">R$</span>
+<input class="w-full text-xs rounded-lg border border-brand-border pl-8 pr-3 py-2 text-brand-dark font-medium focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="price-sale" type="text" value="42,00"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-semibold text-brand-dark mb-1" for="price-cost">Preço de custo</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs text-brand-muted font-medium">R$</span>
+<input class="w-full text-xs rounded-lg border border-brand-border pl-8 pr-3 py-2 text-brand-dark font-medium focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="price-cost" type="text" value="18,00"/>
+</div>
+</div>
+<p class="col-span-2 text-[11px] text-brand-muted -mt-1">Valor pago por unidade para controle de margem gerencial.</p>
+</div>
+<!-- Estoque Inicial -->
+<div class="p-3 bg-brand-bg rounded-lg border border-brand-border space-y-3">
+<span class="text-xs font-bold text-brand-dark block">Parâmetros de Estoque</span>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-[11px] font-semibold text-brand-dark mb-1" for="stock-initial">Quantidade inicial</label>
+<input class="w-full text-xs rounded-md border border-brand-border px-2.5 py-1.5 bg-white text-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark" id="stock-initial" min="0" type="number" value="8"/>
+</div>
+<div>
+<label class="block text-[11px] font-semibold text-brand-dark mb-1" for="stock-min">Estoque mínimo</label>
+<input class="w-full text-xs rounded-md border border-brand-border px-2.5 py-1.5 bg-white text-brand-dark focus:outline-none focus:ring-1 focus:ring-brand-dark" id="stock-min" min="0" type="number" value="3"/>
+</div>
+</div>
+<p class="text-[10px] text-brand-muted leading-tight">
+              Quantidade que acionará o alerta de estoque baixo. Alterações futuras de estoque são feitas através de Reposições, Ajustes ou Perdas no módulo Estoque.
+            </p>
+</div>
+<!-- Upload de Imagem e Fallback -->
+<div class="space-y-2">
+<label class="block text-xs font-semibold text-brand-dark">Imagem do produto</label>
+<div class="border border-dashed border-brand-border rounded-lg p-3 bg-brand-bg/50 flex flex-col items-center justify-center text-center">
+<div class="w-10 h-10 rounded-full bg-white border border-brand-border flex items-center justify-center text-brand-muted mb-1.5 shadow-2xs">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<button class="text-xs font-semibold text-brand-dark hover:underline" type="button">+ Adicionar imagem personalizada</button>
+<p class="text-[10px] text-brand-muted mt-0.5">PNG, JPG até 2MB</p>
+</div>
+<div class="flex items-start space-x-2 pt-1">
+<input checked="" class="mt-0.5 rounded border-brand-border text-brand-dark focus:ring-brand-dark h-3.5 w-3.5" id="default-fallback" type="checkbox"/>
+<label class="text-[11px] text-brand-muted leading-tight select-none" for="default-fallback">
+                Usar imagem padrão da categoria quando não houver foto própria.
+              </label>
+</div>
+</div>
+<!-- Switches Operacionais -->
+<div class="pt-2 border-t border-brand-border space-y-3">
+<!-- Switch Vitrine Digital -->
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-brand-dark">Visível na Vitrine Digital</p>
+<p class="text-[11px] text-brand-muted">Exibir item no catálogo público para clientes.</p>
+</div>
+<button aria-checked="true" class="w-9 h-5 bg-brand-dark rounded-full relative p-0.5 transition-colors" role="switch" type="button">
+<span class="block w-4 h-4 rounded-full bg-white transform translate-x-4 transition-transform"></span>
+</button>
+</div>
+<!-- Switch Produto Ativo -->
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-brand-dark">Produto ativo para venda</p>
+<p class="text-[11px] text-brand-muted">Disponível para lançamento imediato no balcão e comandas.</p>
+</div>
+<button aria-checked="true" class="w-9 h-5 bg-brand-dark rounded-full relative p-0.5 transition-colors" role="switch" type="button">
+<span class="block w-4 h-4 rounded-full bg-white transform translate-x-4 transition-transform"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Drawer Footer with Actions -->
+<div class="p-4 border-t border-brand-border bg-white flex items-center justify-end space-x-3 shrink-0">
+<button class="px-4 py-2 text-xs font-semibold text-brand-muted hover:text-brand-dark transition-colors" type="button">
+            Cancelar
+          </button>
+<button class="px-5 py-2 text-xs font-semibold text-white bg-brand-dark hover:bg-brand-darkHover rounded-lg transition-colors shadow-sm" type="button">
+            Salvar produto
+          </button>
+</div>
+</aside>
+<!-- END: Right Drawer -->
+</div>
+</div>
+<!-- END: Main Content Area -->
+</body></html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Verificar E-mail - Estilo e Gestão</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            'dark-bg': '#181817',
+            'dark-surface': '#222220',
+            'dark-surface-secondary': '#2B2B29',
+            'dark-panel': '#1f1f1d',
+            'dark-border': '#3F3F3B',
+            'dark-text-primary': '#F4F4F0',
+            'dark-text-secondary': '#B8B8B2',
+            'dark-success': '#6FB892',
+            'dark-success-surface': '#173B2D',
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-dark-bg text-dark-text-primary font-sans min-h-screen flex flex-col justify-between selection:bg-white selection:text-dark-bg">
+<!-- Header Superior -->
+<header class="w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+<div></div>
+<!-- Botão de alternância com Sol (Dark Mode) -->
+<div class="flex items-center gap-3">
+<button aria-label="Alternar para modo claro" class="w-10 h-10 rounded-xl bg-[#222220] border border-[#3A3A36] flex items-center justify-center text-[#B8B8B2] hover:text-[#F4F4F0] hover:border-[#52524D] hover:bg-[#2A2A28] transition-all shadow-sm group" type="button"><svg class="w-4 h-4 transition-transform group-hover:rotate-45 duration-300" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button>
+</div>
+</header>
+<!-- Container Principal em 2 Áreas (42% / 58%) -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0"><div class="absolute -top-[15%] left-[5%] w-[600px] h-[600px] rounded-full bg-blue-600/15 blur-[120px]"></div><div class="absolute top-[35%] -left-[10%] w-[550px] h-[550px] rounded-full bg-red-600/20 blur-[130px]"></div><div class="absolute -bottom-[10%] left-[25%] w-[700px] h-[700px] rounded-full bg-red-700/20 blur-[140px]"></div><div class="absolute top-[10%] right-[5%] w-[650px] h-[650px] rounded-full bg-blue-500/20 blur-[140px]"></div><div class="absolute bottom-[10%] right-[10%] w-[500px] h-[500px] rounded-full bg-blue-600/15 blur-[120px]"></div></div><main class="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-10 relative z-10">
+<div class="w-full max-w-5xl bg-dark-surface rounded-3xl border border-dark-border shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px] relative"><div class="absolute inset-0 pointer-events-none z-0 overflow-hidden"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO9llkDaQ45m-57bxaKhdDdDsSmuP9WAAKFoZB0kKZ25Ti4UM-OdwAuYDKwyJir6Eo6phqTs9N8nb3S84S7HAjtg3vESG09X7WvdT2dji0mowXbV70YQOsZI0C9RNWEkdkCiQk7489O2-F8FyfSYWBBWqun44luVJklziFaHC2s1U_f6pAmjJoWHCWIzcmEas_bO65GCJVpiq71MHRr210oPsxIZAOYaOaFxLvUiqg2M1S30ClbhCbFf7yBWhofTuHJAE" alt="" class="w-full h-full object-cover opacity-20 mix-blend-overlay filter blur-sm scale-105"><div class="absolute inset-0 bg-dark-bg/60 backdrop-blur-[1px]"></div></div>
+<!-- Área Esquerda (Aprox 42% no desktop): Painel Contextual de Marca -->
+<div class="lg:col-span-5 bg-[#1E1E1C] p-8 sm:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#333330] relative overflow-hidden"><div class="absolute -top-24 -left-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div><div class="absolute -bottom-20 -right-20 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div><div class="relative z-10 flex flex-col"><h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F0] mb-2">Falta pouco para começar.</h2><p class="text-sm text-[#B8B8B2] leading-relaxed mb-6">Confirme seu e-mail para continuar a configuração da sua barbearia.</p><div class="space-y-3 pt-2 border-t border-[#333330]"><div class="flex items-center gap-3"><div class="w-5 h-5 rounded-md bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 text-emerald-400"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></div><span class="text-xs font-medium text-[#D5D5D0]">Confirme que o e-mail pertence a você</span></div><div class="flex items-center gap-3"><div class="w-5 h-5 rounded-md bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 text-emerald-400"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></div><span class="text-xs font-medium text-[#D5D5D0]">Ajude a proteger o acesso à sua conta</span></div><div class="flex items-center gap-3"><div class="w-5 h-5 rounded-md bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 text-emerald-400"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></div><span class="text-xs font-medium text-[#D5D5D0]">Facilite a recuperação de acesso no futuro</span></div></div></div><div class="relative z-10 flex-1 flex flex-col items-center justify-center my-6 min-h-[200px]"><div class="relative flex items-center justify-center"><div class="absolute w-48 h-48 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(239,68,68,0.1) 50%, transparent 75%); filter: blur(20px);"></div><div class="relative z-10 w-40 h-40 flex items-center justify-center transition-transform hover:scale-105 duration-300"><img alt="Estilo e Gestão - Logo Oficial" class="w-full h-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq17wpusxB3Uk3aZRSF8LB7-NdMHtLcGlRhRfgH3qwCAU87oHP58DLZZMEGzZpjgrWDqZwy3Pb8DcyI-fE24Ahp57ozAaxd_Nx8xqbe-2uz5FXaVXdPCmPu8V5nmilWTEH4zvkaX0ssw-0kjJ-nY28gsA9RFS3SS-IZha-Cw1oT8MZkCHg0tyrKIMI9seWe6i9XKIIXupmP1Ry0ZaUCCtZmkbU3X7Ea8KsGV8_xzvo1ph_G85FHrj2IY1NKKGxzo-sQXI"></div></div></div></div>
+<!-- Área Direita (Aprox 58% no desktop): Container de Verificação -->
+<div class="lg:col-span-7 bg-[#242422] p-6 sm:p-12 flex flex-col justify-center items-center"><div class="w-full max-w-[440px] flex flex-col justify-center text-center"><div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2D2D2A] to-[#1E1E1C] border border-[#3E3E3A] flex items-center justify-center mx-auto mb-5 text-[#F4F4F0] shadow-inner ring-4 ring-white/5"><svg class="w-7 h-7 text-[#F4F4F0]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="20" x="2" y="4"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></div><h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F0] mb-2">Verifique seu e-mail</h1><p class="text-sm text-[#A0A09A] max-w-sm mx-auto leading-relaxed mb-4">Enviamos um código de 6 dígitos para o seu e-mail. Digite o código abaixo para confirmar sua conta.</p><div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#1C1C1A] border border-[#333330] rounded-full mx-auto mb-6 shadow-sm"><span class="w-2 h-2 rounded-full bg-emerald-400"></span><span class="text-xs font-semibold text-[#E0E0DC] tracking-wide">d***i@gmail.com</span></div><div class="hidden mb-4 p-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all" id="alert-container"></div><form class="w-full" id="otp-form" onsubmit="event.preventDefault(); handleSubmit();"><div class="flex justify-center items-center gap-2 sm:gap-2.5 mb-6" id="otp-inputs"><input autofocus="" class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"><input class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"><input class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"><input class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"><input class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"><input class="otp-digit w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-[#383834] bg-[#181816] text-[#F4F4F0] focus:border-blue-400 focus:bg-[#1F1F1D] focus:ring-4 focus:ring-blue-500/20 focus:outline-none transition-all shadow-inner" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"></div><button class="w-full py-3.5 px-6 rounded-xl bg-[#30302D] text-[#70706A] font-semibold text-sm tracking-wide shadow-sm cursor-not-allowed transition-all flex items-center justify-center gap-2 hover:shadow-lg" disabled="" id="verify-btn" onclick="handleSubmit()" type="button"><span id="btn-text" class="">Verificar e-mail</span><svg class="hidden animate-spin w-4 h-4 text-[#181817]" fill="none" id="btn-spinner" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path></svg></button></form><div class="mt-6 pt-5 border-t border-[#333330]"><p class="text-xs text-[#A0A09A] mb-1.5">Não recebeu o código?</p><button class="text-xs font-semibold text-[#F4F4F0] hover:text-white hover:underline transition-all" id="resend-btn" onclick="handleResend()" type="button">Reenviar código</button><p class="hidden text-xs text-[#A0A09A] font-medium mt-1" id="countdown-text">Reenviar código em <span class="font-bold text-[#F4F4F0]" id="countdown-timer">00:45</span></p></div><div class="mt-4"><a class="text-xs text-[#A0A09A] hover:text-[#F4F4F0] transition-colors inline-flex items-center gap-1.5 font-medium" href="#alterar-email"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m15 18-6-6 6-6"></path></svg>E-mail incorreto? Alterar e-mail</a></div><div class="mt-6 pt-4 border-t border-[#333330]/80 w-full"><div class="flex items-center justify-between gap-2 mb-2"><span class="text-[11px] font-semibold text-[#8E8E88] uppercase tracking-wider">Estados de teste:</span><span id="active-state-tag" class="text-[10px] px-2 py-0.5 rounded-full bg-[#30302D] text-[#D5D5D0] border border-[#3E3E3A]">Normal</span></div><div class="flex flex-wrap items-center justify-center gap-1.5"><button type="button" onclick="setTestState('normal')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Normal</button><button type="button" onclick="setTestState('loading')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Carregando</button><button type="button" onclick="setTestState('error')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Incorreto</button><button type="button" onclick="setTestState('expired')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Expirado</button><button type="button" onclick="setTestState('resend')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Reenviado</button><button type="button" onclick="setTestState('success')" class="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#1C1C1A] hover:bg-[#2A2A28] text-[#D5D5D0] border border-[#383834] transition-all hover:border-[#52524D]">Sucesso</button></div></div></div></div>
+</div>
+</main>
+<!-- Rodapé -->
+<footer class="w-full max-w-7xl mx-auto px-6 py-6 text-center text-xs text-dark-text-secondary border-t border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+<p class="">Estilo e Gestão • Sistema para Gestão de Barbearias</p>
+<div class="flex items-center gap-4 text-dark-text-secondary">
+<span class="">Autenticação Segura</span>
+<span class="">•</span>
+<span class="">Supabase Auth</span>
+</div>
+</footer><script>function setTestState(state){const stateTag=document.getElementById('active-state-tag');if(stateTag)stateTag.textContent=state.charAt(0).toUpperCase()+state.slice(1);if(timerInterval)clearInterval(timerInterval);inputs.forEach(i=>{i.classList.remove('border-red-500','bg-red-950/30','border-emerald-500','bg-emerald-950/30','border-amber-500','bg-amber-950/30');i.disabled=false;});verifyBtn.classList.remove('bg-emerald-600','text-white','bg-[#30302D]','text-[#70706A]','cursor-not-allowed','bg-[#F4F4F0]','text-[#181817]','hover:bg-white');btnSpinner.classList.add('hidden');if(state==='normal'){inputs.forEach(i=>i.value='');verifyBtn.disabled=true;verifyBtn.classList.add('bg-[#30302D]','text-[#70706A]','cursor-not-allowed');btnText.textContent='Verificar e-mail';alertBox.classList.add('hidden');resendBtn.classList.remove('hidden');countdownText.classList.add('hidden');inputs[0].focus();}else if(state==='loading'){const demo=['7','4','2','9','0','1'];inputs.forEach((inp,i)=>inp.value=demo[i]);verifyBtn.disabled=true;verifyBtn.classList.add('bg-[#F4F4F0]','text-[#181817]');btnSpinner.classList.remove('hidden');btnText.textContent='Verificando...';alertBox.classList.add('hidden');}else if(state==='error'){const demo=['3','8','1','0','5','9'];inputs.forEach((inp,i)=>inp.value=demo[i]);inputs.forEach(i=>i.classList.add('border-red-500','bg-red-950/30'));showNotification('error','Código incorreto. Você tem mais 2 tentativas restantes.');verifyBtn.disabled=false;verifyBtn.classList.add('bg-[#F4F4F0]','text-[#181817]','hover:bg-white');btnText.textContent='Tentar novamente';}else if(state==='expired'){const demo=['9','1','5','8','3','2'];inputs.forEach((inp,i)=>{inp.value=demo[i];inp.classList.add('border-amber-500','bg-amber-950/30');});showNotification('error','Este código expirou após 15 minutos. Solicite um novo código.');verifyBtn.disabled=true;verifyBtn.classList.add('bg-[#30302D]','text-[#70706A]','cursor-not-allowed');btnText.textContent='Código expirado';}else if(state==='resend'){inputs.forEach(i=>i.value='');verifyBtn.disabled=true;verifyBtn.classList.add('bg-[#30302D]','text-[#70706A]','cursor-not-allowed');btnText.textContent='Verificar e-mail';handleResend();}else if(state==='success'){const demo=['6','8','3','4','1','2'];inputs.forEach((inp,i)=>{inp.value=demo[i];inp.classList.add('border-emerald-500','bg-emerald-950/30');});showNotification('success','E-mail verificado com sucesso! Redirecionando...');verifyBtn.disabled=true;verifyBtn.classList.add('bg-emerald-600','text-white');btnText.textContent='Confirmado!';}}</script>
+<script>
+    const inputs = document.querySelectorAll('.otp-digit');
+    const verifyBtn = document.getElementById('verify-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const alertBox = document.getElementById('alert-container');
+    const resendBtn = document.getElementById('resend-btn');
+    const countdownText = document.getElementById('countdown-text');
+    const countdownTimer = document.getElementById('countdown-timer');
+
+    let isSubmitting = false;
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val ? val[val.length - 1] : '';
+        if (e.target.value && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+        checkFullCode();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+        const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+        if (digits) {
+          digits.split('').forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          if (digits.length === 6) {
+            inputs[5].focus();
+          } else if (inputs[digits.length]) {
+            inputs[digits.length].focus();
+          }
+          checkFullCode();
+        }
+      });
+    });
+
+    function checkFullCode() {
+      const code = Array.from(inputs).map(i => i.value).join('');
+      verifyBtn.disabled = code.length !== 6 || isSubmitting;
+    }
+
+    function handleSubmit() {
+      if (verifyBtn.disabled || isSubmitting) return;
+      isSubmitting = true;
+      verifyBtn.disabled = true;
+      btnSpinner.classList.remove('hidden');
+      btnText.textContent = "Verificando...";
+
+      // Simulação de validação do código
+      setTimeout(() => {
+        const code = Array.from(inputs).map(i => i.value).join('');
+        // Se for '000000', simula erro para teste dinâmico, senão valida com sucesso
+        if (code === '000000') {
+          showNotification('error', 'O código informado é inválido. Verifique e tente novamente.');
+          inputs.forEach(i => i.classList.add('border-red-500', 'bg-red-950/30'));
+          btnSpinner.classList.add('hidden');
+          btnText.textContent = "Verificar e-mail";
+          isSubmitting = false;
+          verifyBtn.disabled = false;
+        } else {
+          showNotification('success', 'E-mail verificado com sucesso! Redirecionando...');
+          inputs.forEach(i => {
+            i.classList.remove('border-red-500', 'bg-red-950/30');
+            i.classList.add('border-emerald-500', 'bg-emerald-950/30');
+          });
+          btnSpinner.classList.add('hidden');
+          btnText.textContent = "Confirmado!";
+          verifyBtn.classList.remove('bg-dark-text-primary', 'text-dark-bg', 'hover:bg-white');
+          verifyBtn.classList.add('bg-emerald-600', 'text-white');
+        }
+      }, 1400);
+    }
+
+    let timerInterval = null;
+    function handleResend() {
+      resendBtn.classList.add('hidden');
+      countdownText.classList.remove('hidden');
+      showNotification('info', 'Um novo código foi enviado para o seu e-mail.');
+
+      let seconds = 45;
+      countdownTimer.textContent = '00:45';
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds--;
+        const formatted = seconds < 10 ? `00:0${seconds}` : `00:${seconds}`;
+        countdownTimer.textContent = formatted;
+        if (seconds <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.classList.remove('hidden');
+          countdownText.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    function showNotification(type, message) {
+      alertBox.className = "mb-4 p-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all";
+      alertBox.classList.remove('hidden');
+
+      if (type === 'info') {
+        alertBox.classList.add('bg-blue-950/60', 'text-blue-200', 'border', 'border-blue-800');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>${message}</span>
+        `;
+      } else if (type === 'error') {
+        alertBox.classList.add('bg-red-950/60', 'text-red-200', 'border', 'border-red-800');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            <line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/>
+            <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/>
+          </svg>
+          <span>${message}</span>
+        `;
+      } else if (type === 'success') {
+        alertBox.classList.add('bg-emerald-950/60', 'text-emerald-200', 'border', 'border-emerald-800');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>${message}</span>
+        `;
+      }
+    }
+  </script>
+
+
+</body></html>

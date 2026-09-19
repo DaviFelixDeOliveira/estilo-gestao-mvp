@@ -1,0 +1,252 @@
+<!DOCTYPE html><html class="h-full bg-neutral-950" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estilo e Gestão - Login</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Cinzel"', 'serif'],
+          },
+          colors: {
+            brand: {
+              charcoal: '#0B0D0E',
+              dark: '#121417',
+              surface: '#16191D',
+              card: '#16191D',
+              border: '#262A30',
+              input: '#1C2026',
+              accent: '#E53E3E',
+              neonBlue: '#0072FF',
+              neonRed: '#FF2E4D'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-ambiance">
+    /* Efeitos de iluminação sutil de barbearia (Barber Pole glow) */
+    .barber-glow {
+      background: radial-gradient(circle at 10% 20%, rgba(229, 62, 62, 0.14) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(0, 114, 255, 0.12) 0%, transparent 45%);
+    }
+
+    /* Suavização de renderização e glow para o logotipo */
+    .logo-glow {
+      filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.08));
+    }
+
+    /* Remove browser autofill custom background */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px #1C2026 inset !important;
+      -webkit-text-fill-color: #F4F4F0 !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+</head>
+<body class="h-full font-sans text-neutral-200 antialiased overflow-x-hidden selection:bg-red-600 selection:text-white bg-[#0B0D0E]">
+<!-- BEGIN: LoginScreenContainer -->
+<div class="min-h-screen w-full flex flex-col lg:flex-row bg-[#0B0D0E] text-neutral-100" data-purpose="split-screen-wrapper">
+<!-- BEGIN: LeftHeroVisual -->
+<!-- Lado Esquerdo: Atmosfera cinematográfica com imagem vertical neon de barbearia -->
+<section class="relative lg:w-7/12 xl:w-3/5 w-full min-h-[50vh] lg:min-h-screen flex flex-col justify-between p-8 sm:p-12 lg:p-16 overflow-hidden border-b lg:border-b-0 lg:border-r border-[#22252A]" data-purpose="hero-visual-panel">
+<!-- Imagem de Fundo Neon Barber -->
+<div class="absolute inset-0 z-0">
+<img alt="Cenário clássico e moderno de barbearia premium com iluminação neon" class="w-full h-full object-cover object-center transform scale-105 duration-1000 ease-out hover:scale-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0uFMkKmS0LOa6Bvtlkw8XMaMsnTWqbN2GdJlpVgI3bCTsIr8EOqOKAnS_bzpxgz8DNCu75C9uE--X-KZOixj48OvTQLhKNZjdIKWoYKU2cRlNX594e28HxEWV3UYwyW0u60iRRfySZlPiWzPpDxn63eEusfNK9CDl-iVVt1VI6XqZzRVFaetVPuvbS_NVPU1HgLuS4CJFXBk7_wwB0HAeXs8QAXZHXEMUszEBkHUn1FXsf-9GfPLM0DQh-Sa-l-d8PGw" style="filter: contrast(1.08) brightness(1.15);">
+<div class="absolute inset-0 bg-gradient-to-t from-[#0B0D0E] via-[#0B0D0E]/30 to-black/40"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#0B0D0E]/30 to-[#0B0D0E]"></div>
+<div class="absolute inset-0 barber-glow pointer-events-none"></div>
+</div>
+<!-- Topo do Banner Esquerdo: Tag de Categoria -->
+<div class="relative z-10 flex items-center gap-3">
+<span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-black/60 backdrop-blur-md border border-neutral-700/60 text-neutral-300">
+<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+<span>GESTÃO PARA BARBEARIAS</span>
+</span>
+</div>
+<!-- Rodapé do Banner Esquerdo: Tipografia de Alto Impacto -->
+<div class="relative z-10 mt-auto pt-16">
+<!-- Detalhe decorativo nas cores da barbearia -->
+<div class="flex items-center gap-2 mb-4">
+<span class="h-1 w-8 bg-red-600 rounded-full"></span>
+<span class="h-1 w-4 bg-blue-600 rounded-full"></span>
+<span class="h-1 w-2 bg-neutral-400 rounded-full"></span>
+</div>
+<h1 class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white uppercase leading-[1.08] drop-shadow-lg">
+        TODA A EXCELÊNCIA, COM TOTAL FACILIDADE
+      </h1>
+<p class="mt-4 max-w-lg text-sm sm:text-base text-neutral-300/90 font-normal leading-relaxed drop-shadow">
+        Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
+      </p>
+</div>
+</section>
+<!-- END: LeftHeroVisual -->
+<!-- BEGIN: RightAuthPanel -->
+<!-- Lado Direito: Área de Autenticação com refinamento idêntico à tela de Boas-vindas -->
+<main class="lg:w-5/12 xl:w-2/5 w-full flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-[#0E1013] relative z-10" data-purpose="auth-login-panel">
+<!-- Topo: Identidade Visual e Botão de Tema -->
+<header class="w-full flex items-center justify-between pt-2 sm:pt-4" data-purpose="brand-header">
+<div class="relative group p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700">
+<img alt="Logotipo Estilo e Gestão" class="h-20 sm:h-24 w-auto object-contain logo-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvnF1kZeGN53CzlZpvXKjAqKBzqqtqKFglF-onptQ5uY2Fme1llY2ulODgll5goyGiuETeFLBLQ35poaGmAJdWzvjYaDkyC15rzTVcoJMZSn5PvyPZpbsoEGftGfW3MgnSOfauXLQfszXlcy16SzxqSqRI4u383QM-uS21aFLokCzII_4WedOL9eQycxNQYSq_y0zQ7p7NniTpEq9YlSe8YN0MmVmOudTB8C-5g7Jpac3YSiXTOQuYC3OlwDikVOnlIMY">
+</div>
+<button aria-label="Mudar para modo claro" class="w-10 h-10 rounded-full flex items-center justify-center text-neutral-300 hover:text-white hover:bg-white/10 transition-colors border border-white/10" id="theme-toggle" title="Mudar para modo claro" type="button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="sun" aria-hidden="true" class="lucide lucide-sun w-5 h-5 text-amber-300"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+</button>
+</header>
+<!-- Conteúdo Central: Formulário de Login -->
+<div class="my-auto py-8 lg:py-6 max-w-md w-full mx-auto lg:mx-0" data-purpose="login-action-block">
+<!-- Cabeçalho do Formulário -->
+<div class="space-y-3 mb-8">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-neutral-900 border border-neutral-800 text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+<span>ACESSO AO SISTEMA</span>
+</div>
+<h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+          Entrar na sua conta
+        </h2>
+<p class="text-sm sm:text-base text-neutral-400 leading-relaxed pt-0.5">
+          Use seu e-mail e senha para acessar o Estilo e Gestão.
+        </p>
+</div>
+<!-- Formulário de Login -->
+<form class="space-y-5" id="login-form" onsubmit="return false;">
+<!-- Campo E-mail -->
+<div class="space-y-2" data-purpose="email-group">
+<label class="block text-xs uppercase tracking-wider font-semibold text-neutral-300" for="email">
+            E-mail
+          </label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-xl bg-[#16191D] border border-neutral-800 text-neutral-100 placeholder-neutral-500 text-sm transition-all focus:border-red-500/80 focus:bg-[#1C2026] focus:outline-none focus:ring-1 focus:ring-red-500/80" id="email" name="email" placeholder="seuemail@exemplo.com" required="" type="email">
+</div>
+</div>
+<!-- Campo Senha -->
+<div class="space-y-2" data-purpose="password-group">
+<div class="flex items-center justify-between">
+<label class="block text-xs uppercase tracking-wider font-semibold text-neutral-300" for="password">
+              Senha
+            </label>
+<a class="text-xs font-medium transition-colors focus:underline text-red-500 hover:text-red-400" href="#">
+              Esqueci minha senha
+            </a>
+</div>
+<div class="relative">
+<input class="w-full h-12 pl-4 pr-11 rounded-xl bg-[#16191D] border border-neutral-800 text-neutral-100 placeholder-neutral-500 text-sm transition-all focus:border-red-500/80 focus:bg-[#1C2026] focus:outline-none focus:ring-1 focus:ring-red-500/80" id="password" name="password" placeholder="Digite sua senha" required="" type="password">
+<button aria-label="Mostrar ou ocultar senha" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-200 focus:outline-none transition-colors p-1" id="toggle-password" type="button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="eye" aria-hidden="true" class="lucide lucide-eye w-4 h-4" id="password-eye-icon"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<!-- Switch Lembrar este terminal -->
+
+<!-- Botão Primário: Entrar (Estilo idêntico ao Criar Conta de Boas-vindas) -->
+<div class="pt-2">
+<button class="group relative w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg shadow-red-950/40 hover:shadow-red-900/50 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-500/50" id="submit-btn" type="submit">
+<span id="btn-text" class="">Entrar</span>
+<svg class="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" fill="none" id="btn-arrow" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden" fill="none" id="spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</button>
+</div>
+</form>
+<!-- Ação Alternativa: Link Criar Conta -->
+<div class="mt-6 text-center">
+<p class="text-xs sm:text-sm text-neutral-400">
+          Ainda não possui uma conta?
+          <a class="font-medium text-white hover:text-red-400 transition-colors underline ml-1" href="#cadastre-se">
+            Criar conta
+          </a>
+</p>
+</div>
+<!-- Selo de Garantia / Benefícios de Boas-vindas -->
+<div class="mt-8 pt-6 border-t border-neutral-800/60 flex items-center justify-between text-xs text-neutral-500">
+<span class="flex items-center gap-1.5">
+<svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Acesse de qualquer dispositivo
+        </span>
+<span class="text-neutral-600">•</span>
+<span>Seus dados sempre disponíveis</span>
+</div>
+</div>
+<!-- Rodapé Institucional Discreto -->
+<footer class="pt-6 border-t border-neutral-900 flex items-center justify-center lg:justify-start" data-purpose="panel-footer">
+<p class="text-xs text-neutral-500 font-normal tracking-wide text-center lg:text-left">
+        © 2026 Estilo e Gestão. Todos os direitos reservados.
+      </p>
+</footer>
+</main>
+<!-- END: RightAuthPanel -->
+</div>
+<!-- END: LoginScreenContainer -->
+<!-- Interatividade de Senha e Feedback de Login -->
+<script data-purpose="form-interactions">
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa ícones Lucide
+    lucide.createIcons();
+
+    // Toggle visibilidade de senha
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const passwordEyeIcon = document.getElementById('password-eye-icon');
+
+    if (togglePasswordBtn && passwordInput) {
+      togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        
+        // Troca de ícone
+        passwordEyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+        lucide.createIcons();
+      });
+    }
+
+    // Simulação de Loading no envio
+    const loginForm = document.getElementById('login-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnArrow = document.getElementById('btn-arrow');
+    const spinner = document.getElementById('spinner');
+
+    if (loginForm && submitBtn) {
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-90', 'cursor-not-allowed');
+        btnText.textContent = 'Entrando...';
+        if (btnArrow) btnArrow.classList.add('hidden');
+        if (spinner) spinner.classList.remove('hidden');
+
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-90', 'cursor-not-allowed');
+          btnText.textContent = 'Entrar';
+          if (btnArrow) btnArrow.classList.remove('hidden');
+          if (spinner) spinner.classList.add('hidden');
+        }, 2000);
+      });
+    }
+  });
+</script>
+
+
+</body></html>

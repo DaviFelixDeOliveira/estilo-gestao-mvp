@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Operação - Serviços | Estilo &amp; Gestão</title>
+<!-- Tailwind CSS v3 CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#181817',
+              surface: '#222220',
+              input: '#2B2B29',
+              border: '#3F3F3B',
+              textPrimary: '#F4F4F0',
+              textSecondary: '#B8B8B2',
+              textMuted: '#7D7D76',
+              accent: '#F4F4F0',
+              accentHover: '#E5E5DF',
+              badgeGreenBg: 'rgba(34, 197, 94, 0.12)',
+              badgeGreenText: '#4ADE80',
+              badgeGrayBg: 'rgba(125, 125, 118, 0.16)',
+              badgeGrayText: '#B8B8B2',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Stylesheet for global layout and scrollbar appearance -->
+<style data-purpose="custom-scrollbars">
+    /* Custom dark scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #181817;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3F3F3B;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #55554F;
+    }
+  </style>
+</head>
+<body class="h-full bg-[#181817] text-[#F4F4F0] font-sans antialiased flex overflow-hidden selection:bg-[#F4F4F0] selection:text-[#181817]">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-[#181817] border-r border-[#3F3F3B] flex flex-col shrink-0 select-none z-20" data-purpose="main-sidebar">
+<!-- Workspace Brand Header -->
+<div class="h-16 px-5 border-b border-[#3F3F3B] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-[#2B2B29] border border-[#3F3F3B] flex items-center justify-center font-bold text-xs tracking-wider text-[#F4F4F0]">
+          EG
+        </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold tracking-wider text-[#F4F4F0] uppercase">Estilo &amp; Gestão</span>
+<span class="text-[11px] text-[#B8B8B2]">Barbearia Club</span>
+</div>
+</div>
+<button aria-label="Colapsar menu lateral" class="text-[#B8B8B2] hover:text-[#F4F4F0] p-1 rounded hover:bg-[#222220] transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+<!-- Navigation Menu List -->
+<nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto" data-purpose="sidebar-nav">
+<!-- Item: Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] transition-colors" href="#">
+<svg class="w-4 h-4 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- Item: PDV -->
+<div class="space-y-1">
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] transition-colors" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>PDV</span>
+</div>
+<svg class="w-3.5 h-3.5 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Item: Operação (ATIVO EXPANDIDO) -->
+<div class="space-y-1 pt-1">
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-[#F4F4F0] bg-[#222220]/60" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-[#F4F4F0]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Operação</span>
+</div>
+<svg class="w-3.5 h-3.5 text-[#F4F4F0]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 15l7-7 7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Sub-items Operação -->
+<div class="pl-7 pr-1 py-1 space-y-1">
+<!-- Serviços (ATIVO) -->
+<a class="block px-3 py-1.5 rounded-md text-xs font-semibold bg-[#F4F4F0] text-[#181817] shadow-sm" href="#">
+            Serviços
+          </a>
+<!-- Produtos -->
+<a class="block px-3 py-1.5 rounded-md text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] transition-colors" href="#">
+            Produtos
+          </a>
+<!-- Estoque -->
+<a class="block px-3 py-1.5 rounded-md text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] transition-colors" href="#">
+            Estoque
+          </a>
+</div>
+</div>
+<!-- Item: Configurações -->
+<div class="pt-2">
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] transition-colors" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+<span>Configurações</span>
+</div>
+<svg class="w-3.5 h-3.5 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Seções Organizacionais de Configuração -->
+<div class="pt-4 pb-2 space-y-4">
+<div>
+<span class="px-3 text-[10px] font-bold text-[#7D7D76] tracking-wider uppercase">Negócio</span>
+<div class="mt-1 space-y-0.5">
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Financeiro</a>
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Relatórios</a>
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Vitrine Digital</a>
+</div>
+</div>
+<div>
+<span class="px-3 text-[10px] font-bold text-[#7D7D76] tracking-wider uppercase">Barbearia</span>
+<div class="mt-1 space-y-0.5">
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Dados da barbearia</a>
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Endereço</a>
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Horários</a>
+<a class="block px-3 py-1 text-xs text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#222220] rounded transition-colors" href="#">Formas de pagamento</a>
+</div>
+</div>
+</div>
+</nav>
+<!-- Sidebar User Footer -->
+<div class="p-3 border-t border-[#3F3F3B] bg-[#181817]">
+<div class="flex items-center justify-between p-2 rounded-lg bg-[#222220]/40 border border-[#3F3F3B]/50">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-full bg-[#2B2B29] border border-[#3F3F3B] flex items-center justify-center shrink-0">
+<svg class="w-4 h-4 text-[#B8B8B2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-xs font-semibold text-[#F4F4F0] truncate">Mestre Barbeiro</span>
+<span class="text-[10px] text-[#B8B8B2] truncate">Operador Caixa</span>
+</div>
+</div>
+<div class="flex items-center gap-1 shrink-0 text-[#B8B8B2]">
+<button aria-label="Ajuda e Suporte" class="p-1 hover:text-[#F4F4F0] rounded" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+<button aria-label="Sair da conta" class="p-1 hover:text-[#F4F4F0] rounded" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#181817]">
+<!-- Topbar Navigation -->
+<header class="h-16 border-b border-[#3F3F3B] px-8 flex items-center justify-between shrink-0 bg-[#181817]" data-purpose="topbar">
+<!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-xs text-[#B8B8B2]">
+<span class="hover:text-[#F4F4F0] cursor-pointer">Estilo &amp; Gestão</span>
+<svg class="w-3 h-3 text-[#7D7D76]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="hover:text-[#F4F4F0] cursor-pointer">Operação</span>
+<svg class="w-3 h-3 text-[#7D7D76]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span aria-current="page" class="text-[#F4F4F0] font-medium">Serviços</span>
+</nav>
+<!-- Right Header Controls: Dark Theme Toggle & Profile Avatar -->
+<div class="flex items-center gap-3">
+<button aria-label="Alternar tema" class="w-8 h-8 rounded-full bg-[#222220] border border-[#3F3F3B] flex items-center justify-center text-[#F4F4F0] hover:bg-[#2B2B29] transition-colors" type="button">
+<svg class="w-4 h-4 text-amber-300" fill="currentColor" viewbox="0 0 20 20">
+<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+</svg>
+</button>
+<div class="w-8 h-8 rounded-full bg-[#2B2B29] border border-[#3F3F3B] flex items-center justify-center text-xs font-semibold text-[#F4F4F0]">
+          MB
+        </div>
+</div>
+</header>
+<!-- Main View Area (Table + Drawer Layout) -->
+<div class="flex-1 flex min-h-0 overflow-hidden">
+<!-- Services Management Table Area -->
+<main class="flex-1 overflow-y-auto p-8 space-y-6" data-purpose="services-main-content">
+<!-- Title and Primary Action -->
+<section aria-labelledby="page-title" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<h1 class="text-2xl font-semibold tracking-tight text-[#F4F4F0]" id="page-title">Serviços</h1>
+<p class="text-sm text-[#B8B8B2] mt-0.5">Cadastre e gerencie os serviços oferecidos no balcão e na Vitrine Digital.</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#F4F4F0] hover:bg-[#E5E5DF] text-[#181817] text-sm font-medium shadow-sm transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Novo serviço</span>
+</button>
+</section>
+<!-- Filters & Search Controls Container -->
+<section aria-label="Filtros e busca" class="p-4 rounded-xl bg-[#222220] border border-[#3F3F3B] space-y-3">
+<!-- Search input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7D76]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-2 text-sm bg-[#2B2B29] border border-[#3F3F3B] rounded-lg text-[#F4F4F0] placeholder-[#7D7D76] focus:outline-none focus:border-[#B8B8B2] focus:ring-0" placeholder="Buscar serviço por nome..." type="text"/>
+</div>
+<!-- Secondary Filters Row -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+<!-- Status Pill Filter Group -->
+<div aria-label="Filtrar por status" class="flex items-center gap-1.5" role="group">
+<button class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#2B2B29] text-[#F4F4F0] border border-[#3F3F3B]" type="button">
+                Todos (5)
+              </button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#2B2B29] transition-colors" type="button">
+                Ativos (4)
+              </button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-medium text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#2B2B29] transition-colors" type="button">
+                Inativos (1)
+              </button>
+</div>
+<!-- Visibility Dropdown Filter -->
+<div class="relative">
+<button class="inline-flex items-center gap-2 px-3 py-1.5 text-xs text-[#B8B8B2] bg-[#2B2B29] border border-[#3F3F3B] rounded-lg hover:text-[#F4F4F0] transition-colors" type="button">
+<span>Todas as visibilidades</span>
+<svg class="w-3.5 h-3.5 text-[#7D7D76]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</section>
+<!-- Services Data Table -->
+<section aria-label="Tabela de serviços" class="rounded-xl border border-[#3F3F3B] bg-[#222220] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="border-b border-[#3F3F3B] text-[11px] font-semibold text-[#7D7D76] uppercase tracking-wider bg-[#181817]/40">
+<th class="py-3 px-4" scope="col">Serviço</th>
+<th class="py-3 px-4" scope="col">Preço</th>
+<th class="py-3 px-4" scope="col">Custo Direto</th>
+<th class="py-3 px-4" scope="col">Vitrine Digital</th>
+<th class="py-3 px-4" scope="col">Status</th>
+<th class="py-3 px-4 text-right" scope="col">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#3F3F3B] text-xs">
+<!-- Row 1: Corte Degradê (Selected for editing) -->
+<tr class="bg-[#2B2B29]/60 hover:bg-[#2B2B29] transition-colors group">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+<span class="font-medium text-[#F4F4F0]">Corte Degradê</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-[#F4F4F0]">R$ 45,00</td>
+<td class="py-3.5 px-4 text-[#B8B8B2]">R$ 4,50</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#222220] border border-[#3F3F3B] text-[#F4F4F0]">
+                      Visível
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      Ativo
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="inline-flex items-center gap-3">
+<button class="text-xs text-[#F4F4F0] underline decoration-[#7D7D76] hover:decoration-[#F4F4F0]" type="button">Editar</button>
+<button class="text-xs text-rose-400 hover:text-rose-300" type="button">Desativar</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Barba Tradicional -->
+<tr class="hover:bg-[#2B2B29]/40 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+<span class="font-medium text-[#F4F4F0]">Barba Tradicional</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-[#F4F4F0]">R$ 35,00</td>
+<td class="py-3.5 px-4 text-[#B8B8B2]">R$ 3,00</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#222220] border border-[#3F3F3B] text-[#F4F4F0]">
+                      Visível
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      Ativo
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-xs text-[#B8B8B2] hover:text-[#F4F4F0]" type="button">Editar</button>
+</td>
+</tr>
+<!-- Row 3: Corte + Barba -->
+<tr class="hover:bg-[#2B2B29]/40 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+<span class="font-medium text-[#F4F4F0]">Corte + Barba</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-[#F4F4F0]">R$ 70,00</td>
+<td class="py-3.5 px-4 text-[#B8B8B2]">R$ 6,50</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#222220] border border-[#3F3F3B] text-[#F4F4F0]">
+                      Visível
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      Ativo
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-xs text-[#B8B8B2] hover:text-[#F4F4F0]" type="button">Editar</button>
+</td>
+</tr>
+<!-- Row 4: Sobrancelha Navalhada -->
+<tr class="hover:bg-[#2B2B29]/40 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+<span class="font-medium text-[#F4F4F0]">Sobrancelha Navalhada</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-[#F4F4F0]">R$ 15,00</td>
+<td class="py-3.5 px-4 text-[#B8B8B2]">R$ 0,50</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#222220] border border-[#3F3F3B] text-[#F4F4F0]">
+                      Visível
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      Ativo
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-xs text-[#B8B8B2] hover:text-[#F4F4F0]" type="button">Editar</button>
+</td>
+</tr>
+<!-- Row 5: Pigmentação de Barba (Inativo/Oculto) -->
+<tr class="opacity-60 hover:opacity-100 hover:bg-[#2B2B29]/40 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-[#7D7D76] shrink-0"></span>
+<span class="font-medium text-[#B8B8B2]">Pigmentação de Barba</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-[#B8B8B2]">R$ 30,00</td>
+<td class="py-3.5 px-4 text-[#7D7D76]">R$ 5,00</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#2B2B29] text-[#7D7D76]">
+                      Oculto
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#2B2B29] text-[#7D7D76]">
+                      Inativo
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="inline-flex items-center gap-3">
+<button class="text-xs text-[#B8B8B2] hover:text-[#F4F4F0]" type="button">Editar</button>
+<button class="text-xs text-emerald-400 hover:text-emerald-300" type="button">Ativar</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Pagination Footer Info -->
+<div class="flex items-center justify-between text-xs text-[#7D7D76] pt-1">
+<span>Mostrando 5 de 5 serviços cadastrados</span>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded border border-[#3F3F3B] opacity-50 cursor-not-allowed" disabled="" type="button">Anterior</button>
+<span class="px-2 py-1 font-semibold text-[#F4F4F0]">1</span>
+<button class="px-2.5 py-1 rounded border border-[#3F3F3B] opacity-50 cursor-not-allowed" disabled="" type="button">Próximo</button>
+</div>
+</div>
+</main>
+<!-- BEGIN: SideDrawer -->
+<!-- Side Drawer: "Editar serviço - Corte Degradê" -->
+<aside class="w-96 bg-[#222220] border-l border-[#3F3F3B] flex flex-col shrink-0 z-10 shadow-2xl" data-purpose="edit-service-drawer">
+<!-- Drawer Header -->
+<div class="px-6 py-5 border-b border-[#3F3F3B] flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-semibold text-base text-[#F4F4F0]">Editar serviço</h2>
+<span class="px-2 py-0.5 text-[10px] font-mono rounded bg-[#2B2B29] text-[#B8B8B2] border border-[#3F3F3B]">#SRV-01</span>
+</div>
+<p class="text-xs text-[#B8B8B2] mt-0.5">Atualize os dados e regras de venda</p>
+</div>
+<button aria-label="Fechar painel" class="p-1 rounded-lg text-[#B8B8B2] hover:text-[#F4F4F0] hover:bg-[#2B2B29] transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Drawer Form Body -->
+<form class="flex-1 overflow-y-auto p-6 space-y-5" onsubmit="event.preventDefault();">
+<!-- Field: Nome do Serviço -->
+<div>
+<label class="block text-xs font-medium text-[#F4F4F0] mb-1.5" for="service-name">
+              Nome do serviço <span class="text-rose-400">*</span>
+</label>
+<input class="w-full px-3 py-2 text-sm bg-[#2B2B29] border border-[#3F3F3B] rounded-lg text-[#F4F4F0] focus:outline-none focus:border-[#B8B8B2] focus:ring-0" id="service-name" type="text" value="Corte Degradê"/>
+</div>
+<!-- Field: Descrição -->
+<div>
+<label class="block text-xs font-medium text-[#F4F4F0] mb-1.5" for="service-desc">
+              Descrição <span class="text-[#7D7D76] font-normal">(opcional)</span>
+</label>
+<textarea class="w-full px-3 py-2 text-sm bg-[#2B2B29] border border-[#3F3F3B] rounded-lg text-[#F4F4F0] focus:outline-none focus:border-[#B8B8B2] focus:ring-0 resize-none" id="service-desc" rows="3">Execução clássica ou moderna na tesoura e máquina</textarea>
+</div>
+<!-- Price and Consumable Costs Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-[#F4F4F0] mb-1.5" for="service-price">
+                Preço de venda <span class="text-rose-400">*</span>
+</label>
+<input class="w-full px-3 py-2 text-sm bg-[#2B2B29] border border-[#3F3F3B] rounded-lg text-[#F4F4F0] font-semibold focus:outline-none focus:border-[#B8B8B2] focus:ring-0" id="service-price" type="text" value="R$ 45,00"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-[#F4F4F0] mb-1.5" for="service-cost">
+                Custo direto
+              </label>
+<input class="w-full px-3 py-2 text-sm bg-[#2B2B29] border border-[#3F3F3B] rounded-lg text-[#B8B8B2] focus:outline-none focus:border-[#B8B8B2] focus:ring-0" id="service-cost" type="text" value="R$ 4,50"/>
+</div>
+</div>
+<p class="text-[11px] text-[#7D7D76] -mt-2">
+            Valor de insumos consumidos diretamente durante o corte.
+          </p>
+<hr class="border-[#3F3F3B] my-4"/>
+<!-- Toggles Section -->
+<div class="space-y-4">
+<!-- Toggle: Visível na Vitrine Digital -->
+<div class="flex items-center justify-between">
+<div>
+<span class="block text-xs font-medium text-[#F4F4F0]">Visível na Vitrine Digital</span>
+<span class="block text-[11px] text-[#7D7D76]">Permite exibição no catálogo público de serviços</span>
+</div>
+<button aria-checked="true" class="w-11 h-6 bg-[#F4F4F0] rounded-full relative inline-flex items-center shrink-0 cursor-pointer transition-colors p-0.5" role="switch" type="button">
+<span class="w-5 h-5 bg-[#181817] rounded-full transform translate-x-5 transition-transform"></span>
+</button>
+</div>
+<!-- Toggle: Serviço Ativo -->
+<div class="flex items-center justify-between">
+<div>
+<span class="block text-xs font-medium text-[#F4F4F0]">Serviço ativo</span>
+<span class="block text-[11px] text-[#7D7D76]">Habilita lançamento imediato no caixa/PDV</span>
+</div>
+<button aria-checked="true" class="w-11 h-6 bg-[#F4F4F0] rounded-full relative inline-flex items-center shrink-0 cursor-pointer transition-colors p-0.5" role="switch" type="button">
+<span class="w-5 h-5 bg-[#181817] rounded-full transform translate-x-5 transition-transform"></span>
+</button>
+</div>
+</div>
+<!-- Bottom Actions Inside Form -->
+<div class="pt-6 space-y-2 border-t border-[#3F3F3B] mt-6">
+<button class="w-full py-2.5 px-4 rounded-lg bg-[#F4F4F0] hover:bg-[#E5E5DF] text-[#181817] font-semibold text-xs tracking-wide transition-colors" type="submit">
+              Salvar alterações
+            </button>
+<button class="w-full py-2 px-4 rounded-lg bg-transparent hover:bg-rose-500/10 text-rose-400 font-medium text-xs transition-colors text-center" type="button">
+              Desativar serviço
+            </button>
+</div>
+</form>
+</aside>
+<!-- END: SideDrawer -->
+</div>
+</div>
+<!-- END: MainContentWrapper -->
+</body></html>

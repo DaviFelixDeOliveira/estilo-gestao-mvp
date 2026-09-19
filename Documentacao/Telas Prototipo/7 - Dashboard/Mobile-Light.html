@@ -1,0 +1,701 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Dashboard — Estilo e Gestão</title>
+  <style>
+    :root {
+      --bg: #F4F4F0;
+      --surface: #FFFFFF;
+      --surface-2: #E9E9E4;
+      --surface-3: #F8F8F4;
+      --text: #2F2F2D;
+      --muted: #666662;
+      --border: #E2E2DD;
+      --primary: #2F2F2D;
+      --primary-hover: #3A3A38;
+      --danger: #B42318;
+      --danger-bg: #FEECEB;
+      --warning: #B54708;
+      --warning-bg: #FFF4E5;
+      --success: #2F6B4F;
+      --success-bg: #EAF5EF;
+      --info: #175CD3;
+      --info-bg: #EAF3FF;
+      --shadow: 0 12px 32px rgba(47,47,45,.08);
+      --radius: 14px;
+    }
+    [data-theme="dark"] {
+      --bg: #181817;
+      --surface: #222220;
+      --surface-2: #2B2B29;
+      --surface-3: #1E1E1C;
+      --text: #F4F4F0;
+      --muted: #B8B8B2;
+      --border: #3F3F3B;
+      --primary: #F4F4F0;
+      --primary-hover: #E9E9E4;
+      --danger: #F97066;
+      --danger-bg: #4A1D1A;
+      --warning: #FDB022;
+      --warning-bg: #4A2C0A;
+      --success: #6FB892;
+      --success-bg: #173B2D;
+      --info: #53B1FD;
+      --info-bg: #12365A;
+      --shadow: 0 16px 38px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    .icon { display: block; flex: none; }
+
+    .mobile {
+      min-height: 100dvh;
+      padding-bottom: 92px; /* space for fixed bottom navigation */
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Compact Mobile Header (approved architecture) */
+    .mobile-header {
+      height: 62px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .mobile-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: var(--primary);
+      color: var(--surface);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+    [data-theme="dark"] .brand-mark { color: #181817; }
+    .mobile-title {
+      font-size: 16px;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+    }
+
+    /* Fixed Bottom Navigation (exact 4 approved destinations) */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 74px;
+      padding: 7px 6px max(7px, env(safe-area-inset-bottom));
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 40;
+    }
+    .bottom-item {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 0;
+      padding: 4px 0;
+      text-decoration: none;
+    }
+    .bottom-item.active {
+      color: var(--text);
+      background: var(--surface-3);
+    }
+    .bottom-item .icon {
+      width: 19px;
+      height: 19px;
+    }
+
+    /* Content Area */
+    .mobile-content {
+      padding: 18px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Welcome Onboarding Box */
+    .onboarding-state-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .onboarding-state-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+    }
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      margin-bottom: 6px;
+    }
+    .state-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 0 0 5px;
+      letter-spacing: -0.01em;
+    }
+    .state-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin: 0 0 14px;
+    }
+
+    .btn-mobile-primary {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--surface);
+      border: 0;
+      font-size: 13px;
+      font-weight: 750;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    [data-theme="dark"] .btn-mobile-primary { color: #181817; }
+
+    /* Filter Selector Mobile (Chips with horizontal scroll) */
+    .filter-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex: none;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .filter-chip.active {
+      background: var(--surface-2);
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
+    /* Financial Indicators Grid (2 columns on mobile) */
+    .mobile-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100px;
+    }
+    .metric-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .metric-empty-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--muted);
+      opacity: 0.7;
+      margin: 8px 0 3px;
+    }
+    .metric-hint {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    /* Operational Grid 2x2 */
+    .mobile-op-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .op-mini-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .op-mini-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--surface-3);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .op-mini-copy { flex: 1; min-width: 0; }
+    .op-mini-title {
+      font-size: 10px;
+      font-weight: 750;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+    .op-mini-num {
+      font-size: 15px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    /* Chart Container Mobile */
+    .mobile-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .mobile-panel-head {
+      margin-bottom: 14px;
+    }
+    .mobile-panel-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin: 0 0 2px;
+    }
+    .mobile-panel-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .mobile-chart-empty {
+      border: 1px dashed var(--border);
+      background: var(--surface-3);
+      border-radius: 11px;
+      padding: 24px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .chart-empty-txt {
+      font-size: 12px;
+      font-weight: 750;
+      margin: 0 0 4px;
+    }
+    .chart-empty-sub {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin: 0;
+      max-width: 280px;
+    }
+
+    /* Start Operating Actions on Mobile */
+    .mobile-action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-action-item {
+      min-height: 52px;
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .mobile-action-item:active {
+      background: var(--surface-2);
+    }
+    .action-badge-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .action-text-box { flex: 1; min-width: 0; }
+    .action-txt-title { font-size: 12px; font-weight: 750; }
+    .action-txt-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+    /* Inventory Status Mobile */
+    .stock-clean-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .stock-icon-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--success-bg);
+      color: var(--success);
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    .stock-copy-txt {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .stock-bold { color: var(--text); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="mobile">
+    <!-- Compact Mobile Header -->
+    <header class="mobile-header">
+      <div class="mobile-brand">
+        <div class="brand-mark">E&amp;G</div>
+        <div class="mobile-title">Dashboard</div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Aparência">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+        <button class="icon-btn" aria-label="Conta">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21a7 7 0 0 0-14 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Body Content -->
+    <main class="mobile-content">
+      <!-- Onboarding Complete State -->
+      <section class="onboarding-state-card">
+        <span class="state-badge">
+          <svg class="icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Onboarding concluído
+        </span>
+        <h1 class="state-title">Barbearia pronta para operar</h1>
+        <p class="state-desc">
+          Seu espaço está configurado. Registre a primeira venda no balcão ou lance uma despesa para alimentar seus indicadores.
+        </p>
+        <button class="btn-mobile-primary" type="button">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Abrir nova comanda
+        </button>
+      </section>
+
+      <!-- Period Filter Selector (Touch-friendly chips) -->
+      <div class="filter-scroll" role="tablist" aria-label="Filtro de período">
+        <button class="filter-chip active" role="tab">Hoje</button>
+        <button class="filter-chip" role="tab">Semana</button>
+        <button class="filter-chip" role="tab">Mês</button>
+        <button class="filter-chip" role="tab">Ano</button>
+        <button class="filter-chip" role="tab">Personalizado</button>
+      </div>
+
+      <!-- Financial Metrics Grid (Empty state honestly rendered without fake R$ 0,00) -->
+      <section class="mobile-metrics-grid" aria-label="Indicadores financeiros">
+        <div class="metric-box">
+          <div class="metric-label">
+            <span class="">Faturamento</span>
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <div>
+            <div class="metric-empty-value">— —</div>
+            <div class="metric-hint">Aguardando vendas</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">
+            <span class="">Entradas</span>
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+          </div>
+          <div>
+            <div class="metric-empty-value">— —</div>
+            <div class="metric-hint">Nenhum recebimento</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">
+            <span class="">Saídas</span>
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+          </div>
+          <div>
+            <div class="metric-empty-value">— —</div>
+            <div class="metric-hint">Sem despesas pagas</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">
+            <span class="">Resultado</span>
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path><path d="M12 16V8"></path></svg>
+          </div>
+          <div>
+            <div class="metric-empty-value">— —</div>
+            <div class="metric-hint">Saldo inicial neutro</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Operational Counters 2x2 -->
+      <section class="mobile-op-grid" aria-label="Indicadores operacionais">
+        <div class="op-mini-card">
+          <div class="op-mini-icon">
+            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
+          </div>
+          <div class="op-mini-copy">
+            <div class="op-mini-title">Serviços</div>
+            <div class="op-mini-num">0</div>
+          </div>
+        </div>
+
+        <div class="op-mini-card">
+          <div class="op-mini-icon">
+            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>
+          </div>
+          <div class="op-mini-copy">
+            <div class="op-mini-title">Bebidas</div>
+            <div class="op-mini-num">0</div>
+          </div>
+        </div>
+
+        <div class="op-mini-card">
+          <div class="op-mini-icon">
+            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+          </div>
+          <div class="op-mini-copy">
+            <div class="op-mini-title"><span style="letter-spacing: 0.2px;" class="">outros </span>Produtos</div>
+            <div class="op-mini-num">0</div>
+          </div>
+        </div>
+
+        <div class="op-mini-card">
+          <div class="op-mini-icon">
+            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+          <div class="op-mini-copy">
+            <div class="op-mini-title">Estoque baixo</div>
+            <div class="op-mini-num">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chart Empty State Box -->
+      <section class="mobile-panel">
+        <div class="mobile-panel-head">
+          <h2 class="mobile-panel-title">Evolução no período</h2>
+          <div class="mobile-panel-sub">Registro contínuo de atendimentos e caixa</div>
+        </div>
+        <div class="mobile-chart-empty">
+          <div class="chart-icon-wrap">
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="m7 16 4-5 4 3 5-7"></path></svg>
+          </div>
+          <div class="chart-empty-txt">Sem dados para o período</div>
+          <p class="chart-empty-sub">
+            O gráfico de linha começará a desenhar seu faturamento assim que a primeira comanda for finalizada no PDV.
+          </p>
+        </div>
+      </section>
+
+      <!-- Start Operating Action Shortcuts -->
+      <section class="mobile-panel">
+        <div class="mobile-panel-head">
+          <h2 class="mobile-panel-title">Comece a operar</h2>
+          <div class="mobile-panel-sub">Atalhos das tarefas principais do dia a dia</div>
+        </div>
+        <div class="mobile-action-list">
+          <a class="mobile-action-item" href="#">
+            <div class="action-badge-icon">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line><line x1="6" x2="10" y1="15" y2="15"></line></svg>
+            </div>
+            <div class="action-text-box">
+              <div class="action-txt-title">Nova venda</div>
+              <div class="action-txt-sub">Comanda de serviços e balcão</div>
+            </div>
+            <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </a>
+
+          <a class="mobile-action-item" href="#">
+            <div class="action-badge-icon">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V6a2 2 0 0 0-2-2H5a3 3 0 0 0 0 6h15v8a2 2 0 0 1-2 2H5a3 3 0 0 1-3-3V7"></path><path d="M16 14h.01"></path></svg>
+            </div>
+            <div class="action-text-box">
+              <div class="action-txt-title">Cadastrar despesa</div>
+              <div class="action-sub">Aluguel, luz ou reposição</div>
+            </div>
+            <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </a>
+
+          <a class="mobile-action-item" href="#">
+            <div class="action-badge-icon">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+            </div>
+            <div class="action-text-box">
+              <div class="action-txt-title">Gerenciar estoque</div>
+              <div class="action-sub">Entrada de produtos na bancada</div>
+            </div>
+            <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </a>
+
+          <a class="mobile-action-item" href="#">
+            <div class="action-badge-icon">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+            </div>
+            <div class="action-text-box">
+              <div class="action-txt-title">Configurar Vitrine Digital</div>
+              <div class="action-sub">Gerar URL pública para clientes</div>
+            </div>
+            <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- Inventory Check State -->
+      <section class="mobile-panel">
+        <div class="mobile-panel-head">
+          <h2 class="mobile-panel-title">Situação do estoque</h2>
+          <div class="mobile-panel-sub">Monitoramento de produtos e bebidas</div>
+        </div>
+        <div class="stock-clean-box">
+          <div class="stock-icon-check">
+            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div class="stock-copy-txt">
+            <span class="stock-bold">Nenhum alerta de estoque baixo.</span><br>
+            Os produtos cadastrados estão regulares ou aguardando primeiro lançamento.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fixed Bottom Navigation (strictly 4 destinations) -->
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button class="bottom-item active" type="button">
+        <svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+        <span class="">Dashboard</span>
+      </button>
+
+      <button class="bottom-item" type="button">
+        <svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line><line x1="6" x2="10" y1="15" y2="15"></line></svg>
+        <span class="">PDV</span>
+      </button>
+
+      <button class="bottom-item" type="button">
+        <svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+        <span class="">Operação</span>
+      </button>
+
+      <button class="bottom-item" type="button">
+        <svg class="icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        <span class="">Configurações</span>
+      </button>
+    </nav>
+  </div>
+
+
+
+
+</body></html>

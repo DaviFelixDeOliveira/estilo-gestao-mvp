@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificar E-mail - Mobile - Modo Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              950: '#2F2F2D',
+              800: '#3A3A38',
+              600: '#666662',
+            },
+            surface: {
+              50: '#F4F4F0',
+              100: '#E9E9E4',
+              white: '#FFFFFF',
+            },
+            accent: {
+              green: '#2F6B4F',
+              red: '#B42318',
+              amber: '#B54708',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Remove setas do input number */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-surface-50 text-brand-950 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-950 selection:text-white relative overflow-x-hidden">
+  <!-- Imagem de fundo sutil com fotografia de barbearia clara -->
+  <div class="fixed inset-0 pointer-events-none opacity-20 z-0">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWQ1uR5wzc9QjpqZuSjEe_S5QjimtI5lJlHectz2XgtYnu9c169Xc-iy98bIsXa-glY7uYlzIfYo_RuzosVDQhSvYutad3dDzhetvUG94VgHCyifEKOtsypJU_NWHWxUPBwrRQWzsK9k66GCO2-__Yr_KTD5-Kz8jK0XR9JW2CCEn6HsvZSqr42s-QFAqKQz1GgH3SKyivgqv_fAvJbR7JudMhZ-YoeUsl4XAcl5jTShHCh-jzAa9fjua0Z_weDZiaeXE" alt="Barbearia Estilo e Gestão" class="w-full h-full object-cover object-center filter blur-[1px]">
+    <div class="absolute inset-0 bg-surface-50/80 backdrop-blur-[2px]"></div>
+  </div>
+
+  <!-- Cabeçalho Mobile -->
+  <header class="relative z-10 w-full px-5 pt-8 pb-4 flex items-center justify-between">
+    <div class="w-8"></div>
+    <div class="flex flex-col items-center">
+      <!-- Logo com Texto Preto para Modo Claro -->
+      <div class="w-24 h-24 flex items-center justify-center">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW2f-3E4xGSYyF2wfOS0Z_X59Z1igR0J5_YOHQxHCT6PrOvP0H2eMuBSzZBzpsDrPOVnSLuRx3NdzY3h_rnm663TdV_4xIpokfu93qrScK7W9FVG01Tc8K9bmODcbpd7rafunXma4PScmwOrr5DEqEUMws4wXOg92AUfiExOAj3kDt5exZa3BcVqjjgeRzu7LLskO9g6GfDFfCaj_b0wuY0PCT-bsYuf7r-ZVpZ9SyIAoSXSbcpB9qDNHxhMDbkVOXuxo" alt="Logo Estilo e Gestão" class="w-full h-full object-contain">
+      </div>
+    </div>
+    <!-- Botão de alternância de tema com ícone de Lua -->
+    <div class="w-8 flex justify-end">
+      <button type="button" aria-label="Alternar para modo escuro" class="w-8 h-8 rounded-full bg-surface-100/80 border border-surface-100 flex items-center justify-center text-brand-600 hover:text-brand-950 transition-colors shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="relative z-10 flex-1 flex flex-col justify-center px-4 py-4 w-full max-w-[420px] mx-auto">
+    <!-- Card Principal -->
+    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 shadow-sm border border-surface-100 text-center">
+      <!-- Ícone representativo de E-mail / Segurança -->
+      <div class="w-12 h-12 rounded-xl bg-surface-50 border border-surface-100 flex items-center justify-center mx-auto mb-4 text-brand-950">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+      </div>
+
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-brand-950 mb-2">
+        Verifique seu e-mail
+      </h1>
+
+      <p class="text-xs sm:text-sm text-brand-600 leading-relaxed mb-1">
+        Enviamos um código de 6 dígitos para o seu e-mail. Digite o código abaixo para confirmar sua conta.
+      </p>
+
+      <!-- Badge com e-mail cadastrado -->
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-50 border border-surface-100 rounded-full my-3">
+        <span class="text-xs font-semibold text-brand-950">davi@email.com</span>
+      </div>
+
+      <!-- Feedback dinâmico de Reenvio / Erros (demonstrativo) -->
+      <div id="alert-container" class="hidden my-3 p-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5"></div>
+
+      <!-- Formulário de Código de 6 Dígitos -->
+      <form id="otp-form" class="mt-4" onsubmit="event.preventDefault(); handleSubmit();">
+        <div class="flex justify-between items-center gap-1.5 sm:gap-2 mb-6" id="otp-inputs">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all" autofocus>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-surface-100 bg-surface-50 text-brand-950 focus:border-brand-950 focus:bg-white focus:outline-none transition-all">
+        </div>
+
+        <!-- Botão Principal de Verificação -->
+        <button id="verify-btn" type="button" onclick="handleSubmit()" disabled class="w-full py-3.5 px-4 rounded-xl bg-brand-950 text-white font-semibold text-sm tracking-wide shadow-sm hover:bg-brand-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
+          <span id="btn-text">Verificar e-mail</span>
+          <svg id="btn-spinner" class="hidden animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Reenvio de Código -->
+      <div class="mt-6 pt-5 border-t border-surface-100/80">
+        <p class="text-xs text-brand-600 mb-1.5">Não recebeu o código?</p>
+        <button id="resend-btn" onclick="handleResend()" type="button" class="text-xs font-semibold text-brand-950 hover:underline transition-all">
+          Reenviar código
+        </button>
+        <p id="countdown-text" class="hidden text-xs text-brand-600 font-medium mt-1">
+          Reenviar código em <span id="countdown-timer" class="font-bold text-brand-950">00:45</span>
+        </p>
+      </div>
+
+      <!-- Ação Secundária: Voltar e Alterar E-mail -->
+      <div class="mt-5">
+        <a href="#voltar" class="text-xs text-brand-600 hover:text-brand-950 transition-colors inline-flex items-center gap-1 font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+          E-mail incorreto? Voltar e alterar
+        </a>
+      </div>
+
+      <!-- Demonstração de Estados (para inspeção do design system) -->
+      <div class="mt-8 pt-4 border-t border-dashed border-surface-100 flex flex-wrap justify-center gap-1.5 text-[10px] text-brand-600">
+        <span class="font-bold text-brand-950">Estados:</span>
+        <button onclick="simulateState('idle')" class="px-2 py-0.5 rounded bg-surface-50 border border-surface-100 hover:bg-surface-100">Normal</button>
+        <button onclick="simulateState('loading')" class="px-2 py-0.5 rounded bg-surface-50 border border-surface-100 hover:bg-surface-100">Carregando</button>
+        <button onclick="simulateState('invalid')" class="px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200">Incorreto</button>
+        <button onclick="simulateState('expired')" class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">Expirado</button>
+        <button onclick="simulateState('resent')" class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">Reenviado</button>
+        <button onclick="simulateState('success')" class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Sucesso</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé discreto -->
+  <footer class="relative z-10 py-5 text-center text-xs text-brand-600">
+    <p>Estilo e Gestão &bull; Sistema de Gestão para Barbearias</p>
+  </footer>
+
+  <script>
+    const inputs = document.querySelectorAll('.otp-digit');
+    const verifyBtn = document.getElementById('verify-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const alertBox = document.getElementById('alert-container');
+    const resendBtn = document.getElementById('resend-btn');
+    const countdownText = document.getElementById('countdown-text');
+    const countdownTimer = document.getElementById('countdown-timer');
+
+    // Auto-avanço, recuo e validação de dígitos
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val ? val[val.length - 1] : '';
+
+        if (e.target.value && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+        checkFullCode();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+
+      // Suporte à colagem do código completo
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+        const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+        if (digits) {
+          digits.split('').forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          if (digits.length === 6) {
+            inputs[5].focus();
+          } else if (inputs[digits.length]) {
+            inputs[digits.length].focus();
+          }
+          checkFullCode();
+        }
+      });
+    });
+
+    function checkFullCode() {
+      const code = Array.from(inputs).map(i => i.value).join('');
+      if (code.length === 6) {
+        verifyBtn.disabled = false;
+      } else {
+        verifyBtn.disabled = true;
+      }
+    }
+
+    function handleSubmit() {
+      if (verifyBtn.disabled) return;
+      simulateState('loading');
+      setTimeout(() => {
+        simulateState('success');
+      }, 1500);
+    }
+
+    let timerInterval = null;
+    function handleResend() {
+      simulateState('resent');
+      resendBtn.classList.add('hidden');
+      countdownText.classList.remove('hidden');
+      let seconds = 45;
+      countdownTimer.textContent = '00:45';
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds--;
+        const formatted = seconds < 10 ? `00:0${seconds}` : `00:${seconds}`;
+        countdownTimer.textContent = formatted;
+        if (seconds <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.classList.remove('hidden');
+          countdownText.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    function simulateState(state) {
+      alertBox.className = "my-3 p-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5";
+      alertBox.classList.remove('hidden');
+      btnSpinner.classList.add('hidden');
+      btnText.textContent = "Verificar e-mail";
+      verifyBtn.disabled = false;
+
+      inputs.forEach(i => {
+        i.classList.remove('border-red-500', 'bg-red-50/50', 'border-emerald-500', 'bg-emerald-50/50');
+      });
+
+      if (state === 'idle') {
+        alertBox.classList.add('hidden');
+        inputs.forEach(i => i.value = '');
+        inputs[0].focus();
+        verifyBtn.disabled = true;
+      } else if (state === 'loading') {
+        alertBox.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+        btnText.textContent = "Verificando...";
+        verifyBtn.disabled = true;
+      } else if (state === 'invalid') {
+        alertBox.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+          <span>O código informado é inválido. Verifique e tente novamente.</span>
+        `;
+        inputs.forEach(i => i.classList.add('border-red-500', 'bg-red-50/50'));
+      } else if (state === 'expired') {
+        alertBox.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+          <span>Este código expirou. Solicite um novo código.</span>
+        `;
+      } else if (state === 'resent') {
+        alertBox.classList.add('bg-blue-50', 'text-blue-700', 'border', 'border-blue-200');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>Um novo código foi enviado para o seu e-mail.</span>
+        `;
+      } else if (state === 'success') {
+        alertBox.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+        alertBox.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>E-mail verificado com sucesso! Redirecionando...</span>
+        `;
+        inputs.forEach(i => i.classList.add('border-emerald-500', 'bg-emerald-50/50'));
+        btnText.textContent = "Confirmado!";
+        verifyBtn.classList.replace('bg-brand-950', 'bg-emerald-700');
+      }
+    }
+  </script>
+</body>
+</html>

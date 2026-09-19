@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Operação / Produtos - Estilo &amp; Gestão</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#F4F4F0',
+              card: '#FFFFFF',
+              border: '#E9E9E4',
+              dark: '#141413',
+              muted: '#73736C',
+              tagBg: '#F0EFEA'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="base-layout">
+    body {
+      background-color: #F4F4F0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="bg-[#F4F4F0] text-[#141413] min-h-screen flex justify-center selection:bg-neutral-800 selection:text-white antialiased">
+<!-- Mobile Viewport Container (Simulando iOS Device max-w-md) -->
+<div class="w-full max-w-[430px] min-h-screen bg-[#F4F4F0] flex flex-col relative pb-28">
+<!-- BEGIN: TopHeader -->
+<!-- Header compacto com logotipo, contexto da seção e ações rápidas de usuário -->
+<header class="sticky top-0 z-30 bg-[#F4F4F0]/95 backdrop-blur-md px-5 pt-3 pb-2 flex items-center justify-between border-b border-[#E9E9E4]/60">
+<div class="flex items-center gap-2.5">
+<!-- Logo Badge Estilo & Gestão -->
+<div class="w-9 h-9 rounded-xl bg-black text-white flex items-center justify-center font-bold text-xs tracking-tight shadow-sm">
+          E&amp;G
+        </div>
+<div>
+<h1 class="text-base font-bold leading-tight text-neutral-900">Operação</h1>
+<p class="text-[11px] font-medium text-neutral-500 tracking-tight">Estilo &amp; Gestão</p>
+</div>
+</div>
+<!-- Ações do Header: Alternador de tema & Perfil -->
+<div class="flex items-center gap-1.5">
+<button aria-label="Alternar tema" class="w-9 h-9 rounded-full flex items-center justify-center text-neutral-600 hover:bg-neutral-200/60 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+</button>
+<button aria-label="Perfil do usuário" class="w-9 h-9 rounded-full bg-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-300/70 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: SegmentedNavigation -->
+<!-- Segment control: Serviços, Produtos (Ativo) e Estoque -->
+<nav aria-label="Seções operacionais" class="px-5 pt-3">
+<div class="bg-[#EBEAE5] p-1 rounded-2xl flex items-center text-[13px] font-semibold text-neutral-600">
+<a class="flex-1 py-2 text-center rounded-xl text-neutral-600 hover:text-neutral-900 transition" href="#">
+          Serviços
+        </a>
+<a class="flex-1 py-2 text-center rounded-xl bg-white text-neutral-900 shadow-sm transition" href="#">
+          Produtos
+        </a>
+<a class="flex-1 py-2 text-center rounded-xl text-neutral-600 hover:text-neutral-900 transition" href="#">
+          Estoque
+        </a>
+</div>
+</nav>
+<!-- END: SegmentedNavigation -->
+<!-- BEGIN: ControlsAndSearchSection -->
+<section class="px-5 pt-3 space-y-3">
+<!-- Subtítulo e Ação Secundária -->
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-xs font-semibold uppercase tracking-wider text-neutral-500">Catálogo</h2>
+<p class="text-[13px] font-bold text-neutral-800">Produtos e Bebidas</p>
+</div>
+<button class="text-xs font-semibold text-neutral-600 bg-white/80 border border-[#E9E9E4] px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-white active:scale-95 transition" type="button">
+<svg class="w-3.5 h-3.5 text-neutral-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h8m-8 6h16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Categorias
+        </button>
+</div>
+<!-- Barra de Pesquisa Mobile -->
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E9E9E4] rounded-2xl text-[14px] placeholder:text-neutral-400 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition" placeholder="Buscar produto ou código..." type="search"/>
+</div>
+<!-- Chips de Filtros com Scroll Horizontal -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-5 px-5">
+<button class="px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-black text-white whitespace-nowrap shadow-sm">
+          Todos (6)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-white text-neutral-700 border border-[#E9E9E4] whitespace-nowrap active:bg-neutral-100 transition">
+          Bebidas (3)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-white text-neutral-700 border border-[#E9E9E4] whitespace-nowrap active:bg-neutral-100 transition">
+          Produtos (3)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-white text-neutral-700 border border-[#E9E9E4] whitespace-nowrap active:bg-neutral-100 transition">
+          Ativos (5)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-white text-neutral-700 border border-[#E9E9E4] whitespace-nowrap active:bg-neutral-100 transition">
+          Inativos (1)
+        </button>
+</div>
+<!-- Botão Primário Adicionar Novo Produto -->
+<button class="w-full bg-black text-white rounded-2xl py-3 px-4 font-semibold text-[14px] flex items-center justify-center gap-2 shadow-sm active:scale-[0.99] transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>Novo Produto</span>
+</button>
+</section>
+<!-- END: ControlsAndSearchSection -->
+<!-- BEGIN: ProductCardList -->
+<main class="px-5 pt-4 space-y-3.5" data-purpose="product-items-container">
+<!-- ITEM 1: Pomada Modeladora Matte -->
+<article class="bg-white rounded-2xl p-4 border border-[#E9E9E4] shadow-sm flex flex-col gap-3 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<!-- Thumbnail estilizado -->
+<div class="relative w-14 h-14 rounded-xl bg-neutral-100 border border-neutral-200 flex flex-col items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-neutral-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -bottom-1.5 bg-neutral-900 text-white text-[9px] font-medium px-1 rounded">Foto</span>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-900 leading-tight">Pomada Modeladora Matte</h3>
+<p class="text-[12px] font-medium text-neutral-500 mt-0.5">Produto • Pomada</p>
+<!-- Badges de status integradas -->
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-100">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Ativo
+                </span>
+<span class="text-[11px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md font-medium">
+                  Vitrine
+                </span>
+</div>
+</div>
+</div>
+<!-- Preço em Destaque à Direita -->
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-extrabold text-neutral-900 leading-tight">R$ 42,00</span>
+</div>
+</div>
+<!-- Rodapé do Card: Estoque e CTA -->
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-neutral-600 font-medium">
+            Estoque: <strong class="text-neutral-900 font-bold">8 un.</strong>
+</span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+<!-- ITEM 2: Cerveja Artesanal IPA 355ml -->
+<article class="bg-white rounded-2xl p-4 border border-[#E9E9E4] shadow-sm flex flex-col gap-3 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="relative w-14 h-14 rounded-xl bg-amber-50/80 border border-amber-200/60 flex items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-amber-700" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M10 2v4M14 2v4m-5 4h6a2 2 0 012 2v8a2 2 0 01-2 2H9a2 2 0 01-2-2v-8a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-900 leading-tight">Cerveja Artesanal IPA 355ml</h3>
+<p class="text-[12px] font-medium text-neutral-500 mt-0.5">Bebida • Long neck</p>
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-100">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Ativo
+                </span>
+<span class="text-[11px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md font-medium">
+                  Vitrine
+                </span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-extrabold text-neutral-900 leading-tight">R$ 14,00</span>
+</div>
+</div>
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-neutral-600 font-medium">
+            Estoque: <strong class="text-neutral-900 font-bold">12 un.</strong>
+</span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+<!-- ITEM 3: Refrigerante Lata 350ml -->
+<article class="bg-white rounded-2xl p-4 border border-[#E9E9E4] shadow-sm flex flex-col gap-3 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="relative w-14 h-14 rounded-xl bg-blue-50/70 border border-blue-200/60 flex items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<rect height="16" rx="3" stroke-width="1.8" width="12" x="6" y="4"></rect>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+</svg>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-900 leading-tight">Refrigerante Lata 350ml</h3>
+<p class="text-[12px] font-medium text-neutral-500 mt-0.5">Bebida • Lata</p>
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-100">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Ativo
+                </span>
+<span class="text-[11px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md font-medium">
+                  Vitrine
+                </span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-extrabold text-neutral-900 leading-tight">R$ 6,00</span>
+</div>
+</div>
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-neutral-600 font-medium">
+            Estoque: <strong class="text-neutral-900 font-bold">24 un.</strong>
+</span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+<!-- ITEM 4: Balm Modelador 100g (Alerta Estoque Baixo) -->
+<article class="bg-white rounded-2xl p-4 border border-amber-200 shadow-sm flex flex-col gap-3 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="relative w-14 h-14 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-amber-700" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="7"></circle>
+<path d="M12 9v3l2 2"></path>
+</svg>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-900 leading-tight">Balm Modelador 100g</h3>
+<p class="text-[12px] font-medium text-neutral-500 mt-0.5">Produto • Óleo/Balm</p>
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-semibold border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  Estoque baixo (2 un.)
+                </span>
+<span class="text-[11px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md font-medium">
+                  Vitrine
+                </span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-extrabold text-neutral-900 leading-tight">R$ 35,00</span>
+</div>
+</div>
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-amber-700 font-semibold flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill-rule="evenodd"></path>
+</svg>
+            Reposição necessária
+          </span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+<!-- ITEM 5: Energético Lata 250ml (Sem Estoque) -->
+<article class="bg-white rounded-2xl p-4 border border-rose-200/80 shadow-sm flex flex-col gap-3 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="relative w-14 h-14 rounded-xl bg-rose-50/70 border border-rose-200/60 flex items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-rose-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-900 leading-tight">Energético Lata 250ml</h3>
+<p class="text-[12px] font-medium text-neutral-500 mt-0.5">Bebida • Energético</p>
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[11px] font-semibold border border-rose-200">
+                  Sem estoque (0 un.)
+                </span>
+<span class="text-[11px] text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-md font-medium line-through">
+                  Vitrine
+                </span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-extrabold text-neutral-900 leading-tight">R$ 12,00</span>
+</div>
+</div>
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-rose-600 font-medium">Indisponível na vitrine</span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+<!-- ITEM 6: Cera Fixadora Efeito Brilho (Inativo) -->
+<article class="bg-white/80 rounded-2xl p-4 border border-[#E9E9E4] shadow-sm flex flex-col gap-3 opacity-80 transition">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="relative w-14 h-14 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center flex-shrink-0">
+<svg class="w-7 h-7 text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 3v18"></path>
+</svg>
+</div>
+<div>
+<h3 class="font-bold text-[15px] text-neutral-700 leading-tight">Cera Fixadora Efeito Brilho</h3>
+<p class="text-[12px] font-medium text-neutral-400 mt-0.5">Produto • Cera</p>
+<div class="flex items-center gap-1.5 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-neutral-400"></span>
+                  Inativo
+                </span>
+<span class="text-[11px] text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-md font-medium">
+                  Oculto
+                </span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">Preço</span>
+<span class="text-[18px] font-bold text-neutral-500 leading-tight">R$ 38,00</span>
+</div>
+</div>
+<div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-[12px]">
+<span class="text-neutral-400 font-medium">Desativado das vendas</span>
+<button class="inline-flex items-center gap-1 font-semibold text-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/80 px-3 py-1.5 rounded-lg active:scale-95 transition" type="button">
+            Editar
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</article>
+</main>
+<!-- END: ProductCardList -->
+<!-- BEGIN: BottomNavigation -->
+<!-- Barra inferior padrão iOS/Mobile preservando consistência exata com SCREEN_3 -->
+<nav aria-label="Navegação Principal" class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/95 backdrop-blur-md border-t border-[#E9E9E4] px-6 pt-2.5 pb-6 z-40 flex justify-between items-center text-[10px] font-medium text-neutral-500 shadow-lg">
+<!-- Início / Dashboard -->
+<a class="flex flex-col items-center gap-1 py-0.5 px-2 hover:text-neutral-900 transition" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="7" rx="1.5" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="14"></rect>
+<rect height="7" rx="1.5" width="7" x="3" y="14"></rect>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- PDV -->
+<a class="flex flex-col items-center gap-1 py-0.5 px-2 hover:text-neutral-900 transition" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="20" rx="2" width="16" x="4" y="2"></rect>
+<line x1="8" x2="16" y1="6" y2="6"></line>
+<line x1="16" x2="16" y1="14" y2="18"></line>
+<line x1="8" x2="8" y1="10" y2="10.01"></line>
+<line x1="12" x2="12" y1="10" y2="10.01"></line>
+<line x1="16" x2="16" y1="10" y2="10.01"></line>
+<line x1="8" x2="8" y1="14" y2="14.01"></line>
+<line x1="12" x2="12" y1="14" y2="14.01"></line>
+<line x1="8" x2="8" y1="18" y2="18.01"></line>
+<line x1="12" x2="12" y1="18" y2="18.01"></line>
+</svg>
+<span>PDV</span>
+</a>
+<!-- Operação (Ativo) -->
+<a class="flex flex-col items-center gap-1 py-0.5 px-2 text-neutral-950 font-bold transition" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Operação</span>
+</a>
+<!-- Ajustes -->
+<a class="flex flex-col items-center gap-1 py-0.5 px-2 hover:text-neutral-900 transition" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Ajustes</span>
+</a>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+</body></html>

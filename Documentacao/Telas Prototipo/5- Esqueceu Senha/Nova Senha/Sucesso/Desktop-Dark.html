@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nova Senha - Estilo e Gestão</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          colors: {
+            brand: {
+              red: '#D32F2F',
+              'red-hover': '#B71C1C',
+              'red-glow': 'rgba(211, 47, 47, 0.4)',
+              dark: '#111215',
+              surface: '#18191E',
+              input: '#1F2128',
+              border: '#2C2E38'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-decorations">
+    .red-blue-bar {
+      background: linear-gradient(90deg, #D32F2F 0%, #D32F2F 50%, #2563EB 50%, #2563EB 100%);
+    }
+</style>
+</head>
+<body class="h-full bg-[#111215] text-gray-200 font-sans antialiased select-none overflow-x-hidden">
+<!-- BEGIN: MainContainer -->
+<main class="min-h-screen w-full flex flex-col lg:flex-row">
+<!-- BEGIN: LeftHeroSection -->
+<section class="relative hidden lg:flex lg:w-7/12 xl:w-3/5 flex-col justify-between p-12 xl:p-16 overflow-hidden bg-black" data-purpose="cinematic-hero-showcase">
+<!-- Background Image with visible dark ambiance -->
+<img alt="Barbearia Estilo e Gestão - Cenário" class="absolute inset-0 w-full h-full object-cover object-center opacity-90 scale-100 filter brightness-105 contrast-105 transition-transform duration-1000 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDlLEHVyZK_VuM6IDjEQVhKIxcBaX4AiZGWBjkNOwPtxpiI86ekaTcFBgcgtYgJyoYAV0y7vWGTeBIQq28jNiujwnulJDma1HvR0dMuwG2_DYwWUnDfLM6n3vC2ZEj8o0kEEVXc_FXzvvIucSzC4CyCtFQKGB7OB2WqczXS6iXMCODUjsoy1t2slBa88vgpaPjFTTmDVzhLJFSmF0CwX4QqvJcxv2eyc0Otmk0Sbw7wKp6JG6i7V3DSuUSEaGPbQX2RX8"/>
+<!-- Gradients overlay for contrast and photography visibility -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#111215]/80 via-[#111215]/20 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-[#111215]/40 via-transparent to-[#111215]/70"></div>
+<!-- Soft ambient neon reflections -->
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-12 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Top Tag Badge -->
+<div class="relative z-10">
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1e2029]/80 border border-white/10 backdrop-blur-md text-[11px] font-semibold tracking-wider text-gray-300 uppercase">
+<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          Gestão Para Barbearias
+        </div>
+</div>
+<!-- Hero Headline -->
+<div class="relative z-10 max-w-xl mb-4">
+<div class="flex items-center gap-1.5 mb-6">
+<div class="w-6 h-1 bg-[#D32F2F] rounded-full"></div>
+<div class="w-6 h-1 bg-[#2563EB] rounded-full"></div>
+</div>
+<h1 class="font-serif text-3xl sm:text-4xl xl:text-5xl font-bold tracking-tight text-white leading-tight uppercase mb-5">RECUPERE SEU ACESSO, COM TOTAL SEGURANÇA.</h1>
+<p class="text-gray-400 text-sm xl:text-base leading-relaxed max-w-md font-normal">
+          Organize sua barbearia, acompanhe seu negócio e recupere o controle em um só lugar.
+        </p>
+</div>
+<!-- Watermark -->
+<div class="relative z-10 text-[11px] text-gray-500 tracking-wider">
+        SISTEMA EXCLUSIVO PARA PROFISSIONAIS DA BELEZA © 2026
+      </div>
+</section>
+<!-- END: LeftHeroSection -->
+<!-- BEGIN: RightFormSection -->
+<section class="flex-1 flex flex-col justify-between bg-[#111215] p-6 sm:p-10 md:p-12 xl:p-16 relative overflow-y-auto" data-purpose="recovery-form-panel">
+<!-- Top Utility Header -->
+<div class="flex items-center justify-between w-full max-w-md mx-auto mb-6 sm:mb-8">
+<!-- Logo Card -->
+<div class="w-20 h-20 sm:w-24 sm:h-24 bg-[#18191E] border border-white/5 rounded-2xl flex items-center justify-center p-3 shadow-2xl relative group">
+<div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none"></div>
+<img alt="Estilo e Gestão Logo" class="w-full h-full object-contain filter drop-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5ogxUfu8T-dKJFNLlmnhXoZb28mNdLZOBBS-aUJ0On7E21Iud4LTrreQuS7U9i8j8Xep5D38jGi5OJAGl2ewMtVM0fLZSKsuZj_zY-utHm4bHdZCHNrelqTgSxYqjovyPAlbm5SIXIud3P22qXlcotq7mJ9S_RHB8aU997g1XgRm9VRZOYTJDcQZHnQhC2PMDxyhEuAs7xzSWnu3VCvhF4Iym_RDjBhN9-DNHOnh0DiiMP9Xvcw7nLv8ADXiisQD0nbo"/>
+</div>
+<!-- Theme Mode Toggle Button -->
+<button aria-label="Alternar tema de iluminação" class="w-10 h-10 rounded-xl bg-[#18191E] border border-white/5 flex items-center justify-center text-gray-400 hover:text-amber-400 hover:border-amber-400/20 transition-colors shadow-lg" type="button">
+<svg aria-hidden="true" class="lucide lucide-sun w-4 h-4" data-lucide="sun" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+</button>
+</div>
+<!-- Center Form Content Container -->
+<div class="w-full max-w-md mx-auto my-auto space-y-5">
+<!-- Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#18191E] border border-white/5 text-[11px] font-semibold tracking-wider text-gray-300 uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+          Recuperação de Acesso
+        </div>
+<!-- Title & Subtitle -->
+<div class="space-y-1.5">
+<h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Crie uma nova senha
+          </h2>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Agora defina uma nova senha para acessar sua conta com segurança.
+          </p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-4 pt-1" method="POST" onsubmit="event.preventDefault();">
+<!-- Nova Senha -->
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-wider text-gray-300" for="new-password">
+              Nova Senha
+            </label>
+<div class="relative rounded-xl shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+<svg aria-hidden="true" class="lucide lucide-lock w-4 h-4" data-lucide="lock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+</div>
+<input class="block w-full rounded-xl bg-[#1F2128] border border-white/5 py-3 pl-10 pr-10 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all outline-none" id="new-password" placeholder="Digite sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-white transition-colors" type="button">
+<svg aria-hidden="true" class="lucide lucide-eye w-4 h-4" data-lucide="eye" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<!-- Confirmar Nova Senha -->
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-wider text-gray-300" for="confirm-password">
+              Confirmar Nova Senha
+            </label>
+<div class="relative rounded-xl shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+<svg aria-hidden="true" class="lucide lucide-shield-check w-4 h-4" data-lucide="shield-check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+</div>
+<input class="block w-full rounded-xl bg-[#1F2128] border border-white/5 py-3 pl-10 pr-10 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all outline-none" id="confirm-password" placeholder="Confirme sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-white transition-colors" type="button">
+<svg aria-hidden="true" class="lucide lucide-eye w-4 h-4" data-lucide="eye" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<!-- Password Rules Box -->
+<div class="p-3.5 rounded-xl bg-[#18191E] border border-white/5 space-y-2"><span class="block text-[11px] font-bold uppercase tracking-wider text-gray-300">A senha deve conter:</span>
+<div class="space-y-1.5 text-xs" id="pwd-checklist">
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-len">
+<svg class="w-3.5 h-3.5 rule-icon shrink-0" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line><line x1="9" x2="15" y1="9" y2="15"></line></svg>
+<span class="">Mínimo de 8 caracteres</span>
+</div>
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-letter">
+<svg class="w-3.5 h-3.5 rule-icon shrink-0" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line><line x1="9" x2="15" y1="9" y2="15"></line></svg>
+<span class="">Pelo menos 1 letra</span>
+</div>
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-num">
+<svg class="w-3.5 h-3.5 rule-icon shrink-0" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line><line x1="9" x2="15" y1="9" y2="15"></line></svg>
+<span class="">Pelo menos 1 número</span>
+</div>
+</div></div>
+<!-- Submit Button -->
+<button class="w-full flex items-center justify-center gap-2 rounded-xl bg-[#D32F2F] text-white font-medium py-3.5 px-4 text-sm transition-all duration-200 shadow-lg shadow-red-900/30 opacity-50 cursor-not-allowed pointer-events-none" disabled="" id="submit-pwd-btn" type="submit">
+<span class="">Salvar nova senha</span>
+<svg class="lucide lucide-arrow-right w-4 h-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+</button>
+<!-- Back to Login Navigation Link -->
+<div class="pt-1 text-center">
+<a class="inline-flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors group" href="#">
+<svg aria-hidden="true" class="lucide lucide-arrow-left w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" data-lucide="arrow-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+<span class="">Voltar para o login</span>
+</a>
+</div>
+</form>
+<!-- Recovery Stepper Indicator (Step 1 Completed, Step 2 Completed, Step 3 Active) -->
+<div class="mt-5 p-3.5 rounded-xl bg-[#18191E] border border-white/5" data-purpose="progress-stepper">
+<div class="grid grid-cols-3 gap-2 relative">
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center text-center space-y-1 relative">
+<div class="w-6 h-6 rounded-full bg-emerald-600/90 text-white flex items-center justify-center text-xs font-bold">
+<svg aria-hidden="true" class="lucide lucide-check w-3.5 h-3.5" data-lucide="check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg>
+</div>
+<span class="text-[11px] font-medium text-emerald-400">Código 6 dígitos</span>
+</div>
+<!-- Step 2: Completed -->
+<div class="flex flex-col items-center text-center space-y-1 relative">
+<div class="w-6 h-6 rounded-full bg-emerald-600/90 text-white flex items-center justify-center text-xs font-bold">
+<svg aria-hidden="true" class="lucide lucide-check w-3.5 h-3.5" data-lucide="check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg>
+</div>
+<span class="text-[11px] font-medium text-emerald-400">Validação</span>
+</div>
+<!-- Step 3: Active -->
+<div class="flex flex-col items-center text-center space-y-1 relative"><div class="w-6 h-6 rounded-full bg-emerald-600/90 text-white flex items-center justify-center text-xs font-bold"><svg class="lucide lucide-check w-3.5 h-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div><span class="text-[11px] font-medium text-emerald-400">Nova senha</span></div>
+</div>
+</div>
+<!-- Trust & Security Bullet -->
+<div class="pt-1 flex items-center justify-center gap-2 text-[11px] text-gray-500 font-medium">
+<svg aria-hidden="true" class="lucide lucide-check w-3.5 h-3.5 text-emerald-500" data-lucide="check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg>
+<span class="">Ambiente de alta criptografia</span>
+<span class="text-gray-700">•</span>
+<span class="">Seus dados sempre protegidos</span>
+</div>
+</div>
+<!-- Form Footer -->
+<footer class="w-full max-w-md mx-auto pt-6 border-t border-white/5 mt-6 text-center" data-purpose="copyright-footer">
+<p class="text-xs text-gray-600">
+          © 2026 Estilo e Gestão. Todos os direitos reservados.
+        </p>
+</footer><script>
+  (function() {
+    const newPwd = document.getElementById('new-password');
+    const confirmPwd = document.getElementById('confirm-password');
+    const submitBtn = document.getElementById('submit-pwd-btn');
+    const ruleLen = document.getElementById('rule-len');
+    const ruleLetter = document.getElementById('rule-letter');
+    const ruleNum = document.getElementById('rule-num');
+
+    const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 rule-icon shrink-0 text-emerald-400"><path d="M20 6 9 17l-5-5"></path></svg>';
+    const uncheckIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 rule-icon shrink-0 text-rose-500"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+
+    function updateRule(elem, text, isValid) {
+      if (isValid) {
+        elem.className = 'flex items-center gap-2 text-emerald-400 transition-colors duration-200';
+        elem.innerHTML = checkIconSvg + '<span>' + text + '</span>';
+      } else {
+        elem.className = 'flex items-center gap-2 text-rose-500 transition-colors duration-200';
+        elem.innerHTML = uncheckIconSvg + '<span>' + text + '</span>';
+      }
+    }
+
+    function validate() {
+      const val = newPwd ? newPwd.value : '';
+      const confirmVal = confirmPwd ? confirmPwd.value : '';
+
+      const isLenValid = val.length >= 8;
+      const isLetterValid = /[a-zA-Z]/.test(val);
+      const isNumValid = /[0-9]/.test(val);
+      const isMatch = val.length > 0 && val === confirmVal;
+
+      if (ruleLen) updateRule(ruleLen, 'Mínimo de 8 caracteres', isLenValid);
+      if (ruleLetter) updateRule(ruleLetter, 'Pelo menos 1 letra', isLetterValid);
+      if (ruleNum) updateRule(ruleNum, 'Pelo menos 1 número', isNumValid);
+
+      const allValid = isLenValid && isLetterValid && isNumValid && isMatch;
+
+      if (submitBtn) {
+        if (allValid) {
+          submitBtn.removeAttribute('disabled');
+          submitBtn.className = 'w-full flex items-center justify-center gap-2 rounded-xl bg-[#D32F2F] hover:bg-[#B71C1C] text-white font-medium py-3.5 px-4 text-sm transition-all duration-200 shadow-lg shadow-red-900/30 hover:shadow-red-800/40 active:scale-[0.99] cursor-pointer';
+        } else {
+          submitBtn.setAttribute('disabled', 'true');
+          submitBtn.className = 'w-full flex items-center justify-center gap-2 rounded-xl bg-[#D32F2F] text-white font-medium py-3.5 px-4 text-sm transition-all duration-200 shadow-lg shadow-red-900/30 opacity-50 cursor-not-allowed pointer-events-none';
+        }
+      }
+    }
+
+    if (newPwd) {
+      newPwd.addEventListener('input', validate);
+    }
+    if (confirmPwd) {
+      confirmPwd.addEventListener('input', validate);
+    }
+
+    // Eye toggle icons
+    const eyeButtons = document.querySelectorAll('button[aria-label="Mostrar senha"]');
+    const eyeOpenSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+    const eyeOffSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>';
+
+    eyeButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const container = btn.closest('.relative');
+        if (!container) return;
+        const input = container.querySelector('input');
+        if (!input) return;
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.innerHTML = eyeOffSvg;
+          btn.setAttribute('aria-label', 'Ocultar senha');
+        } else {
+          input.type = 'password';
+          btn.innerHTML = eyeOpenSvg;
+          btn.setAttribute('aria-label', 'Mostrar senha');
+        }
+      });
+    });
+  })();
+</script>
+</section>
+<!-- END: RightFormSection -->
+</main>
+<!-- END: MainContainer -->
+<script data-purpose="icon-renderer">
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    });
+</script>
+<div class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="success-modal"><div class="bg-[#18191E] border border-white/10 rounded-2xl sm:rounded-3xl p-8 shadow-2xl max-w-md w-full text-center relative flex flex-col items-center space-y-6"><div class="w-16 h-16 rounded-full bg-[#173B2D] border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-950/40"><svg class="text-emerald-400" fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div><div class="space-y-2"><h3 class="text-2xl font-bold text-white tracking-tight">Senha alterada com sucesso</h3><p class="text-sm text-gray-400 leading-relaxed">Agora você pode entrar com sua nova senha.</p></div><a class="w-full flex items-center justify-center gap-2 rounded-xl bg-[#D32F2F] hover:bg-[#B71C1C] text-white font-semibold py-3.5 px-4 text-sm transition-all duration-200 shadow-lg shadow-red-900/30 hover:shadow-red-800/40 active:scale-[0.99]" href="#"><span>Ir para o login</span><svg class="w-4 h-4" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></div></div></body></html>

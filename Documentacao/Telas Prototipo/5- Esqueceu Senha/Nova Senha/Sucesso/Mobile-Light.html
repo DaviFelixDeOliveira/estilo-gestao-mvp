@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nova Senha - Estilo e Gestão</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#C92A2A',
+              redHover: '#B02525',
+              graphite: '#2F2F2D',
+              muted: '#666662',
+              lightBorder: '#E9E9E4',
+              surface: '#FAF9F6',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            card: '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            floating: '0 4px 16px rgba(0, 0, 0, 0.06)',
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="custom-layout">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#F4F3EE] min-h-screen flex items-center justify-center p-0 sm:p-4 text-brand-graphite selection:bg-red-100 selection:text-brand-red">
+<!-- BEGIN: MobileContainer -->
+<div class="relative w-full max-w-[420px] min-h-screen sm:min-h-[850px] sm:rounded-[36px] overflow-hidden bg-[#F4F3EE] flex flex-col justify-between shadow-2xl border border-[#EBEAE4]">
+<!-- Background Barbershop Ambience Image with Soft Overlay -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-70 overflow-hidden"><img alt="Barbershop Background" class="w-full h-full object-cover object-center filter blur-[0.5px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDnEl0jhgSvkjYnWwe1MhcKX6WGg8npgtm9dLt0qVb0S1HRGJyKu2JjeGTWOaGvg3t93JR96MBVo6SeWIcCC8nW5sxS5CNnU9ZnBGbvZflgNY2xN7QCjRIIr-Mcd2qsvvjgCteHb39wlPMqpW-MU5QRPdMyIbQNMLGDv2gwH7YlSXX_j9GbMlMD9R7qpnyVVyPMtOafXZU0c7spNxa968AkL9Ob-YKJk1BnnXlKVvW7K2GR_0R5KauJFA04Am0BeHsWl4"/><div class="absolute inset-0 bg-gradient-to-b from-[#F4F3EE]/80 via-[#F4F3EE]/60 to-[#F4F3EE]/85"></div></div>
+<!-- BEGIN: TopBar -->
+<header class="relative z-10 pt-6 px-5 pb-2 flex items-center justify-between" data-purpose="mobile-top-bar">
+<!-- Back Button -->
+<button aria-label="Voltar" class="w-10 h-10 rounded-full bg-white/90 border border-black/5 shadow-sm flex items-center justify-center text-brand-graphite active:scale-95 transition-transform" type="button">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Center Title -->
+<h1 class="text-xs font-bold tracking-[0.22em] text-brand-graphite uppercase">
+        ESTILO E GESTÃO
+      </h1>
+<!-- Dark Mode / Theme Toggle -->
+<button aria-label="Alternar tema" class="w-10 h-10 rounded-full bg-white/90 border border-black/5 shadow-sm flex items-center justify-center text-brand-graphite active:scale-95 transition-transform" type="button">
+<svg class="h-4 w-4 stroke-brand-graphite" fill="none" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-10 flex-1 px-4 sm:px-6 pt-2 pb-5 flex flex-col justify-center">
+<!-- Logo Floating Box -->
+<div class="flex justify-center mb-3">
+<div class="w-[78px] h-[78px] rounded-2xl bg-white/95 backdrop-blur-md shadow-floating border border-white flex items-center justify-center p-2.5">
+<img alt="Estilo e Gestão" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKU2j6DHfHwqS_skYsVRyAQhfvI4Xd7C77ne5x0wkrNC12LIqDUo8BJUmkFTu1M2Hk4sB9Kh92nNWtEQaPjB3i_hHrkSynzcLPliq0fcGU5MJKXqt6ik-VVuJJxZF20gb529oey44Zwiz4bsDbt-tBsCQ0Q-2v4bp6ELtIiZuxKD2H-8ZbsaNppjLj_0HlMIEdjRDPPpAVU11KNJcCzPsOuiUP_gznJKTBfrmlXEfLq1MLVPmoZ15MRbA0qcHs4dkdA44"/>
+</div>
+</div>
+<!-- Pill Badge -->
+<div class="flex justify-center mb-4">
+<div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/80 backdrop-blur-sm border border-black/5 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-brand-red"></span>
+<span class="text-[10px] font-bold tracking-[0.14em] text-[#4A4A46] uppercase">RECUPERAÇÃO DE ACESSO</span>
+</div>
+</div>
+<!-- Main Card Container -->
+<section class="bg-white rounded-[28px] p-5 sm:p-6 shadow-card border border-black/[0.03]">
+<!-- Header Text Block -->
+<div class="text-center mb-4">
+<h2 class="text-2xl font-extrabold text-brand-graphite tracking-tight mb-1.5">
+            Crie uma nova senha
+          </h2>
+<p class="text-[13px] leading-relaxed text-brand-muted max-w-[280px] mx-auto">
+            Agora defina uma nova senha para acessar sua conta com segurança.
+          </p>
+</div>
+<!-- Form Block -->
+<form class="space-y-3.5" onsubmit="event.preventDefault();">
+<!-- Nova Senha -->
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-wider text-[#4A4A46] mb-1 ml-0.5" for="new-password">
+              NOVA SENHA
+            </label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-gray-400 pointer-events-none flex items-center">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+</span>
+<input class="w-full bg-[#FAF9F7] text-sm text-brand-graphite placeholder-gray-400 pl-10 pr-10 py-2.5 rounded-xl border border-brand-lightBorder focus:border-brand-red focus:ring-1 focus:ring-brand-red focus:bg-white outline-none transition-all duration-200" id="new-password" placeholder="Digite sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute right-3 text-gray-400 hover:text-brand-graphite transition-colors" type="button">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Confirmar Nova Senha -->
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-wider text-[#4A4A46] mb-1 ml-0.5" for="confirm-password">
+              CONFIRMAR NOVA SENHA
+            </label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-gray-400 pointer-events-none flex items-center">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="m9 12 2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full bg-[#FAF9F7] text-sm text-brand-graphite placeholder-gray-400 pl-10 pr-10 py-2.5 rounded-xl border border-brand-lightBorder focus:border-brand-red focus:ring-1 focus:ring-brand-red focus:bg-white outline-none transition-all duration-200" id="confirm-password" placeholder="Confirme sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute right-3 text-gray-400 hover:text-brand-graphite transition-colors" type="button">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Rules checklist box -->
+<div class="bg-[#FAF9F7] border border-brand-lightBorder rounded-xl p-3 space-y-1.5 text-left"><span class="block text-[10px] font-bold uppercase tracking-wider text-[#4A4A46]">A SENHA DEVE CONTER:</span><div class="space-y-1 text-xs"><div class="flex items-center gap-1.5 text-rose-600 font-medium transition-colors" id="rule-length"><span class="icon-rule"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="currentColor" r="4"></circle></svg></span><span class="">Mínimo de 8 caracteres</span></div><div class="flex items-center gap-1.5 text-rose-600 font-medium transition-colors" id="rule-letter"><span class="icon-rule"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="currentColor" r="4"></circle></svg></span><span class="">Pelo menos 1 letra</span></div><div class="flex items-center gap-1.5 text-rose-600 font-medium transition-colors" id="rule-number"><span class="icon-rule"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="currentColor" r="4"></circle></svg></span><span class="">Pelo menos 1 número</span></div></div><div class="hidden text-[11px] font-medium text-rose-600 pt-0.5" id="rule-match">As senhas não coincidem</div></div>
+<!-- Submit Button -->
+<button class="w-full mt-1 bg-brand-red hover:bg-brand-redHover active:scale-[0.99] text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-200 opacity-50 cursor-not-allowed pointer-events-none" disabled="" id="submit-btn" type="submit"><span class="">Salvar nova senha</span><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<!-- Back to Login Action -->
+<div class="text-center pt-1">
+<a class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-graphite transition-colors" href="#">
+<svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Voltar para o login</span>
+</a>
+</div>
+</form>
+<!-- Separator Line -->
+<hr class="border-t border-brand-lightBorder/80 my-4"/>
+<!-- Recovery Stepper (Step 1 Completed, Step 2 Completed, Step 3 Active) -->
+<div class="bg-[#FAF9F7] border border-brand-lightBorder rounded-xl p-3 px-2 sm:px-4" data-purpose="recovery-stepper">
+<div class="flex items-center justify-between">
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center mb-1 shadow-sm">
+<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] font-medium text-emerald-800 text-center leading-tight">
+                Código 6<br/>dígitos
+              </span>
+</div>
+<!-- Stepper Divider 1-2 (completed emerald) -->
+<div class="w-6 sm:w-8 h-[2px] bg-emerald-600 -mt-3"></div>
+<!-- Step 2: Completed -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center mb-1 shadow-sm">
+<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] font-medium text-emerald-800 text-center leading-tight">
+                Validação
+              </span>
+</div>
+<!-- Stepper Divider 2-3 (emerald) -->
+<div class="w-6 sm:w-8 h-[2px] bg-emerald-600 -mt-3"></div>
+<!-- Step 3: Active -->
+<div class="flex flex-col items-center flex-1"><div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center mb-1 shadow-sm"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><span class="text-[10px] font-medium text-emerald-800 text-center leading-tight">Nova senha</span></div>
+</div>
+</div>
+</section>
+<!-- END: Main Card Container -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Footer -->
+<footer class="relative z-10 py-4 text-center px-4" data-purpose="mobile-footer">
+<p class="text-[11px] font-medium text-brand-muted">
+        Estilo e Gestão • Tecnologia para Barbearias
+      </p>
+</footer>
+<!-- END: Footer -->
+</div>
+<!-- END: MobileContainer -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const newPwd = document.getElementById('new-password');
+  const confirmPwd = document.getElementById('confirm-password');
+  const submitBtn = document.getElementById('submit-btn');
+  const ruleLength = document.getElementById('rule-length');
+  const ruleLetter = document.getElementById('rule-letter');
+  const ruleNumber = document.getElementById('rule-number');
+  const ruleMatch = document.getElementById('rule-match');
+
+  const checkIconSvg = '<svg class="h-3.5 w-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+  const uncheckIconSvg = '<svg class="h-3.5 w-3.5 text-rose-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"></circle></svg>';
+
+  function setRuleState(el, satisfied) {
+    const iconSpan = el.querySelector('.icon-rule');
+    if (satisfied) {
+      el.classList.remove('text-rose-600');
+      el.classList.add('text-emerald-700');
+      if (iconSpan) iconSpan.innerHTML = checkIconSvg;
+    } else {
+      el.classList.remove('text-emerald-700');
+      el.classList.add('text-rose-600');
+      if (iconSpan) iconSpan.innerHTML = uncheckIconSvg;
+    }
+  }
+
+  function validate() {
+    const val = newPwd.value || '';
+    const confirmVal = confirmPwd.value || '';
+
+    const isLength = val.length >= 8;
+    const isLetter = /[a-zA-Z]/.test(val);
+    const isNumber = /[0-9]/.test(val);
+    const isMatch = val.length > 0 && val === confirmVal;
+
+    setRuleState(ruleLength, isLength);
+    setRuleState(ruleLetter, isLetter);
+    setRuleState(ruleNumber, isNumber);
+
+    if (confirmVal.length > 0 && !isMatch) {
+      ruleMatch.classList.remove('hidden');
+    } else {
+      ruleMatch.classList.add('hidden');
+    }
+
+    const allValid = isLength && isLetter && isNumber && isMatch;
+    if (allValid) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+    }
+  }
+
+  newPwd.addEventListener('input', validate);
+  confirmPwd.addEventListener('input', validate);
+
+  // Toggle password visibility
+  document.querySelectorAll('form button[aria-label="Mostrar senha"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.parentElement.querySelector('input');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.setAttribute('aria-label', 'Ocultar senha');
+        btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24m-7.07-7.07l14.14 14.14M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+      } else {
+        input.type = 'password';
+        btn.setAttribute('aria-label', 'Mostrar senha');
+        btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"></circle></svg>';
+      }
+    });
+  });
+});
+</script><div aria-modal="true" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog"><div class="bg-white border border-stone-200 rounded-3xl p-6 sm:p-7 shadow-2xl max-w-xs sm:max-w-sm w-full text-center flex flex-col items-center"><div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mb-4 shadow-sm"><svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><h3 class="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Senha alterada com sucesso</h3><p class="text-stone-500 text-sm mt-2 mb-6 leading-relaxed">Agora você pode entrar com sua nova senha.</p><a class="w-full py-3.5 px-4 bg-[#C92A2A] hover:bg-[#B02525] active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 transition-all" href="#"><span>Ir para o login</span><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></div></body></html>

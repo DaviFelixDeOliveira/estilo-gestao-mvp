@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Estilo e Gestão - Admin - Barbearias</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "dark-primary": "#F4F4F0", "dark-bg": "#181817", "on-background": "#1a1c1a", "secondary-container": "#e4e2df", "surface-elevated": "#FFFFFF", "secondary": "#5f5e5c", "on-primary-fixed": "#1b1c1a", "error": "#ba1a1a", "dark-surface-secondary": "#2B2B29", "dark-success-surface": "#173B2D", "primary": "#1a1a19", "on-error-container": "#93000a", "outline": "#777871", "dark-info-surface": "#12365A", "primary-fixed": "#e5e2df", "tertiary-fixed": "#e4e2dd", "surface-container-high": "#e8e8e4", "danger": "#B42318", "on-tertiary-fixed": "#1b1c19", "info": "#175CD3", "secondary-fixed-dim": "#c8c6c3", "dark-primary-hover": "#E9E9E4", "surface": "#faf9f5", "success": "#2F6B4F", "surface-container-highest": "#e2e3df", "on-surface-variant": "#464742", "on-secondary-fixed": "#1b1c1a", "on-tertiary": "#ffffff", "on-error": "#ffffff", "inverse-primary": "#c8c6c3", "background": "#faf9f5", "interactive-hover": "#3A3A38", "tertiary-container": "#2f2f2c", "dark-surface": "#222220", "dark-danger-surface": "#4A1D1A", "outline-variant": "#c7c7c0", "dark-text-primary": "#F4F4F0", "info-surface": "#EAF3FF", "text-secondary": "#666662", "dark-warning-surface": "#4A2C0A", "success-surface": "#EAF5EF", "warning": "#B54708", "on-surface": "#1a1c1a", "dark-warning": "#FDB022", "on-tertiary-container": "#979792", "surface-variant": "#e2e3df", "secondary-fixed": "#e4e2df", "inverse-on-surface": "#f1f1ed", "on-tertiary-fixed-variant": "#474743", "surface-tint": "#5f5e5c", "surface-container-lowest": "#ffffff", "surface-dim": "#dadad6", "dark-border": "#3F3F3B", "on-primary-fixed-variant": "#474745", "error-container": "#ffdad6", "text-primary": "#2F2F2D", "surface-container": "#eeeeea", "surface-secondary": "#E9E9E4", "dark-info": "#53B1FD", "dark-text-secondary": "#B8B8B2", "danger-surface": "#FEECEB", "primary-container": "#2f2f2d", "on-primary": "#ffffff", "tertiary-fixed-dim": "#c8c6c1", "inverse-surface": "#2f312e", "warning-surface": "#FFF4E5", "primary-fixed-dim": "#c8c6c3", "on-secondary-container": "#656462", "on-secondary-fixed-variant": "#474745", "surface-base": "#F4F4F0", "dark-danger": "#F97066", "surface-container-low": "#f4f4f0", "tertiary": "#1a1a18", "border-subtle": "#E9E9E4", "surface-bright": "#faf9f5", "on-secondary": "#ffffff", "dark-success": "#6FB892", "on-primary-container": "#989693" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.5rem", "margin-desktop": "2rem", "space-2xs": "0.25rem", "gutter": "1rem", "margin": "1rem", "space-xl": "2rem", "gutter-desktop": "1.5rem", "space-2xl": "3rem", "margin-tablet": "1.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-sm": "0.75rem" }, "fontFamily": { "headline-xl-mobile": ["Plus Jakarta Sans"], "helper-text": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "metric-display": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"] }, "fontSize": { "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "helper-text": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "metric-display": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface-base font-body-md text-body-md text-text-primary antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between"><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">content_cut</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-primary leading-none">Estilo &amp; Gestão</span><span class="font-label-sm text-label-sm text-text-secondary mt-0.5">Painel administrativo</span></div></div><button class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:bg-surface-secondary hover:text-on-surface transition-colors" title="Recolher barra lateral" type="button"><span class="material-symbols-outlined text-[20px]">menu_open</span></button></div><div class="px-space-md pt-space-xs"><div class="h-[1px] w-full bg-surface-secondary"></div></div><nav class="flex flex-col gap-space-2xs px-space-sm pt-space-md" data-active-classes="bg-primary text-on-primary font-label-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-sm h-11 rounded-lg text-text-secondary hover:bg-surface-secondary hover:text-on-surface transition-all group" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-label-lg text-label-lg">Dashboard</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm h-11 rounded-lg bg-primary text-on-primary font-label-lg shadow-sm transition-all group" href="#"><span class="material-symbols-outlined text-[20px]">storefront</span><span class="font-label-lg text-label-lg">Barbearias</span></a></nav></div><div class="p-space-sm"><div class="relative"><div class="w-full p-space-xs rounded-xl bg-surface-container-low flex items-center justify-between cursor-pointer hover:bg-surface-secondary transition-colors"><div class="flex items-center gap-space-xs min-w-0"><div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center font-label-md text-label-md font-bold text-on-primary">AD</div><div class="flex flex-col min-w-0 text-left"><span class="font-label-md text-label-md text-text-primary truncate leading-tight">Administrador</span><span class="font-label-sm text-label-sm text-text-secondary truncate leading-tight">Operador do SaaS</span></div></div><span class="material-symbols-outlined text-text-secondary text-[18px]">unfold_more</span></div></div></div></aside><div class="pl-64 flex flex-col min-h-screen"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-elevated/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><img alt="Logo Barbeiro Sem fundo Texto Preto.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U5CtWci7y8BULX9IeO_PzrDnNQ7htK9zPShsoMEsngrEn0enf5VMSBa5XGROvir8DSHegPQcQTcot2ZUQNWIKBOaxMrW06vwKvg0FLaEPSdESTrHWrJ-cSbxMiw50ZLEYqGabjbJLEQsUkwEqQiR-amKh6YWt3ZxvOS_RcJP4jcrFEufKWy9rX7aDBfKK5kCMIPRwaqV7fQoQmE21C_803fRvz0et1huqpoHkmK8kQHMPATqPVKwgTc8G7KlJ8ZPshDPIQGxmBOQ"/><div class="h-5 w-[1px] bg-surface-secondary"></div><nav class="flex items-center gap-space-2xs text-text-secondary font-label-md text-label-md"><span class="hover:text-on-surface transition-colors cursor-pointer">Painel administrativo</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-text-primary font-label-lg text-label-lg">Barbearias</span></nav></div><div class="flex items-center gap-space-md"><button class="w-10 h-10 rounded-lg flex items-center justify-center text-text-secondary hover:bg-surface-base hover:text-on-surface transition-colors" title="Alternar tema" type="button"><span class="material-symbols-outlined text-[20px]">dark_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-label-sm text-label-sm font-bold text-on-primary">AD</div></div></header><main class="relative pt-16 bg-surface-base min-h-screen w-full px-space-lg py-space-lg"><div class="flex flex-col w-full">
+<div class="max-w-[1280px] w-full mx-auto flex flex-col gap-space-lg pb-space-2xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-widest">Painel de Controle Corporativo</span>
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">Barbearias</h1>
+<p class="font-body-md text-body-md text-text-secondary max-w-2xl">
+          Gerencie as barbearias cadastradas e a situação das contas na plataforma.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<div class="flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-surface-elevated shadow-sm">
+<span class="material-symbols-outlined text-text-secondary text-[20px]">storefront</span>
+<span class="font-label-md text-label-md text-text-secondary">Cadastradas:</span>
+<span class="font-label-lg text-label-lg text-text-primary" id="counter-badge">3 barbearias</span>
+</div>
+
+</div>
+</div>
+
+<div class="bg-surface-elevated rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-[20px] pointer-events-none">search</span>
+<input class="w-full h-11 pl-11 pr-space-md rounded-lg bg-surface-base font-body-md text-body-md text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-info/20 focus:bg-surface-elevated transition-all" id="search-input" placeholder="Buscar por nome ou código EG..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-text-secondary whitespace-nowrap">Plano:</span>
+<div class="inline-flex p-1 rounded-lg bg-surface-base" id="filter-plan">
+<button class="filter-plan-btn px-3 py-1 rounded-md font-label-md text-label-md bg-surface-elevated text-text-primary shadow-xs transition-all" data-filter="all" type="button">Todos</button>
+<button class="filter-plan-btn px-3 py-1 rounded-md font-label-md text-label-md text-text-secondary hover:text-text-primary transition-all" data-filter="gratis" type="button">Grátis</button>
+<button class="filter-plan-btn px-3 py-1 rounded-md font-label-md text-label-md text-text-secondary hover:text-text-primary transition-all" data-filter="normal" type="button">Normal</button>
+<button class="filter-plan-btn px-3 py-1 rounded-md font-label-md text-label-md text-text-secondary hover:text-text-primary transition-all" data-filter="ia" type="button">Com IA</button>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-text-secondary whitespace-nowrap">Situação:</span>
+<div class="inline-flex p-1 rounded-lg bg-surface-base" id="filter-status">
+<button class="filter-status-btn px-3 py-1 rounded-md font-label-md text-label-md bg-surface-elevated text-text-primary shadow-xs transition-all" data-status="all" type="button">Todas</button>
+<button class="filter-status-btn px-3 py-1 rounded-md font-label-md text-label-md text-text-secondary hover:text-text-primary transition-all" data-status="ativa" type="button">Ativa</button>
+<button class="filter-status-btn px-3 py-1 rounded-md font-label-md text-label-md text-text-secondary hover:text-text-primary transition-all" data-status="suspensa" type="button">Suspensa</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-helper-text text-helper-text text-text-secondary" id="filtered-count-label">
+          Exibindo 3 de 3 barbearias cadastradas
+        </span>
+<button class="font-label-sm text-label-sm text-text-secondary hover:text-primary transition-colors flex items-center gap-1" id="reset-filters" type="button">
+<span class="material-symbols-outlined text-[14px]">restart_alt</span>
+          Redefinir filtros
+        </button>
+</div>
+</div>
+<div class="bg-surface-elevated rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="barber-table">
+<thead>
+<tr class="bg-surface-base/60 text-text-secondary font-label-md text-label-md select-none">
+<th class="py-3.5 px-space-md font-semibold" scope="col">Barbearia</th>
+<th class="py-3.5 px-space-md font-semibold" scope="col">Código EG</th>
+<th class="py-3.5 px-space-md font-semibold" scope="col">Plano</th>
+<th class="py-3.5 px-space-md font-semibold" scope="col">Situação</th>
+<th class="py-3.5 px-space-md font-semibold" scope="col">Validade do plano</th>
+<th class="py-3.5 px-space-md font-semibold text-right" scope="col">Ação</th>
+</tr>
+</thead>
+<tbody class="divide-y-0" id="table-body">
+<tr class="table-row-item hover:bg-surface-base/40 transition-colors group" data-code="eg-7k2m9q" data-name="barbearia navalha &amp; fio" data-plan="normal" data-status="ativa">
+<td class="py-4 px-space-md min-w-[260px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center font-label-lg text-label-lg text-text-primary font-bold shadow-xs">
+                    NF
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Barbearia Navalha &amp; Fio</span>
+
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-surface-base font-label-md text-label-md text-text-primary font-mono tracking-wider">
+                  EG-7K2M9Q
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-secondary font-label-sm text-label-sm text-text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-text-secondary"></span>
+                  Normal
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-surface font-label-sm text-label-sm text-success">
+<span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                  Ativa
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap font-body-md text-body-md text-text-primary">
+                16/10/2026
+              </td>
+<td class="py-4 px-space-md text-right whitespace-nowrap">
+<a class="inline-flex items-center justify-center gap-1 h-9 px-3.5 rounded-lg bg-surface-base text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all group-hover:bg-surface-secondary group-hover:hover:bg-primary" href="#detalhes-eg-7k2m9q">
+<span class="">Ver detalhes</span>
+<span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</a>
+</td>
+</tr>
+<tr class="table-row-item hover:bg-surface-base/40 transition-colors group bg-surface-elevated" data-code="eg-3p9l1v" data-name="barbearia central" data-plan="gratis" data-status="ativa">
+<td class="py-4 px-space-md min-w-[260px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center font-label-lg text-label-lg text-text-primary font-bold shadow-xs">
+                    BC
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Barbearia Central</span>
+
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-surface-base font-label-md text-label-md text-text-primary font-mono tracking-wider">
+                  EG-3P9L1V
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-secondary font-label-sm text-label-sm text-text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-text-secondary"></span>
+                  Grátis
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-surface font-label-sm text-label-sm text-success">
+<span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                  Ativa
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap font-body-md text-body-md text-text-secondary">
+<span class="" title="Plano Grátis sem validade de período pago">—</span>
+</td>
+<td class="py-4 px-space-md text-right whitespace-nowrap">
+<a class="inline-flex items-center justify-center gap-1 h-9 px-3.5 rounded-lg bg-surface-base text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all group-hover:bg-surface-secondary group-hover:hover:bg-primary" href="#detalhes-eg-3p9l1v">
+<span class="">Ver detalhes</span>
+<span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</a>
+</td>
+</tr>
+<tr class="table-row-item hover:bg-surface-base/40 transition-colors group bg-surface-elevated" data-code="eg-4m7k2p" data-name="barber studio" data-plan="ia" data-status="suspensa">
+<td class="py-4 px-space-md min-w-[260px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center font-label-lg text-label-lg text-text-primary font-bold shadow-xs">
+                    BS
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Barber Studio</span>
+
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-surface-base font-label-md text-label-md text-text-primary font-mono tracking-wider">
+                  EG-4M7K2P
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-info-surface font-label-sm text-label-sm text-info">
+<span class="material-symbols-outlined text-[12px]">auto_awesome</span>
+                  Com IA
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning-surface font-label-sm text-label-sm text-warning">
+<span class="w-2 h-2 rounded-full bg-warning"></span>
+                  Suspensa
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap font-body-md text-body-md text-text-primary">
+                20/10/2026
+              </td>
+<td class="py-4 px-space-md text-right whitespace-nowrap">
+<a class="inline-flex items-center justify-center gap-1 h-9 px-3.5 rounded-lg bg-surface-base text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all group-hover:bg-surface-secondary group-hover:hover:bg-primary" href="#detalhes-eg-4m7k2p">
+<span class="">Ver detalhes</span>
+<span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="hidden flex-col items-center justify-center py-space-2xl px-space-md text-center" id="empty-state">
+<div class="w-14 h-14 rounded-2xl bg-surface-base flex items-center justify-center text-text-secondary mb-space-sm">
+<span class="material-symbols-outlined text-[28px]">search_off</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-primary">Nenhuma barbearia encontrada</h3>
+<p class="font-body-md text-body-md text-text-secondary max-w-sm mt-1">
+          Não localizamos resultados para os termos e filtros aplicados. Tente ajustar os parâmetros.
+        </p>
+</div>
+<div class="px-space-md py-3.5 bg-surface-base/40 flex items-center justify-between text-text-secondary font-label-sm text-label-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span class="">Sincronizado em tempo real com a base de instâncias</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="">Página 1 de 1</span>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<script>
+  (function() {
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.table-row-item');
+    const planButtons = document.querySelectorAll('.filter-plan-btn');
+    const statusButtons = document.querySelectorAll('.filter-status-btn');
+    const emptyState = document.getElementById('empty-state');
+    const counterBadge = document.getElementById('counter-badge');
+    const filteredCountLabel = document.getElementById('filtered-count-label');
+    const resetBtn = document.getElementById('reset-filters');
+
+    let currentPlan = 'all';
+    let currentStatus = 'all';
+    let currentSearch = '';
+
+    function filterData() {
+      let visibleCount = 0;
+      tableRows.forEach(row => {
+        const name = row.getAttribute('data-name') || '';
+        const code = row.getAttribute('data-code') || '';
+        const plan = row.getAttribute('data-plan') || '';
+        const status = row.getAttribute('data-status') || '';
+
+        const matchesSearch = name.includes(currentSearch) || code.includes(currentSearch);
+        const matchesPlan = currentPlan === 'all' || plan === currentPlan;
+        const matchesStatus = currentStatus === 'all' || status === currentStatus;
+
+        if (matchesSearch && matchesPlan && matchesStatus) {
+          row.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+
+      if (filteredCountLabel) {
+        filteredCountLabel.textContent = `Exibindo ${visibleCount} de ${tableRows.length} barbearias cadastradas`;
+      }
+      if (counterBadge) {
+        counterBadge.textContent = `${visibleCount} barbearia${visibleCount !== 1 ? 's' : ''}`;
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value.toLowerCase().trim();
+        filterData();
+      });
+    }
+
+    planButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        planButtons.forEach(b => {
+          b.classList.remove('bg-surface-elevated', 'text-text-primary', 'shadow-xs');
+          b.classList.add('text-text-secondary');
+        });
+        btn.classList.add('bg-surface-elevated', 'text-text-primary', 'shadow-xs');
+        btn.classList.remove('text-text-secondary');
+        currentPlan = btn.getAttribute('data-filter');
+        filterData();
+      });
+    });
+
+    statusButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        statusButtons.forEach(b => {
+          b.classList.remove('bg-surface-elevated', 'text-text-primary', 'shadow-xs');
+          b.classList.add('text-text-secondary');
+        });
+        btn.classList.add('bg-surface-elevated', 'text-text-primary', 'shadow-xs');
+        btn.classList.remove('text-text-secondary');
+        currentStatus = btn.getAttribute('data-status');
+        filterData();
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        currentSearch = '';
+        
+        planButtons[0].click();
+        statusButtons[0].click();
+      });
+    }
+  })();
+</script></main></div>
+</body></html>

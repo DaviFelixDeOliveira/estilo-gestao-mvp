@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boas-vindas - Mobile - Modo Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Playfair+Display:ital,wght@0,700;0,800;1,700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            brand: {
+              950: '#2F2F2D',
+              800: '#3A3A38',
+              600: '#666662',
+              100: '#E9E9E4',
+              50: '#F4F4F0',
+            },
+            barberRed: '#C92A2A',
+            barberBlue: '#1864AB',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F8F7F4;
+    }
+    .serif-display {
+      font-family: 'Playfair Display', serif;
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"></head>
+<body class="min-h-screen text-[#2F2F2D] flex flex-col justify-between overflow-x-hidden selection:bg-[#C92A2A] selection:text-white bg-[#F8F7F4] relative">
+
+  <!-- Main Container Mobile -->
+  <div class="relative w-full flex-1 flex flex-col justify-between min-h-screen">
+    
+    <!-- Background Image Light Mode -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjNNVZ7XYaJq0JHojt8beK-oUiTV-0pp68gcBHMjkRWODj5KX7aAqyjCrmvjrFJqBiB-KfUueJpFIyi2hWc8PbT9uV8fHjHMIqkDQG429Dzzv18Bv9FUbZjnVTDEIB4neCISlk9T5YIUWy5bGrhA7Z7_NGQd7aLulHQqCDxeryeoX4RBT_7gKx7XzZ8xhMvdt3BoLdwiSkl9pyRroPWUi2IdvwZDNoksmhGVGZUsMJ42duX0R97yEq0GnoQFETH32-JII" alt="Barbearia Moderna e Iluminada" class="w-full h-full object-cover object-center">
+      <!-- Gradientes sofisticados para o Modo Claro: topo sutil, transição suave e base sólida para leitura perfeita -->
+      <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-[#F8F7F4]/80 to-[#F8F7F4] pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-[#F8F7F4] via-[#F8F7F4]/95 to-transparent pointer-events-none"></div>
+    </div>
+
+    <!-- Header com Logo Oficial -->
+    <header class="relative z-10 pt-10 px-6 flex flex-col items-center"><div class="absolute right-6 top-10"><button type="button" aria-label="Alternar modo escuro" class="w-9 h-9 rounded-full flex items-center justify-center text-[#2F2F2D] hover:bg-[#F4F4F0] bg-white/90 border border-[#E9E9E4] shadow-sm backdrop-blur-md transition-all duration-150 cursor-pointer"><span class="material-symbols-outlined text-[20px]">dark_mode</span></button></div>
+      <div class="p-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-[#E9E9E4] shadow-sm flex items-center justify-center">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfYp-8MqqPW0eItOWE8bJu758tpF9r2ESW34WWthi8U_w9qhjifnH0O3uYW3VnXyhy0u_0cgCgVFjd9jSIsxuluNpGD-_NBSh-S2LXkUxik58x9j3hIDXYse_VwvKolSD2S1LzO2LNzMXCoFoQ8Pw-UauxowRnR_m4np93ehMe8wExvlmxavlFSr3j7ZbfprsdGTPw8r8nQ4PX0Ze47QlSw9ikp5ozAJp9r0PXq5Or3FDc6ZZEyY7NLiVWTyefoB143VM" alt="Estilo e Gestão" class="h-14 w-auto object-contain">
+      </div>
+    </header>
+
+    <!-- Conteúdo Central e Ações -->
+    <main class="relative z-10 px-6 pb-6 pt-16 flex flex-col justify-end flex-1">
+      
+      <!-- Tag / Badge "Gestão para Barbearias" em Vermelho -->
+      <div class="mb-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#C92A2A]/20 shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#C92A2A] animate-pulse"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#C92A2A]">GESTÃO PARA BARBEARIAS</span>
+        </div>
+      </div>
+
+      <!-- Título Principal -->
+      <h1 class="text-3xl font-extrabold text-[#2F2F2D] tracking-tight leading-[1.15] mb-3">
+        Sua barbearia organizada em um só lugar.
+      </h1>
+
+      <!-- Texto de Apoio Oficial -->
+      <p class="text-sm sm:text-base text-[#666662] leading-relaxed mb-8 font-medium">
+        Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
+      </p>
+
+      <!-- Botões de Ação -->
+      <div class="space-y-3 w-full">
+        <!-- Botão Primário Vermelho -->
+        <button class="w-full py-4 px-6 rounded-xl bg-[#C92A2A] hover:bg-[#B42318] active:scale-[0.99] text-white font-bold text-base transition-all duration-150 shadow-md shadow-[#C92A2A]/20 flex items-center justify-center cursor-pointer">
+          Criar conta
+        </button>
+
+        <!-- Botão Secundário Branco / Light Surface -->
+        <button class="w-full py-3.5 px-6 rounded-xl bg-white hover:bg-[#F4F4F0] active:scale-[0.99] text-[#2F2F2D] font-semibold text-base border border-[#E9E9E4] transition-all duration-150 shadow-sm flex items-center justify-center cursor-pointer">
+          Entrar
+        </button>
+      </div>
+
+      <!-- Rodapé Mobile -->
+      <div class="mt-8 text-center">
+        <p class="text-[11px] text-[#8A8A84] font-medium">
+          © 2026 Estilo e Gestão. Todos os direitos reservados.
+        </p>
+      </div>
+
+    </main>
+
+  </div>
+
+
+
+
+</body></html>

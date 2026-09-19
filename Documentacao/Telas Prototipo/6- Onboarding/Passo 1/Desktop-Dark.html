@@ -1,0 +1,286 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style="width: 1280px; height: 1426px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estilo e Gestão - Onboarding Passo 1 (Dark)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "dark-bg": "#111215",
+            "dark-card": "#18191E",
+            "dark-input": "#222226",
+            "dark-border": "#2C2E38",
+            "dark-text-primary": "#F4F4F5",
+            "dark-text-secondary": "#989693",
+            "dark-text-muted": "#666662",
+            "primary-red": "#B42318",
+            "primary-red-hover": "#911C13",
+            "primary-red-dim": "#241719",
+            "success-dark": "#2F6B4F"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#111215] font-sans text-[#F4F4F5] antialiased min-h-screen flex flex-col selection:bg-[#B42318]/30 selection:text-white">
+<!-- HEADER -->
+<header class="fixed top-0 left-0 w-full z-50 bg-[#111215]/90 backdrop-blur-xl border-b border-[#2C2E38]">
+<div class="max-w-[1400px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+<!-- Brand Logo + Badge -->
+<div class="flex items-center gap-3">
+<div class="h-9 w-auto flex items-center">
+<img alt="Estilo e Gestão" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs7djTjFP_C_dxjLHjP_itZEHJTTqFwFMDdnPsMdEhUMIMq4Jc5PqS27ZZaF39ojOskYddSdEpEe9GQSxNDjWX9sLdmT85NDfprmabSlTiAiltc9VUnaqZqc4mEyPI4Lt0NqzZbGbawZ6qF3SWBHNEUQCmqVU39x4boSZEOC4-gyCb4ohLe7AO0rDVDF4RiuXISLfZrizXPndAquCgmAUSR7UifmpqOKq1dYqQ5mNnExUgoiWY_fK9OcQQU8Zv-TJ4Gto">
+</div>
+<div class="h-4 w-[1px] bg-[#2C2E38] hidden sm:block"></div>
+<div class="hidden sm:flex items-center gap-2"><span class="text-sm font-semibold tracking-tight text-[#F4F4F5]">Estilo e Gestão</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#241719] text-[#B42318] border border-[#B42318]/30">Onboarding Profissional</span><span class="hidden lg:inline-flex items-center text-[11px] text-[#989693] ml-2 font-normal">Esses dados formam a base da sua Vitrine pública</span></div>
+</div>
+<!-- Center / Summary Pill -->
+<div class="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#18191E] border border-[#2C2E38] text-xs text-[#989693]">
+<span class="w-2 h-2 rounded-full bg-[#B42318] animate-pulse"></span>
+<span class="font-medium text-[#F4F4F5]">Etapa 1: Dados da barbearia</span>
+<span class="text-[#666662]">•</span>
+<span class="text-[#989693]">16% concluído</span>
+</div>
+<!-- Right Actions: Support, Theme Switch, Profile -->
+<div class="flex items-center gap-2 sm:gap-3">
+<button aria-label="Alternar tema claro" class="w-9 h-9 rounded-lg flex items-center justify-center text-[#989693] hover:text-amber-400 hover:bg-[#18191E] border border-transparent hover:border-[#2C2E38] transition-colors" title="Alternar para tema claro" type="button">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN BODY -->
+<main class="flex-1 w-full pt-20 pb-12 bg-[#111215]">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+<!-- STEPPER NAVIGATION BAR (6 Steps) -->
+<div class="w-full bg-[#18191E] rounded-2xl p-4 sm:p-5 border border-[#2C2E38] shadow-lg">
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3"><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#241719] border border-[#B42318]/50 shadow-[0_0_15px_rgba(180,35,24,0.15)] transition-all"><div class="w-7 h-7 rounded-full bg-[#B42318] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-[0_0_10px_rgba(180,35,24,0.5)]">1</div><div class="flex flex-col min-w-0"><span class="text-xs font-semibold text-[#F4F4F5] truncate">1. Dados da barbearia</span><span class="text-[11px] font-medium text-[#B42318] truncate">Em curso • 16%</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">2</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">2. Endereço</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">3</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">3. Horários</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">4</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">4. Serviços</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">5</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">5. Produtos e pagamentos</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">6</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">6. Aparência</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div></div>
+<!-- Progress track -->
+<div class="w-full bg-[#111215] h-1.5 rounded-full mt-4 overflow-hidden border border-[#2C2E38]/50">
+<div class="bg-gradient-to-r from-[#B42318] to-red-500 h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(180,35,24,0.6)]" style="width: 16.66%;"></div>
+</div>
+</div>
+<!-- MAIN CONTENT: 2-COLUMN LAYOUT (FORM + STOREFRONT PREVIEW) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: FORM & TITLE (lg:col-span-7 or 8) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Headline & Context -->
+<div class="flex flex-col gap-2"><div class="flex items-center gap-2"><span class="text-[11px] font-bold uppercase tracking-widest text-[#B42318] bg-[#241719] px-2.5 py-1 rounded-md border border-[#B42318]/30">Passo 1 de 6</span><span class="text-xs text-[#989693] flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#2F6B4F]">lock_clock</span> 3 minutos para preencher</span></div><h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F5]">Vamos configurar sua barbearia</h1><p class="text-sm text-[#989693] leading-relaxed">Comece pelas informações principais do seu negócio. Você poderá alterar ou enriquecer esses dados a qualquer momento nas configurações.</p></div>
+<form class="flex flex-col gap-6" id="barbershop-form">
+<!-- SEÇÃO 1: RESPONSÁVEL E IDENTIDADE -->
+<section class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-5 sm:p-6 flex flex-col gap-5 shadow-lg relative overflow-hidden">
+<div class="flex items-center gap-3 pb-3.5 border-b border-[#2C2E38]">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center border border-[#B42318]/30">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<div>
+<h2 class="text-base font-semibold text-[#F4F4F5]">Responsável e Identidade</h2>
+<p class="text-xs text-[#989693]">Titularidade e identificação da sua marca no ecossistema.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="owner-name"><span class="">Nome do responsável <span class="text-[#B42318]">*</span></span></label><div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">person</span><input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="owner-name" name="ownerName" placeholder="Ex.: João da Silva" required="" type="text" value="João Carlos"></div><span class="text-[11px] text-[#666662]">Pessoa responsável pela conta e pela administração da barbearia na plataforma.</span></div><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="shop-name"><span class="">Nome da barbearia <span class="text-[#B42318]">*</span></span></label><div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">storefront</span><input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="shop-name" name="shopName" placeholder="Ex.: Barbearia Imperial" required="" type="text" value="Barbearia Imperial"></div><span class="text-[11px] text-[#666662]">Nome comercial que será exibido na Vitrine pública.</span></div><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="pro-name"><span class="flex items-center gap-1.5">Nome profissional<span class="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#2C2E38] text-[#989693]">Opcional</span></span></label><div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">content_cut</span><input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="pro-name" name="proName" placeholder="Ex.: João Barber" type="text" value="João Barber"></div><span class="text-[11px] text-[#666662]">Use este campo se você atende com nome artístico, apelido profissional ou assinatura própria.</span></div><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between"><span class="flex items-center gap-1.5">Logo da barbearia<span class="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#2C2E38] text-[#989693]">Opcional</span></span></label><div class="h-11 border border-dashed border-[#2C2E38] hover:border-[#B42318] bg-[#222226] hover:bg-[#28282e] rounded-xl flex items-center justify-between px-3.5 cursor-pointer group transition-all" id="logo-dropzone"><div class="flex items-center gap-2.5"><div class="w-6 h-6 rounded-md bg-[#18191E] flex items-center justify-center text-[#989693] group-hover:text-[#B42318] transition-colors"><span class="material-symbols-outlined text-[16px]">add_photo_alternate</span></div><span class="text-xs font-medium text-[#F4F4F5] group-hover:text-white" id="logo-label-text">+ Adicionar logo</span></div><span class="text-[11px] text-[#666662]">PNG, JPG até 5MB</span><input accept="image/png, image/jpeg, image/webp" class="hidden" id="logo-file" type="file"></div><span class="text-[11px] text-[#666662]">Envie a logo da sua marca para aparecer na Vitrine. Você poderá alterar depois.</span></div></div>
+</section>
+<!-- SEÇÃO 2: CANAIS DE CONTATO -->
+<section class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-5 sm:p-6 flex flex-col gap-5 shadow-lg">
+<div class="flex items-center gap-3 pb-3.5 border-b border-[#2C2E38]">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center border border-[#B42318]/30">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+<div>
+<h2 class="text-base font-semibold text-[#F4F4F5]">Canais de Contato</h2>
+<p class="text-xs text-[#989693]">Para comunicação direta com clientes e presença na Vitrine.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5]" for="shop-whatsapp">WhatsApp <span class="text-[#B42318]">*</span></label><div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">chat</span><input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="shop-whatsapp" name="whatsapp" placeholder="(13) 99999-9999" required="" type="tel" value="(13) 99999-9999"></div><span class="text-[11px] text-[#666662]">Canal principal para contato direto com clientes.</span></div><div class="flex flex-col gap-1.5"><label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="shop-instagram"><span class="flex items-center gap-1.5">Instagram<span class="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#2C2E38] text-[#989693]">Opcional</span></span></label><div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">alternate_email</span><input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="shop-instagram" name="instagram" placeholder="@suabarbearia" type="text" value="@suabarbearia"></div><span class="text-[11px] text-[#666662]">Seu perfil poderá ser exibido na Vitrine com link direto.</span></div></div>
+</section>
+<!-- SEÇÃO 3: MODALIDADE DE ATENDIMENTO -->
+<section class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-5 sm:p-6 flex flex-col gap-5 shadow-lg">
+<div class="flex items-center gap-3 pb-3.5 border-b border-[#2C2E38]">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center border border-[#B42318]/30">
+<span class="material-symbols-outlined text-[18px]">storefront</span>
+</div>
+<div>
+<h2 class="text-base font-semibold text-[#F4F4F5]">Modalidade de Atendimento</h2>
+<p class="text-xs text-[#989693]">Defina onde suas operações e agendamentos acontecem.</p>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<label class="text-xs font-semibold text-[#F4F4F5]">
+                  Você atende a domicílio? <span class="text-[#B42318]">*</span>
+</label>
+<!-- Radio Cards Selector -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"><button class="atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all cursor-pointer group" data-value="nao" id="opt-home-no" type="button"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center shrink-0 border border-[#B42318]/30"><span class="material-symbols-outlined text-[22px]">store</span></div><div class="flex flex-col"><span class="text-sm font-semibold text-[#F4F4F5]">Não, atendo apenas na barbearia</span><span class="text-xs text-[#989693]">Os atendimentos são realizados somente no endereço da barbearia.</span></div></div><div class="w-5 h-5 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0 radio-circle"><div class="w-2.5 h-2.5 rounded-full bg-[#B42318]"></div></div></button><button class="atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#141518] border border-[#2C2E38] hover:border-[#666662] text-left transition-all cursor-pointer group opacity-85" data-value="sim" id="opt-home-yes" type="button"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-[#18191E] text-[#989693] flex items-center justify-center shrink-0 border border-[#2C2E38] group-hover:text-[#F4F4F5]"><span class="material-symbols-outlined text-[22px]">directions_car</span></div><div class="flex flex-col"><span class="text-sm font-medium text-[#989693] group-hover:text-[#F4F4F5]">Sim, também realizo atendimento a domicílio</span><span class="text-xs text-[#666662]">Além do atendimento no local, você também pode atender clientes em domicílio.</span></div></div><div class="w-5 h-5 rounded-full border border-[#666662] flex items-center justify-center shrink-0 radio-circle"><div class="w-2.5 h-2.5 rounded-full bg-transparent"></div></div></button></div>
+<input id="atendimento-input" name="atendimentoDomicilio" type="hidden" value="nao">
+<span class="text-[11px] text-[#666662]">Essa informação será informada na sua página pública de reservas.</span>
+</div>
+</section>
+<!-- SUBMIT BAR & AUTO-SAVE INDICATOR -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 pb-6"><div class="flex items-center gap-2 text-[#989693]"><span class="material-symbols-outlined text-[18px] text-[#2F6B4F]">cloud_done</span><span class="text-xs">Seu progresso é salvo automaticamente.</span></div><button class="w-full sm:w-auto h-12 px-8 rounded-xl bg-[#B42318] hover:bg-[#911C13] active:bg-[#72160F] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(180,35,24,0.35)] hover:shadow-[0_6px_25px_rgba(180,35,24,0.5)] transition-all cursor-pointer" type="submit"><span class="">Continuar</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></button></div>
+</form>
+</div>
+<!-- RIGHT COLUMN: ENRICHED STOREFRONT PREVIEW CARD (lg:col-span-5) -->
+<div class="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-4"><div class="flex items-center justify-between px-1"><div class="flex items-center gap-2"><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2F6B4F] opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-[#2F6B4F]"></span></span><span class="text-xs font-semibold text-[#F4F4F5] uppercase tracking-wider">Prévia da Vitrine em Tempo Real</span></div><span class="text-[11px] text-[#989693] bg-[#18191E] border border-[#2C2E38] px-2 py-0.5 rounded-md">Mobile &amp; Desktop</span></div><div class="bg-[#18191E] rounded-2xl border border-[#2C2E38] overflow-hidden shadow-2xl relative group transition-all hover:border-[#3F3F46]"><div class="absolute -top-24 -right-24 w-48 h-48 bg-[#B42318]/10 rounded-full blur-3xl pointer-events-none"></div><div class="h-10 bg-[#141518] px-3.5 border-b border-[#2C2E38] flex items-center justify-between"><div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-[#EF4444]/60"></div><div class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]/60"></div><div class="w-2.5 h-2.5 rounded-full bg-[#10B981]/60"></div></div><div class="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#222226] border border-[#2C2E38] text-[11px] text-[#989693]"><span class="material-symbols-outlined text-[13px] text-[#2F6B4F]">lock</span><span class="truncate max-w-[140px]" id="preview-url">barbeariaimperial.estiloegestao.com</span></div><div class="w-4"></div></div><div class="relative h-28 bg-gradient-to-r from-[#241719] via-[#1A1A20] to-[#121316] p-4 flex flex-col justify-end overflow-hidden border-b border-[#2C2E38]"><div class="absolute inset-0 opacity-15 bg-[radial-gradient(#B42318_1px,transparent_1px)] [background-size:12px_12px]"></div><div class="absolute top-3 right-3 bg-[#111215]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#2C2E38] flex items-center gap-1.5 text-[10px] font-semibold text-[#F4F4F5]"><span class="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse"></span> Vitrine em configuração</div></div><div class="px-5 pt-0 pb-5 -mt-8 flex flex-col gap-4 relative z-10"><div class="flex items-end justify-between"><div class="w-16 h-16 rounded-2xl bg-[#222226] border-2 border-[#18191E] shadow-xl flex items-center justify-center overflow-hidden p-2 text-[#F4F4F5]" id="preview-logo-box"><img alt="Logo Barbearia" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMEvy2BFmB3OlucXmYHiOrzhsZa9k-USH-1i9UAKxbTILp8C0lTGgz_9RuPOCXyUb4edtlxMeciX_vaxufO00D2wriAHuxXEw_-Mj3FPN0O9_nRLxx9VxyHDIccJ2oJnoY53xFbvhYavHEdI4GjWPp9dqbphLHLefP3v-9uV0v57rTCvWKvy1_g5uXOyGSpggthErNekrYTyVpAfQSaDoxAI9VPOKjWLkK8Cp-931jHnhhF_0D-FQCOp9YR5tlLUgwiBY"></div><span class="text-[11px] font-medium text-[#989693] bg-[#222226] border border-[#2C2E38] px-2.5 py-1 rounded-lg">Prévia da Vitrine</span></div><div class="flex flex-col gap-1"><div class="flex items-center gap-2"><h3 class="text-base font-bold text-[#F4F4F5] truncate" id="preview-shop-name">Nome da barbearia
+</h3><span class="material-symbols-outlined text-[#38BDF8] text-[17px]" title="Verificado">verified</span></div><div class="flex items-center gap-2 text-xs text-[#989693]"><span class="text-[#989693]" id="preview-pro-name">Por&nbsp;Nome profissional
+</span><span class="">•</span><span class="text-[#2F6B4F] flex items-center gap-0.5 font-medium" id="preview-atendimento-badge"><span class="material-symbols-outlined text-[14px]">store</span> Atendimento no local</span></div></div><div class="flex flex-col gap-2 pt-2 border-t border-[#2C2E38]"><span class="text-[11px] font-semibold text-[#989693] uppercase tracking-wider">Canais Diretos de Contato</span><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><a class="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#222226] border border-[#2C2E38] hover:border-[#2F6B4F] transition-colors" href="#" id="preview-whatsapp-btn"><div class="w-7 h-7 rounded-lg bg-[#2F6B4F]/20 text-[#2F6B4F] flex items-center justify-center"><span class="material-symbols-outlined text-[16px]">chat</span></div><div class="flex flex-col min-w-0"><span class="text-xs font-semibold text-[#F4F4F5] truncate" id="preview-whatsapp-val">(13) 99999-9999</span><span class="text-[10px] text-[#666662]">Canal direto</span></div></a><a class="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#222226] border border-[#2C2E38] hover:border-[#B42318] transition-colors" href="#" id="preview-instagram-btn"><div class="w-7 h-7 rounded-lg bg-[#241719] text-[#B42318] flex items-center justify-center"><span class="material-symbols-outlined text-[16px]">alternate_email</span></div><div class="flex flex-col min-w-0"><span class="text-xs font-semibold text-[#F4F4F5] truncate" id="preview-instagram-val">@suabarbearia</span><span class="text-[10px] text-[#666662]">Instagram</span></div></a></div></div></div></div><div class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-4 flex flex-col gap-3 shadow-md"><div class="flex items-center justify-between pb-2 border-b border-[#2C2E38]"><span class="text-xs font-bold text-[#F4F4F5] uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-[#B42318]">format_list_bulleted</span> Próximas etapas</span><span class="text-[10px] text-[#666662]">5 restantes</span></div><ul class="space-y-2 text-xs text-[#989693]"><li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">2. Endereço</span><span class="text-[10px] text-[#666662]">Localização e mapa</span></li><li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">3. Horários de funcionamento</span><span class="text-[10px] text-[#666662]">Dias e turnos</span></li><li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">4. Serviços</span><span class="text-[10px] text-[#666662]">Catálogo e valores</span></li><li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">5. Produtos e pagamentos</span><span class="text-[10px] text-[#666662]">Itens e meios</span></li><li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">6. Aparência e conclusão</span><span class="text-[10px] text-[#666662]">Tema e publicação</span></li></ul></div><div class="p-4 rounded-xl bg-[#18191E] border border-[#2C2E38] flex items-start gap-3 shadow-sm"><div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center shrink-0 border border-[#B42318]/30 mt-0.5"><span class="material-symbols-outlined text-[18px]">info</span></div><div class="flex flex-col gap-1"><h4 class="text-xs font-semibold text-[#F4F4F5]">Esses dados serão usados na sua Vitrine</h4><p class="text-xs text-[#989693] leading-relaxed">Nome, contatos, logo e modalidade de atendimento poderão aparecer no perfil público da sua barbearia.</p></div></div></div>
+</div>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="w-full bg-[#111215] border-t border-[#2C2E38] py-6 mt-auto">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#989693]">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-[#F4F4F5]">Estilo e Gestão</span>
+<span class="">•</span>
+<span class="">Tecnologia e Gestão Inteligente para Barbearias</span>
+</div>
+<div class="flex items-center gap-4 text-[11px] text-[#666662]">
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Termos de Uso</a>
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Privacidade</a>
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Ajuda &amp; FAQ</a>
+<span class="">© 2026 Todos os direitos reservados</span>
+</div>
+</div>
+</footer>
+<!-- INTERACTION SCRIPT -->
+<script>
+    (function() {
+      // Elements
+      const shopNameInput = document.getElementById('shop-name');
+      const proNameInput = document.getElementById('pro-name');
+      const previewShopName = document.getElementById('preview-shop-name');
+      const previewProName = document.getElementById('preview-pro-name');
+      const previewUrl = document.getElementById('preview-url');
+
+      // Live Synchronized Input -> Preview
+      if (shopNameInput && previewShopName) {
+        shopNameInput.addEventListener('input', function(e) {
+          const val = e.target.value.trim();
+          previewShopName.textContent = val || 'Sua Barbearia';
+          const slug = val.toLowerCase().replace(/[^a-z0-9]/g, '') || 'suabarbearia';
+          if (previewUrl) previewUrl.textContent = `${slug}.estiloegestao.com`;
+        });
+      }
+
+      if (proNameInput && previewProName) {
+        proNameInput.addEventListener('input', function(e) {
+          const val = e.target.value.trim();
+          previewProName.textContent = val ? `Profissional: ${val}` : 'Profissional Titular';
+        });
+      }
+
+      // Atendimento Toggles
+      const optNo = document.getElementById('opt-home-no');
+      const optYes = document.getElementById('opt-home-yes');
+      const hiddenInput = document.getElementById('atendimento-input');
+      const previewAtendimentoBadge = document.getElementById('preview-atendimento-badge');
+
+      function setAtendimento(isYes) {
+        hiddenInput.value = isYes ? 'sim' : 'nao';
+
+        if (isYes) {
+          // Yes Active
+          optYes.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all cursor-pointer group';
+          optYes.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0 radio-circle';
+          optYes.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-[#B42318]';
+          optYes.querySelector('span.text-sm').className = 'text-sm font-semibold text-[#F4F4F5]';
+
+          // No Inactive
+          optNo.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#141518] border border-[#2C2E38] hover:border-[#666662] text-left transition-all cursor-pointer group opacity-85';
+          optNo.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border border-[#666662] flex items-center justify-center shrink-0 radio-circle';
+          optNo.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-transparent';
+          optNo.querySelector('span.text-sm').className = 'text-sm font-medium text-[#989693] group-hover:text-[#F4F4F5]';
+
+          if (previewAtendimentoBadge) {
+            previewAtendimentoBadge.innerHTML = '<span class="material-symbols-outlined text-[14px]">directions_car</span> Atende a domicílio';
+          }
+        } else {
+          // No Active
+          optNo.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all cursor-pointer group';
+          optNo.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0 radio-circle';
+          optNo.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-[#B42318]';
+          optNo.querySelector('span.text-sm').className = 'text-sm font-semibold text-[#F4F4F5]';
+
+          // Yes Inactive
+          optYes.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#141518] border border-[#2C2E38] hover:border-[#666662] text-left transition-all cursor-pointer group opacity-85';
+          optYes.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border border-[#666662] flex items-center justify-center shrink-0 radio-circle';
+          optYes.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-transparent';
+          optYes.querySelector('span.text-sm').className = 'text-sm font-medium text-[#989693] group-hover:text-[#F4F4F5]';
+
+          if (previewAtendimentoBadge) {
+            previewAtendimentoBadge.innerHTML = '<span class="material-symbols-outlined text-[14px]">store</span> No espaço fixo';
+          }
+        }
+      }
+
+      if (optNo && optYes) {
+        optNo.addEventListener('click', () => setAtendimento(false));
+        optYes.addEventListener('click', () => setAtendimento(true));
+      }
+
+      // Logo Dropzone
+      const logoZone = document.getElementById('logo-dropzone');
+      const fileInput = document.getElementById('logo-file');
+      const logoLabelText = document.getElementById('logo-label-text');
+      const previewLogoBox = document.getElementById('preview-logo-box');
+
+      if (logoZone && fileInput) {
+        logoZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              if (previewLogoBox) {
+                previewLogoBox.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover rounded-xl" alt="Logo preview">`;
+              }
+            };
+            reader.readAsDataURL(file);
+            if (logoLabelText) {
+              logoLabelText.textContent = file.name.length > 16 ? file.name.substring(0, 14) + '...' : file.name;
+            }
+          }
+        });
+      }
+
+      // Form Submit Feedback
+      const form = document.getElementById('barbershop-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Salvando dados...';
+            setTimeout(() => {
+              submitBtn.innerHTML = 'Concluído! Avançando... <span class="material-symbols-outlined text-[18px]">check</span>';
+              submitBtn.classList.remove('bg-[#B42318]');
+              submitBtn.classList.add('bg-[#2F6B4F]');
+            }, 700);
+          }
+        });
+      }
+    })();
+  </script>
+
+
+</body></html>

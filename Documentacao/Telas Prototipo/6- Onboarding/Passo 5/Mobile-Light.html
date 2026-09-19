@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Onboarding 5 - Produtos e Pagamentos | Estilo e Gestão</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              cream: '#FAF9F5',
+              border: '#E8E7E0',
+              red: '#C92A2A',
+              redHover: '#b02525',
+              dark: '#141414',
+              muted: '#6B7280',
+              lightGray: '#F3F2EC',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-enhancements">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF9F5;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF9F5] text-[#141414] min-h-screen flex flex-col justify-between antialiased selection:bg-red-100 selection:text-red-700">
+<!-- BEGIN: TopBar -->
+<header class="sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md px-5 pt-3 pb-2 border-b border-brand-border/60">
+<div class="max-w-[420px] mx-auto flex items-center justify-between">
+<!-- Botão Voltar Topo -->
+<button aria-label="Voltar" class="w-10 h-10 flex items-center justify-center rounded-full text-brand-dark hover:bg-black/5 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Logo / Marca Centralizada -->
+<div class="flex flex-col items-center">
+<span class="text-[13px] font-extrabold tracking-widest uppercase leading-none">ESTILO</span>
+<span class="text-[13px] font-extrabold tracking-wider uppercase leading-none mt-0.5">GESTÃO</span>
+</div>
+<!-- Alternador de Tema -->
+<button aria-label="Alternar tema" class="w-10 h-10 flex items-center justify-center rounded-full text-brand-dark hover:bg-black/5 active:scale-95 transition" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Stepper Status & Barra de Progresso -->
+<div class="max-w-[420px] mx-auto mt-2 pt-1 pb-1">
+<div class="flex items-center justify-between text-[10.5px] uppercase font-bold tracking-wider mb-1.5 text-[#2C2C2C]">
+<span class="truncate">Passo 5 de 6 • Produtos e pagamentos</span>
+<span class="text-brand-dark ml-2 shrink-0">83% CONCLUÍDO</span>
+</div>
+<div class="w-full bg-[#E5E3D8] h-1.5 rounded-full overflow-hidden">
+<div class="bg-brand-red h-full rounded-full transition-all duration-300" style="width: 83.3%;"></div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-[420px] mx-auto px-5 pt-4 pb-28 space-y-6">
+<!-- Header da Seção com Badge de Categoria -->
+<div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EBE9E1] rounded-full text-[11px] font-bold tracking-wider uppercase text-neutral-700 mb-3">
+<svg class="w-3.5 h-3.5 text-neutral-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>OPERAÇÃO &amp; FATURAMENTO</span>
+</div>
+<h1 class="text-[26px] font-extrabold tracking-tight text-neutral-900 leading-tight">
+        Vamos configurar seus produtos e pagamentos
+      </h1>
+<p class="text-[14px] text-neutral-600 font-medium mt-2 leading-relaxed">
+        Informe se sua barbearia vende produtos ou bebidas e quais formas de pagamento são aceitas.
+      </p>
+</div>
+<!-- CARD 1: Produtos e Bebidas -->
+<section class="bg-white rounded-3xl p-5 border border-brand-border shadow-sm space-y-5" data-purpose="products-card">
+<div>
+<h2 class="text-base font-bold text-neutral-900">Sua barbearia vende produtos ou bebidas?</h2>
+<p class="text-xs text-neutral-500 font-medium mt-0.5">Permite controle de estoque e venda direta no checkout.</p>
+</div>
+<!-- Seletor Sim / Não em Cards Clicáveis -->
+<div aria-label="Venda de produtos ou bebidas" class="grid grid-cols-2 gap-3" role="radiogroup">
+<label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-brand-red bg-red-50/20 cursor-pointer transition">
+<div class="flex items-center gap-2.5">
+<span class="text-base">🍾</span>
+<span class="font-bold text-sm text-neutral-900">Sim, vendo</span>
+</div>
+<input checked="" class="w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" name="sell_products" type="radio" value="sim"/>
+</label>
+<label class="flex items-center justify-between p-3.5 rounded-2xl border border-brand-border bg-brand-cream/30 hover:bg-neutral-50 cursor-pointer transition">
+<div class="flex items-center gap-2.5">
+<span class="text-base">✂️</span>
+<span class="font-bold text-sm text-neutral-700">Apenas serviços</span>
+</div>
+<input class="w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" name="sell_products" type="radio" value="nao"/>
+</label>
+</div>
+<!-- Categorias em Chips Wrap -->
+<div class="pt-2 border-t border-neutral-100 space-y-2.5">
+<span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Quais categorias você comercializa?</span>
+<div class="flex flex-wrap gap-2">
+<!-- Item Ativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-bold bg-neutral-900 text-white flex items-center gap-1.5 shadow-sm" type="button">
+<span>🍺 Bebidas</span>
+<svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Item Ativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-bold bg-neutral-900 text-white flex items-center gap-1.5 shadow-sm" type="button">
+<span>🧴 Pomadas</span>
+<svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Item Inativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#FAF9F5] text-neutral-700 border border-brand-border hover:bg-neutral-100" type="button">
+            Shampoo
+          </button>
+<!-- Item Inativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#FAF9F5] text-neutral-700 border border-brand-border hover:bg-neutral-100" type="button">
+            Cera modeladora
+          </button>
+<!-- Item Ativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-bold bg-neutral-900 text-white flex items-center gap-1.5 shadow-sm" type="button">
+<span>🧔 Óleo / Balm</span>
+<svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Item Inativo -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#FAF9F5] text-neutral-700 border border-brand-border hover:bg-neutral-100" type="button">
+            Acessórios
+          </button>
+<!-- Item Outro -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold border border-dashed border-neutral-400 text-neutral-700 bg-white hover:bg-neutral-50 flex items-center gap-1" type="button">
+<span>+ Outros</span>
+</button>
+</div>
+<!-- Input Categoria Customizada -->
+<div class="pt-1">
+<label class="block text-[11px] font-medium text-neutral-500 mb-1" for="custom-category">Adicionar categoria personalizada (Opcional):</label>
+<div class="flex gap-2">
+<input class="flex-1 text-xs px-3.5 py-2.5 rounded-xl border border-brand-border bg-[#FAF9F5] focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-red" id="custom-category" placeholder="Ex.: Bonés, Camisetas..." type="text"/>
+<button class="px-4 py-2.5 rounded-xl bg-neutral-100 text-neutral-800 text-xs font-bold hover:bg-neutral-200" type="button">
+              Adicionar
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- CARD 2: Formas de Pagamento -->
+<section class="bg-white rounded-3xl p-5 border border-brand-border shadow-sm space-y-4" data-purpose="payment-methods">
+<div>
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-neutral-900">Formas de pagamento</h2>
+<span class="text-[11px] font-bold text-brand-red uppercase">4 selecionadas</span>
+</div>
+<p class="text-xs text-neutral-500 font-medium mt-0.5">Selecione as opções que sua barbearia aceita habitualmente.</p>
+</div>
+<!-- Lista Compacta de Pagamentos -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Pix (Selecionado) -->
+<label class="flex items-center p-3 rounded-2xl border-2 border-brand-red bg-red-50/20 cursor-pointer gap-2.5 transition">
+<input checked="" class="rounded w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-neutral-900 leading-tight">Pix</span>
+<span class="text-[10px] text-neutral-500">Instantâneo</span>
+</div>
+</label>
+<!-- Dinheiro (Selecionado) -->
+<label class="flex items-center p-3 rounded-2xl border-2 border-brand-red bg-red-50/20 cursor-pointer gap-2.5 transition">
+<input checked="" class="rounded w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-neutral-900 leading-tight">Dinheiro</span>
+<span class="text-[10px] text-neutral-500">Cédula / Moeda</span>
+</div>
+</label>
+<!-- Débito (Selecionado) -->
+<label class="flex items-center p-3 rounded-2xl border-2 border-brand-red bg-red-50/20 cursor-pointer gap-2.5 transition">
+<input checked="" class="rounded w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-neutral-900 leading-tight">Débito</span>
+<span class="text-[10px] text-neutral-500">Cartão à vista</span>
+</div>
+</label>
+<!-- Crédito (Selecionado) -->
+<label class="flex items-center p-3 rounded-2xl border-2 border-brand-red bg-red-50/20 cursor-pointer gap-2.5 transition">
+<input checked="" class="rounded w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-neutral-900 leading-tight">Crédito</span>
+<span class="text-[10px] text-neutral-500">Cartão</span>
+</div>
+</label>
+<!-- Outro (Não selecionado) -->
+<label class="flex items-center p-3 rounded-2xl border border-brand-border bg-[#FAF9F5]/40 hover:bg-neutral-50 cursor-pointer gap-2.5 transition col-span-2">
+<input class="rounded w-4 h-4 text-brand-red focus:ring-brand-red border-neutral-300" type="checkbox"/>
+<div class="flex items-center justify-between w-full">
+<span class="text-xs font-bold text-neutral-800">Outros meios (Voucher, Fiado com controle, etc)</span>
+<span class="text-[10px] text-neutral-400 font-medium">Personalizado</span>
+</div>
+</label>
+</div>
+</section>
+<!-- CARD 3: Resumo da Configuração -->
+<section class="bg-white rounded-3xl p-5 border border-brand-border shadow-sm space-y-3" data-purpose="configuration-summary">
+<div class="flex items-center justify-between">
+<span class="text-xs font-extrabold uppercase tracking-wider text-neutral-700 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Resumo da configuração
+        </span>
+<span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Ativo</span>
+</div>
+<div class="bg-[#FAF9F5] rounded-2xl p-3.5 border border-[#EBE9E1] text-xs space-y-2">
+<div class="flex justify-between items-center text-neutral-700">
+<span class="font-medium">Catálogo de Produtos:</span>
+<span class="font-bold text-neutral-900">3 categorias ativas</span>
+</div>
+<div class="h-px bg-brand-border/60"></div>
+<div class="flex justify-between items-center text-neutral-700">
+<span class="font-medium">Pagamentos no PDV:</span>
+<span class="font-bold text-neutral-900">Pix, Dinheiro, Débito, Crédito</span>
+</div>
+</div>
+</section>
+<!-- CARD 4: Informações na Vitrine -->
+<section class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-4 flex gap-3 items-start" data-purpose="info-card">
+<div class="text-blue-600 mt-0.5 shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h4 class="text-xs font-bold text-blue-950">Exibição transparente na Vitrine</h4>
+<p class="text-[12px] text-blue-900/80 mt-0.5 leading-snug">
+          Os clientes poderão ver as formas de pagamento aceitas e produtos de destaque diretamente na página de agendamento online.
+        </p>
+</div>
+</section>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigation -->
+<footer class="fixed bottom-0 inset-x-0 bg-[#FAF9F5]/95 backdrop-blur-md border-t border-brand-border/80 px-5 pt-3 pb-5 z-40">
+<div class="max-w-[420px] mx-auto space-y-3">
+<!-- Botões de Ação Primária e Secundária em Linha Única -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Voltar -->
+<button class="w-full py-3.5 px-4 rounded-2xl border border-brand-border bg-white text-neutral-800 text-sm font-bold shadow-sm hover:bg-neutral-50 active:scale-[0.98] transition flex items-center justify-center whitespace-nowrap" type="button">
+<svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Voltar
+        </button>
+<!-- Continuar -->
+<button class="w-full py-3.5 px-4 rounded-2xl bg-brand-red text-white text-sm font-bold shadow-md hover:bg-brand-redHover active:scale-[0.98] transition flex items-center justify-center whitespace-nowrap" type="button">
+          Continuar
+          <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Indicador Autosave -->
+<div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-neutral-500">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Seu progresso é salvo automaticamente.</span>
+</div>
+</div>
+</footer>
+<!-- END: BottomNavigation -->
+</body></html>

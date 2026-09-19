@@ -1,0 +1,423 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Horários de Funcionamento - Estilo e Gestão</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1a1a19",
+            "on-primary": "#ffffff",
+            "primary-container": "#2f2f2d",
+            "on-primary-container": "#989693",
+            "secondary": "#5f5e5c",
+            "secondary-container": "#e4e2df",
+            "on-secondary-container": "#656462",
+            "surface": "#faf9f5",
+            "surface-base": "#F4F4F0",
+            "surface-elevated": "#FFFFFF",
+            "surface-container": "#eeeeea",
+            "surface-container-low": "#f4f4f0",
+            "surface-container-high": "#e8e8e4",
+            "surface-container-highest": "#e2e3df",
+            "text-primary": "#2F2F2D",
+            "text-secondary": "#666662",
+            "border-subtle": "#E9E9E4",
+            "outline-variant": "#c7c7c0",
+            "danger": "#B42318",
+            "danger-surface": "#FEECEB",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "success": "#2F6B4F",
+            "success-surface": "#EAF5EF",
+            "warning": "#B54708",
+            "warning-surface": "#FFF4E5",
+            "info": "#175CD3",
+            "info-surface": "#EAF3FF",
+            "dark-bg": "#181817",
+            "dark-surface": "#222220",
+            "dark-border": "#3F3F3B"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-text-primary antialiased min-h-screen flex flex-col justify-between selection:bg-danger selection:text-white">
+<!-- Fixed Top Header -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface-elevated/95 backdrop-blur-md border-b border-border-subtle">
+<div class="h-16 max-w-[1280px] mx-auto px-6 md:px-8 flex items-center justify-between gap-4">
+<!-- Brand & Badge -->
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
+          EG
+        </div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-base text-primary tracking-tight">Estilo e Gestão</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold uppercase tracking-wider">
+            Onboarding Profissional
+          </span>
+</div>
+</div>
+<!-- Header Utilities -->
+<div class="flex items-center gap-3">
+<button aria-label="Alternar Tema" class="w-10 h-10 rounded-lg flex items-center justify-center bg-surface-container hover:bg-surface-container-high text-text-secondary hover:text-primary transition-colors cursor-pointer" onclick="document.documentElement.classList.toggle('dark')" type="button">
+<span class="material-symbols-outlined text-[20px]">dark_mode</span>
+</button>
+
+</div>
+</div>
+<!-- Stepper Navigation Bar: 6 Official Steps -->
+<div class="w-full bg-surface-container-low border-t border-border-subtle overflow-x-auto">
+<div class="max-w-[1280px] mx-auto px-6 md:px-8 py-3">
+<nav aria-label="Etapas do cadastro" class="flex items-center justify-between min-w-[760px] gap-2">
+<!-- Step 1: Dados (Concluído) -->
+<div class="flex items-center gap-2 flex-1">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-success-surface text-success text-xs font-bold ring-1 ring-success/20">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">1. Dados</span>
+<span class="text-[11px] text-success font-medium">Concluído</span>
+</div>
+<div class="flex-1 h-[2px] bg-success mx-2 rounded-full"></div>
+</div>
+<!-- Step 2: Endereço (Concluído) -->
+<div class="flex items-center gap-2 flex-1">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-success-surface text-success text-xs font-bold ring-1 ring-success/20">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">2. Endereço</span>
+<span class="text-[11px] text-success font-medium">Concluído</span>
+</div>
+<div class="flex-1 h-[2px] bg-danger mx-2 rounded-full"></div>
+</div>
+<!-- Step 3: Horários (Ativo) -->
+<div class="flex items-center gap-2 flex-1">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-danger text-white text-xs font-bold ring-2 ring-danger ring-offset-2 ring-offset-surface-container-low shadow-sm">
+              3
+            </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-danger">3. Horários</span>
+<span class="px-1.5 py-[1px] rounded-full bg-danger-surface text-danger text-[10px] font-bold">50%</span>
+</div>
+<span class="text-[11px] text-text-secondary font-medium">Em andamento</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-2 rounded-full"></div>
+</div>
+<!-- Step 4: Serviços (Pendente) -->
+<div class="flex items-center gap-2 flex-1">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-high text-text-secondary text-xs font-bold">
+              4
+            </div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-text-secondary">4. Serviços</span>
+<span class="text-[11px] text-text-secondary/70">Pendente</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-2 rounded-full"></div>
+</div>
+<!-- Step 5: Produtos e pagamentos (Pendente) -->
+<div class="flex items-center gap-2 flex-1">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-high text-text-secondary text-xs font-bold">
+              5
+            </div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-text-secondary">5. Produtos e pagamentos</span>
+<span class="text-[11px] text-text-secondary/70">Pendente</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-2 rounded-full"></div>
+</div>
+<!-- Step 6: Aparência (Pendente) -->
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-high text-text-secondary text-xs font-bold">
+              6
+            </div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-text-secondary">6. Aparência</span>
+<span class="text-[11px] text-text-secondary/70">Pendente</span>
+</div>
+</div>
+</nav>
+</div>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="w-full pt-36 pb-16 bg-surface min-h-[calc(100vh-76px)]">
+<div class="max-w-[1280px] mx-auto px-6 md:px-8">
+<!-- Context Header Section -->
+<div class="mb-8 flex flex-col gap-2">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container">
+              Configuração do seu espaço • Passo 3 de 6
+            </span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-danger-surface text-danger text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-danger animate-pulse"></span>
+              Passo 3 de 6 • 50% concluído
+            </span>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-text-secondary">
+<span class="material-symbols-outlined text-[17px] text-success">cloud_done</span>
+<span class="">Seu progresso é salvo automaticamente.</span>
+</div>
+</div>
+<div class="mt-2">
+<h1 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">
+            Quando sua barbearia funciona?
+          </h1>
+<p class="text-base text-text-secondary mt-1 max-w-3xl leading-relaxed">
+            Defina os dias e horários em que sua barbearia funciona. Essas informações poderão aparecer na sua Vitrine pública.
+          </p>
+</div>
+</div>
+<!-- Main Layout: 8 Cols (Form) + 4 Cols (Sidebar) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Weekly Hours Form (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="bg-surface-elevated rounded-xl border border-border-subtle shadow-sm p-6 md:p-8 flex flex-col gap-6">
+<!-- Card Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle"><div>
+  <h2 class="text-base font-bold text-primary">Dias da semana</h2>
+  <p class="text-xs text-text-secondary mt-0.5">Selecione se o estabelecimento estará aberto ou fechado em cada dia.</p>
+</div>
+<div class="flex items-center gap-2">
+  <button type="button" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-text-secondary hover:text-primary text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer">
+    <span class="material-symbols-outlined text-[16px]">content_copy</span>
+    <span class="">Copiar horários</span>
+  </button>
+</div></div>
+<!-- Days List -->
+<div class="flex flex-col gap-4"><!-- Segunda-feira -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-segunda">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Segunda-feira</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Terça-feira -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-terca">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Terça-feira</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quarta-feira -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-quarta">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Quarta-feira</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quinta-feira -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-quinta">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Quinta-feira</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sexta-feira -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-sexta">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Sexta-feira</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sábado -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-sabado">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Sábado</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Domingo -->
+<div class="bg-surface-container-low rounded-xl p-4 md:p-5 border border-border-subtle/80 flex flex-col gap-3 transition-all" id="day-domingo">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-primary">Domingo</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-text-secondary text-xs font-semibold">Não configurado</span>
+    </div>
+    <div class="inline-flex p-1 bg-surface-container rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary">
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Aberto</button>
+      <button type="button" class="px-3 py-1 rounded hover:bg-surface-elevated hover:text-primary transition-all">Fechado</button>
+    </div>
+  </div>
+</div></div>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-2"><button class="w-full sm:w-auto min-w-[140px] h-12 px-6 rounded-xl bg-surface-container hover:bg-surface-container-high text-primary font-bold text-sm flex items-center justify-center gap-2 border border-border-subtle transition-all cursor-pointer whitespace-nowrap shrink-0" type="button">
+  <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+  <span class="">Voltar</span>
+</button>
+<button class="w-full sm:w-auto min-w-[160px] h-12 px-8 rounded-xl bg-danger hover:bg-error text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer whitespace-nowrap shrink-0" type="button">
+  <span class="">Continuar</span>
+  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button></div>
+</div>
+<!-- Right Column: Supporting Panel (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Card 1: Prévia dos horários (Vitrine Pública) -->
+<div class="bg-surface-elevated rounded-xl border border-border-subtle shadow-sm p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-border-subtle pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">storefront</span>
+<h3 class="text-base font-bold text-primary">Prévia dos horários</h3>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-success-surface text-success text-xs font-bold">
+                Vitrine Pública
+              </span>
+</div>
+<p class="text-xs text-text-secondary leading-relaxed">
+              Veja como o expediente será apresentado no link oficial do seu espaço:
+            </p>
+<div class="bg-surface-container-low rounded-lg p-3.5 flex flex-col gap-2.5 text-xs"><div class="py-6 px-4 text-center flex flex-col items-center justify-center gap-2 text-text-secondary">
+  <span class="material-symbols-outlined text-[28px] text-text-secondary/60">schedule</span>
+  <p class="text-xs leading-relaxed max-w-[220px]">
+    Nenhum horário configurado ainda. Os horários que você definir aparecerão aqui.
+  </p>
+</div></div>
+</div>
+<!-- Card 2: Horários na Vitrine -->
+<div class="bg-info-surface rounded-xl border border-info/20 p-5 flex gap-3.5 items-start">
+<span class="material-symbols-outlined text-info text-[22px] shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-1">
+<h4 class="text-sm font-bold text-primary">Horários na Vitrine</h4>
+<p class="text-xs text-text-secondary leading-relaxed">
+                Esses horários ajudam os clientes a saber quando sua barbearia normalmente está aberta.
+              </p>
+</div>
+</div>
+<!-- Card 3: Próximas etapas -->
+<div class="bg-surface-elevated rounded-xl border border-border-subtle shadow-sm p-6 flex flex-col gap-3">
+<span class="text-xs font-bold text-text-secondary uppercase tracking-wider">Próximas etapas</span>
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container-low border border-border-subtle/60">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center text-xs font-bold">
+                  4
+                </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">Serviços</span>
+<span class="text-[11px] text-text-secondary">Definição de serviços e preços</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container-low border border-border-subtle/60">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center text-xs font-bold">
+                  5
+                </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">Produtos e pagamentos</span>
+<span class="text-[11px] text-text-secondary">Itens de venda e formas de pagamento</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container-low border border-border-subtle/60">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-text-secondary flex items-center justify-center text-xs font-bold">
+                  6
+                </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">Aparência e conclusão</span>
+<span class="text-[11px] text-text-secondary">Tema do sistema e conclusão</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low border-t border-border-subtle">
+<div class="max-w-[1280px] mx-auto px-6 md:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-text-secondary">
+<div class="flex flex-wrap items-center gap-2 text-center md:text-left">
+<span class="">© 2025 Estilo e Gestão. Todos os direitos reservados.</span>
+<span class="hidden md:inline">•</span>
+<span class="hidden md:inline">Plataforma de Gestão Operacional para Barbearias</span>
+</div>
+<div class="flex items-center gap-5">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">help_center</span>
+          Central de Ajuda
+        </a>
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">support_agent</span>
+          Suporte Operacional
+        </a>
+<a class="hover:text-primary transition-colors" href="#">Termos de Uso</a>
+<a class="hover:text-primary transition-colors" href="#">Privacidade</a>
+</div>
+</div>
+</footer>
+
+
+
+
+
+
+</body></html>

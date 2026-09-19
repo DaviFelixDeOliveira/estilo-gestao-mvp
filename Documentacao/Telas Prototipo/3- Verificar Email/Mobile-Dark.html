@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificar E-mail - Mobile - Modo Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              950: '#2F2F2D',
+              800: '#3A3A38',
+              600: '#666662',
+            },
+            dark: {
+              bg: '#181817',
+              surface: '#222220',
+              surfaceAlt: '#2B2B29',
+              border: '#3F3F3B',
+              textPrimary: '#F4F4F0',
+              textSecondary: '#B8B8B2',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-dark-bg text-dark-textPrimary font-sans min-h-screen flex flex-col justify-between selection:bg-white selection:text-dark-bg relative overflow-x-hidden">
+  <!-- Imagem de fundo temática escura da barbearia -->
+  <div class="fixed inset-0 pointer-events-none opacity-25 z-0">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn4y4Jts3svQQuDej2P_hLHDDPZoTBVidwoMsufRSd1L0NqXn-L3uh8wK1O4qvyJr5lqEHrJonQW_yRChlKClDRDLTj29ylt5ZQuYPy1Tt7nrZykqFyYtsQ63OsrcKtfEl1mffMfMnfbg7CphkEVsXTDHLdzvUuEWjp8RTJPdEbhs3V5YrktuR_pF1IV-Uwwg7GMYcokGHjVt47KfQBJXxMQzk0F16JRtOBH61spm2FQnD9GNfWGy5QhPVKlIWcIppn7w" alt="Barbearia Dark Estilo e Gestão" class="w-full h-full object-cover object-center filter blur-[1px]">
+    <div class="absolute inset-0 bg-dark-bg/85 backdrop-blur-[2px]"></div>
+  </div>
+
+  <!-- Cabeçalho Mobile -->
+  <header class="relative z-10 w-full px-5 pt-8 pb-4 flex items-center justify-between">
+    <div class="w-8"></div>
+    <div class="flex flex-col items-center">
+      <!-- Logo com Texto Branco para Modo Escuro -->
+      <div class="w-24 h-24 flex items-center justify-center">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwtSRKUIlZBlZUnMXYNJmvozY693_28dfT9LdnbB-rZExgB_8hbPmjJrQifZcgsxHHwuc7RI75CXq49P47_JcO-WMyvcM-LGqiegrhnUET4ugtZOTsPLPoXZcelj56huv4FFEScC8vELa-BiC7bArFHnatwDsK5qzNRkaHV7r9BNHmTuvwaanzy0BaFPsa3B9DroqPXcjtHKOM7dMwv1HCEeXZ6xFNH4fA1UVBa2fVshNI-CJZvnlV2p6vwxANdjAyWPY" alt="Logo Estilo e Gestão" class="w-full h-full object-contain">
+      </div>
+    </div>
+    <!-- Botão de alternância com ícone de Sol -->
+    <div class="w-8 flex justify-end">
+      <button type="button" aria-label="Alternar para modo claro" class="w-8 h-8 rounded-full bg-dark-surfaceAlt border border-dark-border flex items-center justify-center text-dark-textSecondary hover:text-dark-textPrimary transition-colors shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="relative z-10 flex-1 flex flex-col justify-center px-4 py-4 w-full max-w-[420px] mx-auto">
+    <div class="bg-dark-surface/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 shadow-xl border border-dark-border text-center">
+      <!-- Ícone representativo -->
+      <div class="w-12 h-12 rounded-xl bg-dark-surfaceAlt border border-dark-border flex items-center justify-center mx-auto mb-4 text-dark-textPrimary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+      </div>
+
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-dark-textPrimary mb-2">
+        Verifique seu e-mail
+      </h1>
+
+      <p class="text-xs sm:text-sm text-dark-textSecondary leading-relaxed mb-1">
+        Enviamos um código de 6 dígitos para o seu e-mail. Digite o código abaixo para confirmar sua conta.
+      </p>
+
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-dark-surfaceAlt border border-dark-border rounded-full my-3">
+        <span class="text-xs font-semibold text-dark-textPrimary">davi@email.com</span>
+      </div>
+
+      <!-- Container de Alertas -->
+      <div id="alert-container-dark" class="hidden my-3 p-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5"></div>
+
+      <!-- Formulário OTP -->
+      <form id="otp-form-dark" class="mt-4" onsubmit="event.preventDefault(); handleSubmitDark();">
+        <div class="flex justify-between items-center gap-1.5 sm:gap-2 mb-6" id="otp-inputs-dark">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all" autofocus>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-dark w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-xl border-2 border-dark-border bg-dark-surfaceAlt text-dark-textPrimary focus:border-dark-textPrimary focus:bg-dark-surface focus:outline-none transition-all">
+        </div>
+
+        <button id="verify-btn-dark" type="button" onclick="handleSubmitDark()" disabled class="w-full py-3.5 px-4 rounded-xl bg-dark-textPrimary text-dark-bg font-semibold text-sm tracking-wide shadow-sm hover:bg-surface-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
+          <span id="btn-text-dark">Verificar e-mail</span>
+          <svg id="btn-spinner-dark" class="hidden animate-spin w-4 h-4 text-dark-bg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Reenvio -->
+      <div class="mt-6 pt-5 border-t border-dark-border/80">
+        <p class="text-xs text-dark-textSecondary mb-1.5">Não recebeu o código?</p>
+        <button id="resend-btn-dark" onclick="handleResendDark()" type="button" class="text-xs font-semibold text-dark-textPrimary hover:underline transition-all">
+          Reenviar código
+        </button>
+        <p id="countdown-text-dark" class="hidden text-xs text-dark-textSecondary font-medium mt-1">
+          Reenviar código em <span id="countdown-timer-dark" class="font-bold text-dark-textPrimary">00:45</span>
+        </p>
+      </div>
+
+      <!-- Voltar -->
+      <div class="mt-5">
+        <a href="#voltar" class="text-xs text-dark-textSecondary hover:text-dark-textPrimary transition-colors inline-flex items-center gap-1 font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+          E-mail incorreto? Voltar e alterar
+        </a>
+      </div>
+
+      <!-- Botões de Demonstração de Estados -->
+      <div class="mt-8 pt-4 border-t border-dashed border-dark-border flex flex-wrap justify-center gap-1.5 text-[10px] text-dark-textSecondary">
+        <span class="font-bold text-dark-textPrimary">Estados:</span>
+        <button onclick="simulateStateDark('idle')" class="px-2 py-0.5 rounded bg-dark-surfaceAlt border border-dark-border hover:bg-dark-border">Normal</button>
+        <button onclick="simulateStateDark('loading')" class="px-2 py-0.5 rounded bg-dark-surfaceAlt border border-dark-border hover:bg-dark-border">Carregando</button>
+        <button onclick="simulateStateDark('invalid')" class="px-2 py-0.5 rounded bg-red-950/60 text-red-300 border border-red-800">Incorreto</button>
+        <button onclick="simulateStateDark('expired')" class="px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800">Expirado</button>
+        <button onclick="simulateStateDark('resent')" class="px-2 py-0.5 rounded bg-blue-950/60 text-blue-300 border border-blue-800">Reenviado</button>
+        <button onclick="simulateStateDark('success')" class="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-800">Sucesso</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="relative z-10 py-5 text-center text-xs text-dark-textSecondary">
+    <p>Estilo e Gestão &bull; Sistema de Gestão para Barbearias</p>
+  </footer>
+
+  <script>
+    const inputsDark = document.querySelectorAll('.otp-digit-dark');
+    const verifyBtnDark = document.getElementById('verify-btn-dark');
+    const btnTextDark = document.getElementById('btn-text-dark');
+    const btnSpinnerDark = document.getElementById('btn-spinner-dark');
+    const alertBoxDark = document.getElementById('alert-container-dark');
+    const resendBtnDark = document.getElementById('resend-btn-dark');
+    const countdownTextDark = document.getElementById('countdown-text-dark');
+    const countdownTimerDark = document.getElementById('countdown-timer-dark');
+
+    inputsDark.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val ? val[val.length - 1] : '';
+        if (e.target.value && index < inputsDark.length - 1) {
+          inputsDark[index + 1].focus();
+        }
+        checkFullCodeDark();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          inputsDark[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+        const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+        if (digits) {
+          digits.split('').forEach((char, i) => {
+            if (inputsDark[i]) inputsDark[i].value = char;
+          });
+          if (digits.length === 6) {
+            inputsDark[5].focus();
+          } else if (inputsDark[digits.length]) {
+            inputsDark[digits.length].focus();
+          }
+          checkFullCodeDark();
+        }
+      });
+    });
+
+    function checkFullCodeDark() {
+      const code = Array.from(inputsDark).map(i => i.value).join('');
+      verifyBtnDark.disabled = code.length !== 6;
+    }
+
+    function handleSubmitDark() {
+      if (verifyBtnDark.disabled) return;
+      simulateStateDark('loading');
+      setTimeout(() => {
+        simulateStateDark('success');
+      }, 1500);
+    }
+
+    let timerIntervalDark = null;
+    function handleResendDark() {
+      simulateStateDark('resent');
+      resendBtnDark.classList.add('hidden');
+      countdownTextDark.classList.remove('hidden');
+      let seconds = 45;
+      countdownTimerDark.textContent = '00:45';
+      if (timerIntervalDark) clearInterval(timerIntervalDark);
+      timerIntervalDark = setInterval(() => {
+        seconds--;
+        const formatted = seconds < 10 ? `00:0${seconds}` : `00:${seconds}`;
+        countdownTimerDark.textContent = formatted;
+        if (seconds <= 0) {
+          clearInterval(timerIntervalDark);
+          resendBtnDark.classList.remove('hidden');
+          countdownTextDark.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    function simulateStateDark(state) {
+      alertBoxDark.className = "my-3 p-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5";
+      alertBoxDark.classList.remove('hidden');
+      btnSpinnerDark.classList.add('hidden');
+      btnTextDark.textContent = "Verificar e-mail";
+      verifyBtnDark.disabled = false;
+
+      inputsDark.forEach(i => {
+        i.classList.remove('border-red-500', 'bg-red-950/30', 'border-emerald-500', 'bg-emerald-950/30');
+      });
+
+      if (state === 'idle') {
+        alertBoxDark.classList.add('hidden');
+        inputsDark.forEach(i => i.value = '');
+        inputsDark[0].focus();
+        verifyBtnDark.disabled = true;
+      } else if (state === 'loading') {
+        alertBoxDark.classList.add('hidden');
+        btnSpinnerDark.classList.remove('hidden');
+        btnTextDark.textContent = "Verificando...";
+        verifyBtnDark.disabled = true;
+      } else if (state === 'invalid') {
+        alertBoxDark.classList.add('bg-red-950/60', 'text-red-300', 'border', 'border-red-800');
+        alertBoxDark.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+          <span>O código informado é inválido. Verifique e tente novamente.</span>
+        `;
+        inputsDark.forEach(i => i.classList.add('border-red-500', 'bg-red-950/30'));
+      } else if (state === 'expired') {
+        alertBoxDark.classList.add('bg-amber-950/60', 'text-amber-300', 'border', 'border-amber-800');
+        alertBoxDark.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+          <span>Este código expirou. Solicite um novo código.</span>
+        `;
+      } else if (state === 'resent') {
+        alertBoxDark.classList.add('bg-blue-950/60', 'text-blue-300', 'border', 'border-blue-800');
+        alertBoxDark.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>Um novo código foi enviado para o seu e-mail.</span>
+        `;
+      } else if (state === 'success') {
+        alertBoxDark.classList.add('bg-emerald-950/60', 'text-emerald-300', 'border', 'border-emerald-800');
+        alertBoxDark.innerHTML = `
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>E-mail verificado com sucesso! Redirecionando...</span>
+        `;
+        inputsDark.forEach(i => i.classList.add('border-emerald-500', 'bg-emerald-950/30'));
+        btnTextDark.textContent = "Confirmado!";
+        verifyBtnDark.classList.replace('bg-dark-textPrimary', 'bg-emerald-600');
+        verifyBtnDark.classList.replace('text-dark-bg', 'text-white');
+      }
+    }
+  </script>
+</body>
+</html>

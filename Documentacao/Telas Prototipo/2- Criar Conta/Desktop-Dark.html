@@ -1,0 +1,381 @@
+<!DOCTYPE html><html class="h-full" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Criar Conta - Estilo e Gestão</title>
+<!-- Fonts: Inter and Playfair Display for editorial elegance -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#D92D20',
+              'red-hover': '#B42318',
+              surface: '#121212',
+              card: '#181817',
+              input: '#222220',
+              border: '#3F3F3B',
+              muted: '#B8B8B2',
+              light: '#F4F4F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles: Micro-adjustments and animations -->
+<style data-purpose="custom-styling">
+    /* Subtle barber pole light streak */
+    .barber-accent-gradient {
+      background: linear-gradient(90deg, #D92D20 0%, #1D4ED8 100%);
+    }
+    
+    /* Chrome autocomplete dark background fix */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: #F4F4F0;
+      -webkit-box-shadow: 0 0 0px 1000px #222220 inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+</head>
+<body class="h-full bg-[#121212] text-brand-light font-sans antialiased overflow-x-hidden">
+<!-- BEGIN: SignupContainer -->
+<main class="min-h-screen w-full flex flex-col lg:flex-row">
+<!-- BEGIN: LeftAtmosphere -->
+<!-- Left Hero/Atmospheric Column -->
+<section aria-label="Apresentação Visual" class="relative hidden lg:flex lg:w-1/2 xl:w-[52%] flex-col justify-between p-12 xl:p-16 overflow-hidden">
+<!-- Background Image with Moody Overlay -->
+<div class="absolute inset-0 z-0">
+<img alt="Barbearia premium com iluminação sofisticada em tons escuros e luzes neon" class="w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvtgAEU9loxs0EnuNBsm0iSKnXlESnnUkGcbgEy40sQkjXSiCJxLE0dbc_p76afhNCMu3jjULL_wjYD_-vsOMWwCSOTaErzElRinxXPlIiHJR-hgf7V5IdCwVh68sHWHSLJ6jGUZKo_P2M0MCHQtQykI40_TS8kDTXSzkDfe1yQuibfFeqOHzMZv2dIktLxjxbFMEHU1dMIp_ZHncg9P-rBJf4eLKpvbWsFDVJ4ooNXI9y9RM121SMSxfyA2uX9QbCAko">
+<!-- Atmospheric Vignette & Color Bleeds -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#121212]/60"></div>
+</div>
+<!-- Top decorative badge -->
+<div class="relative z-10">
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 border border-brand-border/60 backdrop-blur-md">
+<span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+<span class="text-xs font-semibold tracking-wider uppercase text-brand-light/90">Gestão para Barbearias</span>
+</div>
+</div>
+<!-- Bottom Headline & Text Area -->
+<div class="relative z-10 max-w-xl pb-6">
+<!-- Dual tone barber stripe indicator -->
+<div class="w-16 h-1 rounded-full barber-accent-gradient mb-6"></div>
+<h1 class="text-3xl xl:text-5xl font-serif font-bold text-[#F4F4F0] leading-tight tracking-tight mb-4">
+          Toda a excelência, com total facilidade.
+        </h1>
+<p class="text-base xl:text-lg text-brand-muted leading-relaxed font-light max-w-lg">
+          Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
+        </p>
+</div>
+</section>
+<!-- END: LeftAtmosphere -->
+<!-- BEGIN: RightAuthSurface -->
+<!-- Right Registration Surface Column -->
+<section aria-label="Formulário de Cadastro" class="w-full lg:w-1/2 xl:w-[48%] flex flex-col justify-between bg-[#121212] px-6 sm:px-12 md:px-16 py-8 lg:py-12 relative z-10 border-l border-brand-border/40">
+<!-- Top Navigation & Brand Header -->
+<header class="w-full flex items-center justify-between pb-8">
+<!-- Brand Identity Container with White background for transparent black text logo -->
+<div class="flex items-center justify-center w-24 h-24"><img alt="Estilo &amp; Gestão" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCveZK0J9qnWZRYmSoa1PGAqS4oSYPZTE7Tp0-pSDv4MyB9v_PC0fOV4lzpztc3m9WC6_vNNS00GslBiqT2UvQJmAtJ524W-wrvtmaYH2kp5hEAyayxht2EZjkksXVv4gAWTmV3Ve7146FlsPOxrdC1eegTM8stISGaj2wd-iNbNouavgxd7J8rWAv-O5b2aJMS2GbYRHcIfi1UwvQF00s17d7HgMuUIIETeBfTkhv-2FIDLhLui3Ggtzp8gDALT4O2jsY"></div>
+<!-- Return/Login Secondary Action -->
+<div class="text-sm"><span class="text-brand-muted hidden sm:inline mr-1">Já tem uma conta?</span><a class="font-medium text-brand-light hover:text-white hover:underline transition-colors" href="#entrar">Entrar</a></div>
+</header>
+<!-- Center Registration Form Container -->
+<div class="w-full max-w-[440px] mx-auto py-6 sm:py-8 my-auto">
+<!-- Form Introduction -->
+<div class="mb-8">
+<h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F0] mb-2 font-sans">
+            Crie sua conta
+          </h2>
+<p class="text-sm sm:text-base text-brand-muted">
+            Comece a organizar sua barbearia com o Estilo e Gestão.
+          </p>
+</div>
+<!-- Main Form -->
+<form class="space-y-5" data-purpose="registration-form" id="signup-form" novalidate="">
+<!-- E-mail Field -->
+<div class="space-y-1.5">
+<label class="block text-sm font-medium text-brand-light" for="email">
+              E-mail
+            </label>
+<div class="relative">
+<input autocomplete="email" class="w-full h-12 px-4 rounded-lg bg-brand-input border border-brand-border text-brand-light placeholder-brand-muted/50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors" id="email" name="email" placeholder="seu.email@barbearia.com" required="" type="email">
+</div>
+<!-- Email Inline Error -->
+<p class="hidden text-xs text-brand-red mt-1 font-medium" id="email-error" role="alert"></p>
+</div>
+<!-- Password Field -->
+<div class="space-y-1.5">
+<label class="block text-sm font-medium text-brand-light" for="password">
+              Senha
+            </label>
+<div class="relative">
+<input autocomplete="new-password" class="w-full h-12 pl-4 pr-12 rounded-lg bg-brand-input border border-brand-border text-brand-light placeholder-brand-muted/50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors" id="password" name="password" placeholder="••••••••" required="" type="password">
+<!-- Password Toggle Button -->
+<button aria-label="Alternar visibilidade da senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-light p-1.5 rounded transition-colors focus:outline-none" id="toggle-password" type="button">
+<!-- Eye Icon (Hidden state default) -->
+<svg class="w-5 h-5" fill="none" id="eye-icon-password" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<!-- Eye Off Icon (Initially hidden) -->
+<svg class="w-5 h-5 hidden" fill="none" id="eye-off-icon-password" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Password Validation Requirements List -->
+<ul aria-label="Requisitos de senha" class="pt-1.5 space-y-1 text-xs text-brand-muted" id="password-requirements">
+<li class="flex items-center gap-1.5" id="req-length">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-border inline-block transition-colors" id="dot-length"></span>
+<span class="">Mínimo de 8 caracteres</span>
+</li>
+<li class="flex items-center gap-1.5" id="req-letter">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-border inline-block transition-colors" id="dot-letter"></span>
+<span class="">Pelo menos 1 letra</span>
+</li>
+<li class="flex items-center gap-1.5" id="req-number">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-border inline-block transition-colors" id="dot-number"></span>
+<span class="">Pelo menos 1 número</span>
+</li>
+</ul>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-1.5">
+<label class="block text-sm font-medium text-brand-light" for="confirm-password">
+              Confirmar senha
+            </label>
+<div class="relative">
+<input autocomplete="new-password" class="w-full h-12 pl-4 pr-12 rounded-lg bg-brand-input border border-brand-border text-brand-light placeholder-brand-muted/50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors" id="confirm-password" name="confirm-password" placeholder="••••••••" required="" type="password">
+<!-- Confirm Password Toggle Button -->
+<button aria-label="Alternar visibilidade de confirmação da senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-light p-1.5 rounded transition-colors focus:outline-none" id="toggle-confirm-password" type="button">
+<!-- Eye Icon -->
+<svg class="w-5 h-5" fill="none" id="eye-icon-confirm" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<!-- Eye Off Icon -->
+<svg class="w-5 h-5 hidden" fill="none" id="eye-off-icon-confirm" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Confirm Password Inline Error -->
+<p class="hidden text-xs text-brand-red mt-1 font-medium" id="confirm-password-error" role="alert"></p>
+</div>
+<!-- Submit Button Container -->
+<div class="pt-3">
+<button class="w-full h-12 bg-brand-red hover:bg-brand-red-hover active:scale-[0.99] text-white font-semibold rounded-lg shadow-lg shadow-brand-red/20 transition duration-150 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-brand-surface focus:ring-brand-red disabled:opacity-75 disabled:cursor-not-allowed" id="submit-btn" type="submit">
+<!-- Default state text -->
+<span id="btn-text" class="">Criar conta</span>
+<!-- Loading spinner (Hidden by default) -->
+<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden" fill="none" id="btn-spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</button>
+</div>
+<!-- General Form Alert / Success Message Container -->
+<div class="hidden p-3 rounded-lg text-xs font-medium" id="form-alert" role="status"></div>
+</form>
+</div>
+<!-- Legal / Copyright Footer -->
+<footer class="w-full pt-8 text-center sm:text-left border-t border-brand-border/30">
+<p class="text-xs text-brand-muted/70">
+          © 2026 Estilo e Gestão. Todos os direitos reservados.
+        </p>
+</footer>
+</section>
+<!-- END: RightAuthSurface -->
+</main>
+<!-- END: SignupContainer -->
+<!-- BEGIN: InteractiveScripts -->
+<!-- Password Visibility Toggle Logic -->
+<script data-purpose="password-visibility">
+    function setupPasswordToggle(toggleBtnId, inputId, eyeIconId, eyeOffIconId) {
+      const button = document.getElementById(toggleBtnId);
+      const input = document.getElementById(inputId);
+      const eyeIcon = document.getElementById(eyeIconId);
+      const eyeOffIcon = document.getElementById(eyeOffIconId);
+
+      if (!button || !input) return;
+
+      button.addEventListener('click', () => {
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.classList.toggle('hidden', isPassword);
+        eyeOffIcon.classList.toggle('hidden', !isPassword);
+      });
+    }
+
+    setupPasswordToggle('toggle-password', 'password', 'eye-icon-password', 'eye-off-icon-password');
+    setupPasswordToggle('toggle-confirm-password', 'confirm-password', 'eye-icon-confirm', 'eye-off-icon-confirm');
+  </script>
+<!-- Live Password Validation & Form Submission Logic -->
+<script data-purpose="form-validation-and-submit">
+    const form = document.getElementById('signup-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+
+    const emailError = document.getElementById('email-error');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const formAlert = document.getElementById('form-alert');
+
+    // Requirement indicators
+    const dotLength = document.getElementById('dot-length');
+    const dotLetter = document.getElementById('dot-letter');
+    const dotNumber = document.getElementById('dot-number');
+    const textLength = document.getElementById('req-length');
+    const textLetter = document.getElementById('req-letter');
+    const textNumber = document.getElementById('req-number');
+
+    // Live validation for password rules
+    passwordInput.addEventListener('input', () => {
+      const val = passwordInput.value;
+      
+      const hasLength = val.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(val);
+      const hasNumber = /[0-9]/.test(val);
+
+      // Update Length Indicator
+      updateReqState(dotLength, textLength, hasLength);
+      // Update Letter Indicator
+      updateReqState(dotLetter, textLetter, hasLetter);
+      // Update Number Indicator
+      updateReqState(dotNumber, textNumber, hasNumber);
+
+      // Clear password mismatch error if user edits
+      if (confirmPasswordInput.value && val === confirmPasswordInput.value) {
+        hideError(confirmPasswordError, confirmPasswordInput);
+      }
+    });
+
+    function updateReqState(dotEl, textEl, isValid) {
+      if (isValid) {
+        dotEl.classList.remove('bg-brand-border');
+        dotEl.classList.add('bg-emerald-500');
+        textEl.classList.remove('text-brand-muted');
+        textEl.classList.add('text-emerald-400');
+      } else {
+        dotEl.classList.add('bg-brand-border');
+        dotEl.classList.remove('bg-emerald-500');
+        textEl.classList.add('text-brand-muted');
+        textEl.classList.remove('text-emerald-400');
+      }
+    }
+
+    function showError(element, inputElement, message) {
+      element.textContent = message;
+      element.classList.remove('hidden');
+      inputElement.classList.add('border-brand-red');
+      inputElement.classList.remove('border-brand-border');
+    }
+
+    function hideError(element, inputElement) {
+      element.textContent = '';
+      element.classList.add('hidden');
+      inputElement.classList.remove('border-brand-red');
+      inputElement.classList.add('border-brand-border');
+    }
+
+    // Clear input errors on focus
+    emailInput.addEventListener('input', () => hideError(emailError, emailInput));
+    confirmPasswordInput.addEventListener('input', () => hideError(confirmPasswordError, confirmPasswordInput));
+
+    // Form submission handling
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      let isValid = true;
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      // Email validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        showError(emailError, emailInput, 'Por favor, insira um e-mail válido.');
+        isValid = false;
+      } else {
+        hideError(emailError, emailInput);
+      }
+
+      // Password rules validation
+      const hasLength = password.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+
+      if (!hasLength || !hasLetter || !hasNumber) {
+        isValid = false;
+      }
+
+      // Confirm Password match validation
+      if (password !== confirmPassword) {
+        showError(confirmPasswordError, confirmPasswordInput, 'As senhas não coincidem.');
+        isValid = false;
+      } else if (!confirmPassword) {
+        showError(confirmPasswordError, confirmPasswordInput, 'Por favor, confirme sua senha.');
+        isValid = false;
+      } else {
+        hideError(confirmPasswordError, confirmPasswordInput);
+      }
+
+      if (!isValid) return;
+
+      // Loading State Trigger
+      submitBtn.disabled = true;
+      btnText.textContent = 'Criando conta...';
+      btnSpinner.classList.remove('hidden');
+      formAlert.classList.add('hidden');
+
+      // Simulate API registration request
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Criar conta';
+        btnSpinner.classList.add('hidden');
+
+        // Display success confirmation message
+        formAlert.className = 'p-3 rounded-lg text-xs font-medium bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 block text-center';
+        formAlert.textContent = 'Conta criada com sucesso! Redirecionando...';
+
+        // Optional reset after successful creation
+        form.reset();
+        [dotLength, dotLetter, dotNumber].forEach(dot => {
+          dot.classList.add('bg-brand-border');
+          dot.classList.remove('bg-emerald-500');
+        });
+        [textLength, textLetter, textNumber].forEach(txt => {
+          txt.classList.add('text-brand-muted');
+          txt.classList.remove('text-emerald-400');
+        });
+      }, 1500);
+    });
+  </script>
+<!-- END: InteractiveScripts -->
+
+
+
+
+
+
+
+
+</body></html>

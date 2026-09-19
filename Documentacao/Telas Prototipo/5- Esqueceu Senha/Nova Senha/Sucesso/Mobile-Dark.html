@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Nova Senha - Estilo e Gestão</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#DC2626',
+              redHover: '#B91C1C',
+              darkBg: '#0F0F11',
+              cardBg: '#19191C',
+              inputBg: '#1F1F23',
+              borderDark: '#2E2E33',
+              subtext: '#A1A1AA'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-red': '0 0 20px -3px rgba(220, 38, 38, 0.45)',
+            'card-dark': '0 20px 40px -15px rgba(0, 0, 0, 0.7)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #0A0A0C;
+    color: #F4F4F5;
+    -webkit-font-smoothing: antialiased;
+}
+.bg-barbershop {
+    background-image: linear-gradient(180deg, rgba(10, 10, 12, 0.70) 0%, rgba(10, 10, 12, 0.85) 65%, #0A0A0C 100%), url(https://lh3.googleusercontent.com/aida-public/AB6AXuA6bXQMFn4Y148bDb_hqs9OKNi5YDmvVYOCyDg90caaPt-34PWrdRJ-QqPS9fU8jrDGxHgDpjfJHZJAFCL6d6fLX-lBE_u17QWdMut32Xt1IJKa0wkkSuXJsUn_qb9zJiv-VUvLAXWJxrnfQZAiUrv2LgbSv7l-rqpLuZ3VzoMY8Ju14YPCH747L8JXjb5M8_rjWvGxRzNe5RO5ol43RyOSD0yUQ32qOYPu2p71ZbgpUIhHSSZTGTAW7w);
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+</style>
+</head>
+<body class="min-h-screen bg-barbershop flex flex-col justify-between items-center px-4 py-6 selection:bg-red-600 selection:text-white">
+<!-- BEGIN: TopBar -->
+<header class="w-full max-w-sm flex items-center justify-between pt-2 pb-3">
+<!-- Back Button -->
+<a aria-label="Voltar" class="w-10 h-10 rounded-full bg-neutral-900/80 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 flex items-center justify-center transition-all duration-200 backdrop-blur-md active:scale-95" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+<!-- Top App Brand Header -->
+<span class="text-xs font-bold tracking-widest text-neutral-300 uppercase">
+      ESTILO E GESTÃO
+    </span>
+<!-- Dark/Light Theme Toggle Button -->
+<button aria-label="Alternar tema" class="w-10 h-10 rounded-full bg-neutral-900/80 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 flex items-center justify-center transition-all duration-200 backdrop-blur-md active:scale-95" type="button">
+<svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-sm flex flex-col items-center my-auto">
+<!-- Central Brand Logo Box -->
+<div class="relative w-20 h-20 sm:w-24 sm:h-24 mb-4 rounded-2xl bg-neutral-900/90 border border-neutral-800 shadow-xl flex items-center justify-center p-3 backdrop-blur-md">
+<div class="absolute -inset-0.5 bg-gradient-to-tr from-red-600/20 to-blue-600/20 rounded-2xl blur-sm -z-10"></div>
+<img alt="Estilo e Gestão Logo" class="w-full h-full object-contain drop-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvghKpBv0KweKYc-LST8rDZCovnYFMuxntcTeeFJO67uNEPLaUYLAbd7Y-FF3u7fTXFEAjrQiWbFZ28t_A_TjH9q_HUtN6FjZsBe0EqnO9aMZqvbGFr1z9Pv0e8s4ZKFLzQR8Y93f37sxJtmiv-iPhhzQ-b2Nat25w0azDOmtktDAan-liAlcSxwWsQqzFJeK70Qy6emmHNPkUvClrZOWghd5FdDAnPp9nVEBeo8CGEZUvFzQKkqLZ_w"/>
+</div>
+<!-- Status Category Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 mb-4 rounded-full bg-neutral-900/80 border border-neutral-800 shadow-sm backdrop-blur-md">
+<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_#dc2626]"></span>
+<span class="text-[11px] font-semibold tracking-wider text-neutral-300 uppercase">RECUPERAÇÃO DE ACESSO</span>
+</div>
+<!-- Card Container -->
+<section class="w-full bg-[#18181B]/95 backdrop-blur-xl border border-neutral-800/90 rounded-3xl p-6 shadow-card-dark" data-purpose="recovery-card">
+<!-- Heading Text Group -->
+<div class="text-center mb-5">
+<h1 class="text-2xl font-extrabold text-white tracking-tight mb-1.5">
+          Crie uma nova senha
+        </h1>
+<p class="text-xs sm:text-sm text-neutral-400 leading-relaxed font-normal">
+          Agora defina uma nova senha para acessar sua conta com segurança.
+        </p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-4" data-purpose="new-password-form" method="POST" onsubmit="event.preventDefault();">
+<!-- Nova Senha -->
+<div class="space-y-1.5 text-left">
+<label class="block text-xs font-bold text-neutral-300 tracking-wider uppercase" for="new-password">
+            NOVA SENHA
+          </label>
+<div class="relative rounded-xl shadow-inner">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+</div>
+<input class="block w-full pl-10 pr-10 py-3 bg-[#232327]/90 border border-neutral-700/80 rounded-xl text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-200" id="new-password" placeholder="Digite sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-white transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Confirmar Nova Senha -->
+<div class="space-y-1.5 text-left">
+<label class="block text-xs font-bold text-neutral-300 tracking-wider uppercase" for="confirm-password">
+            CONFIRMAR NOVA SENHA
+          </label>
+<div class="relative rounded-xl shadow-inner">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="m9 12 2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="block w-full pl-10 pr-10 py-3 bg-[#232327]/90 border border-neutral-700/80 rounded-xl text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-200" id="confirm-password" placeholder="Confirme sua nova senha" required="" type="password" value=""/>
+<button aria-label="Mostrar senha" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-white transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Password Rules Box -->
+<div class="p-3.5 rounded-xl bg-[#232327]/70 border border-neutral-700/70 text-left space-y-1.5" id="password-rules">
+<span class="block text-[11px] font-bold uppercase tracking-wider text-neutral-300">A senha deve conter:</span>
+<div class="space-y-1.5 text-xs text-neutral-300">
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-length">
+<svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+<path d="M15 9l-6 6m0-6l6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Mínimo de 8 caracteres</span>
+</div>
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-letter">
+<svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+<path d="M15 9l-6 6m0-6l6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Pelo menos 1 letra</span>
+</div>
+<div class="flex items-center gap-2 text-rose-500 transition-colors duration-200" id="rule-number">
+<svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+<path d="M15 9l-6 6m0-6l6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Pelo menos 1 número</span>
+</div>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="pt-1">
+<button class="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-glow-red transition-all duration-200 transform opacity-50 cursor-not-allowed pointer-events-none" disabled="" id="submit-btn" type="submit">
+<span class="">Salvar nova senha</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Back to Login Link -->
+<div class="text-center pt-1">
+<a class="inline-flex items-center gap-2 text-xs font-medium text-neutral-400 hover:text-white transition-colors duration-200" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Voltar para o login</span>
+</a>
+</div>
+</form>
+<!-- Stepper Component (Step 1 Completed, Step 2 Completed, Step 3 Active) -->
+<div class="mt-5 pt-4 border-t border-neutral-800/80" data-purpose="recovery-stepper">
+<div class="grid grid-cols-3 gap-2 text-center">
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center mb-1 shadow-[0_0_8px_#059669]">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+<span class="text-[10px] sm:text-[11px] font-medium text-emerald-400 leading-tight">Código 6 dígitos</span>
+</div>
+<!-- Step 2: Completed -->
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center mb-1 shadow-[0_0_8px_#059669]">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+<span class="text-[10px] sm:text-[11px] font-medium text-emerald-400 leading-tight">Validação</span>
+</div>
+<!-- Step 3: Active -->
+<div class="flex flex-col items-center"><div class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center mb-1 shadow-[0_0_8px_#059669]"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg></div><span class="text-[10px] sm:text-[11px] font-medium text-emerald-400 leading-tight">Nova senha</span></div>
+</div>
+</div>
+</section>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Footer -->
+<footer class="w-full max-w-sm text-center py-4">
+<p class="text-[11px] text-neutral-500 tracking-wide">
+      Estilo e Gestão • Tecnologia para Barbearias
+    </p>
+</footer>
+<!-- END: Footer -->
+<script>
+(function() {
+  const newPwd = document.getElementById('new-password');
+  const confirmPwd = document.getElementById('confirm-password');
+  const submitBtn = document.getElementById('submit-btn');
+  const ruleLength = document.getElementById('rule-length');
+  const ruleLetter = document.getElementById('rule-letter');
+  const ruleNumber = document.getElementById('rule-number');
+
+  const checkSvg = `<svg class="w-3.5 h-3.5 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>`;
+  const crossSvg = `<svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"></circle><path d="M15 9l-6 6m0-6l6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>`;
+
+  function updateRule(elem, text, isPassed) {
+    if (isPassed) {
+      elem.className = 'flex items-center gap-2 text-emerald-400 transition-colors duration-200';
+      elem.innerHTML = checkSvg + `<span>${text}</span>`;
+    } else {
+      elem.className = 'flex items-center gap-2 text-rose-500 transition-colors duration-200';
+      elem.innerHTML = crossSvg + `<span>${text}</span>`;
+    }
+  }
+
+  function validate() {
+    const val = newPwd.value || '';
+    const confirmVal = confirmPwd.value || '';
+
+    const isLengthOk = val.length >= 8;
+    const isLetterOk = /[a-zA-Z]/.test(val);
+    const isNumberOk = /[0-9]/.test(val);
+    const isMatch = val.length > 0 && val === confirmVal;
+
+    updateRule(ruleLength, 'Mínimo de 8 caracteres', isLengthOk);
+    updateRule(ruleLetter, 'Pelo menos 1 letra', isLetterOk);
+    updateRule(ruleNumber, 'Pelo menos 1 número', isNumberOk);
+
+    const allValid = isLengthOk && isLetterOk && isNumberOk && isMatch;
+
+    if (allValid) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+      submitBtn.classList.add('active:scale-[0.98]');
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+      submitBtn.classList.remove('active:scale-[0.98]');
+    }
+  }
+
+  if (newPwd && confirmPwd) {
+    newPwd.addEventListener('input', validate);
+    confirmPwd.addEventListener('input', validate);
+  }
+
+  const eyeBtns = document.querySelectorAll('button[aria-label="Mostrar senha"]');
+  eyeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const input = this.parentElement.querySelector('input');
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        this.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>`;
+      } else {
+        input.type = 'password';
+        this.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>`;
+      }
+    });
+  });
+})();
+</script><div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300" id="success-modal-overlay"><div class="bg-[#18181B] border border-neutral-800 rounded-3xl p-6 sm:p-7 shadow-2xl max-w-xs sm:max-w-sm w-full text-center relative flex flex-col items-center"><div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5 shadow-[0_0_24px_rgba(16,185,129,0.3)]"><div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-[0_0_12px_#059669]"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg></div></div><h2 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">Senha alterada com sucesso</h2><p class="text-neutral-400 text-sm mt-2 mb-6 leading-relaxed font-normal">Agora você pode entrar com sua nova senha.</p><a class="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white font-semibold text-sm shadow-glow-red transition-all duration-200" href="#"><span>Ir para o login</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></a></div></div></body></html>

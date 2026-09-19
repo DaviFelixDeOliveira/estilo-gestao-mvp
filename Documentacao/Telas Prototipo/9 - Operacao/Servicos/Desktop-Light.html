@@ -1,0 +1,565 @@
+<!DOCTYPE html><html class="h-full" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estilo &amp; Gestão - Operação / Serviços</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Custom Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              surface: '#FAF9F5',
+              card: '#FFFFFF',
+              dark: '#2F2F2D',
+              border: '#E9E9E4',
+              muted: '#71716E',
+              accent: '#EBEAE5',
+              subtle: '#F4F3EE',
+              greenBg: '#EAF8EE',
+              greenText: '#188038',
+              grayBg: '#F0EFEA',
+              grayText: '#63625E'
+            }
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF9F5;
+      color: #2F2F2D;
+    }
+  </style>
+<style data-purpose="layout">
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D9D8D2;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BCBBB5;
+    }
+  </style>
+</head>
+<body class="h-full antialiased text-[#2F2F2D] flex overflow-hidden bg-brand-surface">
+<!-- BEGIN: Sidebar -->
+<aside class="w-[270px] bg-white border-r border-brand-border flex flex-col justify-between shrink-0 select-none z-20">
+<!-- Top Area: Logo & Navigation -->
+<div class="flex flex-col">
+<!-- Logo Header -->
+<div class="h-16 border-b border-brand-border px-5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-brand-dark flex items-center justify-center text-white font-bold text-xs tracking-wider shadow-sm">
+            E&amp;G
+          </div>
+<div class="flex flex-col">
+<span class="text-xs font-extrabold tracking-wider text-brand-dark uppercase">Estilo &amp; Gestão</span>
+<span class="text-[11px] text-brand-muted leading-tight">Barbearia Club</span>
+</div>
+</div>
+<button aria-label="Recolher menu" class="text-brand-muted hover:text-brand-dark p-1.5 rounded-lg hover:bg-brand-subtle transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Menu principal" class="p-3.5 space-y-1.5">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-brand-muted hover:text-brand-dark hover:bg-brand-subtle transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Dashboard
+        </a>
+<!-- 2. PDV (Closed) -->
+<div>
+<button class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-brand-muted hover:text-brand-dark hover:bg-brand-subtle transition-colors" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">PDV</span>
+</div>
+<svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- 3. Operação (Active Group - Expanded) -->
+<div class="space-y-1">
+<button class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold text-brand-dark bg-brand-subtle" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5 text-brand-dark" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Operação</span>
+</div>
+<svg class="w-4 h-4 text-brand-dark transition-transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Submenu Operação -->
+<div class="pl-5 pr-1 space-y-1 pt-0.5">
+<!-- Serviços (Selected Item) -->
+<a class="flex items-center px-3.5 py-2 text-xs font-semibold rounded-lg bg-brand-dark text-white shadow-sm transition-colors" href="#">
+              Serviços
+            </a>
+<!-- Produtos -->
+<a class="flex items-center px-3.5 py-2 text-xs font-medium text-brand-muted hover:text-brand-dark hover:bg-brand-subtle rounded-lg transition-colors" href="#">
+              Produtos
+            </a>
+<!-- Estoque -->
+<a class="flex items-center px-3.5 py-2 text-xs font-medium text-brand-muted hover:text-brand-dark hover:bg-brand-subtle rounded-lg transition-colors" href="#">
+              Estoque
+            </a>
+</div>
+</div>
+<!-- 4. Configurações (Inactive / Collapsed) -->
+<div>
+<button class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-brand-muted hover:text-brand-dark hover:bg-brand-subtle transition-colors" type="button">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Configurações</span>
+</div>
+<svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</nav>
+</div>
+<!-- Bottom Profile Block -->
+<div class="p-3.5 border-t border-brand-border bg-white">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-brand-dark text-white font-semibold text-xs flex items-center justify-center">
+            MB
+          </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-brand-dark">Mestre Barbeiro</span>
+<span class="text-[11px] text-brand-muted">Operador Geral</span>
+</div>
+</div>
+<button aria-label="Sair da conta" class="text-brand-muted hover:text-brand-dark p-1.5 rounded-lg hover:bg-brand-subtle transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Area Wrapper -->
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+<!-- BEGIN: Topbar -->
+<header class="h-16 bg-white border-b border-brand-border px-8 flex items-center justify-between shrink-0">
+<!-- Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-brand-muted">
+<span class="">Estilo &amp; Gestão</span>
+<span class="text-brand-border">/</span>
+<span class="">Operação</span>
+<span class="text-brand-border">/</span>
+<span class="font-semibold text-brand-dark">Serviços</span>
+</nav>
+<!-- Right Actions -->
+<div class="flex items-center gap-4">
+<!-- Theme Toggle Button -->
+<button aria-label="Alternar tema" class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border text-brand-muted hover:text-brand-dark hover:bg-brand-subtle transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- User Snapshot Badge -->
+<div class="flex items-center gap-2.5 pl-3 border-l border-brand-border">
+<div class="w-8 h-8 rounded-full bg-brand-dark text-white text-xs font-semibold flex items-center justify-center">
+            MB
+          </div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-brand-dark leading-none">Mestre Barbeiro</span>
+<span class="text-[10px] text-brand-muted leading-tight mt-0.5">Unidade Centro</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Topbar -->
+<!-- BEGIN: Content & Drawer Container -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 overflow-y-auto px-8 py-7 space-y-6">
+<!-- Header Section -->
+<section class="flex items-center justify-between">
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-brand-dark">Serviços</h1>
+<p class="text-xs text-brand-muted mt-1">Cadastre e gerencie os serviços oferecidos no balcão e na Vitrine Digital.</p>
+</div>
+<button class="inline-flex items-center gap-2 bg-brand-dark hover:bg-neutral-800 text-white font-medium text-xs px-4 py-2.5 rounded-lg shadow-sm transition-colors" id="btn-open-drawer" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">&nbsp;Novo serviço</span>
+</button>
+</section>
+<!-- Filter Card -->
+<section class="bg-white border border-brand-border rounded-xl p-4 shadow-sm space-y-3.5">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<!-- Search Input -->
+<div class="relative w-full max-w-sm">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-muted">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-3.5 py-1.5 text-xs bg-[#FCFCFA] border border-brand-border rounded-lg placeholder-brand-muted text-brand-dark focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark transition-all" placeholder="Buscar serviço por nome..." type="text">
+</div>
+<!-- Vitrine Visibility Dropdown Selector -->
+<div class="flex items-center gap-2 text-xs">
+<span class="text-brand-muted font-medium">Vitrine:</span>
+<div class="relative inline-block">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs border border-brand-border rounded-lg bg-white text-brand-dark hover:bg-brand-subtle font-medium transition-colors" type="button">
+<span class="">Todas as visibilidades</span>
+<svg class="w-3.5 h-3.5 text-brand-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+<!-- Status Filter Chips -->
+<div class="flex items-center gap-2 pt-1 border-t border-[#F3F2ED]">
+<span class="text-xs text-brand-muted font-medium mr-1">Status:</span>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-dark text-white transition-colors" type="button">
+              Todos <span class="ml-1 text-[11px] font-normal opacity-80">5</span>
+</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-brand-muted hover:text-brand-dark bg-transparent hover:bg-brand-subtle transition-colors" type="button">
+              Ativos <span class="ml-1 text-[11px] text-brand-muted font-normal">4</span>
+</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-brand-muted hover:text-brand-dark bg-transparent hover:bg-brand-subtle transition-colors" type="button">
+              Inativos <span class="ml-1 text-[11px] text-brand-muted font-normal">1</span>
+</button>
+</div>
+</section>
+<!-- Services Table Section -->
+<section class="bg-white border border-brand-border rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-brand-border bg-[#FDFCFA] text-[11px] font-semibold text-brand-muted uppercase tracking-wider">
+<th class="py-3.5 px-5" scope="col">Serviço</th>
+<th class="py-3.5 px-4" scope="col">Preço</th>
+<th class="py-3.5 px-4" scope="col">Custo Direto</th>
+<th class="py-3.5 px-4" scope="col">Vitrine Digital</th>
+<th class="py-3.5 px-4" scope="col">Status</th>
+<th class="py-3.5 px-5 text-right" scope="col">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-brand-border text-xs text-brand-dark">
+<!-- Row 1 -->
+<tr class="hover:bg-brand-surface/70 transition-colors">
+<td class="py-4 px-5">
+<div class="font-semibold text-brand-dark">Corte Degradê</div>
+<div class="text-[11px] text-brand-muted mt-0.5 font-normal">Execução clássica ou moderna na tesoura e máquina</div>
+</td>
+<td class="py-4 px-4 font-bold text-brand-dark">
+                    R$ 45,00
+                  </td>
+<td class="py-4 px-4 text-brand-muted font-normal">
+                    R$ 4,50
+                  </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-brand-greenBg text-brand-greenText">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                      Visível
+                    </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-greenBg text-brand-greenText">
+                      Ativo
+                    </span>
+</td>
+<td class="py-4 px-5 text-right whitespace-nowrap">
+<button class="text-xs font-semibold text-brand-dark hover:underline mr-3" type="button">Editar</button>
+<button class="text-xs font-medium text-brand-muted hover:text-red-600 transition-colors" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-brand-surface/70 transition-colors">
+<td class="py-4 px-5">
+<div class="font-semibold text-brand-dark">Barba Tradicional</div>
+<div class="text-[11px] text-brand-muted mt-0.5 font-normal">Toalha quente, navalhete e alinhamento facial</div>
+</td>
+<td class="py-4 px-4 font-bold text-brand-dark">
+                    R$ 35,00
+                  </td>
+<td class="py-4 px-4 text-brand-muted font-normal">
+                    R$ 3,00
+                  </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-brand-greenBg text-brand-greenText">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                      Visível
+                    </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-greenBg text-brand-greenText">
+                      Ativo
+                    </span>
+</td>
+<td class="py-4 px-5 text-right whitespace-nowrap">
+<button class="text-xs font-semibold text-brand-dark hover:underline mr-3" type="button">Editar</button>
+<button class="text-xs font-medium text-brand-muted hover:text-red-600 transition-colors" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-brand-surface/70 transition-colors">
+<td class="py-4 px-5">
+<div class="font-semibold text-brand-dark">Corte + Barba</div>
+<div class="text-[11px] text-brand-muted mt-0.5 font-normal">Combo completo com alinhamento e finalização</div>
+</td>
+<td class="py-4 px-4 font-bold text-brand-dark">
+                    R$ 70,00
+                  </td>
+<td class="py-4 px-4 text-brand-muted font-normal">
+                    R$ 6,50
+                  </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-brand-greenBg text-brand-greenText">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                      Visível
+                    </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-greenBg text-brand-greenText">
+                      Ativo
+                    </span>
+</td>
+<td class="py-4 px-5 text-right whitespace-nowrap">
+<button class="text-xs font-semibold text-brand-dark hover:underline mr-3" type="button">Editar</button>
+<button class="text-xs font-medium text-brand-muted hover:text-red-600 transition-colors" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-brand-surface/70 transition-colors">
+<td class="py-4 px-5">
+<div class="font-semibold text-brand-dark">Sobrancelha Navalhada</div>
+<div class="text-[11px] text-brand-muted mt-0.5 font-normal">Desenho limpo com navalhete descartável</div>
+</td>
+<td class="py-4 px-4 font-bold text-brand-dark">
+                    R$ 15,00
+                  </td>
+<td class="py-4 px-4 text-brand-muted font-normal">
+                    R$ 0,50
+                  </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-brand-greenBg text-brand-greenText">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                      Visível
+                    </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-greenBg text-brand-greenText">
+                      Ativo
+                    </span>
+</td>
+<td class="py-4 px-5 text-right whitespace-nowrap">
+<button class="text-xs font-semibold text-brand-dark hover:underline mr-3" type="button">Editar</button>
+<button class="text-xs font-medium text-brand-muted hover:text-red-600 transition-colors" type="button">Desativar</button>
+</td>
+</tr>
+<!-- Row 5 (Inactive / Hidden) -->
+<tr class="hover:bg-brand-surface/70 bg-[#FAF9F7]/40 transition-colors">
+<td class="py-4 px-5">
+<div class="font-semibold text-brand-muted line-through">Pigmentação de Barba</div>
+<div class="text-[11px] text-brand-muted/80 mt-0.5 font-normal">Camuflagem e realce de fios brancos</div>
+</td>
+<td class="py-4 px-4 font-medium text-brand-muted">
+                    R$ 30,00
+                  </td>
+<td class="py-4 px-4 text-brand-muted/70 font-normal">
+                    R$ 5,00
+                  </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-brand-grayBg text-brand-grayText">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                      Oculto
+                    </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-brand-grayBg text-brand-grayText">
+                      Inativo
+                    </span>
+</td>
+<td class="py-4 px-5 text-right whitespace-nowrap">
+<button class="text-xs font-semibold text-brand-dark hover:underline mr-3" type="button">Editar</button>
+<button class="text-xs font-medium text-brand-muted hover:text-brand-dark transition-colors" type="button">Ativar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination/Summary -->
+<div class="px-5 py-3 border-t border-brand-border bg-[#FDFCFA] flex items-center justify-between">
+<span class="text-xs text-brand-muted">Mostrando <strong class="font-semibold text-brand-dark">1 – 5</strong> de <strong class="font-semibold text-brand-dark">5</strong> serviços</span>
+<div class="flex items-center gap-1.5">
+<button class="px-2.5 py-1 text-xs font-medium text-brand-muted/50 border border-brand-border/60 rounded-md bg-white cursor-not-allowed" disabled="" type="button">Anterior</button>
+<button class="px-2.5 py-1 text-xs font-semibold text-white bg-brand-dark rounded-md" type="button">1</button>
+<button class="px-2.5 py-1 text-xs font-medium text-brand-muted/50 border border-brand-border/60 rounded-md bg-white cursor-not-allowed" disabled="" type="button">Próximo</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BEGIN: Side Drawer / Modal (Demonstrative for Creation & Editing) -->
+<aside class="w-[380px] bg-white border-l border-brand-border flex flex-col justify-between shrink-0 shadow-sm" id="service-drawer">
+<!-- Drawer Header -->
+<div class="p-5 border-b border-brand-border flex items-center justify-between">
+<div>
+<h2 class="text-sm font-bold text-brand-dark">Novo serviço</h2>
+<p class="text-[11px] text-brand-muted mt-0.5">Preencha os dados essenciais para o balcão.</p>
+</div>
+<button aria-label="Fechar painel" class="text-brand-muted hover:text-brand-dark p-1 rounded-md hover:bg-brand-subtle transition-colors" id="btn-close-drawer" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Drawer Form Content -->
+<div class="flex-1 overflow-y-auto p-5 space-y-4">
+<!-- Field: Nome do Serviço -->
+<div>
+<label class="block text-xs font-bold text-brand-dark mb-1" for="service-name">Nome do serviço *</label>
+<input class="w-full text-xs px-3 py-2 bg-[#FCFCFA] border border-brand-border rounded-lg text-brand-dark placeholder-brand-muted focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="service-name" placeholder="Ex: Corte Degradê" type="text" value="Corte Degradê">
+</div>
+<!-- Field: Descrição -->
+<div>
+<label class="block text-xs font-medium text-brand-dark mb-1" for="service-desc">Descrição <span class="text-brand-muted font-normal">(opcional)</span></label>
+<textarea class="w-full text-xs px-3 py-2 bg-[#FCFCFA] border border-brand-border rounded-lg text-brand-dark placeholder-brand-muted focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="service-desc" placeholder="Breve resumo para exibição na comanda ou vitrine..." rows="3">Execução clássica ou moderna na tesoura e máquina</textarea>
+</div>
+<!-- Dual Field: Preço de venda & Custo direto -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<label class="block text-xs font-bold text-brand-dark mb-1" for="service-price">Preço de venda *</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-xs font-medium text-brand-muted">R$</span>
+<input class="w-full text-xs pl-8 pr-2.5 py-2 bg-[#FCFCFA] border border-brand-border rounded-lg text-brand-dark font-semibold focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="service-price" type="text" value="45,00">
+</div>
+</div>
+<div>
+<label class="block text-xs font-medium text-brand-dark mb-1" for="service-cost">Custo direto <span class="text-brand-muted font-normal">(opcional)</span></label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-xs font-medium text-brand-muted">R$</span>
+<input class="w-full text-xs pl-8 pr-2.5 py-2 bg-[#FCFCFA] border border-brand-border rounded-lg text-brand-dark focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-dark focus:border-brand-dark" id="service-cost" type="text" value="4,50" placeholder="4,50">
+</div>
+</div>
+</div>
+<p class="text-[10px] text-brand-muted -mt-1 leading-relaxed">
+            * Custo direto de consumíveis (lâmina, loção, toalha).
+          </p>
+<!-- Toggles Container -->
+<div class="pt-4 border-t border-brand-border space-y-3.5">
+<!-- Toggle 1: Vitrine Digital -->
+<div class="flex items-start justify-between gap-3">
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-brand-dark">Visível na Vitrine Digital</span>
+<span class="text-[11px] text-brand-muted leading-tight mt-0.5">Exibir este item no catálogo público da barbearia.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0 mt-0.5">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-9 h-5 bg-brand-accent peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-dark"></div>
+</label>
+</div>
+<!-- Toggle 2: Ativo/Inativo -->
+<div class="flex items-start justify-between gap-3">
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-brand-dark">Serviço ativo</span>
+<span class="text-[11px] text-brand-muted leading-tight mt-0.5">Disponível para lançamento no PDV e comandas.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0 mt-0.5">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-9 h-5 bg-brand-accent peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-dark"></div>
+</label>
+</div>
+</div>
+<!-- Helpful Box -->
+<div class="p-3 bg-brand-surface rounded-lg border border-brand-border text-[11px] text-brand-muted leading-relaxed">
+            Cadastre os preços praticados sem complexidade. O Estilo &amp; Gestão calcula a margem e rentabilidade com precisão no fechamento do dia.
+          </div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="p-4 border-t border-brand-border bg-white flex items-center justify-end gap-2.5">
+<button class="px-3.5 py-2 text-xs font-semibold text-brand-muted hover:text-brand-dark rounded-lg transition-colors" id="btn-cancel-drawer" type="button">
+            Cancelar
+          </button>
+<button class="px-4 py-2 text-xs font-semibold text-white bg-brand-dark hover:bg-neutral-800 rounded-lg shadow-sm transition-colors" type="button">
+            Salvar serviço
+          </button>
+</div>
+</aside>
+<!-- END: Side Drawer -->
+</div>
+<!-- END: Content & Drawer Container -->
+</div>
+<!-- END: Main Area Wrapper -->
+<!-- Drawer Toggle Interactivity Script -->
+<script data-purpose="drawer-toggle">
+    const drawer = document.getElementById('service-drawer');
+    const openBtn = document.getElementById('btn-open-drawer');
+    const closeBtn = document.getElementById('btn-close-drawer');
+    const cancelBtn = document.getElementById('btn-cancel-drawer');
+
+    function toggleDrawer(show) {
+      if (show) {
+        drawer.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    if (openBtn) {
+      openBtn.addEventListener('click', () => toggleDrawer(true));
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => toggleDrawer(false));
+    }
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => toggleDrawer(false));
+    }
+  </script>
+
+
+</body></html>

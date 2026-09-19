@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Operação / Serviços - Estilo e Gestão</title>
+<!-- Tailwind CSS v3 CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#121211',
+              card: '#222220',
+              border: '#3F3F3B',
+              borderLight: '#2C2C29',
+              textPrimary: '#F4F4F0',
+              textSecondary: '#A3A39E',
+              accent: '#10B981',
+              accentLight: 'rgba(16, 185, 129, 0.15)',
+              inactiveText: '#787873'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Scrollbar & Safe Area Styles -->
+<style data-purpose="mobile-layout">
+    /* Hide scrollbar for clean horizontal chip navigation */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Safe Area Padding for iOS Devices */
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 12px);
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+    }
+  </style>
+</head>
+<body class="bg-[#121211] text-[#F4F4F0] min-h-screen flex flex-col font-sans antialiased select-none pb-28">
+<!-- BEGIN: HeaderSection -->
+<header class="sticky top-0 z-30 bg-[#121211]/95 backdrop-blur-md border-b border-[#3F3F3B]/60 pt-safe px-4 pb-3" data-purpose="top-header">
+<div class="flex items-center justify-between pt-2">
+<!-- Monogram & Page Title Area -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#222220] border border-[#3F3F3B] flex items-center justify-center shadow-sm" data-purpose="app-monogram">
+<span class="text-xs font-bold tracking-tight text-[#F4F4F0]">E&amp;G</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-[#F4F4F0] tracking-tight leading-tight">Serviços</h1>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[11px] font-medium text-emerald-400">Catálogo Ativo</span>
+</div>
+</div>
+</div>
+<!-- Action Icons: Dark Mode Toggle & User Avatar -->
+<div class="flex items-center gap-2">
+<button aria-label="Modo Escuro Ativo" class="w-9 h-9 rounded-full bg-[#222220] border border-[#3F3F3B] flex items-center justify-center text-[#A3A39E] active:scale-95 transition-transform" type="button">
+<svg class="w-4 h-4 text-[#F4F4F0]" fill="currentColor" viewbox="0 0 20 20">
+<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+</svg>
+</button>
+<div class="w-9 h-9 rounded-full bg-[#222220] border border-[#3F3F3B] flex items-center justify-center text-xs font-semibold text-[#F4F4F0]" data-purpose="user-avatar">
+          MO
+        </div>
+</div>
+</div>
+<!-- Sub-navigation: Operation Tabs (Serviços, Produtos, Estoque) -->
+<nav aria-label="Abas da Operação" class="mt-3.5 flex border-b border-[#2C2C29]" data-purpose="operation-tabs">
+<button class="pb-2.5 px-3 text-sm font-semibold text-[#F4F4F0] border-b-2 border-[#F4F4F0] transition-colors" type="button">
+        Serviços
+      </button>
+<button class="pb-2.5 px-3 text-sm font-medium text-[#787873] border-b-2 border-transparent hover:text-[#A3A39E] transition-colors" type="button">
+        Produtos
+      </button>
+<button class="pb-2.5 px-3 text-sm font-medium text-[#787873] border-b-2 border-transparent hover:text-[#A3A39E] transition-colors" type="button">
+        Estoque
+      </button>
+</nav>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: SearchAndActionsSection -->
+<section class="px-4 pt-4 pb-2 space-y-3.5" data-purpose="search-and-action-controls">
+<!-- Search Input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+<svg class="w-4 h-4 text-[#A3A39E]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-2.5 bg-[#222220] border border-[#3F3F3B] rounded-xl text-sm text-[#F4F4F0] placeholder-[#787873] focus:outline-none focus:border-[#F4F4F0] focus:ring-1 focus:ring-[#F4F4F0] transition-colors" placeholder="Buscar serviço..." type="text"/>
+</div>
+<!-- Horizontal Filter Chips & Add Action -->
+<div class="flex items-center justify-between gap-2">
+<!-- Status Filter Chips -->
+<div aria-label="Filtro de status" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5" role="tablist">
+<!-- Active Filter: Todos -->
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#F4F4F0] text-[#121211] shrink-0 active:scale-95 transition-transform" type="button">
+<span>Todos</span>
+<span class="w-4 h-4 rounded-full bg-[#121211]/15 text-[10px] font-bold flex items-center justify-center">5</span>
+</button>
+<!-- Filter: Ativos -->
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#222220] text-[#A3A39E] border border-[#3F3F3B] shrink-0 active:scale-95 transition-transform" type="button">
+<span>Ativos</span>
+<span class="w-4 h-4 rounded-full bg-[#121211] text-[10px] font-medium text-[#787873] flex items-center justify-center">4</span>
+</button>
+<!-- Filter: Inativos -->
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#222220] text-[#787873] border border-[#3F3F3B] shrink-0 active:scale-95 transition-transform" type="button">
+<span>Inativos</span>
+<span class="w-4 h-4 rounded-full bg-[#121211] text-[10px] font-medium text-[#787873] flex items-center justify-center">1</span>
+</button>
+</div>
+</div>
+<!-- Primary Action: + Novo serviço Button -->
+<div>
+<button class="w-full py-2.5 px-4 bg-[#F4F4F0] hover:bg-white text-[#181817] font-semibold text-sm rounded-xl flex items-center justify-center gap-2 shadow-sm active:scale-[0.99] transition-all" data-purpose="add-service-button" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Novo serviço</span>
+</button>
+</div>
+</section>
+<!-- END: SearchAndActionsSection -->
+<!-- BEGIN: ServicesListSection -->
+<main class="flex-1 px-4 py-2 space-y-3" data-purpose="services-catalog-list">
+<!-- Service Card 1: Corte Degradê -->
+<article class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm" data-purpose="service-item">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-semibold text-[#F4F4F0] leading-snug">Corte Degradê</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">
+              Ativo
+            </span>
+</div>
+<div class="flex items-center gap-2 text-xs text-[#A3A39E]">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Visível no catálogo
+            </span>
+<span class="text-[#787873]">•</span>
+<span>Custo direto: <strong class="font-medium text-[#F4F4F0]">R$ 4,50</strong></span>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-[#A3A39E]">Preço</span>
+<span class="text-base font-bold text-[#F4F4F0]">R$ 45,00</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#2C2C29] flex items-center justify-between">
+<span class="text-xs text-[#787873]">Margem bruta est.: ~90%</span>
+<button class="inline-flex items-center gap-1 text-xs font-semibold text-[#F4F4F0] bg-[#181817] hover:bg-[#2C2C29] px-3 py-1.5 rounded-lg border border-[#3F3F3B] active:scale-95 transition-all" type="button">
+<span>Editar</span>
+<svg class="w-3.5 h-3.5 text-[#A3A39E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Service Card 2: Barba Tradicional -->
+<article class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm" data-purpose="service-item">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-semibold text-[#F4F4F0] leading-snug">Barba Tradicional</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">
+              Ativo
+            </span>
+</div>
+<div class="flex items-center gap-2 text-xs text-[#A3A39E]">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Visível no catálogo
+            </span>
+<span class="text-[#787873]">•</span>
+<span>Custo direto: <strong class="font-medium text-[#F4F4F0]">R$ 3,00</strong></span>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-[#A3A39E]">Preço</span>
+<span class="text-base font-bold text-[#F4F4F0]">R$ 35,00</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#2C2C29] flex items-center justify-between">
+<span class="text-xs text-[#787873]">Margem bruta est.: ~91%</span>
+<button class="inline-flex items-center gap-1 text-xs font-semibold text-[#F4F4F0] bg-[#181817] hover:bg-[#2C2C29] px-3 py-1.5 rounded-lg border border-[#3F3F3B] active:scale-95 transition-all" type="button">
+<span>Editar</span>
+<svg class="w-3.5 h-3.5 text-[#A3A39E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Service Card 3: Corte + Barba -->
+<article class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm" data-purpose="service-item">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-semibold text-[#F4F4F0] leading-snug">Corte + Barba</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">
+              Ativo
+            </span>
+</div>
+<div class="flex items-center gap-2 text-xs text-[#A3A39E]">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Visível no catálogo
+            </span>
+<span class="text-[#787873]">•</span>
+<span>Custo direto: <strong class="font-medium text-[#F4F4F0]">R$ 6,50</strong></span>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-[#A3A39E]">Preço</span>
+<span class="text-base font-bold text-[#F4F4F0]">R$ 70,00</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#2C2C29] flex items-center justify-between">
+<span class="text-xs text-[#787873]">Margem bruta est.: ~90%</span>
+<button class="inline-flex items-center gap-1 text-xs font-semibold text-[#F4F4F0] bg-[#181817] hover:bg-[#2C2C29] px-3 py-1.5 rounded-lg border border-[#3F3F3B] active:scale-95 transition-all" type="button">
+<span>Editar</span>
+<svg class="w-3.5 h-3.5 text-[#A3A39E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Service Card 4: Sobrancelha Navalhada -->
+<article class="bg-[#222220] border border-[#3F3F3B] rounded-2xl p-4 shadow-sm" data-purpose="service-item">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-semibold text-[#F4F4F0] leading-snug">Sobrancelha Navalhada</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">
+              Ativo
+            </span>
+</div>
+<div class="flex items-center gap-2 text-xs text-[#A3A39E]">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Visível no catálogo
+            </span>
+<span class="text-[#787873]">•</span>
+<span>Custo direto: <strong class="font-medium text-[#F4F4F0]">R$ 0,50</strong></span>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-[#A3A39E]">Preço</span>
+<span class="text-base font-bold text-[#F4F4F0]">R$ 15,00</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#2C2C29] flex items-center justify-between">
+<span class="text-xs text-[#787873]">Margem bruta est.: ~96%</span>
+<button class="inline-flex items-center gap-1 text-xs font-semibold text-[#F4F4F0] bg-[#181817] hover:bg-[#2C2C29] px-3 py-1.5 rounded-lg border border-[#3F3F3B] active:scale-95 transition-all" type="button">
+<span>Editar</span>
+<svg class="w-3.5 h-3.5 text-[#A3A39E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</article>
+<!-- Service Card 5: Pigmentação de Barba (Inativo) -->
+<article class="bg-[#222220]/75 border border-[#3F3F3B] rounded-2xl p-4 shadow-sm opacity-85" data-purpose="service-item">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-semibold text-[#A3A39E] leading-snug">Pigmentação de Barba</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#2C2C29] text-[#A3A39E] border border-[#3F3F3B]">
+              Inativo
+            </span>
+</div>
+<div class="flex items-center gap-2 text-xs text-[#787873]">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#787873]"></span>
+              Oculto no catálogo
+            </span>
+<span class="text-[#787873]">•</span>
+<span>Custo direto: <strong class="font-medium text-[#A3A39E]">R$ 5,00</strong></span>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-[11px] text-[#787873]">Preço</span>
+<span class="text-base font-bold text-[#A3A39E]">R$ 30,00</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#2C2C29] flex items-center justify-between">
+<span class="text-xs text-[#787873]">Desativado temporariamente</span>
+<button class="inline-flex items-center gap-1 text-xs font-semibold text-[#F4F4F0] bg-[#181817] hover:bg-[#2C2C29] px-3 py-1.5 rounded-lg border border-[#3F3F3B] active:scale-95 transition-all" type="button">
+<span>Editar</span>
+<svg class="w-3.5 h-3.5 text-[#A3A39E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</article>
+</main>
+<!-- END: ServicesListSection -->
+<!-- BEGIN: BottomNavigation -->
+<footer class="fixed bottom-0 inset-x-0 bg-[#181817] border-t border-[#3F3F3B] z-40 pb-safe shadow-2xl" data-purpose="mobile-bottom-nav">
+<nav aria-label="Navegação Principal" class="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
+<!-- 1. Início/Dashboard -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#A3A39E] hover:text-[#F4F4F0] transition-colors" data-purpose="nav-item" href="#">
+<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium tracking-tight">Início</span>
+</a>
+<!-- 2. PDV -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#A3A39E] hover:text-[#F4F4F0] transition-colors" data-purpose="nav-item" href="#">
+<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0H3m-1.5 0h1.5m-1.5 0v11.25c0 .621.504 1.125 1.125 1.125h16.5c.621 0 1.125-.504 1.125-1.125V6.75M2.25 6h19.5m-19.5 0v11.25m19.5-11.25v11.25m0 0a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18V6.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium tracking-tight">PDV</span>
+</a>
+<!-- 3. Operação (ATIVO) -->
+<a aria-current="page" class="flex flex-col items-center justify-center flex-1 py-1 text-emerald-400 font-semibold" data-purpose="nav-item-active" href="#">
+<div class="relative">
+<svg class="w-5 h-5 mb-1 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400"></span>
+</div>
+<span class="text-[10px] font-semibold tracking-tight">Operação</span>
+</a>
+<!-- 4. Ajustes/Configurações -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#A3A39E] hover:text-[#F4F4F0] transition-colors" data-purpose="nav-item" href="#">
+<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium tracking-tight">Ajustes</span>
+</a>
+</nav>
+</footer>
+<!-- END: BottomNavigation -->
+</body></html>

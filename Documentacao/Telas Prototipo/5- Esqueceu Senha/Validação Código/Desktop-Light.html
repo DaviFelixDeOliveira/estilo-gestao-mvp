@@ -1,0 +1,264 @@
+<!DOCTYPE html><html class="h-full" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Validação do Código - Estilo e Gestão</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&amp;display=swap" rel="stylesheet">
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          colors: {
+            brand: {
+              red: '#C92A2A',
+              redHover: '#B42318',
+              blue: '#1E40AF',
+              surface: '#FAF9F5',
+              card: '#FFFFFF',
+              inputBg: '#F8F8F5',
+              border: '#E8E7E0',
+              graphite: '#2F2F2D',
+              muted: '#6B6B66',
+              lightMuted: '#9B9A93',
+            }
+          },
+          boxShadow: {
+            'subtle-card': '0 4px 20px -2px rgba(47, 47, 45, 0.04), 0 2px 6px -1px rgba(47, 47, 45, 0.02)',
+            'btn-shadow': '0 4px 14px 0 rgba(201, 42, 42, 0.28)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    body {
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    .accent-barber-gradient {
+      background: linear-gradient(90deg, #C92A2A 0%, #1D4ED8 100%);
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+</style>
+</head>
+<body class="h-full bg-brand-surface font-sans text-brand-graphite antialiased selection:bg-brand-red/10 selection:text-brand-red">
+<!-- BEGIN: MainContainer -->
+<div class="min-h-full flex flex-col lg:flex-row w-full overflow-x-hidden">
+<!-- BEGIN: LeftHeroSection -->
+<section class="relative hidden lg:flex lg:w-1/2 xl:w-7/12 flex-col justify-between p-12 xl:p-16 overflow-hidden bg-stone-900" data-purpose="hero-brand-panel">
+<!-- Background Image with Ambient Warm Lighting -->
+<img alt="Interior barbearia premium moderna com iluminação natural" class="absolute inset-0 w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPlnS8a45my9f6xkoCSc9K9jV-tcEhVhZzqR8LWlpJUU6cxIS514TNIT7xjcernGH8rDrmt6VFmuMfAhNRSMQhSl-Rwj3_Af_DRYHLk3zeRgVSVq2Mx3183uQbWQKOzs--G2i7JPO2eYsTQoSXA_XJlIpjowm88VOnT9ZjOupXiMKjhzg4k5nnFieN0oD2a7G6kS_CEtR7JdVxNb0QOn8qR-uE_9rhvDWoyeGobhHbiFoEq3jFX8uyhLMPiF8Pg2tcCRg">
+<!-- Subtle multi-layered overlay for high readability and warm photographic tone -->
+<div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/40 to-stone-950/30"></div>
+<div class="absolute inset-0 bg-stone-900/15 mix-blend-multiply"></div>
+<!-- Top Branding Badge -->
+<header class="relative z-10">
+<div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white/30 text-[11px] font-bold tracking-wider text-stone-900 uppercase shadow-sm">
+<span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+          GESTÃO PARA BARBEARIAS
+</div>
+</header>
+<!-- Bottom Headline & Copy -->
+<div class="relative z-10 max-w-xl pb-4">
+<!-- Accent Barber Indicator Line -->
+<div class="w-16 h-1 rounded-full accent-barber-gradient mb-6"></div>
+<h1 class="font-serif text-3xl sm:text-4xl xl:text-5xl font-bold tracking-tight text-white leading-tight">
+          RECUPERE SEU ACESSO, COM TOTAL SEGURANÇA.
+</h1>
+<p class="mt-4 text-base sm:text-lg text-stone-200/90 font-normal leading-relaxed">
+          Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
+</p>
+<!-- Social Proof Pill -->
+<div class="mt-8 flex items-center gap-4 text-xs font-medium text-stone-300">
+<div class="flex items-center gap-1.5">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="shield-check" aria-hidden="true" class="lucide lucide-shield-check w-4 h-4 text-white"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+<span>Ambiente 100% Protegido</span>
+</div>
+<span class="text-stone-500">•</span>
+<div class="flex items-center gap-1.5">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zap" aria-hidden="true" class="lucide lucide-zap w-4 h-4 text-white"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"></path></svg>
+<span>Recuperação Instantânea</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: LeftHeroSection -->
+
+<!-- BEGIN: RightAuthSection -->
+<main class="flex-1 flex flex-col justify-between bg-brand-surface px-6 py-8 sm:px-12 lg:px-14 xl:px-20 min-h-full" data-purpose="auth-content-panel">
+<!-- Top Bar with Backlink and Dark/Light Mode Switch -->
+<nav class="w-full flex items-center justify-between pt-2">
+<a class="inline-flex items-center gap-2 text-xs font-semibold text-brand-muted hover:text-brand-graphite transition-colors group" href="#">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-left" aria-hidden="true" class="lucide lucide-chevron-left w-4 h-4 transition-transform group-hover:-translate-x-0.5"><path d="m15 18-6-6 6-6"></path></svg>
+<span>Voltar ao portal</span>
+</a>
+<!-- Dark mode toggle button -->
+<button aria-label="Alternar modo escuro" class="p-2.5 rounded-full text-brand-muted hover:text-brand-graphite bg-white hover:bg-stone-100 border border-brand-border transition-all duration-200 shadow-sm" type="button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="moon" aria-hidden="true" class="lucide lucide-moon w-4 h-4"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+</button>
+</nav>
+
+<!-- Center Container for Form -->
+<div class="w-full max-w-md mx-auto my-auto py-6">
+<!-- Brand Logo Card -->
+<div class="flex justify-center mb-5">
+<div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-brand-border p-3 shadow-subtle-card flex items-center justify-center">
+<img alt="Estilo e Gestão - Logotipo da barbearia" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD318absA3v94GseOcRDQD7bXgK06tdHnbEC0sCCETj1XdNGxxxaPP0UH03hWURkIZ825u0_QAc0jJBGEBUEwBkYjyZ_fb0nCf4mnqL7LsklSQbF-i73zizaFtTtbJpYhi0YSejPXEHuJ6AiyrdO2N1KCCeJ7tonfsdsmc5NeI2I3W5neK70HWLQv29TNYa-SnRw2kbRKbOuy8GHSEdbS9aNtJrUDDialfBXR9KAil2rUu6PZrpsbEKeA">
+</div>
+</div>
+
+<!-- Section Badge Indicator -->
+<div class="flex justify-center mb-3.5">
+<span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-brand-border/80 text-[11px] font-bold tracking-wider text-brand-graphite uppercase shadow-xs">
+<span class="w-2 h-2 rounded-full bg-brand-red"></span>
+            RECUPERAÇÃO DE ACESSO
+</span>
+</div>
+
+<!-- Headings -->
+<header class="text-center mb-6">
+<h2 class="text-2xl sm:text-3xl font-extrabold text-brand-graphite tracking-tight">
+            Digite o código
+</h2>
+<p class="mt-2 text-sm text-brand-muted leading-relaxed max-w-sm mx-auto">
+            Enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para continuar a redefinição.
+</p>
+<!-- Masked Email -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 mt-2.5 rounded-lg bg-white border border-brand-border text-xs text-brand-graphite font-mono font-medium shadow-2xs">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="mail" aria-hidden="true" class="lucide lucide-mail w-3.5 h-3.5 text-brand-muted"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+<span>d***i@gmail.com</span>
+</div>
+</header>
+
+<!-- OTP Recovery Form -->
+<form class="space-y-4" data-purpose="otp-verification-form" onsubmit="event.preventDefault();">
+<!-- OTP Input Group -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="block text-[11px] font-bold tracking-widest text-brand-graphite uppercase">
+              CÓDIGO DE VERIFICAÇÃO
+</label>
+<span class="text-[11px] font-medium text-brand-muted">Expira em 15 min</span>
+</div>
+<div class="grid grid-cols-6 gap-2 sm:gap-2.5">
+<input autocomplete="one-time-code" class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border-2 border-brand-red rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text" value="8"/>
+<input class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border border-brand-border rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text" value="4"/>
+<input class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border border-brand-border rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text" value="1"/>
+<input class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border border-brand-border rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text"/>
+<input class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border border-brand-border rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text"/>
+<input class="w-full h-12 sm:h-13 text-center text-lg sm:text-xl font-bold bg-white border border-brand-border rounded-xl text-brand-graphite focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-xs" maxlength="1" inputmode="numeric" pattern="[0-9]*" type="text"/>
+</div>
+<p class="text-[11px] text-brand-muted text-center pt-0.5">
+            Você pode colar o código diretamente com Ctrl+V ou Cmd+V
+</p>
+</div>
+
+<!-- Primary Submit Button -->
+<button class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-red hover:bg-brand-redHover text-white text-sm font-semibold tracking-wide shadow-btn-shadow hover:shadow-lg transition-all duration-200 transform active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2" type="submit">
+<span>Validar código</span>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" aria-hidden="true" class="lucide lucide-arrow-right w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+</button>
+
+<!-- Resend Code & Change Email Action -->
+<div class="text-center pt-1 space-y-2">
+<p class="text-xs text-brand-muted">
+            Não recebeu o código? 
+            <span class="font-bold text-brand-graphite">Reenviar código em <span class="text-brand-red font-mono">00:42</span></span>
+</p>
+<div>
+<a class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-red transition-colors group" href="#">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-left" aria-hidden="true" class="lucide lucide-arrow-left w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+<span>E-mail incorreto? Voltar e alterar</span>
+</a>
+</div>
+</div>
+</form>
+
+<!-- Stepper Component (3 Steps: Step 1 Completed, Step 2 Active, Step 3 Inactive) -->
+<section aria-label="Etapas da Recuperação" class="mt-8 pt-5 border-t border-brand-border/80" data-purpose="step-indicator">
+<div class="bg-white/70 backdrop-blur-xs border border-brand-border rounded-2xl p-4 sm:p-5 shadow-subtle-card">
+<div class="grid grid-cols-3 gap-2 relative">
+<!-- Connecting Progress Line -->
+<div class="absolute top-4 left-[16%] right-[16%] h-[2px] bg-stone-200 -z-0"></div>
+<div class="absolute top-4 left-[16%] right-[50%] h-[2px] bg-emerald-600 -z-0"></div>
+
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center text-center relative z-10">
+<span class="w-8 h-8 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shadow-sm ring-4 ring-white">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" data-lucide="check" aria-hidden="true" class="lucide lucide-check w-4 h-4"><path d="M20 6 9 17l-5-5"></path></svg>
+</span>
+<span class="mt-2 text-xs font-semibold text-brand-graphite">
+                  Código 6 dígitos
+</span>
+</div>
+
+<!-- Step 2: Active -->
+<div class="flex flex-col items-center text-center relative z-10">
+<span class="w-8 h-8 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shadow-sm ring-4 ring-white">
+                  2
+</span>
+<span class="mt-2 text-xs font-bold text-brand-red">
+                  Validação
+</span>
+</div>
+
+<!-- Step 3: Inactive -->
+<div class="flex flex-col items-center text-center relative z-10">
+<span class="w-8 h-8 rounded-full bg-stone-100 border border-brand-border text-brand-muted text-xs font-medium flex items-center justify-center ring-4 ring-white">
+                  3
+</span>
+<span class="mt-2 text-xs font-medium text-brand-muted">
+                  Nova senha
+</span>
+</div>
+</div>
+<!-- Informative Message -->
+<p class="mt-3.5 text-center text-[11px] text-brand-muted leading-tight border-t border-brand-border/40 pt-3">
+              Insira os 6 dígitos numéricos recebidos por e-mail para desbloquear a criação de uma nova senha.
+</p>
+</div>
+</section>
+
+<!-- Security Badge Note -->
+<div class="mt-5 flex items-center justify-center gap-2 text-xs text-brand-muted">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check-circle-2" aria-hidden="true" class="lucide lucide-check-circle-2 w-3.5 h-3.5 text-emerald-600"><circle cx="12" cy="12" r="10"></circle><path d="m16 9-5.5 5.5L8 12"></path></svg>
+<span>Ambiente de alta criptografia</span>
+<span class="text-stone-300">•</span>
+<span>Código com validade de 15 minutos</span>
+</div>
+</div>
+
+<!-- BEGIN: FooterLinks -->
+<footer class="w-full pt-6 border-t border-brand-border/60 flex flex-col sm:flex-row items-center justify-between text-xs text-brand-muted gap-3">
+<p>© 2026 Estilo e Gestão. Todos os direitos reservados.</p>
+<div class="flex items-center gap-4">
+<a class="hover:text-brand-graphite transition-colors" href="#">Privacidade</a>
+<span class="text-stone-300">•</span>
+<a class="hover:text-brand-graphite transition-colors" href="#">Termos de Uso</a>
+<span class="text-stone-300">•</span>
+<a class="hover:text-brand-graphite transition-colors" href="#">Suporte</a>
+</div>
+</footer>
+<!-- END: FooterLinks -->
+</main>
+<!-- END: RightAuthSection -->
+</div>
+<!-- END: MainContainer -->
+<script data-purpose="icon-initializer">
+    lucide.createIcons();
+</script>
+</body></html>

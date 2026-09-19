@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estilo e Gestão - Relatórios</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              surface: '#FAF9F5',
+              card: '#FFFFFF',
+              border: '#E8E7E0',
+              primary: '#2F2F2D',
+              muted: '#666662',
+              soft: '#F4F3ED',
+              green: '#2F6B4F',
+              greenBg: '#EAF5EF',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF9F5;
+      color: #2F2F2D;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style data-purpose="scrollbar-styling">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF9F5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #E8E7E0;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #666662;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex bg-brand-surface text-brand-primary">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-brand-card border-r border-brand-border flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-30" data-purpose="application-sidebar">
+<div class="flex flex-col flex-1 overflow-y-auto">
+<!-- Brand Header -->
+<div class="p-5 flex items-center justify-between border-b border-brand-border/60">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-brand-primary text-white font-bold flex items-center justify-center text-sm tracking-tight shadow-sm">
+            E&amp;G
+          </div>
+<div class="flex flex-col leading-tight">
+<span class="font-semibold text-sm text-brand-primary">Estilo e Gestão</span>
+<span class="text-xs text-brand-muted">Gestão da barbearia</span>
+</div>
+</div>
+<!-- Collapse Sidebar Toggle Button -->
+<button class="text-brand-muted hover:text-brand-primary p-1.5 rounded-md hover:bg-brand-soft transition-colors" title="Recolher menu" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Navegação Principal" class="p-3 space-y-6 text-sm">
+<!-- Main Core Section -->
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors font-medium" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- PDV with Submenu -->
+<div>
+<div class="flex items-center justify-between px-3 py-2 text-brand-muted hover:text-brand-primary hover:bg-brand-soft rounded-lg cursor-pointer transition-colors font-medium">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>PDV</span>
+</div>
+<svg class="w-3.5 h-3.5 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="pl-9 pr-2 py-1 space-y-1">
+<a class="block px-2.5 py-1.5 text-xs text-brand-muted hover:text-brand-primary rounded-md hover:bg-brand-soft" href="#">Nova venda</a>
+<a class="block px-2.5 py-1.5 text-xs text-brand-muted hover:text-brand-primary rounded-md hover:bg-brand-soft" href="#">Histórico de vendas</a>
+</div>
+</div>
+<!-- Operação with Submenu -->
+<div>
+<div class="flex items-center justify-between px-3 py-2 text-brand-muted hover:text-brand-primary hover:bg-brand-soft rounded-lg cursor-pointer transition-colors font-medium">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Operação</span>
+</div>
+<svg class="w-3.5 h-3.5 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="pl-9 pr-2 py-1 space-y-1">
+<a class="block px-2.5 py-1.5 text-xs text-brand-muted hover:text-brand-primary rounded-md hover:bg-brand-soft" href="#">Serviços</a>
+<a class="block px-2.5 py-1.5 text-xs text-brand-muted hover:text-brand-primary rounded-md hover:bg-brand-soft" href="#">Produtos</a>
+<a class="block px-2.5 py-1.5 text-xs text-brand-muted hover:text-brand-primary rounded-md hover:bg-brand-soft" href="#">Estoque</a>
+</div>
+</div>
+</div>
+<!-- Configurações Active Group -->
+<div class="space-y-2 pt-2 border-t border-brand-border/60">
+<div class="flex items-center justify-between px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-primary">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Configurações</span>
+</div>
+<svg class="w-3.5 h-3.5 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Group NEGÓCIO -->
+<div class="pl-2 space-y-1">
+<span class="block px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider text-brand-muted uppercase">Negócio</span>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Financeiro</span>
+</a>
+<!-- Active Sub-item: Relatórios -->
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#2F2F2D] text-white shadow-sm transition-colors" href="#">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Relatórios</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Vitrine Digital</span>
+</a>
+</div>
+<!-- Group BARBEARIA -->
+<div class="pl-2 space-y-1">
+<span class="block px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider text-brand-muted uppercase">Barbearia</span>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Dados da barbearia</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Endereço</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Horários</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" href="#">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Formas de pagamento</span>
+</a>
+</div>
+</div>
+</nav>
+</div>
+<!-- Sidebar Footer: Sua Conta -->
+<div class="p-3 border-t border-brand-border/60 bg-brand-card" data-purpose="user-profile-summary">
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-brand-soft transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-brand-soft border border-brand-border flex items-center justify-center font-semibold text-xs text-brand-primary">
+            EG
+          </div>
+<div class="flex flex-col leading-tight">
+<span class="text-xs font-semibold text-brand-primary">Sua conta</span>
+<span class="text-[11px] text-brand-muted">Gestor Barbearia</span>
+</div>
+</div>
+<svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 9l4-4 4 4m0 6l-4 4-4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 ml-64 min-w-0 flex flex-col">
+<!-- Topbar -->
+<header class="h-16 px-8 border-b border-brand-border bg-brand-card/80 backdrop-blur sticky top-0 z-20 flex items-center justify-between" data-purpose="topbar">
+<!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumbs" class="flex items-center space-x-2 text-xs font-medium text-brand-muted">
+<span>Estilo e Gestão</span>
+<svg class="w-3.5 h-3.5 text-brand-border" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Configurações</span>
+<svg class="w-3.5 h-3.5 text-brand-border" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Negócio</span>
+<svg class="w-3.5 h-3.5 text-brand-border" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-brand-primary font-semibold">Relatórios</span>
+</nav>
+<!-- Right Utility Actions -->
+<div class="flex items-center space-x-3">
+<!-- Theme switcher button (Light/Moon icon) -->
+<button class="w-8 h-8 rounded-lg border border-brand-border flex items-center justify-center text-brand-muted hover:text-brand-primary hover:bg-brand-soft transition-colors" title="Alternar Modo Escuro" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Profile button -->
+<button class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg border border-brand-border text-xs font-semibold text-brand-primary hover:bg-brand-soft transition-colors" type="button">
+<div class="w-5 h-5 rounded-full bg-brand-primary text-white text-[10px] flex items-center justify-center">
+            B
+          </div>
+<span>Barbearia Navalha &amp; Fio</span>
+</button>
+</div>
+</header>
+<!-- Page Body Main Container -->
+<main class="flex-1 p-8 max-w-7xl w-full mx-auto space-y-6">
+<!-- BEGIN: PageHeader -->
+<section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4" data-purpose="page-header">
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-brand-primary">Relatórios</h1>
+<p class="text-sm text-brand-muted mt-1">Analise as vendas, entradas, saídas e resultados da sua barbearia por período.</p>
+</div>
+<!-- Export Actions -->
+<div class="flex items-center gap-2.5 shrink-0">
+<button class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-brand-primary bg-brand-card border border-brand-border rounded-lg shadow-sm hover:bg-brand-soft transition-colors" type="button">
+<svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Exportar PDF</span>
+</button>
+<button class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-brand-primary bg-brand-card border border-brand-border rounded-lg shadow-sm hover:bg-brand-soft transition-colors" type="button">
+<svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Exportar PNG</span>
+</button>
+</div>
+</section>
+<!-- END: PageHeader -->
+<!-- BEGIN: PeriodSelector -->
+<section class="flex items-center gap-2 overflow-x-auto pb-1" data-purpose="period-selector">
+<button class="px-4 py-2 text-xs font-medium rounded-lg text-brand-muted bg-brand-card border border-brand-border hover:text-brand-primary hover:bg-brand-soft transition-colors" type="button">
+          Hoje
+        </button>
+<button class="px-4 py-2 text-xs font-medium rounded-lg text-brand-muted bg-brand-card border border-brand-border hover:text-brand-primary hover:bg-brand-soft transition-colors" type="button">
+          Semana
+        </button>
+<button class="px-4 py-2 text-xs font-medium rounded-lg bg-brand-primary text-white border border-brand-primary shadow-sm" type="button">
+          Mês (Set/26)
+        </button>
+<button class="px-4 py-2 text-xs font-medium rounded-lg text-brand-muted bg-brand-card border border-brand-border hover:text-brand-primary hover:bg-brand-soft transition-colors" type="button">
+          Ano
+        </button>
+<button class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-lg text-brand-muted bg-brand-card border border-brand-border hover:text-brand-primary hover:bg-brand-soft transition-colors" type="button">
+<span>Personalizado</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</section>
+<!-- END: PeriodSelector -->
+<!-- BEGIN: TopMetricsCards -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" data-purpose="summary-metrics-grid">
+<!-- Faturamento -->
+<div class="bg-brand-card p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-brand-muted">Faturamento</span>
+<span class="p-1.5 rounded-md bg-brand-soft text-brand-muted">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+</div>
+<div class="text-2xl font-bold tracking-tight text-brand-primary mt-2">R$ 4.820,00</div>
+</div>
+<p class="text-[11px] text-brand-muted mt-3 pt-3 border-t border-brand-border/60">
+            Total das vendas concluídas no período.
+          </p>
+</div>
+<!-- Entradas -->
+<div class="bg-brand-card p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-brand-muted">Entradas</span>
+<span class="p-1.5 rounded-md bg-brand-greenBg text-brand-green">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M7 11l5-5m0 0l5 5m-5-5v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+</div>
+<div class="text-2xl font-bold tracking-tight text-brand-primary mt-2">R$ 4.820,00</div>
+</div>
+<p class="text-[11px] text-brand-muted mt-3 pt-3 border-t border-brand-border/60">
+            Valores que efetivamente entraram no caixa.
+          </p>
+</div>
+<!-- Saídas -->
+<div class="bg-brand-card p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-brand-muted">Saídas</span>
+<span class="p-1.5 rounded-md bg-amber-50 text-amber-700">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 13l-5 5m0 0l-5-5m5 5V6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+</div>
+<div class="text-2xl font-bold tracking-tight text-brand-primary mt-2">R$ 1.704,50</div>
+</div>
+<p class="text-[11px] text-brand-muted mt-3 pt-3 border-t border-brand-border/60">
+            Valores registrados como gastos no período.
+          </p>
+</div>
+<!-- Resultado Estimado -->
+<div class="bg-brand-card p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-brand-muted">Resultado estimado</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-brand-greenBg text-brand-green">
+                Saldo positivo
+              </span>
+</div>
+<div class="text-2xl font-bold tracking-tight text-brand-primary mt-2">R$ 3.115,50</div>
+</div>
+<p class="text-[11px] text-brand-muted mt-3 pt-3 border-t border-brand-border/60">
+            Entradas menos saídas registradas no período. Estimativa gerencial.
+          </p>
+</div>
+</section>
+<!-- END: TopMetricsCards -->
+<!-- BEGIN: OperationalIndicators -->
+<section class="bg-brand-card rounded-xl border border-brand-border p-4 flex flex-wrap items-center justify-between gap-4" data-purpose="operational-indicators">
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold text-brand-primary uppercase tracking-wide">Indicadores Operacionais:</span>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-soft border border-brand-border/70 text-xs">
+<span class="text-brand-muted">Serviços realizados:</span>
+<span class="font-bold text-brand-primary">74 atendimentos</span>
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-soft border border-brand-border/70 text-xs">
+<span class="text-brand-muted">Bebidas vendidas:</span>
+<span class="font-bold text-brand-primary">36 unidades</span>
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-soft border border-brand-border/70 text-xs">
+<span class="text-brand-muted">Outros produtos vendidos:</span>
+<span class="font-bold text-brand-primary">18 unidades</span>
+</div>
+</div>
+</section>
+<!-- END: OperationalIndicators -->
+<!-- BEGIN: MainEvolutionChartSection -->
+<section class="bg-brand-card rounded-xl border border-brand-border p-6 shadow-sm" data-purpose="main-chart-section">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div>
+<h2 class="text-base font-bold text-brand-primary">Evolução no período</h2>
+<p class="text-xs text-brand-muted mt-0.5">Veja como o valor selecionado variou ao longo do período.</p>
+</div>
+<!-- Metric Selector Toggle Pills -->
+<div class="inline-flex p-1 rounded-lg bg-brand-soft border border-brand-border text-xs font-medium self-start md:self-auto">
+<button class="px-3 py-1 rounded-md bg-brand-primary text-white shadow-xs font-semibold" type="button">
+              Faturamento
+            </button>
+<button class="px-3 py-1 rounded-md text-brand-muted hover:text-brand-primary transition-colors" type="button">
+              Entradas
+            </button>
+<button class="px-3 py-1 rounded-md text-brand-muted hover:text-brand-primary transition-colors" type="button">
+              Saídas
+            </button>
+<button class="px-3 py-1 rounded-md text-brand-muted hover:text-brand-primary transition-colors" type="button">
+              Resultado estimado
+            </button>
+</div>
+</div>
+<!-- SVG Line Chart Representation -->
+<div class="relative w-full h-64 select-none">
+<!-- Background Horizontal Gridlines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none text-[10px] text-brand-muted/70">
+<div class="border-b border-dashed border-brand-border/80 w-full flex justify-between">
+<span>R$ 600</span>
+</div>
+<div class="border-b border-dashed border-brand-border/80 w-full flex justify-between">
+<span>R$ 450</span>
+</div>
+<div class="border-b border-dashed border-brand-border/80 w-full flex justify-between">
+<span>R$ 300</span>
+</div>
+<div class="border-b border-dashed border-brand-border/80 w-full flex justify-between">
+<span>R$ 150</span>
+</div>
+<div class="border-b border-brand-border w-full flex justify-between">
+<span>R$ 0</span>
+</div>
+</div>
+<!-- Responsive Area & Line Chart -->
+<svg class="w-full h-full pt-3 pb-5" preserveaspectratio="none" viewbox="0 0 1000 240">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2F2F2D" stop-opacity="0.16"></stop>
+<stop offset="100%" stop-color="#2F2F2D" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Filled Area Curve -->
+<path d="M 20,200
+                 C 80,180 120,130 180,140
+                 C 240,150 280,90 350,110
+                 C 420,130 460,40 500,45
+                 C 540,50 600,160 670,140
+                 C 740,120 780,60 840,80
+                 C 900,100 950,90 980,85
+                 L 980,210 L 20,210 Z" fill="url(#chartGradient)"></path>
+<!-- Main Stroke Path -->
+<path d="M 20,200
+                 C 80,180 120,130 180,140
+                 C 240,150 280,90 350,110
+                 C 420,130 460,40 500,45
+                 C 540,50 600,160 670,140
+                 C 740,120 780,60 840,80
+                 C 900,100 950,90 980,85" fill="none" stroke="#2F2F2D" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Regular Data Points -->
+<circle class="fill-white stroke-[#2F2F2D]" cx="180" cy="140" r="3.5" stroke-width="2"></circle>
+<circle class="fill-white stroke-[#2F2F2D]" cx="350" cy="110" r="3.5" stroke-width="2"></circle>
+<circle class="fill-white stroke-[#2F2F2D]" cx="670" cy="140" r="3.5" stroke-width="2"></circle>
+<circle class="fill-white stroke-[#2F2F2D]" cx="840" cy="80" r="3.5" stroke-width="2"></circle>
+<!-- Peak Highlight Point (14/09) -->
+<circle class="fill-brand-primary stroke-white" cx="500" cy="45" r="5" stroke-width="2.5"></circle>
+</svg>
+<!-- Interactive-styled Tooltip for Peak Value -->
+<div class="absolute left-1/2 -translate-x-1/2 top-1.5 bg-brand-primary text-white text-[11px] py-1 px-2.5 rounded-md shadow-md flex flex-col items-center pointer-events-none">
+<span class="font-bold">14/09: R$ 480,00</span>
+<span class="text-[9px] text-gray-300">Pico de atendimentos</span>
+<div class="w-1.5 h-1.5 bg-brand-primary rotate-45 -mb-1 mt-0.5"></div>
+</div>
+</div>
+<!-- X-Axis Labels: September Days -->
+<div class="flex justify-between text-[11px] text-brand-muted pt-2 border-t border-brand-border">
+<span>01 Set</span>
+<span>05 Set</span>
+<span>10 Set</span>
+<span class="font-semibold text-brand-primary">15 Set</span>
+<span>20 Set</span>
+<span>25 Set</span>
+<span>30 Set</span>
+</div>
+</section>
+<!-- END: MainEvolutionChartSection -->
+<!-- BEGIN: AnalyticalBreakdownGrid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6" data-purpose="breakdown-grid">
+<!-- Faturamento por Origem -->
+<div class="bg-brand-card p-6 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-sm font-bold text-brand-primary">Faturamento por origem</h3>
+<span class="text-xs text-brand-muted">Total: R$ 4.820,00</span>
+</div>
+<p class="text-xs text-brand-muted mb-6">Veja quais tipos de venda mais contribuíram para seu faturamento.</p>
+<div class="space-y-4">
+<!-- Item 1: Serviços -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Serviços</span>
+<span class="text-brand-muted font-medium">R$ 3.200,00 <strong class="text-brand-primary ml-1">(66%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-brand-primary rounded-full" style="width: 66%;"></div>
+</div>
+</div>
+<!-- Item 2: Outros produtos -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Outros produtos</span>
+<span class="text-brand-muted font-medium">R$ 1.080,00 <strong class="text-brand-primary ml-1">(23%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-500 rounded-full" style="width: 23%;"></div>
+</div>
+</div>
+<!-- Item 3: Bebidas -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Bebidas</span>
+<span class="text-brand-muted font-medium">R$ 540,00 <strong class="text-brand-primary ml-1">(11%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-400 rounded-full" style="width: 11%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-6 border-t border-brand-border/60 text-[11px] text-brand-muted">
+            Serviços seguem como o principal motor do faturamento mensal.
+          </div>
+</div>
+<!-- Entradas por Forma de Pagamento -->
+<div class="bg-brand-card p-6 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-sm font-bold text-brand-primary">Entradas por forma de pagamento</h3>
+<span class="text-xs text-brand-muted">Total: R$ 4.820,00</span>
+</div>
+<p class="text-xs text-brand-muted mb-6">Veja como os valores recebidos foram registrados no período.</p>
+<div class="space-y-4">
+<!-- Item 1: Pix -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Pix</span>
+<span class="text-brand-muted font-medium">R$ 2.410,00 <strong class="text-brand-primary ml-1">(50%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-brand-primary rounded-full" style="width: 50%;"></div>
+</div>
+</div>
+<!-- Item 2: Cartão de Crédito -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Cartão de Crédito</span>
+<span class="text-brand-muted font-medium">R$ 1.205,00 <strong class="text-brand-primary ml-1">(25%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-500 rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+<!-- Item 3: Dinheiro -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Dinheiro</span>
+<span class="text-brand-muted font-medium">R$ 723,00 <strong class="text-brand-primary ml-1">(15%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-400 rounded-full" style="width: 15%;"></div>
+</div>
+</div>
+<!-- Item 4: Cartão de Débito -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Cartão de Débito</span>
+<span class="text-brand-muted font-medium">R$ 482,00 <strong class="text-brand-primary ml-1">(10%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-300 rounded-full" style="width: 10%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-6 border-t border-brand-border/60 text-[11px] text-brand-muted">
+            50% dos recebimentos foram feitos instantaneamente via Pix.
+          </div>
+</div>
+</section>
+<!-- END: AnalyticalBreakdownGrid -->
+<!-- BEGIN: BottomAnalyticalSection -->
+<section class="bg-brand-card p-6 rounded-xl border border-brand-border shadow-sm" data-purpose="expenses-category-breakdown">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-sm font-bold text-brand-primary">Saídas por categoria</h3>
+<span class="text-xs text-brand-muted">Total: R$ 1.704,50</span>
+</div>
+<p class="text-xs text-brand-muted mb-6">Veja onde os gastos da barbearia ficaram concentrados.</p>
+<div class="space-y-4">
+<!-- Aluguel -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Aluguel do Salão</span>
+<span class="text-brand-muted font-medium">R$ 1.200,00 <strong class="text-brand-primary ml-1">(70,4%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-brand-primary rounded-full" style="width: 70.4%;"></div>
+</div>
+</div>
+<!-- Compra de estoque -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Compra de estoque (Pomadas, Shampoos e Descartáveis)</span>
+<span class="text-brand-muted font-medium">R$ 320,00 <strong class="text-brand-primary ml-1">(18,8%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-500 rounded-full" style="width: 18.8%;"></div>
+</div>
+</div>
+<!-- Energia -->
+<div>
+<div class="flex justify-between text-xs mb-1.5">
+<span class="font-medium text-brand-primary">Energia Elétrica (CPFL)</span>
+<span class="text-brand-muted font-medium">R$ 184,50 <strong class="text-brand-primary ml-1">(10,8%)</strong></span>
+</div>
+<div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden">
+<div class="h-full bg-stone-400 rounded-full" style="width: 10.8%;"></div>
+</div>
+</div>
+</div>
+<div class="mt-6 p-3 bg-brand-soft rounded-lg flex items-center justify-between text-xs text-brand-muted">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-brand-primary shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>O custo fixo com locação representa o maior impacto nas despesas do mês vigente.</span>
+</div>
+<a class="font-semibold text-brand-primary hover:underline shrink-0" href="#">Ver no financeiro</a>
+</div>
+</section>
+<!-- END: BottomAnalyticalSection -->
+</main>
+</div>
+<!-- END: MainContentWrapper -->
+</body></html>

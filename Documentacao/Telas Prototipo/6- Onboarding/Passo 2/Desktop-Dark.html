@@ -1,0 +1,471 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style="width: 1280px; height: 1426px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estilo e Gestão - Onboarding Passo 2: Endereço (Dark)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "dark-bg": "#111215",
+            "dark-card": "#18191E",
+            "dark-input": "#222226",
+            "dark-border": "#2C2E38",
+            "dark-text-primary": "#F4F4F5",
+            "dark-text-secondary": "#989693",
+            "dark-text-muted": "#666662",
+            "primary-red": "#B42318",
+            "primary-red-hover": "#911C13",
+            "primary-red-dim": "#241719",
+            "success-dark": "#2F6B4F"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#111215] font-sans text-[#F4F4F5] antialiased min-h-screen flex flex-col selection:bg-[#B42318]/30 selection:text-white">
+<!-- HEADER -->
+<header class="fixed top-0 left-0 w-full z-50 bg-[#111215]/90 backdrop-blur-xl border-b border-[#2C2E38]">
+<div class="max-w-[1400px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+<!-- Brand Logo + Badge -->
+<div class="flex items-center gap-3">
+<div class="h-9 w-auto flex items-center">
+<img alt="Estilo e Gestão" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs7djTjFP_C_dxjLHjP_itZEHJTTqFwFMDdnPsMdEhUMIMq4Jc5PqS27ZZaF39ojOskYddSdEpEe9GQSxNDjWX9sLdmT85NDfprmabSlTiAiltc9VUnaqZqc4mEyPI4Lt0NqzZbGbawZ6qF3SWBHNEUQCmqVU39x4boSZEOC4-gyCb4ohLe7AO0rDVDF4RiuXISLfZrizXPndAquCgmAUSR7UifmpqOKq1dYqQ5mNnExUgoiWY_fK9OcQQU8Zv-TJ4Gto">
+</div>
+<div class="h-4 w-[1px] bg-[#2C2E38] hidden sm:block"></div>
+<div class="hidden sm:flex items-center gap-2"><span class="text-sm font-semibold tracking-tight text-[#F4F4F5]">Estilo e Gestão</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#241719] text-[#B42318] border border-[#B42318]/30">Onboarding Profissional</span><span class="hidden lg:inline-flex items-center text-[11px] text-[#989693] ml-2 font-normal">Esses dados formam a base da sua Vitrine pública</span></div>
+</div>
+<!-- Center / Summary Pill -->
+<div class="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#18191E] border border-[#2C2E38] text-xs text-[#989693]"><span class="w-2 h-2 rounded-full bg-[#B42318] animate-pulse"></span><span class="font-medium text-[#F4F4F5]">Etapa 2: Endereço</span><span class="text-[#666662]">•</span><span class="text-[#989693]">33% concluído</span></div>
+<!-- Right Actions: Support, Theme Switch, Profile -->
+<div class="flex items-center gap-2 sm:gap-3">
+<button aria-label="Alternar tema claro" class="w-9 h-9 rounded-lg flex items-center justify-center text-[#989693] hover:text-amber-400 hover:bg-[#18191E] border border-transparent hover:border-[#2C2E38] transition-colors" title="Alternar para tema claro" type="button">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN BODY -->
+<main class="flex-1 w-full pt-20 pb-12 bg-[#111215]">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+<!-- STEPPER NAVIGATION BAR (6 Steps) -->
+<div class="w-full bg-[#18191E] rounded-2xl p-4 sm:p-5 border border-[#2C2E38] shadow-lg">
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3"><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/80 border border-[#2F6B4F]/40 transition-all"><div class="w-7 h-7 rounded-full bg-[#2F6B4F] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-[0_0_10px_rgba(47,107,79,0.5)]"><span class="material-symbols-outlined text-[15px]">check</span></div><div class="flex flex-col min-w-0"><span class="text-xs font-semibold text-[#F4F4F5] truncate">1. Dados da barbearia</span><span class="text-[11px] font-medium text-[#2F6B4F] truncate">Concluído</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#241719] border border-[#B42318]/50 shadow-[0_0_15px_rgba(180,35,24,0.15)] transition-all"><div class="w-7 h-7 rounded-full bg-[#B42318] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-[0_0_10px_rgba(180,35,24,0.5)]">2</div><div class="flex flex-col min-w-0"><span class="text-xs font-semibold text-[#F4F4F5] truncate">2. Endereço</span><span class="text-[11px] font-medium text-[#B42318] truncate">Em curso</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">3</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">3. Horários</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">4</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">4. Serviços</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">5</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">5. Produtos e pagamentos</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div><div class="flex items-center gap-3 p-2.5 rounded-xl bg-[#141518]/60 border border-[#2C2E38]/50 opacity-60"><div class="w-7 h-7 rounded-full bg-[#2C2E38] text-[#989693] flex items-center justify-center text-xs font-medium shrink-0">6</div><div class="flex flex-col min-w-0"><span class="text-xs font-medium text-[#989693] truncate">6. Aparência</span><span class="text-[11px] text-[#666662] truncate">Pendente</span></div></div></div>
+<!-- Progress track -->
+<div class="w-full bg-[#111215] h-1.5 rounded-full mt-4 overflow-hidden border border-[#2C2E38]/50">
+<div class="bg-gradient-to-r from-[#B42318] to-red-500 h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(180,35,24,0.6)]" style="width: 33.33%;"></div>
+</div>
+</div>
+<!-- MAIN CONTENT: 2-COLUMN LAYOUT (FORM + STOREFRONT PREVIEW) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: FORM & TITLE (lg:col-span-7 or 8) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Headline & Context -->
+<div class="flex flex-col gap-2"><div class="flex items-center gap-2"><span class="text-[11px] font-bold uppercase tracking-widest text-[#B42318] bg-[#241719] px-2.5 py-1 rounded-md border border-[#B42318]/30">Passo 2 de 6</span><span class="text-xs text-[#989693] flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#2F6B4F]">domain</span> Configuração do seu espaço</span><span class="text-[#666662]">•</span><span class="text-xs text-[#989693]">33% concluído</span></div><h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F5]">Agora, onde fica sua barbearia?</h1><p class="text-sm text-[#989693] leading-relaxed">Informe o endereço do estabelecimento. Esses dados poderão ser alterados depois nas configurações.</p></div>
+<form class="flex flex-col gap-6" id="barbershop-form"><!-- SEÇÃO 01: LOCALIZAÇÃO DA BARBEARIA -->
+<section class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-5 sm:p-6 flex flex-col gap-5 shadow-lg relative overflow-hidden">
+<div class="flex items-center gap-3 pb-3.5 border-b border-[#2C2E38]">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center border border-[#B42318]/30">
+<span class="material-symbols-outlined text-[18px]">pin_drop</span>
+</div>
+<div>
+<h2 class="text-base font-semibold text-[#F4F4F5]">Localização da Barbearia</h2>
+<p class="text-xs text-[#989693]">Comece pelo CEP para preencher parte do endereço automaticamente.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="cep-input">
+<span class="">CEP <span class="text-[#B42318]">*</span></span>
+<span class="text-[11px] text-[#2F6B4F] flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[13px]">bolt</span> Busca automática</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">search</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-24 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="cep-input" name="cep" placeholder="11730-000" required="" type="text" value="11730-000">
+<button class="absolute right-2 px-3 py-1.5 rounded-lg bg-[#2C2E38] hover:bg-[#B42318] text-[#F4F4F5] hover:text-white text-xs font-medium transition-colors" type="button">
+Buscar
+</button>
+</div>
+<span class="text-[11px] text-[#666662]">Buscaremos o endereço automaticamente quando possível.</span>
+</div>
+<div class="flex items-center gap-3 p-3.5 rounded-xl bg-[#222226]/50 border border-[#2C2E38] mt-1 sm:mt-6">
+<span class="material-symbols-outlined text-[20px] text-[#2F6B4F] shrink-0">check_circle</span>
+<p class="text-xs text-[#989693] leading-relaxed"><strong class="text-[#F4F4F5] font-semibold">CEP localizado:</strong> Mongaguá - SP. Confira e complete os dados abaixo.</p>
+</div>
+</div>
+</section>
+<!-- SEÇÃO 02: ENDEREÇO COMPLETO -->
+<section class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-5 sm:p-6 flex flex-col gap-5 shadow-lg">
+<div class="flex items-center gap-3 pb-3.5 border-b border-[#2C2E38]">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center border border-[#B42318]/30">
+<span class="material-symbols-outlined text-[18px]">map</span>
+</div>
+<div>
+<h2 class="text-base font-semibold text-[#F4F4F5]">Endereço Completo</h2>
+<p class="text-xs text-[#989693]">Confira os dados e informe o número ou referência.</p>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Rua / Logradouro -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5]" for="street-input">Rua / Logradouro <span class="text-[#B42318]">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">signpost</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="street-input" name="street" placeholder="Avenida São Paulo" required="" type="text" value="Avenida São Paulo">
+</div>
+</div>
+<!-- Pergunta de Número (Radio cards) e Campo de Número -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
+<div class="sm:col-span-7 flex flex-col gap-2">
+<label class="text-xs font-semibold text-[#F4F4F5]">O endereço tem número? <span class="text-[#B42318]">*</span></label>
+<div class="grid grid-cols-2 gap-2.5">
+<button class="flex items-center justify-between p-3 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#B42318]">tag</span>
+<span class="text-xs font-semibold text-[#F4F4F5]">Sim, tem número</span>
+</div>
+<div class="w-4 h-4 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-[#B42318]"></div></div>
+</button>
+<button class="flex items-center justify-between p-3 rounded-xl bg-[#141518] border border-[#2C2E38] text-left opacity-85 hover:border-[#666662] transition-all" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#989693]">do_not_disturb_on</span>
+<span class="text-xs font-medium text-[#989693]">Não (Sem número)</span>
+</div>
+<div class="w-4 h-4 rounded-full border border-[#666662] flex items-center justify-center shrink-0"><div class="w-2 h-2 rounded-full bg-transparent"></div></div>
+</button>
+</div>
+</div>
+<div class="sm:col-span-5 flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5]" for="number-input">Número <span class="text-[#B42318]">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">tag</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="number-input" name="number" placeholder="125" required="" type="text" value="125">
+</div>
+</div>
+</div>
+<!-- Complemento -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5] flex items-center justify-between" for="complement-input">
+<span class="flex items-center gap-1.5">Complemento<span class="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#2C2E38] text-[#989693]">Opcional</span></span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">apartment</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="complement-input" name="complement" placeholder="Ex.: Sala 2, Fundos, Loja B" type="text" value="">
+</div>
+<span class="text-[11px] text-[#666662]">Use somente se precisar adicionar uma referência ao endereço.</span>
+</div>
+<!-- Bairro, Cidade e Estado -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5]" for="district-input">Bairro <span class="text-[#B42318]">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">home_work</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="district-input" name="district" placeholder="Centro" required="" type="text" value="Centro">
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5]" for="city-input">Cidade <span class="text-[#B42318]">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#989693] text-[18px]">location_city</span>
+<input class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl pl-10 pr-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all placeholder:text-[#666662]" id="city-input" name="city" placeholder="Mongaguá" required="" type="text" value="Mongaguá">
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-[#F4F4F5]" for="state-select">Estado <span class="text-[#B42318]">*</span></label>
+<div class="relative">
+<select class="w-full h-11 bg-[#222226] text-[#F4F4F5] text-sm rounded-xl px-3.5 border border-[#2C2E38] focus:border-[#B42318] focus:ring-1 focus:ring-[#B42318] focus:outline-none transition-all cursor-pointer" id="state-select" name="state" required="">
+<option selected="" value="SP">SP — São Paulo</option>
+<option value="RJ">RJ — Rio de Janeiro</option>
+<option value="MG">MG — Minas Gerais</option>
+<option value="PR">PR — Paraná</option>
+<option value="RS">RS — Rio Grande do Sul</option>
+<option value="SC">SC — Santa Catarina</option>
+<option value="BA">BA — Bahia</option>
+<option value="DF">DF — Distrito Federal</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SUBMIT & NAVIGATION BAR -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 pb-6">
+<div class="flex items-center gap-2 text-[#989693]">
+<span class="material-symbols-outlined text-[18px] text-[#2F6B4F]">cloud_done</span>
+<span class="text-xs">Seu progresso é salvo automaticamente em nuvem.</span>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<button class="w-1/2 sm:w-auto h-12 px-6 rounded-xl bg-[#18191E] hover:bg-[#222226] border border-[#2C2E38] hover:border-[#666662] text-[#F4F4F5] text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="">Voltar</span>
+</button>
+<button class="w-1/2 sm:w-auto h-12 px-8 rounded-xl bg-[#B42318] hover:bg-[#911C13] active:bg-[#72160F] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(180,35,24,0.35)] hover:shadow-[0_6px_25px_rgba(180,35,24,0.5)] transition-all cursor-pointer" type="submit">
+<span class="">Continuar</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div></form>
+</div>
+<!-- RIGHT COLUMN: ENRICHED STOREFRONT PREVIEW CARD (lg:col-span-5) -->
+<div class="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-4"><!-- Topo Prévia -->
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2F6B4F] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#2F6B4F]"></span>
+</span>
+<span class="text-xs font-semibold text-[#F4F4F5] uppercase tracking-wider">Prévia do Endereço na Vitrine</span>
+</div>
+<span class="text-[11px] text-[#989693] bg-[#18191E] border border-[#2C2E38] px-2 py-0.5 rounded-md">Mobile &amp; Desktop</span>
+</div>
+<!-- Card de Prévia de Endereço Estilizado -->
+<div class="bg-[#18191E] rounded-2xl border border-[#2C2E38] overflow-hidden shadow-2xl relative group transition-all hover:border-[#3F3F46]">
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-[#B42318]/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Browser mock header -->
+<div class="h-10 bg-[#141518] px-3.5 border-b border-[#2C2E38] flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-[#EF4444]/60"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]/60"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#10B981]/60"></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#222226] border border-[#2C2E38] text-[11px] text-[#989693]">
+<span class="material-symbols-outlined text-[13px] text-[#2F6B4F]">lock</span>
+<span class="truncate max-w-[140px]">barbeariaimperial.estiloegestao.com</span>
+</div>
+<div class="w-4"></div>
+</div>
+<!-- Mini Mapa Visual / Localização -->
+<div class="relative h-32 bg-gradient-to-r from-[#241719] via-[#1A1A20] to-[#121316] p-4 flex flex-col justify-between overflow-hidden border-b border-[#2C2E38]">
+<div class="absolute inset-0 opacity-15 bg-[radial-gradient(#B42318_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex items-center justify-between relative z-10">
+<span class="text-[11px] font-medium text-[#989693] bg-[#111215]/90 backdrop-blur-md border border-[#2C2E38] px-2.5 py-0.5 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#B42318]">near_me</span> Mongaguá, SP
+</span>
+<span class="bg-[#111215]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#2C2E38] flex items-center gap-1.5 text-[10px] font-semibold text-[#2F6B4F]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2F6B4F]"></span> Endereço verificado
+</span>
+</div>
+<div class="flex items-center gap-2 relative z-10">
+<div class="w-9 h-9 rounded-xl bg-[#B42318] text-white flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+</div>
+<div>
+<span class="text-xs font-bold text-[#F4F4F5] block">Ponto de Atendimento</span>
+<span class="text-[11px] text-[#989693]">Visível para seus clientes</span>
+</div>
+</div>
+</div>
+<!-- Detalhes do Endereço formatados -->
+<div class="p-5 flex flex-col gap-4 relative z-10">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col gap-0.5">
+<span class="text-xs font-bold text-[#989693] uppercase tracking-wider">Estabelecimento</span>
+<h3 class="text-base font-bold text-[#F4F4F5] flex items-center gap-1.5">
+Barbearia Imperial
+<span class="material-symbols-outlined text-[#38BDF8] text-[16px]">verified</span>
+</h3>
+</div>
+<span class="text-[11px] font-medium text-[#989693] bg-[#222226] border border-[#2C2E38] px-2.5 py-1 rounded-lg shrink-0">Como na Vitrine</span>
+</div>
+<div class="p-3.5 rounded-xl bg-[#222226] border border-[#2C2E38] flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-[#241719] text-[#B42318] flex items-center justify-center shrink-0 border border-[#B42318]/30 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">pin_drop</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-semibold text-[#F4F4F5]" id="preview-address-street">Avenida São Paulo, 125</span>
+<span class="text-xs text-[#989693]" id="preview-address-city">Centro • Mongaguá - SP</span>
+<span class="text-[11px] font-medium text-[#666662] mt-0.5" id="preview-address-cep">CEP 11730-000</span>
+</div>
+</div>
+<div class="pt-2 border-t border-[#2C2E38] flex items-center justify-between text-xs text-[#989693]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-[#2F6B4F]">navigation</span> Rota com Google Maps e Waze</span>
+<span class="text-[11px] text-[#38BDF8] font-medium">Integrado</span>
+</div>
+</div>
+</div>
+<!-- Card de Informação sobre o endereço na vitrine -->
+<div class="p-4 rounded-xl bg-[#18191E] border border-[#2C2E38] flex items-start gap-3 shadow-sm">
+<div class="w-8 h-8 rounded-xl bg-[#241719] text-[#B42318] flex items-center justify-center shrink-0 border border-[#B42318]/30 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-xs font-semibold text-[#F4F4F5]">Endereço na Vitrine</h4>
+<p class="text-xs text-[#989693] leading-relaxed">O endereço poderá ser usado para ajudar clientes a localizar sua barbearia com rota direta no mapa.</p>
+</div>
+</div>
+<!-- Card Próximas Etapas -->
+<div class="bg-[#18191E] rounded-2xl border border-[#2C2E38] p-4 flex flex-col gap-3 shadow-md">
+<div class="flex items-center justify-between pb-2 border-b border-[#2C2E38]">
+<span class="text-xs font-bold text-[#F4F4F5] uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-[#B42318]">format_list_bulleted</span> Próximas etapas
+</span>
+<span class="text-[10px] text-[#666662]">4 restantes</span>
+</div>
+<ul class="space-y-2 text-xs text-[#989693]">
+<li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">3. Horários de funcionamento</span><span class="text-[10px] text-[#666662]">Dias e turnos</span></li>
+<li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">4. Serviços</span><span class="text-[10px] text-[#666662]">Catálogo e valores</span></li>
+<li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">5. Produtos e pagamentos</span><span class="text-[10px] text-[#666662]">Itens e meios</span></li>
+<li class="flex items-center justify-between py-1 px-2 rounded-lg bg-[#222226]/50"><span class="text-[#F4F4F5] font-medium">6. Aparência e conclusão</span><span class="text-[10px] text-[#666662]">Tema e publicação</span></li>
+</ul>
+</div></div>
+</div>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="w-full bg-[#111215] border-t border-[#2C2E38] py-6 mt-auto">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#989693]">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-[#F4F4F5]">Estilo e Gestão</span>
+<span class="">•</span>
+<span class="">Tecnologia e Gestão Inteligente para Barbearias</span>
+</div>
+<div class="flex items-center gap-4 text-[11px] text-[#666662]">
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Termos de Uso</a>
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Privacidade</a>
+<a class="hover:text-[#F4F4F5] transition-colors" href="#">Ajuda &amp; FAQ</a>
+<span class="">© 2026 Todos os direitos reservados</span>
+</div>
+</div>
+</footer>
+<!-- INTERACTION SCRIPT -->
+<script>
+    (function() {
+      // Elements
+      const shopNameInput = document.getElementById('shop-name');
+      const proNameInput = document.getElementById('pro-name');
+      const previewShopName = document.getElementById('preview-shop-name');
+      const previewProName = document.getElementById('preview-pro-name');
+      const previewUrl = document.getElementById('preview-url');
+
+      // Live Synchronized Input -> Preview
+      if (shopNameInput && previewShopName) {
+        shopNameInput.addEventListener('input', function(e) {
+          const val = e.target.value.trim();
+          previewShopName.textContent = val || 'Sua Barbearia';
+          const slug = val.toLowerCase().replace(/[^a-z0-9]/g, '') || 'suabarbearia';
+          if (previewUrl) previewUrl.textContent = `${slug}.estiloegestao.com`;
+        });
+      }
+
+      if (proNameInput && previewProName) {
+        proNameInput.addEventListener('input', function(e) {
+          const val = e.target.value.trim();
+          previewProName.textContent = val ? `Profissional: ${val}` : 'Profissional Titular';
+        });
+      }
+
+      // Atendimento Toggles
+      const optNo = document.getElementById('opt-home-no');
+      const optYes = document.getElementById('opt-home-yes');
+      const hiddenInput = document.getElementById('atendimento-input');
+      const previewAtendimentoBadge = document.getElementById('preview-atendimento-badge');
+
+      function setAtendimento(isYes) {
+        hiddenInput.value = isYes ? 'sim' : 'nao';
+
+        if (isYes) {
+          // Yes Active
+          optYes.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all cursor-pointer group';
+          optYes.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0 radio-circle';
+          optYes.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-[#B42318]';
+          optYes.querySelector('span.text-sm').className = 'text-sm font-semibold text-[#F4F4F5]';
+
+          // No Inactive
+          optNo.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#141518] border border-[#2C2E38] hover:border-[#666662] text-left transition-all cursor-pointer group opacity-85';
+          optNo.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border border-[#666662] flex items-center justify-center shrink-0 radio-circle';
+          optNo.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-transparent';
+          optNo.querySelector('span.text-sm').className = 'text-sm font-medium text-[#989693] group-hover:text-[#F4F4F5]';
+
+          if (previewAtendimentoBadge) {
+            previewAtendimentoBadge.innerHTML = '<span class="material-symbols-outlined text-[14px]">directions_car</span> Atende a domicílio';
+          }
+        } else {
+          // No Active
+          optNo.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#222226] border-2 border-[#B42318] text-left transition-all cursor-pointer group';
+          optNo.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border-2 border-[#B42318] flex items-center justify-center shrink-0 radio-circle';
+          optNo.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-[#B42318]';
+          optNo.querySelector('span.text-sm').className = 'text-sm font-semibold text-[#F4F4F5]';
+
+          // Yes Inactive
+          optYes.className = 'atendimento-card flex items-center justify-between p-4 rounded-xl bg-[#141518] border border-[#2C2E38] hover:border-[#666662] text-left transition-all cursor-pointer group opacity-85';
+          optYes.querySelector('.radio-circle').className = 'w-5 h-5 rounded-full border border-[#666662] flex items-center justify-center shrink-0 radio-circle';
+          optYes.querySelector('.radio-circle div').className = 'w-2.5 h-2.5 rounded-full bg-transparent';
+          optYes.querySelector('span.text-sm').className = 'text-sm font-medium text-[#989693] group-hover:text-[#F4F4F5]';
+
+          if (previewAtendimentoBadge) {
+            previewAtendimentoBadge.innerHTML = '<span class="material-symbols-outlined text-[14px]">store</span> No espaço fixo';
+          }
+        }
+      }
+
+      if (optNo && optYes) {
+        optNo.addEventListener('click', () => setAtendimento(false));
+        optYes.addEventListener('click', () => setAtendimento(true));
+      }
+
+      // Logo Dropzone
+      const logoZone = document.getElementById('logo-dropzone');
+      const fileInput = document.getElementById('logo-file');
+      const logoLabelText = document.getElementById('logo-label-text');
+      const previewLogoBox = document.getElementById('preview-logo-box');
+
+      if (logoZone && fileInput) {
+        logoZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              if (previewLogoBox) {
+                previewLogoBox.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover rounded-xl" alt="Logo preview">`;
+              }
+            };
+            reader.readAsDataURL(file);
+            if (logoLabelText) {
+              logoLabelText.textContent = file.name.length > 16 ? file.name.substring(0, 14) + '...' : file.name;
+            }
+          }
+        });
+      }
+
+      // Form Submit Feedback
+      const form = document.getElementById('barbershop-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Salvando dados...';
+            setTimeout(() => {
+              submitBtn.innerHTML = 'Concluído! Avançando... <span class="material-symbols-outlined text-[18px]">check</span>';
+              submitBtn.classList.remove('bg-[#B42318]');
+              submitBtn.classList.add('bg-[#2F6B4F]');
+            }, 700);
+          }
+        });
+      }
+    })();
+  </script>
+
+
+</body></html>
