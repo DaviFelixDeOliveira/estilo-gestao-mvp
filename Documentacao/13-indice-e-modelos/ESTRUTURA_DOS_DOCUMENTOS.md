@@ -37,8 +37,10 @@ Exemplo:
 Tecnologia
 → Decisões Tecnológicas
 
-Fluxo funcional
-→ Fluxo do Barbeiro e Cliente
+Fluxos funcionais por ator
+→ FLUXO_BARBEIRO.md
+→ FLUXO_CLIENTE.md
+→ FLUXO_ADMIN.md
 
 Banco
 → Banco de Dados

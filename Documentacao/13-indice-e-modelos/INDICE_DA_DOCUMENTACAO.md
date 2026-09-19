@@ -13,7 +13,7 @@ Não contém regras detalhadas do sistema. Cada assunto deve ser consultado em s
 # 1. Estrutura geral
 
 ```text
-documentação/
+Documentação/
 │
 ├── 01-planejamento-e-visao/
 │   ├── DOCUMENTO_VISAO.md
@@ -25,7 +25,9 @@ documentação/
 │   └── PREPARACAO_FRONTEND_PARA_BACKEND.md
 │
 ├── 03-fluxos-de-uso/
-│   └── FLUXO_BARBEIRO_E_CLIENTE.md
+│   ├── FLUXO_BARBEIRO.md
+│   ├── FLUXO_CLIENTE.md
+│   └── FLUXO_ADMIN.md
 │
 ├── 04-banco-de-dados/
 │   ├── BANCO_DE_DADOS.md
@@ -40,7 +42,8 @@ documentação/
 ├── 06-design-e-interface/
 │   ├── DESIGN_SYSTEM.md
 │   ├── ESQUEMA_DE_CORES.md
-│   └── RESPONSIVIDADE.md
+│   ├── RESPONSIVIDADE.md
+│   └── GUIA_PROTOTIPACAO_IA.md
 │
 ├── 07-gestao-do-projeto/
 │   └── CHECKLIST_MESTRE.md
@@ -61,6 +64,7 @@ documentação/
 │   ├── FRONTEND_BACKEND.md
 │   ├── VITRINE_E_IA.md
 │   ├── TESTES_E_QUALIDADE.md
+│   ├── INFRAESTRUTURA_PERFORMANCE.md
 │   └── ESCOPO_E_DOCUMENTACAO.md
 │
 ├── 11-modelo-de-negocio/
@@ -69,10 +73,16 @@ documentação/
 ├── 12-testes-e-qualidade/
 │   └── PLANO_DE_TESTES.md
 │
-└── 13-indice-e-modelos/
-    ├── INDICE_DA_DOCUMENTACAO.md
-    └── ESTRUTURA_DOS_DOCUMENTOS.md
+├── 13-indice-e-modelos/
+│   ├── INDICE_DA_DOCUMENTACAO.md
+│   └── ESTRUTURA_DOS_DOCUMENTOS.md
+│
+└── 99-historico/
+    ├── README.md
+    └── arquivos substituídos (não canônicos)
 ```
+> **Histórico:** arquivos substituídos ficam em `99-historico/` apenas para consulta histórica e **não são fonte oficial de verdade**.
+
 
 Na raiz do projeto:
 
@@ -176,29 +186,39 @@ Também orienta a futura troca dos mocks pelo backend real.
 
 # 4. Fluxos de Uso
 
-## Fluxo do Barbeiro e Cliente
+Os fluxos funcionais são separados por ator para evitar duplicação e conflitos de responsabilidade.
+
+## Fluxo do Barbeiro
 
 **Arquivo:**
 
-[`../03-fluxos-de-uso/FLUXO_BARBEIRO_E_CLIENTE.md`](../03-fluxos-de-uso/FLUXO_BARBEIRO_E_CLIENTE.md)
+[`../03-fluxos-de-uso/FLUXO_BARBEIRO.md`](../03-fluxos-de-uso/FLUXO_BARBEIRO.md)
 
 **Finalidade:**
 
-Ser a principal referência técnica sobre o funcionamento das funcionalidades.
+Ser a referência funcional principal da área autenticada da barbearia: autenticação, onboarding, Dashboard, PDV, serviços, produtos, estoque, financeiro, relatórios, administração da Vitrine, conta, assinatura e estados que afetam o barbeiro.
 
-Contém:
+## Fluxo do Cliente
 
-- campos;
-- regras;
-- validações;
-- mensagens;
-- ações;
-- sequências;
-- estados;
-- comportamento esperado;
-- decisões pendentes.
+**Arquivo:**
 
-Este arquivo é principalmente voltado ao desenvolvimento.
+[`../03-fluxos-de-uso/FLUXO_CLIENTE.md`](../03-fluxos-de-uso/FLUXO_CLIENTE.md)
+
+**Finalidade:**
+
+Ser a referência funcional principal da experiência pública: Vitrine, serviços, produtos, Portfólio, contatos, Assistente IA e estados públicos.
+
+## Fluxo do ADMIN
+
+**Arquivo:**
+
+[`../03-fluxos-de-uso/FLUXO_ADMIN.md`](../03-fluxos-de-uso/FLUXO_ADMIN.md)
+
+**Finalidade:**
+
+Ser a referência funcional principal do Operador do SaaS: Dashboard administrativo, lista e detalhes de barbearias, pagamentos, planos, suspensão, manutenção, histórico administrativo e limites de acesso.
+
+Os três documentos detalham campos, regras, validações, mensagens, ações, sequências e estados do ator correspondente.
 
 ---
 
@@ -385,6 +405,18 @@ Definir como as interfaces deverão se adaptar entre:
 
 ---
 
+## Guia de Prototipação para IA
+
+**Arquivo:**
+
+[`../06-design-e-interface/GUIA_PROTOTIPACAO_IA.md`](../06-design-e-interface/GUIA_PROTOTIPACAO_IA.md)
+
+**Finalidade:**
+
+Orientar a criação e revisão de protótipos com base nos documentos oficiais, definindo arquivos-base por ator, hierarquia de fontes e limites de escopo.
+
+---
+
 # 8. Gestão do Projeto
 
 ## Checklist Mestre
@@ -541,6 +573,16 @@ Define verificações essenciais durante desenvolvimento.
 
 ---
 
+## Infraestrutura e Performance
+
+**Arquivo:**
+
+[`../10-skills/INFRAESTRUTURA_PERFORMANCE.md`](../10-skills/INFRAESTRUTURA_PERFORMANCE.md)
+
+Resume cuidados de infraestrutura, disponibilidade e desempenho durante a implementação.
+
+---
+
 ## Escopo e Documentação
 
 **Arquivo:**
@@ -624,6 +666,18 @@ Serve como referência para outros projetos.
 
 ---
 
+## Histórico não canônico
+
+**Pasta:**
+
+`../99-historico/`
+
+**Finalidade:**
+
+Preservar documentos substituídos apenas para consulta histórica. Arquivos dessa pasta **não são fonte oficial de verdade** e não devem orientar implementação ou prototipação quando houver divergência com a documentação atual.
+
+---
+
 # 15. README do Projeto
 
 **Arquivo na raiz:**
@@ -653,8 +707,14 @@ O que é o projeto?
 Qual tecnologia usar?
 → DECISOES_TECNOLOGICAS.md
 
-Como uma funcionalidade funciona?
-→ FLUXO_BARBEIRO_E_CLIENTE.md
+Como uma funcionalidade do barbeiro funciona?
+→ FLUXO_BARBEIRO.md
+
+Como a experiência pública funciona?
+→ FLUXO_CLIENTE.md
+
+Como a operação administrativa funciona?
+→ FLUXO_ADMIN.md
 
 Como o banco funciona?
 → BANCO_DE_DADOS.md
