@@ -1,8 +1,11 @@
 # Estilo e Gestão
 
-Sistema web para **gestão e divulgação de pequenas barbearias**.
 
-O Estilo e Gestão foi criado para ajudar barbeiros autônomos e pequenas barbearias a organizar a operação do negócio e divulgar seus serviços através de uma única plataforma.
+Sistema web para gestão e divulgação de pequenas barbearias.
+
+Desenvolvido por: [Davi Felix de Oliveira](https://github.com/DaviFelixDeOliveira/)
+
+O Estilo e Gestão foi criado para ajudar barbeiros autônomos e barbearias a organizar a operação do negócio e divulgar seus serviços através de uma única plataforma.
 
 ---
 
@@ -33,7 +36,6 @@ A proposta é oferecer uma solução simples, rápida e adequada à rotina de um
 - ajustes e perdas;
 - PDV/Comanda;
 - histórico de vendas;
-- cancelamento de vendas;
 - registro de despesas;
 - relatórios financeiros.
 
@@ -65,7 +67,7 @@ O recurso poderá responder dúvidas básicas dos visitantes sobre informações
 
 ## Público-alvo
 
-O MVP é voltado principalmente para:
+O app é voltado principalmente para:
 
 - barbeiros autônomos;
 - barbeiros que trabalham sozinhos;
@@ -102,69 +104,13 @@ O foco inicial não são grandes redes ou operações com vários funcionários.
 
 ### Desenvolvimento e hospedagem
 
-- Git;
 - GitHub;
-- Node.js;
-- npm;
 - Vercel.
 
 A explicação completa está em:
 
-[`documentação/02-arquitetura-e-tecnologia/DECISOES_TECNOLOGICAS.md`](documentação/02-arquitetura-e-tecnologia/DECISOES_TECNOLOGICAS.md)
+[Documentação/02-arquitetura-e-tecnologia/DECISOES_TECNOLOGICAS.md](Documentação/02-arquitetura-e-tecnologia/DECISOES_TECNOLOGICAS.md)
 
----
-
-## Arquitetura resumida
-
-```text
-Usuário
-   │
-   ▼
-Next.js
-   │
-   ├── React
-   ├── Tailwind CSS
-   ├── Zod
-   │
-   └── Backend
-          │
-          ├── Supabase Auth
-          ├── PostgreSQL
-          ├── Supabase Storage
-          ├── ViaCEP
-          └── Gemini API
-```
-
-A aplicação será hospedada na Vercel e o código-fonte será versionado através do GitHub.
-
----
-
-## Estrutura principal
-
-```text
-estilo-gestao-mvp/
-│
-├── aplicação/
-│
-├── documentação/
-│   ├── 01-planejamento-e-visao/
-│   ├── 02-arquitetura-e-tecnologia/
-│   ├── 03-fluxos-de-uso/
-│   ├── 04-banco-de-dados/
-│   ├── 05-seguranca-privacidade-juridico/
-│   ├── 06-design-e-interface/
-│   ├── 07-gestao-do-projeto/
-│   ├── 08-manual-do-usuario/
-│   ├── 09-ideias-futuras/
-│   ├── 10-skills/
-│   ├── 11-modelo-de-negocio/
-│   ├── 12-testes-e-qualidade/
-│   └── 13-indice-e-modelos/
-│
-└── README.md
-```
-
-A estrutura da aplicação deverá acompanhar a implementação real do projeto e não deve ser inventada no README antes de existir.
 
 ---
 
@@ -172,7 +118,7 @@ A estrutura da aplicação deverá acompanhar a implementação real do projeto 
 
 A documentação completa está disponível em:
 
-[`documentação/13-indice-e-modelos/INDICE_DA_DOCUMENTACAO.md`](documentação/13-indice-e-modelos/INDICE_DA_DOCUMENTACAO.md)
+[`Documentação/13-indice-e-modelos/INDICE_DA_DOCUMENTACAO.md`](Documentação/13-indice-e-modelos/INDICE_DA_DOCUMENTACAO.md)
 
 O índice explica:
 
@@ -180,11 +126,17 @@ O índice explica:
 - onde estão;
 - qual é a função de cada um.
 
+Os fluxos funcionais estão separados por ator:
+
+- `FLUXO_BARBEIRO.md`;
+- `FLUXO_CLIENTE.md`;
+- `FLUXO_ADMIN.md`.
+
 ---
 
-## Escopo do MVP
+## Escopo do software
 
-O MVP inclui:
+O sistema inclui:
 
 - autenticação;
 - configuração da barbearia;
@@ -219,7 +171,7 @@ Não fazem parte da versão inicial:
 
 Essas possibilidades estão registradas em:
 
-[`documentação/09-ideias-futuras/IDEIAS_FUTURAS.md`](documentação/09-ideias-futuras/IDEIAS_FUTURAS.md)
+[`Documentação/09-ideias-futuras/IDEIAS_FUTURAS.md`](Documentação/09-ideias-futuras/IDEIAS_FUTURAS.md)
 
 ---
 
@@ -229,13 +181,13 @@ Essas possibilidades estão registradas em:
 
 O projeto está atualmente em fase de:
 
-- documentação;
-- definição do MVP;
-- validação de regras;
-- preparação da arquitetura;
-- desenvolvimento da interface e backend.
+- documentação funcional consolidada;
+- prototipação principal concluída;
+- saneamento técnico antes da implementação;
+- preparação da arquitetura, banco, autenticação e permissões;
+- início da implementação da interface e backend.
 
-Algumas decisões ainda estão sendo validadas antes da implementação definitiva.
+As decisões funcionais principais da versão inicial estão consolidadas. Alterações futuras devem ser incorporadas primeiro à documentação responsável.
 
 ---
 
@@ -254,7 +206,7 @@ O projeto utiliza como princípios:
 
 As regras completas estão em:
 
-[`documentação/05-seguranca-privacidade-juridico/DIRETRIZES_SEGURANCA_PROTECAO_DADOS.md`](documentação/05-seguranca-privacidade-juridico/DIRETRIZES_SEGURANCA_PROTECAO_DADOS.md)
+[`Documentação/05-seguranca-privacidade-juridico/DIRETRIZES_SEGURANCA_PROTECAO_DADOS.md`](Documentação/05-seguranca-privacidade-juridico/DIRETRIZES_SEGURANCA_PROTECAO_DADOS.md)
 
 ---
 
@@ -264,11 +216,11 @@ O banco utiliza PostgreSQL através do Supabase.
 
 A documentação está em:
 
-[`documentação/04-banco-de-dados/BANCO_DE_DADOS.md`](documentação/04-banco-de-dados/BANCO_DE_DADOS.md)
+[`Documentação/04-banco-de-dados/BANCO_DE_DADOS.md`](Documentação/04-banco-de-dados/BANCO_DE_DADOS.md)
 
 O SQL didático está em:
 
-[`documentação/04-banco-de-dados/BANCO_EXEMPLO.sql`](documentação/04-banco-de-dados/BANCO_EXEMPLO.sql)
+[`Documentação/04-banco-de-dados/BANCO_EXEMPLO.sql`](Documentação/04-banco-de-dados/BANCO_EXEMPLO.sql)
 
 ---
 
@@ -291,7 +243,7 @@ A estratégia de qualidade contempla:
 
 Plano completo:
 
-[`documentação/12-testes-e-qualidade/PLANO_DE_TESTES.md`](documentação/12-testes-e-qualidade/PLANO_DE_TESTES.md)
+[`Documentação/12-testes-e-qualidade/PLANO_DE_TESTES.md`](Documentação/12-testes-e-qualidade/PLANO_DE_TESTES.md)
 
 ---
 
@@ -299,7 +251,7 @@ Plano completo:
 
 As instruções completas de variáveis de ambiente estão em:
 
-[`documentação/02-arquitetura-e-tecnologia/ENV_SETUP.md`](documentação/02-arquitetura-e-tecnologia/ENV_SETUP.md)
+[`Documentação/02-arquitetura-e-tecnologia/ENV_SETUP.md`](Documentação/02-arquitetura-e-tecnologia/ENV_SETUP.md)
 
 O projeto utilizará um arquivo:
 
@@ -326,11 +278,3 @@ são documentos de trabalho.
 As versões comerciais deverão passar por revisão jurídica antes do lançamento público definitivo.
 
 ---
-
-## Princípio do projeto
-
-O Estilo e Gestão é desenvolvido com foco em uma regra simples:
-
-> resolver primeiro os problemas reais do barbeiro antes de adicionar funcionalidades apenas porque parecem interessantes.
-
-O MVP deve permanecer simples, utilizável e sustentável de manter.
