@@ -12,14 +12,6 @@ Detalhes de configuração, variáveis de ambiente, banco de dados e segurança 
 
 ## 1. Desenvolvimento
 
-### Git
-
-O Git será utilizado para controle de versão do projeto.
-
-Ele permitirá registrar o histórico das alterações realizadas no código e na documentação, facilitando a identificação de mudanças, correção de erros e recuperação de versões anteriores.
-
----
-
 ### GitHub
 
 O GitHub será utilizado para hospedar o repositório Git do Estilo e Gestão.
@@ -30,9 +22,9 @@ Também poderá ser integrado à Vercel para realizar os deployments da aplicaç
 
 ---
 
-### Figma
+### Stitch
 
-O Figma será utilizado para criação e validação dos protótipos das telas antes da implementação.
+O Stitch será utilizado para criação e validação dos protótipos das telas antes da implementação.
 
 Nele serão planejados:
 
@@ -44,32 +36,6 @@ Nele serão planejados:
 - aplicação da identidade visual.
 
 Os protótipos servirão como referência para desenvolvimento, mas não substituirão a especificação funcional.
-
----
-
-### Node.js
-
-O Node.js será utilizado como ambiente necessário para executar as ferramentas do projeto Next.js durante desenvolvimento, build e execução do servidor.
-
-Também será utilizado para instalar e executar as dependências JavaScript/TypeScript do sistema.
-
----
-
-### npm
-
-O npm será utilizado para instalar, atualizar e gerenciar os pacotes utilizados pelo projeto.
-
-Exemplos:
-
-- Next.js;
-- React;
-- Tailwind CSS;
-- Zod;
-- bibliotecas do Supabase;
-- Lucide React;
-- SDK da API Gemini.
-
-O arquivo de dependências do projeto deverá registrar as versões utilizadas.
 
 ---
 
@@ -376,3 +342,4 @@ Aplicação Next.js
           ├── Supabase Storage
           ├── ViaCEP
           └── Gemini API
+```
