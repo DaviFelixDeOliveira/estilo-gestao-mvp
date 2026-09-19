@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Estilo e Gestão - Boas-vindas</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#D4AF37',
+              goldHover: '#C59E2B',
+              dark: '#0B0C10',
+              surface: '#15161D',
+              border: '#272A36'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-enhancements">
+    /* Suporte a Safe Areas do iOS */
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 24px);
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+    /* Filtro e mesclagem para o logo em fundo escuro premium */
+    .logo-glow {
+      filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.15)) drop-shadow(0 0 12px rgba(212, 175, 55, 0.2));
+    }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 antialiased min-h-screen flex justify-center items-center overflow-x-hidden selection:bg-amber-500 selection:text-black">
+<!-- BEGIN: MobileDeviceFrame -->
+<div class="relative w-full max-w-[430px] min-h-[100dvh] bg-[#0B0C10] shadow-2xl flex flex-col justify-between overflow-hidden" data-purpose="mobile-container">
+<!-- BEGIN: CinematicBackground -->
+<!-- Camada de imagem com transição em degradê para grafite profundo -->
+<div class="absolute inset-0 z-0 pointer-events-none" data-purpose="hero-background-layer">
+<img alt="Barbearia cinematográfica de fundo" class="w-full h-[65%] object-cover object-center opacity-75 scale-105 transform origin-top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRlPM_yYcX8BZfcu_2Jq1LWtV_gJGSQMPd9fsZH2_T7Qcfqq73ux5uLDfMvbSHv5Yyl_Dgv7tLWo77AWiulFC72QXAGsyL49Vsg_a-U-2AflA1Rv3Gyk3GUiHvbTUir73Q95dtAXTAFuEISBZ6JQTK0_QzT246HrfsVwpro-d2XZRHUn9pyx7s-NOAMJIBpttA3-YrQSmBORy6q7rGGtJjO3aCllnUGVm_uDtfdBXRXkIHtPsc1RGFSvURUfbnZ-d_egg">
+<!-- Gradiente cinematográfico sobreposto com nuances sutis dos neons azul e vermelho -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#0B0C10] via-[#0B0C10]/70 to-black/50"></div>
+<div class="absolute inset-0 bg-radial-at-t from-transparent via-transparent to-[#0B0C10]/90"></div>
+<!-- Luzes de ambiente sutis -->
+<div class="absolute top-1/4 -left-20 w-48 h-48 bg-blue-600/15 rounded-full blur-3xl"></div>
+<div class="absolute top-1/3 -right-20 w-48 h-48 bg-red-600/15 rounded-full blur-3xl"></div>
+</div>
+<!-- END: CinematicBackground -->
+<!-- BEGIN: TopBar -->
+<header class="relative z-10 pt-safe px-6 w-full flex justify-center items-center pt-8" data-purpose="top-header">
+<!-- Container do Logo com badge translúcida para legibilidade perfeita -->
+<div class="bg-black/40 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 shadow-lg flex items-center justify-center">
+<img alt="Logo Estilo e Gestão" class="h-14 w-auto object-contain logo-glow invert contrast-200 brightness-150" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjN0dBBbyP9wI9C4TliziuJ6AsLMRpgTrszEIcF37x6OIZtY2BVwfuDT2g8JA5fwWXA-oW_hUy5060eEwd4CZOw_sk2NjyuppdNju7r0wgkBOGlvqcZ9eOZSfO0iBKlRoMA8eqeeQJFCkR6HZ-wJiYzD5jsrY88Vp85CSo31OcaCDbEWm-LI3X9_ZjNMoKhiqUNQOIEcwedL6m4lV5FbHlSEqMlioEOF3pQeHMJ4ecfv7KueX5T-HYJ_NcrgtVG5Y32ww">
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: HeroContentArea -->
+<main class="relative z-10 flex-1 flex flex-col justify-end px-6 pt-16 pb-6" data-purpose="main-presentation">
+<!-- Espaçador flexível para empurrar o bloco de texto para área visual ideal -->
+<div class="flex-1"></div>
+<!-- Tagline / Selo de qualidade -->
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-white/[0.08] border border-white/15 backdrop-blur-sm mb-4">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+<span class="text-[11px] font-semibold tracking-wider text-red-400 uppercase">GESTÃO PARA BARBEARIAS</span>
+</div>
+<!-- Título de Impacto -->
+<h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-[1.15] mb-3">
+        Sua barbearia <br class="hidden xs:inline">organizada em um só lugar.
+      </h1>
+<!-- Subtítulo de Apoio -->
+<p class="text-neutral-300 text-sm sm:text-base font-normal leading-relaxed text-pretty mb-8 max-w-sm"><span style="color: rgba(212, 212, 212, 0.9); font-family: &quot;Plus Jakarta Sans&quot;, sans-serif; font-size: 16px; background-color: rgb(11, 13, 14);" class="">Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.</span></p>
+<!-- BEGIN: ActionButtons -->
+<div class="flex flex-col gap-3 w-full" data-purpose="actions-group">
+<!-- Botão Principal: Criar Conta -->
+<button aria-label="Criar nova conta" class="w-full py-4 px-6 rounded-xl font-semibold text-base text-white bg-[#B42318] hover:bg-[#912015] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-red-900/30 flex items-center justify-center gap-2 text-center" type="button">
+<span class="">Criar conta</span>
+<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Botão Secundário: Entrar -->
+<button aria-label="Acessar conta existente" class="w-full py-3.5 px-6 rounded-xl font-semibold text-base text-neutral-200 bg-white/[0.05] hover:bg-white/[0.1] active:bg-white/[0.15] border border-white/20 active:scale-[0.98] transition-all duration-200 backdrop-blur-md text-center" type="button">
+          Entrar
+        </button>
+</div>
+<!-- END: ActionButtons -->
+</main>
+<!-- END: HeroContentArea -->
+<!-- BEGIN: MinimalFooter -->
+<footer class="relative z-10 px-6 pb-safe pt-2 pb-5 text-center" data-purpose="footer-copyright">
+<p class="text-xs text-neutral-500 font-light tracking-wide">
+        © 2026 Estilo e Gestão. Todos os direitos reservados.
+      </p>
+</footer>
+<!-- END: MinimalFooter -->
+</div>
+<!-- END: MobileDeviceFrame -->
+
+
+
+
+</body></html>
