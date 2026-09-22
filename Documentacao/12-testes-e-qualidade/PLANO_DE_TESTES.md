@@ -1419,13 +1419,13 @@ Resultado:
 
 Resultado:
 
-\- permitir selecionar uma ou mais categorias sugeridas;
+- permitir selecionar uma ou mais categorias sugeridas;
+- permitir criar categoria personalizada;
+- criar somente as categorias realmente selecionadas/utilizadas;
+- exigir pelo menos 1 categoria;
+- exigir pelo menos 1 produto cadastrado antes de concluir a etapa;
+- não exigir configuração de estoque durante o Onboarding.
 
-\- permitir criar categoria personalizada;
-
-\- criar somente as categorias realmente selecionadas/utilizadas;
-
-\- não exigir cadastro detalhado de produtos, preços ou estoque durante o Onboarding.
 
 Categorias sugeridas podem incluir:
 
@@ -1440,6 +1440,41 @@ Acessórios
 Outros
 
 \`\`\`
+
+
+**## Cadastro dos produtos iniciais**
+
+Para cada produto, testar:
+
+- categoria obrigatória;
+- nome obrigatório;
+- preço de custo obrigatório;
+- preço de custo igual a `0` permitido;
+- preço de custo negativo bloqueado;
+- preço de venda obrigatório;
+- preço de venda maior que `0`;
+- preço de venda igual a `0` bloqueado;
+- preço de venda negativo bloqueado;
+- imagem própria opcional;
+- utilização da imagem padrão da categoria quando não houver imagem própria;
+- imagem própria do produto sem alterar a imagem padrão da categoria;
+- produto pertencendo somente a categoria da própria barbearia;
+- estoque inicial igual a `0`.
+
+Verificar que o Onboarding não solicite:
+
+- estoque atual;
+- estoque mínimo;
+- reposição;
+- ajuste;
+- perda;
+- movimentação de estoque.
+
+Se a barbearia informou que vende produtos ou bebidas:
+
+- impedir avanço sem nenhum produto cadastrado;
+- permitir avanço após existir pelo menos 1 produto válido.
+
 
 **## Formas de pagamento aceitas**
 
@@ -1470,6 +1505,10 @@ Verificar:
 \- formas configuradas disponíveis como opções preferenciais no PDV;
 
 \- formas configuradas disponíveis para exposição pública na Vitrine;
+
+\- impedir avanço quando nenhuma forma de pagamento estiver selecionada;
+
+\- permitir avanço quando existir pelo menos uma forma de pagamento selecionada;
 
 
 A configuração de formas aceitas deve permanecer diferente de:

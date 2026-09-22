@@ -872,7 +872,26 @@ Ao retomar o fluxo, utilizar:
 
 \- *\`onboardingConcluido\`*.
 
-Na Etapa 5, se a barbearia vender produtos ou bebidas, o Onboarding deverá coletar inicialmente as categorias ou tipos comercializados. O cadastro detalhado de cada produto poderá ser feito depois na área de Produtos.
+Na Etapa 5, se a barbearia vender produtos ou bebidas, o Onboarding deverá coletar inicialmente as categorias comercializadas e permitir o cadastro dos produtos iniciais vinculados a essas categorias.
+
+O barbeiro poderá selecionar categorias sugeridas pelo sistema ou criar categorias próprias.
+
+Se informar que vende produtos ou bebidas, deverá cadastrar pelo menos 1 produto durante o Onboarding.
+
+Para cada produto, deverão ser coletados:
+
+- categoria;
+- nome;
+- preço de custo;
+- preço de venda;
+- imagem própria opcional.
+
+Quando o produto não possuir imagem própria, poderá utilizar a imagem padrão da categoria.
+
+O Onboarding não deverá solicitar estoque atual, estoque mínimo ou movimentações de estoque. Produtos criados durante o Onboarding deverão iniciar com estoque `0`.
+
+Após concluir o Onboarding, o barbeiro poderá adicionar, editar ou complementar produtos normalmente na área de Produtos.
+
 
 Categorias sugeridas pelo sistema poderão possuir uma imagem padrão oficial.
 

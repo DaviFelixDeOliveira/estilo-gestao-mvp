@@ -196,7 +196,34 @@ Também será possível criar uma categoria própria.
 
 Categorias criadas manualmente por você começam sem imagem padrão.
 
-Nesta etapa não será necessário cadastrar todos os produtos, preços, imagens ou quantidades em estoque. O cadastro detalhado poderá ser feito depois na área de **Produtos**.
+Depois de selecionar ou criar as categorias utilizadas pela barbearia, cadastre os produtos iniciais que você comercializa.
+
+Se você informou que vende produtos ou bebidas, será necessário cadastrar pelo menos 1 produto para continuar.
+
+Para cada produto, informe:
+
+- **Categoria**;
+- **Nome**;
+- **Preço de custo**;
+- **Preço de venda**;
+- **Imagem própria**, opcional.
+
+Se você não adicionar uma imagem própria, o produto poderá utilizar a imagem padrão da categoria selecionada.
+
+Adicionar uma imagem própria ao produto não altera a imagem padrão da categoria.
+
+Nesta etapa não é necessário configurar:
+
+- estoque atual;
+- estoque mínimo;
+- reposições;
+- ajustes;
+- perdas.
+
+Os produtos cadastrados durante o Onboarding começam com estoque `0`.
+
+Depois de concluir a configuração inicial, você poderá cadastrar novos produtos, alterar produtos existentes e configurar o estoque em **Operação → Produtos** e **Operação → Estoque**.
+
 
 **### Formas de pagamento aceitas**
 
@@ -207,6 +234,9 @@ Selecione as formas que a barbearia aceita, como:
 - Débito;
 - Crédito;
 - Outro.
+
+Selecione pelo menos uma forma de pagamento para continuar.
+
 
 Essas opções poderão ser utilizadas no PDV e apresentadas na Vitrine Digital.
 

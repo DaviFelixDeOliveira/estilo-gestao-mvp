@@ -1468,37 +1468,72 @@ Poderão ser utilizados:
 
 O sistema deverá perguntar se a barbearia vende produtos ou bebidas.
 
-Quando vender, o barbeiro poderá indicar os tipos ou categorias que utiliza, como:
+Se a barbearia não vender produtos ou bebidas:
 
-\- Bebidas;
+- não exigir categorias;
+- não exigir cadastro de produtos;
+- seguir para a configuração das formas de pagamento.
 
-\- Pomadas;
+Se a barbearia vender produtos ou bebidas, o barbeiro deverá indicar as categorias que comercializa.
 
-\- Shampoo;
+O sistema poderá oferecer categorias sugeridas, como:
 
-\- Cera;
+- Bebida;
+- Pomada;
+- Shampoo;
+- Cera;
+- Óleo/Balm para barba;
+- Acessórios;
+- Outros.
 
-\- Óleo/Balm para barba;
+O barbeiro também poderá criar categorias próprias quando necessário.
 
-\- Acessórios;
+Categorias sugeridas poderão possuir uma imagem padrão oficial do sistema.
 
-\- Outros.
+Categorias personalizadas deverão iniciar sem imagem padrão oficial.
 
-O cadastro detalhado de todos os produtos e do estoque poderá ser realizado posteriormente na área própria do sistema.
+Após selecionar ou criar as categorias, o barbeiro deverá cadastrar os produtos iniciais comercializados pela barbearia.
+
+Se informou que vende produtos ou bebidas, deverá existir pelo menos 1 produto cadastrado antes de concluir a etapa.
+
+Para cada produto deverão ser informados:
+
+- categoria;
+- nome;
+- preço de custo;
+- preço de venda;
+- imagem própria opcional.
+
+Quando o produto não possuir imagem própria, poderá utilizar a imagem padrão da categoria correspondente.
+
+A imagem própria do produto não deverá alterar ou substituir a imagem padrão oficial da categoria.
+
+O Onboarding não deverá solicitar:
+
+- estoque atual;
+- estoque mínimo;
+- reposições;
+- ajustes;
+- perdas;
+- movimentações de estoque.
+
+Produtos cadastrados durante o Onboarding deverão iniciar com estoque `0`.
+
+A configuração e movimentação do estoque serão realizadas posteriormente na área própria do sistema.
 
 Nessa etapa também deverão ser informadas as formas de pagamento normalmente aceitas pela barbearia, como:
 
-\- Pix;
+- Pix;
+- Dinheiro;
+- Cartão de débito;
+- Cartão de crédito;
+- Outro, quando aplicável.
 
-\- Dinheiro;
-
-\- Cartão de débito;
-
-\- Cartão de crédito;
-
-\- Outro, quando aplicável.
+Deverá existir pelo menos uma forma de pagamento selecionada antes de concluir a etapa.
 
 Essa configuração representa os meios aceitos pelo estabelecimento e não substitui o registro da forma utilizada em cada venda.
+
+Após o Onboarding, categorias, produtos e formas de pagamento poderão ser alterados nas áreas correspondentes do sistema.
 
 **### Etapa 6 — Aparência e conclusão**
 

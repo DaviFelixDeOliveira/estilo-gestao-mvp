@@ -1000,54 +1000,45 @@ Os serviços cadastrados nesta etapa deverão ficar disponíveis posteriormente 
 
 ## Etapa 5 — Produtos e formas de pagamento
 
-Esta etapa reúne duas configurações comerciais iniciais:
+Esta etapa deverá permitir configurar:
 
-- tipos de produtos ou bebidas comercializados;
-
-- formas de pagamento aceitas pela barbearia.
+- categorias de produtos ou bebidas comercializados;
+- produtos iniciais da barbearia;
+- formas de pagamento aceitas.
 
 ### Produtos e bebidas
 
 O sistema deverá perguntar:
 
-****A barbearia vende produtos ou bebidas?****
+**A barbearia vende produtos ou bebidas?**
 
-O usuário poderá selecionar ****Sim**** ou ****Não****.
+O usuário poderá selecionar **Sim** ou **Não**.
 
 #### Se selecionar Não
 
 - não exigir categorias de produto;
-
 - não exigir cadastro de produtos;
-
 - permitir continuar para a configuração das formas de pagamento.
 
 #### Se selecionar Sim
 
-Perguntar quais tipos de produtos ou bebidas a barbearia comercializa.
+Perguntar quais categorias de produtos ou bebidas a barbearia comercializa.
 
 Apresentar categorias sugeridas, como:
 
 - Bebida;
-
 - Pomada;
-
 - Shampoo;
-
 - Cera;
-
 - Óleo/Balm para barba;
-
 - Acessórios;
-
 - Outros.
 
-As categorias sugeridas poderão possuir uma imagem padrão oficial do Estilo e Gestão.
+As categorias sugeridas poderão possuir uma imagem padrão oficial do sistema.
 
 Exemplos:
 
 ```text
-
 Bebida
 → imagem genérica de bebida
 
@@ -1055,78 +1046,8 @@ Pomada
 → imagem genérica de pomada
 
 Outros
-→ imagem neutra, sem representar um produto específico
-
+→ imagem neutra
 ```
-
-O barbeiro poderá:
-
-- selecionar uma ou mais categorias sugeridas;
-
-- criar categoria própria quando necessário.
-
-A seleção poderá criar as categorias iniciais da barbearia.
-
-Quando uma categoria sugerida for criada para a barbearia, ela deverá manter a referência da imagem padrão correspondente.
-
-Uma categoria personalizada criada pelo barbeiro deverá começar sem imagem padrão.
-
-O Onboarding não deverá obrigar o barbeiro a cadastrar neste momento:
-
-- nome de cada produto;
-
-- preço de custo;
-
-- preço de venda;
-
-- estoque atual;
-
-- estoque mínimo;
-
-- imagem.
-
-O cadastro detalhado dos produtos poderá ser realizado posteriormente na área de Produtos.
-
-### Formas de pagamento aceitas
-
-Perguntar:
-
-****Quais formas de pagamento sua barbearia aceita?****
-
-Permitir selecionar:
-
-- Pix;
-
-- Dinheiro;
-
-- Débito;
-
-- Crédito;
-
-- Outro.
-
-As formas selecionadas deverão ser salvas como configuração da barbearia.
-
-Elas poderão ser utilizadas posteriormente:
-
-- como opções preferenciais no PDV;
-
-- na Vitrine Digital;
-
-
-Essa configuração é diferente da forma de pagamento registrada em uma venda específica.
-
-Exemplo:
-
-```text
-Barbearia aceita:
-Pix, Dinheiro, Débito e Crédito
-
-Venda 001:
-forma utilizada = PIX
-```
-
-O barbeiro poderá alterar as formas aceitas posteriormente nas Configurações da Barbearia.
 
 ---
 
