@@ -1,8 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { ArrowRight, Layers, Smartphone, CheckCircle2 } from "lucide-react";
 
-export default function WelcomePage() {
+import { createClient } from "@/lib/supabase/server";
+
+export default async function WelcomePage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: perfil } = await supabase
+      .from("perfis")
+      .select("tipo, onboarding_concluido")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (perfil?.tipo === "ADMIN") {
+      redirect("/admin");
+    }
+
+    if (perfil?.tipo === "BARBEIRO") {
+      if (!perfil.onboarding_concluido) {
+        redirect("/onboarding");
+      }
+
+      redirect("/dashboard");
+    }
+  }
+
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#0B0D0E] text-neutral-100 selection:bg-red-700 selection:text-white">
       {/* ============================================================ */}
