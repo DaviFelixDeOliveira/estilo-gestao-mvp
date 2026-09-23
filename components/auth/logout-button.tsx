@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/client";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export function LogoutButton({ className, children }: LogoutButtonProps) {
   const router = useRouter();
 
   const [carregando, setCarregando] = useState(false);
@@ -36,6 +41,9 @@ export function LogoutButton() {
     router.refresh();
   }
 
+  const defaultButtonClass =
+    "rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60";
+
   return (
     <div>
       {erro && (
@@ -51,9 +59,9 @@ export function LogoutButton() {
         type="button"
         onClick={handleLogout}
         disabled={carregando}
-        className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+        className={className || defaultButtonClass}
       >
-        {carregando ? "Saindo..." : "Sair"}
+        {carregando ? "Saindo..." : children || "Sair"}
       </button>
     </div>
   );
