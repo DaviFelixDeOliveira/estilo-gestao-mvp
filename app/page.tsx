@@ -47,11 +47,11 @@ export default function WelcomePage() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase leading-[1.08] drop-shadow-md">
-            Toda a excelência, com total facilidade
+            Menos complicação. Mais controle para sua barbearia.
           </h1>
 
           <p className="mt-3.5 max-w-lg text-sm sm:text-base text-neutral-300 font-normal leading-relaxed drop-shadow">
-            Organize sua barbearia, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
+            Organize sua rotina, acompanhe seu negócio e divulgue seu trabalho em um só lugar.
           </p>
         </div>
       </section>
@@ -71,7 +71,7 @@ export default function WelcomePage() {
                 Painel do Barbeiro
               </span>
               <span className="text-[10px] text-neutral-400">
-                Sistema de Gestão
+                Gestão • Operação • Divulgação
               </span>
             </div>
           </div>
@@ -85,11 +85,11 @@ export default function WelcomePage() {
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight">
-              Sua barbearia organizada em um só lugar.
+              Sua barbearia organizada. Seu negócio no controle.
             </h2>
 
             <p className="text-sm sm:text-base text-neutral-400 leading-relaxed pt-1">
-              Controle vendas, estoque e despesas e divulgue seu trabalho com sua Vitrine Digital.
+              Acompanhe vendas, estoque e despesas e mostre seu trabalho com uma Vitrine Digital profissional.
             </p>
           </div>
 
