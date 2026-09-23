@@ -88,32 +88,53 @@ export async function POST(request: Request) {
       });
 
     if (signUpError) {
-  console.error("Erro no Supabase Auth:", signUpError.message);
+      console.error(
+        "Erro no Supabase Auth:",
+        signUpError.message
+      );
 
-  const mensagem = signUpError.message.toLowerCase();
+      const mensagem =
+        signUpError.message.toLowerCase();
 
-  if (mensagem.includes("rate limit")) {
-    return NextResponse.json(
-      {
-        erro:
-          "Muitas tentativas de envio de e-mail. Aguarde um pouco e tente novamente.",
-      },
-      { status: 429 }
-    );
-  }
+      if (mensagem.includes("rate limit")) {
+        return NextResponse.json(
+          {
+            erro:
+              "Muitas tentativas de envio de e-mail. Aguarde um pouco e tente novamente.",
+          },
+          { status: 429 }
+        );
+      }
 
-  if (mensagem.includes("already")) {
-    return NextResponse.json(
-      { erro: "Este e-mail já está associado a uma conta." },
-      { status: 400 }
-    );
-  }
+      if (mensagem.includes("already")) {
+        return NextResponse.json(
+          {
+            erro:
+              "Este e-mail já está associado a uma conta.",
+          },
+          { status: 400 }
+        );
+      }
 
-  return NextResponse.json(
-    { erro: "Não foi possível criar a conta." },
-    { status: 400 }
-  );
-}
+      if (
+        mensagem.includes("sending confirmation email") ||
+        mensagem.includes("confirmation email") ||
+        mensagem.includes("smtp")
+      ) {
+        return NextResponse.json(
+          {
+            erro:
+              "Não foi possível enviar o e-mail de confirmação. Verifique a configuração de e-mail do sistema.",
+          },
+          { status: 503 }
+        );
+      }
+
+      return NextResponse.json(
+        { erro: "Não foi possível criar a conta." },
+        { status: 400 }
+      );
+    }
 
     const user = signUpData.user;
 
