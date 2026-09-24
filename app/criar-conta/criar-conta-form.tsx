@@ -13,7 +13,6 @@ import {
 export function CriarContaForm() {
   const router = useRouter();
 
-  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -48,7 +47,6 @@ export function CriarContaForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nome,
           email,
           senha,
           confirmarSenha,
@@ -88,25 +86,6 @@ export function CriarContaForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-4.5" noValidate>
-      {/* Campo Nome */}
-      <div className="space-y-1.5">
-        <label
-          htmlFor="nome"
-          className="block text-xs sm:text-sm font-medium text-neutral-300"
-        >
-          Nome
-        </label>
-        <input
-          id="nome"
-          type="text"
-          maxLength={50}
-          value={nome}
-          onChange={(event) => setNome(event.target.value)}
-          autoComplete="name"
-          placeholder="Seu nome ou apelido profissional"
-          className="w-full h-11 sm:h-12 px-3.5 sm:px-4 rounded-xl bg-neutral-900/90 border border-neutral-800 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-colors"
-        />
-      </div>
 
       {/* Campo E-mail */}
       <div className="space-y-1.5">

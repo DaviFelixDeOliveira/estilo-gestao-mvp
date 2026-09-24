@@ -4,7 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type CriarContaBody = {
-  nome?: string;
   email?: string;
   senha?: string;
   confirmarSenha?: string;
@@ -14,17 +13,9 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as CriarContaBody;
 
-    const nome = body.nome?.trim() || null;
     const email = body.email?.trim().toLowerCase() ?? "";
     const senha = body.senha ?? "";
     const confirmarSenha = body.confirmarSenha ?? "";
-
-    if (nome && nome.length > 50) {
-      return NextResponse.json(
-        { erro: "O nome deve possuir no máximo 50 caracteres." },
-        { status: 400 }
-      );
-    }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
@@ -146,18 +137,17 @@ export async function POST(request: Request) {
     }
 
     if (user.identities && user.identities.length === 0) {
-  return NextResponse.json(
-    { erro: "Este e-mail já está associado a uma conta." },
-    { status: 400 }
-  );
-}
+      return NextResponse.json(
+        { erro: "Este e-mail já está associado a uma conta." },
+        { status: 400 }
+      );
+    }
 
     const admin = createAdminClient();
 
     const { data: provisioningData, error: provisioningError } =
       await admin.rpc("create_initial_barbershop_for_user", {
         p_user_id: user.id,
-        p_nome: nome,
       });
 
     if (provisioningError) {
