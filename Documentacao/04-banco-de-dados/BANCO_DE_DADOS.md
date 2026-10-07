@@ -1,1356 +1,2002 @@
-**# Banco de Dados — Estilo e Gestão**
+# Banco de Dados — Estilo & Gestão
 
-**## Objetivo**
+> Documento de arquitetura e funcionamento do banco de dados do MVP.
 
-Este documento explica como o banco de dados do **\*\*Estilo e Gestão\*\*** deverá funcionar na aplicação real.
+## 1. Para que este documento existe
 
-Ele serve como tradução técnica do arquivo *\`BANCO\_EXEMPLO.sql\`* para a implementação com PostgreSQL e Supabase.
+Este arquivo responde à pergunta:
 
-O arquivo SQL apresenta de forma mais direta:
+> **Qual é o banco de dados do Estilo & Gestão e como ele funciona?**
 
-\- tabelas;
+Ele foi pensado para:
 
-\- colunas;
+- novos desenvolvedores que entrarem no projeto;
+- IAs usadas no desenvolvimento;
+- apresentações técnicas;
+- manutenção futura;
+- consulta rápida sobre regras e relacionamentos.
 
-\- tipos;
+Este documento não substitui as migrations SQL nem o `BANCO_EXEMPLO.sql`.
 
-\- enums;
+A função dele é explicar:
 
-\- nulabilidade;
+- tecnologias utilizadas;
+- ambientes do banco;
+- autenticação;
+- isolamento entre barbearias;
+- tabelas existentes;
+- o que cada tabela guarda;
+- relacionamentos principais;
+- regras de negócio que afetam o banco;
+- RLS;
+- Storage;
+- migrations;
+- seeds;
+- funcionamento da Vitrine, PDV, estoque, financeiro e planos.
 
-\- relacionamentos;
+Quando este documento falar em "campos documentados", significa os campos e conceitos já aprovados no projeto. A lista técnica definitiva de colunas, tipos, nulabilidade e constraints deve continuar sincronizada com as migrations e com o SQL de referência.
 
-\- constraints iniciais.
+---
 
-Este documento explica principalmente:
+# 2. Tecnologias utilizadas
 
-\- responsabilidade de cada tabela;
+## 2.1 Banco principal
 
-\- integração com Supabase Auth;
+O banco oficial utiliza:
 
-\- tipos de usuário;
-
-\- relacionamento entre usuário e barbearia;
-
-\- progresso e persistência do Onboarding;
-
-\- preferência de tema do usuário;
-
-\- formas de pagamento aceitas pela barbearia;
-
-\- imagem padrão opcional em *\`categorias_produto.imagem_padrao_path\`*;
-
-\- imagem personalizada em *\`produtos.imagem_path\`*;
-
-\- preferência de fallback em *\`produtos.usar_imagem_categoria\`*;
-
-\- regra de prioridade entre imagem personalizada, imagem padrão da categoria e ausência de imagem;
-
-\- isolamento entre barbearias;
-
-\- funcionamento do estoque;
-
-\- despesas avulsas e recorrentes;
-
-\- histórico financeiro;
-
-\- snapshots;
-
-\- transações;
-
-\- RLS;
-
-\- autorização do Operador do SaaS;
-
-\- leitura pública da Vitrine;
-
-\- integração com Supabase Storage;
-
-\- imagens padrão de categorias e regras de fallback de imagem dos produtos.
-
-Não é necessário repetir aqui cada coluna existente no SQL.
-
-\---
-
-**# 1. Tecnologia**
-
-O banco oficial será:
-
-\`\`\`text
-
+```text
 PostgreSQL
-
-\`\`\`
+```
 
 hospedado através do:
 
-\`\`\`text
-
+```text
 Supabase
+```
 
-\`\`\`
+## 2.2 Autenticação
 
-O projeto não utilizará Prisma no MVP.
+A autenticação utiliza:
 
-A aplicação poderá acessar o banco através:
-
-\- da integração do Supabase com Next.js;
-
-\- de código executado no servidor;
-
-\- de funções SQL/RPC quando fizer sentido.
-
-Operações críticas não deverão depender somente de alterações feitas pelo navegador.
-
-\---
-
-**# 2. Fonte de identidade**
-
-As contas de autenticação serão mantidas pelo:
-
-\`\`\`text
-
+```text
 Supabase Auth
-
-\`\`\`
+```
 
 O Supabase mantém internamente:
 
-\`\`\`text
-
+```text
 auth.users
+```
 
-\`\`\`
+`auth.users` guarda informações como:
 
-Essa estrutura será responsável por:
+- identificador da conta;
+- e-mail;
+- autenticação;
+- credenciais;
+- sessão.
 
-\- identificador da conta;
+A aplicação não deve criar colunas próprias para:
 
-\- e-mail;
+- senha;
+- hash de senha;
+- token permanente de autenticação.
 
-\- credenciais;
+## 2.3 Arquivos e imagens
 
-\- autenticação;
+Os arquivos utilizam:
 
-\- sessão.
+```text
+Supabase Storage
+```
 
-A aplicação não deverá criar coluna própria para:
+O PostgreSQL guarda somente a referência ou caminho do arquivo.
 
-\- senha;
+Exemplo:
 
-\- hash de senha;
+```text
+PostgreSQL
+└── portfolio.imagem_path
 
-\- token permanente de autenticação.
+Supabase Storage
+└── arquivo real
+```
 
-\---
+Esse princípio vale para:
 
-**# 3. Perfil da aplicação**
+- logo;
+- capa;
+- produtos;
+- Portfólio.
 
-A tabela:
+Não armazenar imagens como Base64 ou BLOB no PostgreSQL sem necessidade.
 
-\`\`\`text
+## 2.4 Aplicação
 
-perfis
+A aplicação usa Next.js e a integração com Supabase.
 
-\`\`\`
+O MVP não utiliza Prisma.
 
-representa o usuário dentro das regras do Estilo e Gestão.
+Operações críticas podem utilizar:
 
-Ela deverá possuir relação com:
+- código server-side;
+- Route Handlers;
+- funções SQL/RPC;
+- transações do PostgreSQL.
 
-\`\`\`text
+Operações críticas não devem depender somente do navegador.
 
-auth.users
+---
 
-\`\`\`
+# 3. Os três ambientes do banco
 
-e armazenar informações próprias da aplicação.
+O Estilo & Gestão utiliza **três ambientes separados do mesmo banco**:
 
-Exemplos:
+```text
+DEV
+STAGING
+PROD
+```
 
-\- nome;
+Os três devem utilizar PostgreSQL + Supabase e seguir o mesmo schema aprovado.
 
-\- tipo do usuário;
+Eles não são três modelos de banco diferentes.
 
-\- barbearia vinculada quando aplicável;
+São três ambientes com finalidades diferentes.
 
-\- progresso do Onboarding;
+## 3.1 DEV
 
-\- tema escolhido.
+Ambiente de desenvolvimento.
 
-\---
+Utilizado enquanto o sistema está sendo construído.
 
-**# 4. Tipos de usuário**
+Pode conter:
 
-O sistema possui dois tipos de usuário no MVP:
+- barbearias fictícias;
+- contas de teste;
+- serviços fictícios;
+- produtos fictícios;
+- vendas fictícias;
+- despesas fictícias;
+- dados que podem ser apagados.
 
-\`\`\`text
+Pode ser resetado quando necessário.
 
-BARBEIRO
+As novas migrations devem ser testadas primeiro no DEV.
 
-ADMIN
+## 3.2 STAGING
 
-\`\`\`
+Ambiente de homologação e testes finais.
 
-O tipo deverá ser armazenado no perfil da aplicação.
+É usado antes de uma versão chegar ao ambiente oficial.
 
-Exemplo conceitual:
+Deve possuir:
 
-\`\`\`text
+- o mesmo schema esperado para produção;
+- dados falsos, porém realistas;
+- testes de fluxos completos;
+- RLS equivalente à produção.
 
-auth.users
+STAGING não deve utilizar dados reais de clientes de produção.
 
-    │
+## 3.3 PROD
 
-    ▼
+Ambiente oficial.
 
-perfis
+Guarda os dados reais dos clientes quando o sistema estiver publicado.
 
-    │
+Não deve receber:
 
-    ├── tipo = BARBEIRO
+- seeds de demonstração;
+- testes destrutivos;
+- registros fictícios de desenvolvimento;
+- alterações estruturais improvisadas.
 
-    │
+Mudanças estruturais devem chegar por migrations revisadas.
 
-    └── tipo = ADMIN
+## 3.4 Regra de sincronização
 
-\`\`\`
-
-\---
-
-**# 5. Tipo padrão**
-
-Todo cadastro realizado através do fluxo público deverá gerar:
-
-\`\`\`text
-
-tipo = BARBEIRO
-
-\`\`\`
-
-O frontend não deverá possuir autoridade para criar:
-
-\`\`\`text
-
-tipo = ADMIN
-
-\`\`\`
-
-No MVP, a alteração para *\`ADMIN\`* será realizada manualmente no banco de dados.
-
-O próprio usuário não poderá alterar seu tipo pela aplicação.
-
-\---
-
-**# 6. Relação entre perfil e barbearia**
-
-Para contas do tipo:
-
-\`\`\`text
-
-BARBEIRO
-
-\`\`\`
-
-o perfil deverá estar associado a uma barbearia.
+O schema não deve ser mantido manualmente três vezes.
 
 Fluxo:
 
-\`\`\`text
+```text
+Migration
+   ↓
+DEV
+   ↓
+STAGING
+   ↓
+PROD
+```
 
+Cada ambiente utiliza seu próprio projeto Supabase e suas próprias variáveis de ambiente.
+
+Não criar tabelas `dev_*`, `staging_*` ou `prod_*` dentro de um único banco de produção.
+
+---
+
+# 4. Visão geral da arquitetura
+
+## 4.1 Usuário e barbearia
+
+Fluxo principal:
+
+```text
 auth.users
-
-    │
-
-    ▼
-
+   ↓
 perfis
-
-    │
-
-    ▼
-
+   ↓
 barbearias
-
-\`\`\`
+```
 
 No MVP:
 
-\`\`\`text
-
+```text
 1 BARBEIRO
+   ↓
+1 BARBEARIA
+```
 
-     ↓
+Não existe equipe com vários barbeiros utilizando a mesma barbearia nesta versão.
 
-1 barbearia
+## 4.2 Tipos de usuário
 
-\`\`\`
+Existem:
 
-Não haverá equipe com vários barbeiros utilizando a mesma barbearia.
-
-\---
-
-**# 7. Perfil ADMIN**
-
-Uma conta:
-
-\`\`\`text
-
-ADMIN
-
-\`\`\`
-
-representa o Operador do SaaS.
-
-Ela não precisa possuir uma barbearia própria.
-
-Portanto, conceitualmente:
-
-\`\`\`text
-
+```text
 BARBEIRO
-
-→ barbearia\_id obrigatório
-
 ADMIN
+```
 
-→ barbearia\_id nulo
+### BARBEIRO
 
-\`\`\`
+É o usuário comum da plataforma.
 
-A migration deverá possuir uma regra que mantenha essa relação consistente.
+Deve possuir uma barbearia vinculada.
 
-Não deve existir:
+### ADMIN
 
-\`\`\`text
+Representa o Operador do SaaS.
 
+Não precisa possuir barbearia.
+
+O cadastro público sempre cria:
+
+```text
 tipo = BARBEIRO
+```
 
-barbearia\_id = null
+O usuário não pode transformar a própria conta em `ADMIN` pelo frontend.
 
-\`\`\`
+## 4.3 Tenant
 
-em uma conta ativa normalmente configurada.
+Cada barbearia representa um tenant.
 
-\---
+A maior parte dos dados operacionais possui:
 
-**# 8. Fluxo de identificação após Login**
-
-Após autenticar pelo Supabase Auth:
-
-\`\`\`text
-
-auth.uid()
-
-   ↓
-
-perfis
-
-   ↓
-
-tipo
-
-\`\`\`
-
-Se:
-
-\`\`\`text
-
-tipo = BARBEIRO
-
-\`\`\`
-
-o sistema deverá:
-
-\- localizar a barbearia;
-
-\- verificar o Onboarding;
-
-\- aplicar as regras do tenant.
-
-Se:
-
-\`\`\`text
-
-tipo = ADMIN
-
-\`\`\`
-
-o sistema deverá:
-
-\- validar a autorização administrativa;
-
-\- utilizar o fluxo do Painel Administrativo.
-
-\---
-
-**# 9. Tema do sistema**
-
-A preferência de tema pertence ao usuário, não à barbearia.
-
-Por isso deverá ficar associada ao perfil através de:
-
-\`\`\`text
-
-perfis.tema
-
-\`\`\`
-
-Valores previstos:
-
-\`\`\`text
-
-CLARO
-
-ESCURO
-
-SISTEMA
-
-\`\`\`
-
-Padrão:
-
-\`\`\`text
-
-SISTEMA
-
-\`\`\`
-
-Quando *\`SISTEMA\`* estiver selecionado, a interface utiliza a preferência do dispositivo.
-
-A escolha realizada durante o Onboarding deverá ser persistida no perfil e continuar aplicada nos acessos seguintes.
-
-O usuário poderá alterar essa preferência posteriormente nas configurações da própria conta.
-
-A escolha de tema da área autenticada não controla automaticamente a aparência pública da Vitrine Digital.
-
-\---
-
-**# 10. Onboarding**
-
-O progresso do Onboarding também pertence ao perfil do barbeiro.
-
-O banco poderá armazenar:
-
-\`\`\`text
-
-onboarding\_etapa
-
-onboarding\_concluido
-
-\`\`\`
-
-Isso permite:
-
-\`\`\`text
-
-Login
-
- ↓
-
-Onboarding concluído?
-
- ↓ não
-
-Retomar etapa salva
-
-\`\`\`
-
-O Onboarding deverá considerar as 6 etapas atualmente definidas:
-
-\`\`\`text
-
-1. Dados da barbearia
-
-2. Endereço
-
-3. Horários de funcionamento
-
-4. Serviços
-
-5. Produtos e formas de pagamento
-
-6. Aparência e conclusão
-
-\`\`\`
-
-A etapa 6 deverá salvar a preferência de tema em *\`perfis.tema\`*.
-
-Ao concluir todas as etapas:
-
-\`\`\`text
-
-onboarding_concluido = true
-
-\`\`\`
-
-Enquanto o fluxo não estiver concluído, *\`onboarding_etapa\`* permite retomar a etapa pendente no próximo Login.
-
-\---
-
-**# 11. Tenant**
-
-A entidade principal de isolamento dos dados comerciais é:
-
-\`\`\`text
-
-barbearia
-
-\`\`\`
-
-Cada barbearia representa um tenant do SaaS.
-
-Dados da operação deverão estar associados a:
-
-\`\`\`text
-
-barbearia\_id
-
-\`\`\`
-
-quando aplicável.
-
-\---
-
-**# 12. Dados pertencentes à barbearia**
-
-Exemplos:
-
-\- serviços;
-
-\- categorias de produtos;
-
-\- produtos;
-
-\- vendas;
-
-\- despesas;
-
-\- despesas recorrentes;
-
-\- ocorrências recorrentes;
-
-\- movimentações de estoque;
-
-\- Portfólio;
-
-\- horários de funcionamento;
-
-\- formas de pagamento aceitas pela barbearia.
-
-\---
-
-**# 13. Por que utilizar** *\`barbearia\_id\`*
-
-Mesmo existindo apenas um barbeiro por barbearia no MVP, associar dados ao estabelecimento evita vincular toda a estrutura permanentemente à conta de autenticação.
+```text
+barbearia_id
+```
 
 Exemplo:
 
-\`\`\`text
-
+```text
 Barbearia A
-
-├── Serviço A
-
-├── Produto A
-
-└── Venda A
+├── serviços
+├── produtos
+├── vendas
+└── despesas
 
 Barbearia B
+├── serviços
+├── produtos
+├── vendas
+└── despesas
+```
 
-├── Serviço B
+A Barbearia A não pode acessar os dados privados da Barbearia B.
 
-├── Produto B
+---
 
-└── Venda B
+# 5. Quantidade de tabelas
 
-\`\`\`
+O MVP possui atualmente **24 tabelas próprias da aplicação**.
 
-A Barbearia A não pode acessar registros da Barbearia B.
+Além delas existe `auth.users`, mantida pelo Supabase Auth.
 
-\---
+## 5.1 Tabelas operacionais — 16
 
-**# 14. Estrutura conceitual**
-
-\`\`\`text
-
-auth.users
-
-    │
-
-    ▼
-
+```text
+barbearias
 perfis
+servicos
+categorias_produto
+produtos
+vendas
+venda_itens
+venda_contadores
+venda_pagamentos
+despesas
+despesas_recorrentes
+ocorrencias_despesas_recorrentes
+movimentacoes_estoque
+portfolio
+horarios_funcionamento
+barbearia_formas_pagamento
+```
 
-    │
+## 5.2 Tabelas comerciais e administrativas — 8
 
-    ├── ADMIN
+```text
+planos
+assinaturas
+pagamentos_assinatura
+historico_administrativo
+configuracoes_sistema
+codigos_reservados
+retencoes_contas_excluidas
+aceites_legais
+```
 
-    │     └── Painel Administrativo
+Total:
 
-    │
+```text
+16 + 8 = 24 tabelas próprias
+```
 
-    └── BARBEIRO
+---
+# 6. Mapa simplificado dos relacionamentos
 
-          │
+```text
+auth.users
+   |
+   v
+perfis
+   |
+   +-- ADMIN
+   |   \-- Painel Administrativo
+   |
+   \-- BARBEIRO
+       |
+       v
+    barbearias
+       |
+       +-- servicos
+       +-- categorias_produto
+       |   \-- produtos
+       +-- vendas
+       |   +-- venda_itens
+       |   \-- venda_pagamentos
+       +-- venda_contadores
+       +-- despesas
+       +-- despesas_recorrentes
+       |   \-- ocorrencias_despesas_recorrentes
+       +-- movimentacoes_estoque
+       +-- portfolio
+       +-- horarios_funcionamento
+       +-- barbearia_formas_pagamento
+       \-- assinaturas
+           \-- planos
 
-          ▼
+Administração do SaaS
++-- pagamentos_assinatura
++-- historico_administrativo
++-- configuracoes_sistema
++-- codigos_reservados
++-- retencoes_contas_excluidas
+\-- aceites_legais
+```
 
-      barbearias
+`venda_contadores` pertence diretamente à barbearia e controla a numeração sequencial das vendas daquele tenant.
 
-          │
+`venda_pagamentos` pertence a uma venda e permite registrar um ou mais meios de pagamento para a mesma venda.
 
-          ├── servicos
+---
+# 7. Catálogo das tabelas
 
-          │
+A quantidade mostrada em cada tabela abaixo representa os **campos de negócio documentados atualmente**.
 
-          ├── categorias\_produto
+Campos puramente técnicos, como timestamps adicionais, podem existir na migration definitiva mesmo quando não forem detalhados aqui.
 
-          │      └── produtos
+---
 
-          │
+## 7.1 `barbearias`
 
-          ├── vendas
+### Função
 
-          │      └── venda\_itens
+Guarda as informações principais de cada estabelecimento.
 
-          │
+Também concentra configurações simples usadas pela Vitrine Digital.
 
-          ├── despesas
+### Campos documentados principais
 
-          │
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador interno da barbearia. |
+| `codigo` | Código único e imutável no formato `BAR-XXXXXX`. |
+| `nome_marca` | Nome comercial da barbearia. |
+| `nome_profissional` | Nome profissional opcional do barbeiro. |
+| `descricao_publica` | Texto curto apresentado publicamente. |
+| `whatsapp` | Número usado para contato público. |
+| `instagram` | Usuário ou referência do Instagram. |
+| `tem_numero` | Informa se o endereço possui número. |
+| `numero_endereco` | Número do endereço quando existir. |
+| `atendimento_domicilio` | Informa se a barbearia realiza atendimento externo. |
+| `slug` | Identificador da URL pública da Vitrine. |
+| `vitrine_publicada` | Define se a Vitrine está publicada. |
+| `comportamento_sem_estoque` | Define como produtos sem estoque aparecem na Vitrine. |
+| `logo_path` | Caminho da logo no Storage. |
+| `capa_path` | Caminho da foto de capa no Storage. |
+| `status_conta` | Estado da conta: `ATIVA` ou `SUSPENSA`. |
+| `motivo_suspensao` | Motivo da suspensão quando aplicável. |
+| `data_suspensao` | Data/hora da suspensão quando aplicável. |
 
-          ├── despesas\_recorrentes
+**Campos de negócio documentados:** 18 principais.
 
-          │      └── ocorrencias\_despesas\_recorrentes
+O endereço possui outros dados civis necessários, como rua, bairro, cidade, estado e CEP. A decomposição técnica definitiva desses campos deve permanecer sincronizada com o SQL/migrations.
 
-          │
+### Regras importantes
 
-          ├── movimentacoes\_estoque
+A descrição pública utiliza no banco:
 
-          │
+```text
+TEXT
+```
 
-          ├── portfolio
+No MVP, a aplicação limita o conteúdo a:
 
-          │
+```text
+200 caracteres
+```
 
-          ├── horarios\_funcionamento
+Esse limite fica na regra da aplicação, não em um `VARCHAR(200)` obrigatório.
 
-          │
+A Vitrine Digital utiliza os mesmos dados da barbearia.
 
-          └── barbearia\_formas\_pagamento
+Não criar uma segunda cópia de:
 
-\`\`\`
+- nome;
+- nome profissional;
+- descrição;
+- WhatsApp;
+- Instagram;
+- logo;
+- capa;
+- atendimento a domicílio.
 
-\---
-
-**# 15. Tabela** *\`barbearias\`*
-
-Responsável pelas informações gerais do estabelecimento.
-
-Também concentra configurações simples relacionadas à Vitrine Digital.
-
-Exemplos:
-
-\- nome da marca;
-
-\- nome profissional;
-
-\- descrição pública;
-
-\- WhatsApp;
-
-\- Instagram;
-
-\- endereço;
-
-\- atendimento a domicílio;
-
-\- formas de pagamento aceitas, através de estrutura relacionada;
-
-\- slug;
-
-\- publicação da Vitrine;
-
-\- comportamento de produtos sem estoque;
-
-\- logo;
-
-\- capa;
-
-
-
-\- estado da conta.
-
-\---
-
-**# 15.1 Tabela** *\`barbearia_formas_pagamento\`*
-
-Responsável por registrar quais formas de pagamento a barbearia informa aceitar normalmente.
-
-Essa informação é diferente da forma de pagamento utilizada em uma venda específica.
+### Slug
 
 Exemplo:
 
-\`\`\`text
+```text
+barbearia-imperial-a7k9
+```
 
-Barbearia Imperial
-├── PIX
-├── DINHEIRO
-├── DEBITO
-└── CREDITO
+O slug:
 
-\`\`\`
+- é único;
+- usa letras minúsculas;
+- pode usar números;
+- pode usar hífens;
+- não deve ter espaços ou acentos;
+- evita palavras reservadas.
 
-A estrutura deverá relacionar:
+Depois de criado, mudar o nome da barbearia não altera automaticamente o slug.
 
-\`\`\`text
+Ao despublicar a Vitrine, o slug continua salvo.
 
-barbearia_id
-forma_pagamento
+---
 
-\`\`\`
+## 7.2 `perfis`
 
-Os valores previstos reutilizam o enum de formas de pagamento já utilizado no sistema:
+### Função
 
-\`\`\`text
+Representa o usuário dentro das regras do Estilo & Gestão.
 
+A autenticação continua em `auth.users`.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `user_id` | Referência para `auth.users`. |
+| `barbearia_id` | Barbearia vinculada ao BARBEIRO. Pode ser nulo para ADMIN. |
+| `nome` | Nome do usuário. |
+| `tipo` | `BARBEIRO` ou `ADMIN`. |
+| `tema` | `CLARO`, `ESCURO` ou `SISTEMA`. |
+| `onboarding_etapa` | Última etapa salva do Onboarding. |
+| `onboarding_concluido` | Informa se o Onboarding foi concluído. |
+| `created_at` | Data de criação. |
+| `updated_at` | Data de atualização. |
+
+**Campos documentados:** 9.
+
+### Regras
+
+Cadastro público:
+
+```text
+tipo = BARBEIRO
+```
+
+BARBEIRO:
+
+```text
+barbearia_id obrigatório
+```
+
+ADMIN:
+
+```text
+barbearia_id pode ser nulo
+```
+
+O tema pertence ao usuário, não à barbearia.
+
+---
+
+## 7.3 `servicos`
+
+### Função
+
+Guarda os serviços oferecidos pela barbearia.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do serviço. |
+| `barbearia_id` | Barbearia proprietária. |
+| `nome` | Nome do serviço. |
+| `descricao` | Descrição opcional. |
+| `preco` | Preço cobrado. |
+| `custo_estimado` | Estimativa de materiais consumidos no atendimento. |
+| `ativo` | Define se pode ser usado em novas vendas. |
+| `visivel_vitrine` | Define se aparece na Vitrine. |
+
+**Campos de negócio documentados:** 8 principais.
+
+### Regra entre ativo e Vitrine
+
+```text
+ativo = true
+visivel_vitrine = true
+```
+
+Pode ser usado no PDV e exibido publicamente.
+
+```text
+ativo = true
+visivel_vitrine = false
+```
+
+Pode ser usado no PDV, mas não aparece publicamente.
+
+```text
+ativo = false
+```
+
+Não entra em novas vendas e não aparece na Vitrine.
+
+O histórico antigo continua preservado.
+
+---
+
+## 7.4 `categorias_produto`
+
+### Função
+
+Organiza os produtos por categoria.
+
+Categorias pertencem à barbearia.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da categoria. |
+| `barbearia_id` | Barbearia proprietária. |
+| `nome` | Nome da categoria. |
+| `ativo` | Estado atual da categoria. |
+| `imagem_padrao_path` | Caminho opcional de uma imagem padrão oficial do sistema. |
+
+**Campos de negócio documentados:** 5.
+
+### Categorias sugeridas
+
+Exemplos:
+
+```text
+Bebida
+Pomada
+Shampoo
+Cera
+Óleo/Balm para barba
+Acessórios
+Outros
+```
+
+Uma sugestão só precisa virar registro quando realmente utilizada.
+
+Imagens padrão podem apontar para arquivos compartilhados como:
+
+```text
+sistema/categorias/pomada.webp
+```
+
+Esses arquivos pertencem ao Estilo & Gestão, não à barbearia.
+
+### Categoria personalizada
+
+Categoria criada manualmente começa com:
+
+```text
+imagem_padrao_path = null
+```
+
+Não criar tabela separada para categoria padrão e personalizada.
+
+---
+
+## 7.5 `produtos`
+
+### Função
+
+Guarda produtos físicos vendidos e controlados em estoque.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do produto. |
+| `barbearia_id` | Barbearia proprietária. |
+| `categoria_id` | Categoria do produto. |
+| `nome` | Nome do produto. |
+| `descricao` | Descrição do produto quando existir. |
+| `preco_venda` | Preço de venda atual. |
+| `estoque_atual` | Saldo atual disponível. |
+| `estoque_minimo` | Limite opcional para alerta de estoque baixo. |
+| `ativo` | Define se o produto pode ser usado em novas vendas. |
+| `visivel_vitrine` | Define se aparece na Vitrine. |
+| `imagem_path` | Imagem personalizada do produto no Storage. |
+| `usar_imagem_categoria` | Permite usar a imagem padrão da categoria como fallback. |
+
+**Campos de negócio documentados:** 12 principais.
+
+O modelo também precisa preservar o custo atual necessário às operações de estoque e aos snapshots. O nome técnico definitivo desse campo deve seguir o SQL/migration oficial.
+
+### Prioridade de imagem
+
+```text
+1. imagem personalizada do produto
+2. imagem padrão da categoria, quando habilitada
+3. placeholder neutro
+```
+
+Se o barbeiro remover a imagem personalizada, pode escolher:
+
+```text
+usar imagem da categoria
+```
+
+ou:
+
+```text
+ficar sem imagem
+```
+
+Não copiar a imagem da categoria fisicamente para o produto.
+
+### Estoque mínimo
+
+Quando:
+
+```text
+estoque_atual <= estoque_minimo
+```
+
+o produto está com estoque baixo.
+
+Se:
+
+```text
+estoque_minimo = null
+```
+
+não existe alerta de mínimo.
+
+---
+
+## 7.6 `vendas`
+
+### Função
+
+Guarda vendas efetivamente finalizadas.
+
+Uma comanda ainda em edição não existe nesta tabela.
+
+### Campos
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da venda. |
+| `barbearia_id` | Barbearia responsável pela venda. |
+| `status` | Estado da venda: `CONCLUIDA` ou `CANCELADA`. |
+| `total_bruto` | Soma dos itens antes do desconto. |
+| `total_custo_snapshot` | Custo total preservado no momento da venda. |
+| `resultado_estimado_snapshot` | Resultado estimado preservado historicamente. |
+| `observacao` | Observação opcional da venda, limitada a 200 caracteres. |
+| `created_at` | Momento em que o registro foi criado no banco. |
+| `canceled_at` | Momento do cancelamento. Fica nulo enquanto a venda não estiver cancelada. |
+| `ocorrida_em` | Data e hora em que a venda aconteceu para fins de negócio e relatórios. |
+| `numero_venda` | Número sequencial da venda dentro da própria barbearia. |
+| `desconto_tipo` | Tipo do desconto: `VALOR`, `PERCENTUAL` ou nulo quando não existe desconto. |
+| `desconto_valor_informado` | Valor ou percentual informado pelo usuário. |
+| `desconto_total_snapshot` | Valor monetário final do desconto preservado na venda. |
+| `total_liquido` | Total final após o desconto. |
+
+**Campos documentados:** 15.
+
+### Número da venda
+
+O número da venda é único dentro de cada barbearia.
+
+Exemplo:
+
+```text
+Barbearia A
+Venda 1
+Venda 2
+Venda 3
+
+Barbearia B
+Venda 1
+Venda 2
+```
+
+A tabela `venda_contadores` auxilia no controle desse número.
+
+### Desconto
+
+O banco preserva:
+
+```text
+tipo informado
+valor informado
+valor monetário final aplicado
+```
+
+Isso permite manter o histórico mesmo quando o desconto foi percentual.
+
+O banco também garante:
+
+```text
+total_liquido = total_bruto - desconto_total_snapshot
+```
+
+### Pagamentos
+
+A forma de pagamento não fica mais diretamente na tabela `vendas`.
+
+Os pagamentos pertencem à tabela:
+
+```text
+venda_pagamentos
+```
+
+Isso permite registrar pagamento único ou pagamento dividido entre mais de uma forma.
+
+---
+## 7.7 `venda_itens`
+
+### Função
+
+Guarda os itens que formam uma venda.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do item. |
+| `venda_id` | Venda à qual pertence. |
+| `tipo` | Informa se o item veio de serviço ou produto. |
+| `servico_id` / `produto_id` | Referência para o cadastro original quando aplicável. |
+| `nome_snapshot` | Nome preservado no momento da venda. |
+| `quantidade` | Quantidade vendida. |
+| `preco_unitario_snapshot` | Preço usado na venda. |
+| `custo_snapshot` | Custo considerado no momento da venda. |
+| `subtotal` | Total daquele item. |
+| `resultado_estimado` | Resultado estimado preservado historicamente. |
+
+**Campos de negócio documentados:** 10 principais.
+
+### Snapshot
+
+Se um Corte custa R$ 40 hoje e depois passa para R$ 50, a venda antiga continua mostrando R$ 40.
+
+O snapshot responde:
+
+```text
+O que foi vendido e por qual valor?
+```
+
+O ID responde:
+
+```text
+Qual cadastro originou esse item?
+```
+
+### Quantidade de serviço
+
+Serviços usam:
+
+```text
+quantidade = 1
+```
+
+Produtos podem usar quantidade maior conforme estoque.
+
+---
+
+## 7.8 `venda_contadores`
+
+### Função
+
+Controla a numeração sequencial das vendas de cada barbearia.
+
+Ela é uma tabela de apoio do PDV e não representa uma venda.
+
+### Campos
+
+| Campo | O que guarda |
+|---|---|
+| `barbearia_id` | Barbearia à qual o contador pertence. Também é a chave primária da tabela. |
+| `ultimo_numero` | Último número de venda utilizado pela barbearia. Começa em `0`. |
+
+**Campos documentados:** 2.
+
+### Regra principal
+
+Cada barbearia possui seu próprio contador.
+
+```text
+Barbearia A → ultimo_numero = 153
+Barbearia B → ultimo_numero = 27
+```
+
+O banco não usa uma sequência global compartilhada entre todas as barbearias.
+
+`ultimo_numero` nunca pode ser negativo.
+
+---
+
+## 7.9 `venda_pagamentos`
+
+### Função
+
+Guarda as formas de pagamento e os valores associados a uma venda.
+
+Essa separação permite que uma venda tenha pagamento único ou pagamento dividido.
+
+### Campos
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do pagamento. |
+| `barbearia_id` | Barbearia proprietária da venda e do pagamento. |
+| `venda_id` | Venda à qual o pagamento pertence. |
+| `forma_pagamento` | Forma de pagamento utilizada. |
+| `valor` | Valor pago naquela forma. Deve ser maior que zero. |
+| `created_at` | Momento em que o registro de pagamento foi criado. |
+
+**Campos documentados:** 6.
+
+### Pagamento dividido
+
+Exemplo:
+
+```text
+Venda: R$ 100
+
+PIX      → R$ 60
+DINHEIRO → R$ 40
+```
+
+Nesse caso existem dois registros em `venda_pagamentos`, ligados à mesma venda.
+
+### Regras do banco
+
+A mesma forma de pagamento não pode aparecer duas vezes na mesma venda.
+
+Exemplo inválido:
+
+```text
+PIX → R$ 30
+PIX → R$ 20
+```
+
+Nesse caso os valores devem formar um único registro:
+
+```text
+PIX → R$ 50
+```
+
+O relacionamento também garante que a venda e o pagamento pertençam à mesma barbearia.
+
+---
+## 7.10 `despesas`
+### Função
+
+Guarda saídas financeiras efetivamente realizadas.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da despesa. |
+| `barbearia_id` | Barbearia proprietária. |
+| `nome` | Nome que explica o gasto. |
+| `categoria` | Categoria financeira. |
+| `valor` | Valor efetivamente gasto. |
+| `data` | Data civil da despesa. |
+| `origem` | `MANUAL` ou `DESPESA_RECORRENTE`. |
+| `movimentacao_estoque_id` | Referência opcional a uma reposição para rastreabilidade. |
+| `ocorrencia_recorrente_id` | Referência quando a despesa nasceu de uma ocorrência paga. |
+
+**Campos de negócio documentados:** 9 principais.
+
+### Categorias do MVP
+
+```text
+Aluguel
+Água
+Energia
+Internet
+Equipamentos
+Materiais de consumo
+Manutenção
+Marketing
+Impostos e taxas
+Estoque
+Outros
+```
+
+Não existem categorias personalizadas de despesa no MVP.
+
+### Estoque e Financeiro
+
+Reposição de estoque e despesa são registros independentes.
+
+Registrar uma reposição:
+
+```text
+não cria despesa automaticamente
+```
+
+Se a compra também precisar aparecer no Financeiro, o barbeiro cadastra a despesa separadamente.
+
+---
+
+## 7.11 `despesas_recorrentes`
+### Função
+
+Guarda a configuração de despesas que se repetem.
+
+Ela não representa uma saída de caixa já paga.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da recorrência. |
+| `barbearia_id` | Barbearia proprietária. |
+| `nome` | Nome da despesa recorrente. |
+| `categoria` | Categoria financeira. |
+| `valor_previsto` | Valor esperado. |
+| `frequencia` | No MVP: `MENSAL`. |
+| `dia_vencimento` | Dia configurado, de 1 a 31. |
+| `descricao` | Observação opcional. |
+| `ativa` | Define se novas ocorrências devem continuar sendo geradas. |
+| `created_at` | Criação da configuração. |
+| `updated_at` | Última atualização. |
+
+**Campos documentados:** 11.
+
+Se o dia configurado não existir naquele mês, usar o último dia disponível.
+
+---
+
+## 7.12 `ocorrencias_despesas_recorrentes`
+### Função
+
+Representa cada ocorrência concreta gerada a partir de uma despesa recorrente.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da ocorrência. |
+| `despesa_recorrente_id` | Configuração que originou a ocorrência. |
+| `barbearia_id` | Barbearia proprietária. |
+| `status` | `PENDENTE`, `PAGA` ou `IGNORADA`. |
+| `valor_previsto` | Valor esperado naquele período. |
+| `valor_pago` | Valor realmente pago quando aplicável. |
+| `vencimento` | Data de vencimento. |
+| `data_pagamento` | Data efetiva de pagamento. |
+| `despesa_id` | Despesa efetiva criada quando a ocorrência é paga. |
+
+**Campos de negócio documentados:** 9 principais.
+
+### PENDENTE
+
+É somente previsão.
+
+Não entra como saída efetiva.
+
+### PAGA
+
+Gera a saída correspondente em `despesas`.
+
+### IGNORADA
+
+Permanece no histórico, mas não gera saída e não encerra a recorrência.
+
+Editar a recorrência afeta o futuro, não reescreve ocorrências históricas.
+
+---
+
+## 7.13 `movimentacoes_estoque`
+### Função
+
+Guarda o histórico de alterações de estoque.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da movimentação. |
+| `barbearia_id` | Barbearia proprietária. |
+| `produto_id` | Produto alterado. |
+| `tipo` | Motivo técnico da movimentação. |
+| `quantidade_delta` | Diferença positiva ou negativa. |
+| `saldo_anterior` | Estoque antes da alteração. |
+| `saldo_posterior` | Estoque depois da alteração. |
+| `data_hora` | Momento da movimentação. |
+| `motivo` | Explicação adicional quando necessária. |
+| `venda_id` | Venda relacionada quando aplicável. |
+| `custo_snapshot` | Custo histórico relevante para perda/reposição. |
+| `valor_total_snapshot` | Valor histórico total quando aplicável. |
+
+**Campos de negócio documentados:** 12 principais.
+
+### Tipos
+
+```text
+REPOSICAO
+VENDA
+AJUSTE
+PERDA
+REVERSAO_VENDA
+```
+
+### Exemplo
+
+```text
+estoque anterior = 10
+venda = 2
+quantidade_delta = -2
+saldo posterior = 8
+```
+
+### Perda
+
+Uma perda reduz estoque e preserva o custo daquele momento.
+
+Ela representa prejuízo de estoque, mas não cria uma segunda saída de caixa.
+
+---
+
+## 7.14 `portfolio`
+### Função
+
+Guarda os metadados das fotos apresentadas no Portfólio da Vitrine.
+
+O arquivo real fica no Supabase Storage.
+
+### Campos aprovados
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador da foto. |
+| `barbearia_id` | Barbearia proprietária. |
+| `imagem_path` | Caminho da imagem no Storage. |
+| `titulo` | Título opcional. |
+| `descricao` | Descrição opcional. |
+| `ordem` | Posição da imagem no Portfólio. |
+| `visivel_vitrine` | Define se a foto aparece publicamente. |
+| `created_at` | Data original de criação. |
+| `updated_at` | Última atualização. |
+
+**Campos documentados:** 9.
+
+### Não existem no MVP
+
+```text
+categoria
+serviço relacionado
+foto destaque
+```
+
+### Limites por plano
+
+```text
+GRATIS = 5 fotos
+NORMAL = 10 fotos
+```
+
+Esses limites pertencem ao verificador central de recursos da aplicação.
+
+Não criar:
+
+```text
+barbearias.limite_portfolio
+```
+
+### Downgrade
+
+Exemplo:
+
+```text
+NORMAL
+10 fotos
+
+↓ downgrade
+
+GRATIS
+limite 5
+```
+
+O sistema não apaga nem oculta automaticamente as fotos excedentes.
+
+Enquanto o total estiver acima do limite:
+
+Permitido:
+
+- visualizar;
+- ampliar;
+- excluir.
+
+Bloqueado:
+
+- adicionar;
+- editar;
+- trocar imagem;
+- alterar título;
+- alterar descrição.
+
+Fotos ocultas também contam para o limite.
+
+---
+
+## 7.15 `horarios_funcionamento`
+### Função
+
+Guarda os horários públicos de funcionamento.
+
+Não representa agenda.
+
+### Campos documentados principais
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do registro. |
+| `barbearia_id` | Barbearia proprietária. |
+| `dia_semana` | Dia da semana, entre 0 e 6. |
+| `fechado` | Informa se a barbearia não abre naquele dia. |
+| `abertura_1` | Início do primeiro intervalo. |
+| `fechamento_1` | Fim do primeiro intervalo. |
+| `abertura_2` | Início opcional do segundo intervalo. |
+| `fechamento_2` | Fim opcional do segundo intervalo. |
+
+**Campos de negócio documentados:** 8 principais.
+
+### Regras
+
+Se o dia estiver aberto:
+
+- primeiro intervalo obrigatório;
+- segundo intervalo opcional;
+- abertura anterior ao fechamento;
+- intervalos não podem se sobrepor.
+
+Exemplo válido:
+
+```text
+08:00–12:00
+14:00–18:00
+```
+
+Dia fechado não deve manter intervalos ativos.
+
+---
+
+## 7.16 `barbearia_formas_pagamento`
+### Função
+
+Registra as formas de pagamento que a barbearia informa aceitar normalmente.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `barbearia_id` | Barbearia proprietária. |
+| `forma_pagamento` | Forma aceita. |
+
+**Campos de negócio documentados:** 2.
+
+Valores:
+
+```text
 PIX
 DINHEIRO
 DEBITO
 CREDITO
 OUTRO
+```
 
-\`\`\`
+A combinação entre barbearia e forma deve ser única.
 
-A combinação entre barbearia e forma de pagamento deverá ser única.
+Não criar colunas separadas como:
 
-A ausência de uma forma nessa relação significa apenas que ela não foi configurada como aceita pela barbearia.
-
-Não criar colunas booleanas separadas como:
-
-\`\`\`text
-
+```text
 aceita_pix
 aceita_dinheiro
 aceita_debito
 aceita_credito
+```
 
-\`\`\`
+---
 
-A relação própria mantém a modelagem mais consistente e evita duplicação de estrutura.
+## 7.17 `planos`
+### Função
 
-As formas configuradas poderão ser utilizadas:
+Catálogo comercial dos planos do Estilo & Gestão.
 
-\- durante o Onboarding;
+### Campos mínimos aprovados
 
-\- nas configurações da barbearia;
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador do plano. |
+| `codigo` | `GRATIS` ou `NORMAL`. |
+| `nome` | Nome apresentado comercialmente. |
+| `preco_mensal` | Preço mensal atual. |
+| `ativo` | Define se o plano está comercialmente disponível. |
+| `created_at` | Data de criação. |
+| `updated_at` | Data de atualização. |
 
-\- como opções sugeridas no PDV;
+**Campos documentados:** 7.
 
-\- na Vitrine Digital pública;
+Valores atuais:
 
+```text
+GRATIS = R$ 0,00
+NORMAL = R$ 49,90
+```
 
-A forma registrada em *\`vendas.forma_pagamento\`* continua representando somente como aquela venda específica foi paga.
+As permissões não ficam duplicadas em dezenas de colunas nesta tabela.
 
-\---
+O código da aplicação possui um verificador central de recursos.
 
-**# 16. Endereço**
+Exemplo conhecido:
 
-O endereço deverá representar explicitamente se existe número.
+```text
+portfolioPhotos
+GRATIS = 5
+NORMAL = 10
+```
 
-A regra funcional utiliza:
+---
 
-\`\`\`text
+## 7.18 `assinaturas`
+### Função
 
-tem\_numero = true
+Guarda o estado comercial atual do plano de cada barbearia.
 
-\`\`\`
+Existe um registro atual por barbearia, inclusive para o plano Grátis.
 
-quando houver número.
+### Campos mínimos aprovados
 
-Nesse caso:
+| Campo | O que guarda |
+|---|---|
+| `barbearia_id` | Barbearia da assinatura. Deve ser único. |
+| `plano_atual_id` | Plano registrado atualmente. |
+| `inicio_periodo` | Início do período pago ou cortesia. |
+| `fim_periodo` | Fim do período pago ou cortesia. |
+| `dia_base` | Dia de referência usado pelo fluxo comercial. |
+| `origem_periodo` | `GRATIS`, `PAGAMENTO` ou `CORTESIA`. |
+| `proximo_plano_id` | Plano futuro quando houver mudança agendada. |
+| `mudanca_agendada_para` | Data da mudança programada. |
+| `cancelamento_agendado` | Informa se existe cancelamento/downgrade programado. |
+| `created_at` | Criação do registro. |
+| `updated_at` | Última atualização. |
 
-\`\`\`text
+**Campos documentados:** 11.
 
-numero\_endereco != null
+### Regra de validade
 
-\`\`\`
+O plano efetivo deve considerar a validade do período.
 
-Quando:
+Período encerrado equivale ao Grátis quando não houver novo pagamento ou cortesia válida.
 
-\`\`\`text
+### Importante
 
-tem\_numero = false
+A existência desta tabela não significa que o MVP já possui cobrança automática de cartão.
 
-\`\`\`
+O MVP possui controle de assinatura/plano.
 
-o campo deverá ser:
+O MVP não exige inicialmente:
 
-\`\`\`text
+- cobrança automática mensal;
+- tentativa automática de pagamento;
+- integração recorrente completa com gateway.
 
-numero\_endereco = null
+---
 
-\`\`\`
+## 7.19 `pagamentos_assinatura`
+### Função
 
-Não armazenar:
+Guarda cada pagamento real relacionado ao plano.
 
-\`\`\`text
+É um histórico financeiro/comercial.
 
-"S/N"
+### Campos mínimos documentados
 
-\`\`\`
+| Campo | O que guarda |
+|---|---|
+| `barbearia_id` / referência de retenção | Conta à qual o pagamento pertence. |
+| `plano_id` | Plano adquirido. |
+| `plano_nome_snapshot` | Nome do plano no momento do pagamento. |
+| `preco_oficial_snapshot` | Preço oficial do plano naquele momento. |
+| `valor_recebido` | Valor realmente recebido. |
+| `data_pagamento` | Data real do pagamento. |
+| `confirmado_em` | Data/hora da confirmação. |
+| `admin_id` | ADMIN que confirmou quando aplicável. |
+| `metodo_pagamento` | Meio usado no pagamento. |
+| `status` | Estado do pagamento. |
+| `identificador_externo` | Referência externa quando existir. |
 
-como número do endereço.
+**Campos de negócio documentados:** 11 principais.
 
-A expressão **\*\*Sem número\*\*** pertence à apresentação da interface.
+Cortesia não gera pagamento.
 
-\---
+---
 
-**# 17. Vitrine na tabela** *\`barbearias\`*
+## 7.20 `historico_administrativo`
+### Função
 
-No escopo atual, não é necessária uma tabela exclusiva para a Vitrine.
+Registra eventos administrativos importantes e permanentes.
 
-Informações básicas já pertencem naturalmente à barbearia.
+### Campos documentados principais
 
-Outros conteúdos possuem estruturas próprias:
+| Campo | O que guarda |
+|---|---|
+| `ator` | `BARBEIRO`, `ADMIN` ou `SISTEMA`. |
+| `data_hora` | Momento do evento. |
+| `tipo_evento` | Tipo da ação administrativa. |
+| `estado_anterior` | Snapshot JSON controlado do estado anterior quando necessário. |
+| `estado_posterior` | Snapshot JSON controlado do estado posterior quando necessário. |
 
-\`\`\`text
+**Campos de negócio explicitamente documentados:** 5 principais.
 
+Eventos possíveis incluem:
+
+- mudança de plano;
+- confirmação de pagamento;
+- cortesia;
+- suspensão;
+- reativação;
+- manutenção excepcional;
+- exclusão administrativa.
+
+O vínculo técnico com a entidade afetada deve ser definido no SQL/migration oficial.
+
+Esse histórico não concede ao ADMIN acesso aos dados operacionais privados da barbearia.
+
+---
+
+## 7.21 `configuracoes_sistema`
+### Função
+
+Guarda configurações globais do SaaS.
+
+É pensada como um registro único do sistema.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `manutencao_ativa` | Informa se o sistema está em manutenção. |
+| `motivo_interno` | Motivo administrativo da manutenção. |
+| `mensagem_publica` | Texto opcional mostrado aos usuários. |
+| `exibir_motivo` | Define se o motivo deve ser mostrado. |
+| `previsao_retorno` | Previsão opcional de retorno. |
+| `admin_responsavel` | ADMIN que realizou a alteração. |
+
+**Campos de negócio documentados:** 6.
+
+Motivos de interface podem incluir:
+
+```text
+Melhorias no sistema
+Correção de bugs
+Privacidade corrompida
+Outro
+```
+
+A previsão pode ser informada ou ficar como tempo indeterminado.
+
+---
+
+## 7.22 `codigos_reservados`
+### Função
+
+Impede reutilização do código público de uma barbearia.
+
+Formato:
+
+```text
+BAR-XXXXXX
+```
+
+### Dados conceituais documentados
+
+Durante a existência da conta ou retenção:
+
+- código legível pode permanecer reservado.
+
+Depois da eliminação final:
+
+- manter somente uma impressão criptográfica não reversível suficiente para rejeitar nova geração igual.
+
+A estrutura exata das colunas ainda deve ser refletida pelo SQL/migration oficial.
+
+Não transformar esse registro em uma forma de restaurar a conta excluída.
+
+---
+
+## 7.23 `retencoes_contas_excluidas`
+### Função
+
+Guarda somente os dados mínimos permitidos após exclusão de uma conta.
+
+Não contém dados operacionais restauráveis.
+
+### Campos mínimos aprovados
+
+| Campo | O que guarda |
+|---|---|
+| `id` | Identificador próprio da retenção. |
+| `codigo` | Código retido da conta. |
+| `nome` | Nome mínimo retido. |
+| `email` | E-mail mínimo retido. |
+| `data_exclusao` | Quando a conta foi excluída. |
+| `data_eliminacao_programada` | Data planejada para eliminação da retenção. |
+| `data_eliminacao_efetiva` | Quando a retenção foi efetivamente eliminada. |
+
+**Campos documentados:** 7.
+
+A regra atual documentada prevê eliminação programada cinco anos depois.
+
+Pagamentos e ações essenciais podem apontar para a retenção após a exclusão.
+
+---
+
+## 7.24 `aceites_legais`
+### Função
+
+Registra o aceite de documentos legais.
+
+### Campos documentados
+
+| Campo | O que guarda |
+|---|---|
+| `perfil_id` | Usuário que realizou o aceite. |
+| `tipo_documento` | Termos de Uso ou Política de Privacidade. |
+| `versao` | Versão aceita. |
+| `aceito_em` | Data/hora do aceite. |
+
+**Campos de negócio documentados:** 4.
+
+Essa tabela não deve ser usada como justificativa automática para conservar dados além das regras jurídicas aprovadas.
+
+---
+
+# 8. Onboarding
+
+O Onboarding possui seis etapas:
+
+```text
+1. Dados da barbearia
+2. Endereço
+3. Horários de funcionamento
+4. Serviços
+5. Produtos e formas de pagamento
+6. Aparência e conclusão
+```
+
+O progresso fica no perfil.
+
+Fluxo:
+
+```text
+Login
+  ↓
+Onboarding concluído?
+  ↓ não
+Retomar etapa salva
+```
+
+A etapa 6 salva a preferência de tema.
+
+Ao concluir:
+
+```text
+onboarding_concluido = true
+```
+
+---
+
+# 9. Vitrine Digital
+
+A Vitrine não possui tabela própria no MVP.
+
+Ela é montada com dados já existentes em:
+
+```text
+barbearias
 servicos
-
 produtos
-
 portfolio
+horarios_funcionamento
+barbearia_formas_pagamento
+```
 
-horarios\_funcionamento
+## 9.1 Contrato público
 
-barbearia\_formas\_pagamento
+Visitantes não podem receber `SELECT *` de tabelas administrativas.
 
-\`\`\`
+A leitura pública deve usar uma allowlist.
 
-Se futuramente a Vitrine ganhar regras muito mais complexas, a modelagem poderá ser separada.
+Pode ser implementada com:
 
-\---
+- view segura;
+- função SQL/RPC;
+- Route Handler;
+- consulta server-side com colunas explícitas.
 
-**# 18. Slug da Vitrine**
+## 9.2 Produto público
 
-O slug será utilizado na URL pública:
+Pode conter:
 
-\`\`\`text
+- nome;
+- descrição;
+- categoria;
+- preço de venda;
+- imagem efetiva;
+- disponibilidade pública.
 
-/{slug}
+Não deve conter:
 
-\`\`\`
+- preço de custo;
+- estoque mínimo;
+- estoque numérico;
+- movimentações;
+- informações financeiras.
 
-Ele deverá:
+## 9.3 Serviço público
 
-\- ser único;
+Pode conter:
 
-\- ser gerado automaticamente;
+- nome;
+- descrição;
+- preço.
 
-\- utilizar letras minúsculas;
+Não pode expor custo estimado.
 
-\- permitir números;
+## 9.4 Dados públicos da barbearia
 
-\- permitir hífens;
+Podem incluir:
 
-\- não possuir espaços;
+- nome;
+- nome profissional;
+- descrição;
+- logo;
+- capa;
+- WhatsApp;
+- Instagram;
+- endereço;
+- horários;
+- atendimento a domicílio;
+- formas de pagamento.
 
-\- não possuir acentos;
+## 9.5 Informações que não viram campos no MVP
 
-\- não possuir caracteres especiais;
+Não criar campos específicos para afirmações de protótipo como:
 
-\- evitar palavras reservadas.
+- Wi-Fi;
+- café;
+- ambiente climatizado;
+- atendimento personalizado;
+- pontualidade.
+
+Essas informações não fazem parte da modelagem aprovada.
+
+---
+
+# 10. Estoque
+
+`produtos.estoque_atual` mantém o saldo atual para consulta rápida.
+
+O histórico fica em `movimentacoes_estoque`.
+
+Após o cadastro inicial, o estoque não deve ser alterado livremente pela tela normal do produto.
+
+As alterações acontecem por movimentos específicos.
+
+## 10.1 Reposição
 
 Exemplo:
 
-\`\`\`text
+```text
+estoque anterior = 8
+entrada = 10
+estoque posterior = 18
+tipo = REPOSICAO
+```
 
-barbearia-imperial-a7k9
-
-\`\`\`
-
-\---
-
-**# 19. Identificador público do slug**
-
-O slug poderá combinar:
-
-\`\`\`text
-
-nome normalizado
-
-\+
-
-identificador público curto
-
-\`\`\`
+Uma reposição pode receber quantidade e custo unitário.
 
 Exemplo:
 
-\`\`\`text
+```text
+10 unidades × R$ 15,00
+= R$ 150,00
+```
 
-Barbearia Imperial
+A movimentação de estoque não cria uma despesa automaticamente.
 
-\+
+## 10.2 Venda
 
-a7k9
+Venda reduz o estoque.
 
-\=
+## 10.3 Perda
 
-barbearia-imperial-a7k9
-
-\`\`\`
-
-Não utilizar o UUID interno completo como parte obrigatória da URL pública.
-
-\---
-
-**# 20. Alteração do nome da barbearia**
-
-Depois que o slug tiver sido criado, alterar:
-
-\`\`\`text
-
-nome\_marca
-
-\`\`\`
-
-não deverá alterar automaticamente o slug existente.
-
-Isso evita quebrar links já divulgados.
-
-\---
-
-**# 21. Criação da Vitrine**
-
-A Vitrine não precisa possuir slug desde a criação da barbearia.
-
-Antes de o usuário selecionar:
-
-\`\`\`text
-
-Gerar URL
-
-\`\`\`
-
-o campo poderá permanecer:
-
-\`\`\`text
-
-slug = null
-
-\`\`\`
-
-Ao gerar:
-
-1\. backend monta o slug;
-
-2\. valida palavras reservadas;
-
-3\. verifica unicidade;
-
-4\. salva;
-
-5\. publica a Vitrine.
-
-\---
-
-**# 22. Despublicação da Vitrine**
-
-Ao despublicar:
-
-\`\`\`text
-
-vitrine\_publicada = false
-
-\`\`\`
-
-O slug deverá permanecer armazenado.
-
-Ao publicar novamente:
-
-\- utilizar a mesma URL;
-
-\- não gerar outro slug automaticamente.
-
-\---
-
-**# 23. Produtos sem estoque na Vitrine**
-
-A barbearia deverá armazenar a configuração de apresentação de produtos sem estoque.
-
-Valores:
-
-\`\`\`text
-
-OCULTAR
-
-INDISPONIVEL
-
-\`\`\`
-
-Padrão:
-
-\`\`\`text
-
-INDISPONIVEL
-
-\`\`\`
-
-Essa regra é aplicada somente a produtos:
-
-\`\`\`text
-
-ativo = true
-
-visivel\_vitrine = true
-
-\`\`\`
-
-\---
-
-**# 24. Tabela** *\`perfis\`*
-
-Responsável pelas informações do usuário dentro da aplicação.
-
-Pode armazenar:
-
-\- *\`user\_id\`*;
-
-\- *\`barbearia\_id\`*;
-
-\- nome;
-
-\- tipo;
-
-\- tema;
-
-\- progresso do Onboarding;
-
-\- datas de criação e atualização.
-
-Não guarda:
-
-\- senha;
-
-\- token permanente;
-
-\- Secret Key;
-
-\- credenciais externas.
-
-\---
-
-**# 25. Regra de** *\`tipo\`*
-
-A coluna responsável pelo tipo deverá aceitar somente:
-
-\`\`\`text
-
-BARBEIRO
-
-ADMIN
-
-\`\`\`
-
-Padrão:
-
-\`\`\`text
-
-BARBEIRO
-
-\`\`\`
-
-A aplicação pública não deverá permitir alteração livre desse valor.
-
-\---
-
-**# 26. Tabela** *\`servicos\`*
-
-Representa serviços oferecidos.
-
-Exemplos:
-
-\`\`\`text
-
-Corte
-
-Barba
-
-Sobrancelha
-
-Corte + Barba
-
-\`\`\`
-
-Cada serviço poderá possuir:
-
-\- nome;
-
-\- descrição;
-
-\- preço;
-
-\- custo estimado de insumos;
-
-\- status ativo;
-
-\- visibilidade na Vitrine.
-
-\---
-
-**# 27. Serviço ativo e visível**
-
-São conceitos diferentes.
-
-\`\`\`text
-
-ativo = true
-
-visivel\_vitrine = true
-
-\`\`\`
-
-Pode ser utilizado no PDV e exibido publicamente.
-
-\`\`\`text
-
-ativo = true
-
-visivel\_vitrine = false
-
-\`\`\`
-
-Pode ser utilizado no PDV, mas fica oculto da Vitrine.
-
-\`\`\`text
-
-ativo = false
-
-\`\`\`
-
-Não deverá:
-
-\- ser utilizado em novas vendas;
-
-\- aparecer na Vitrine.
-
-O histórico permanece preservado.
-
-\---
-
-**# 28. Custo estimado do serviço**
-
-O custo é opcional e representa somente materiais diretamente consumidos no atendimento.
+Perda reduz o estoque e preserva o custo histórico daquele momento.
 
 Exemplo:
 
-\`\`\`text
+```text
+custo = R$ 20,00
+quantidade perdida = 2
+valor histórico da perda = R$ 40,00
+```
 
-Preço cobrado: R$ 40,00
+A perda representa prejuízo de estoque.
 
-Custo estimado: R$ 2,00
+Ela não cria uma nova saída de caixa se a compra já foi paga anteriormente.
 
-\`\`\`
+## 10.4 Ajuste
 
-Não representa automaticamente:
+Serve para corrigir diferença entre o saldo registrado e a quantidade física correta.
 
-\- aluguel;
+Deve guardar motivo.
 
-\- energia;
+Não deve substituir reposição ou perda conhecida.
 
-\- internet;
+## 10.5 Cancelamento
 
-\- salário;
+Quando uma venda é cancelada, produtos retornam ao estoque por:
 
-\- demais custos indiretos.
+```text
+REVERSAO_VENDA
+```
 
-Se não existir custo informado:
+---
 
-\`\`\`text
+# 11. PDV e transações
 
-custo considerado = R$ 0,00
+Uma comanda em edição fica no frontend.
 
-\`\`\`
+Ela só entra em `vendas` quando for finalizada.
 
-para o cálculo estimado daquele item.
+Fluxo:
 
-\---
+```text
+Comanda
+   ↓
+Finalizar
+   ↓
+Backend valida
+   ↓
+Venda + itens + estoque
+```
 
-**# 29. Categorias de produtos**
+A finalização precisa ser atômica.
 
-Categorias pertencem à barbearia.
+Exemplo conceitual:
 
-Exemplos:
+```text
+BEGIN
 
-\`\`\`text
+validar venda
+validar estoque
+criar venda
+criar itens
+atualizar estoque
+criar movimentações
 
-Bebida
+COMMIT
+```
 
-Pomada
+Se algo falhar:
 
-Shampoo
+```text
+ROLLBACK
+```
 
-Cera
+Não pode acontecer:
 
-Acessórios
+```text
+venda criada
++
+itens criados
++
+estoque não baixado
+```
 
-\`\`\`
+## 11.1 Concorrência
 
-Não utilizar enum SQL fixo porque o barbeiro poderá criar categorias próprias.
+Se existe uma unidade em estoque, duas requisições simultâneas não podem vender a mesma última unidade.
 
-Cada categoria poderá possuir:
+O estoque não pode ficar negativo por concorrência.
 
-\- nome;
+---
 
-\- status ativo;
+# 12. Financeiro
 
-\- imagem padrão opcional.
+## 12.1 Despesas reais
 
-A referência da imagem padrão deverá ser armazenada conceitualmente em:
+`despesas` representa saídas efetivamente realizadas.
 
-\`\`\`text
+## 12.2 Recorrências
 
-categorias_produto.imagem_padrao_path
+`despesas_recorrentes` representa configuração futura.
 
-\`\`\`
+`ocorrencias_despesas_recorrentes` representa cada mês/período.
 
-A imagem padrão não representa uma foto enviada pelo barbeiro.
+## 12.3 Ocorrência paga
 
-Ela funciona como um recurso visual fornecido pelo próprio Estilo e Gestão para categorias sugeridas pelo sistema.
+Quando uma ocorrência é marcada como `PAGA`:
+
+```text
+ocorrência
+   ↓
+despesa efetiva
+```
+
+A ligação entre os dois registros deve ser preservada.
+
+## 12.4 Evitar dupla contagem
+
+Compra de estoque e custo histórico dos produtos vendidos servem para análises diferentes.
+
+O sistema não deve subtrair a mesma compra duas vezes dentro do mesmo indicador financeiro.
+
+---
+
+# 13. Planos e permissões
+
+O banco guarda:
+
+- catálogo de planos;
+- plano atual;
+- período;
+- pagamentos;
+- cortesias;
+- histórico administrativo.
+
+As permissões detalhadas ficam no verificador central de recursos da aplicação.
+
+Não criar dezenas de colunas como:
+
+```text
+pode_portfolio
+pode_relatorios
+pode_x
+pode_y
+```
+
+sem necessidade.
+
+Exemplo aprovado:
+
+```text
+portfolioPhotos
+GRATIS = 5
+NORMAL = 10
+```
+
+Quando um novo recurso for aprovado, a matriz de permissões pode crescer no código sem exigir uma nova coluna em cada barbearia.
+
+---
+
+# 14. RLS
+
+RLS significa:
+
+```text
+Row Level Security
+```
+
+Ela restringe quais linhas um usuário autenticado pode acessar.
+
+## 14.1 BARBEIRO
+
+Fluxo conceitual:
+
+```text
+auth.uid()
+   ↓
+perfis
+   ↓
+barbearia_id
+   ↓
+dados daquela barbearia
+```
+
+## 14.2 ADMIN
+
+Não usar uma policy genérica:
+
+```text
+ADMIN → pode tudo
+```
+
+Ações administrativas devem passar por fluxo controlado.
 
 Exemplo:
 
-\`\`\`text
+```text
+requisição
+   ↓
+servidor
+   ↓
+validar sessão
+   ↓
+validar ADMIN
+   ↓
+validar ação
+   ↓
+executar somente o necessário
+```
 
-Categoria: Pomada
+ADMIN pode ter acesso a informações administrativas necessárias, como:
 
-imagem_padrao_path:
-sistema/categorias/pomada.webp
+- plano;
+- validade;
+- pagamento;
+- suspensão;
+- cortesia;
+- histórico administrativo.
 
-\`\`\`
+Isso não significa acesso automático a:
 
-Categorias sem imagem padrão deverão manter:
+- vendas completas;
+- despesas;
+- estoque;
+- operações de PDV.
 
-\`\`\`text
+## 14.3 RLS e backend
 
-imagem_padrao_path = null
+RLS não substitui backend.
 
-\`\`\`
+Backend também não substitui RLS.
 
-\---
+Os dois trabalham juntos.
 
-**# 30. Categorias sugeridas**
+---
 
-Sugestões poderão existir no código.
+# 15. Storage
 
-Exemplo:
+Os arquivos de imagem ficam no Supabase Storage.
 
-\`\`\`ts
-
-[
-
-  "Bebida",
-
-  "Pomada",
-
-  "Shampoo",
-
-  "Cera",
-
-  "Óleo/Balm para barba",
-
-  "Acessórios",
-
-  "Outros"
-
-]
-
-\`\`\`
-
-As categorias sugeridas poderão possuir imagens padrão mantidas pelo próprio sistema.
-
-Exemplos conceituais:
-
-\`\`\`text
-
-Bebida
-→ imagem genérica de bebida
-
-Pomada
-→ imagem genérica de pomada
-
-Shampoo
-→ imagem genérica de shampoo
-
-Cera
-→ imagem genérica de cera
-
-Óleo/Balm para barba
-→ imagem genérica relacionada à categoria
-
-Acessórios
-→ imagem genérica de acessórios
-
-Outros
-→ imagem neutra e não específica
-
-\`\`\`
-
-Uma sugestão somente precisa virar registro no banco quando a barbearia realmente utilizá-la.
-
-Ao criar uma categoria a partir de uma sugestão oficial, o backend poderá associar automaticamente o respectivo:
-
-\`\`\`text
-
-imagem_padrao_path
-
-\`\`\`
-
-A imagem padrão deverá apontar para um recurso compartilhado do sistema.
-
-Não é necessário duplicar fisicamente o mesmo arquivo no Storage de cada barbearia.
+O PostgreSQL não guarda a imagem inteira. Ele guarda somente o caminho ou a referência necessária para localizar o arquivo.
 
 Exemplo:
 
-\`\`\`text
+```text
+PostgreSQL
+\-- portfolio.imagem_path
 
-Barbearia A
-└── categoria Pomada
-    └── imagem_padrao_path = sistema/categorias/pomada.webp
+Supabase Storage
+\-- arquivo real
+```
 
-Barbearia B
-└── categoria Pomada
-    └── imagem_padrao_path = sistema/categorias/pomada.webp
+## 15.1 Bucket atual
 
-\`\`\`
+O bucket público usado pelas mídias das barbearias é:
 
-As duas categorias podem apontar para o mesmo arquivo oficial do sistema.
+```text
+midia-publica
+```
 
-\---
+Configuração atual confirmada:
 
-**# 30.1 Imagens padrão do sistema**
+```text
+public = true
+file_size_limit = 10 MiB
+file_size_limit em bytes = 10485760
+```
 
-As imagens padrão das categorias:
+Tipos de arquivo permitidos pelo bucket:
 
-\- pertencem ao Estilo e Gestão;
+```text
+image/jpeg
+image/png
+image/webp
+```
 
-\- não pertencem a uma barbearia específica;
+Na prática, isso cobre:
 
-\- são utilizadas apenas como fallback visual;
+```text
+JPG/JPEG
+PNG
+WebP
+```
 
-\- não devem ser modificadas ou excluídas pelo barbeiro;
+O limite de 10 MiB é uma regra do próprio bucket `midia-publica`.
 
-\- podem ser substituídas visualmente por uma imagem personalizada do produto.
+## 15.2 Organização por barbearia
 
-A aplicação deverá tratar esses arquivos como recursos administrados pelo sistema.
+Estrutura conceitual:
 
-O caminho definitivo poderá variar durante a implementação, mas conceitualmente poderá seguir:
+```text
+barbearias/
+  {barbeariaId}/
+    logo/
+    capa/
+    produtos/
+    portfolio/
+```
 
-\`\`\`text
+Cada arquivo de uma barbearia deve ficar dentro da pasta do próprio `barbearia_id`.
 
+## 15.3 Segurança do Storage
+
+O bucket é público para leitura por URL.
+
+Isso é necessário porque logo, capa, produtos e Portfólio podem aparecer na Vitrine pública.
+
+As operações autenticadas de leitura pela API, upload, atualização e exclusão usam policies que verificam o tenant pelo caminho do arquivo.
+
+A estrutura protegida começa por:
+
+```text
+barbearias/{barbearia_id}/...
+```
+
+Uma barbearia não deve conseguir enviar, alterar ou excluir arquivos de outra barbearia.
+
+As policies atuais usam `current_barbearia_id()` para comparar o tenant autenticado com o caminho do objeto.
+
+## 15.4 Imagens oficiais do sistema
+
+Imagens padrão mantidas pelo próprio sistema não devem ser tratadas como arquivos editáveis de uma barbearia.
+
+Exemplo conceitual:
+
+```text
 sistema/
   categorias/
     bebida.webp
@@ -1360,2763 +2006,446 @@ sistema/
     oleo-balm.webp
     acessorios.webp
     outros.webp
+```
 
-\`\`\`
+Arquivos oficiais do sistema não podem ser alterados ou apagados por barbeiros.
 
-A escolha dos arquivos finais pertence à implementação e ao Design System.
+## 15.5 Regra de armazenamento
 
-\---
+Não armazenar imagens como Base64 ou BLOB no PostgreSQL sem necessidade.
 
-**# 31. Categoria personalizada**
+A regra do MVP é:
 
-Exemplo:
+```text
+arquivo real -> Supabase Storage
+path/referência -> PostgreSQL
+```
 
-\`\`\`text
+---
+# 16. Dados monetários e datas
 
-Bonés
-
-\`\`\`
-
-Depois de criada, funciona como qualquer outra categoria.
-
-No MVP, uma categoria criada manualmente pelo barbeiro começa sem imagem padrão:
-
-\`\`\`text
-
-imagem_padrao_path = null
-
-\`\`\`
-
-Não atribuir automaticamente uma imagem genérica a uma categoria personalizada.
-
-O banco não precisa separar:
-
-\`\`\`text
-
-categoria padrão
-
-categoria personalizada
-
-\`\`\`
-
-em tabelas diferentes.
-
-A diferença de comportamento pode ser definida pela origem do cadastro no fluxo da aplicação e pela presença ou ausência de:
-
-\`\`\`text
-
-imagem_padrao_path
-
-\`\`\`
-
-Categorias personalizadas continuam pertencendo normalmente à barbearia.
-
-\---
-
-**# 32. Duplicidade de categoria**
-
-Dentro da mesma barbearia, deverão ser consideradas equivalentes:
-
-\`\`\`text
-
-Bebida
-
-bebida
-
- BEBIDA 
-
-\`\`\`
-
-A implementação deverá:
-
-\- remover espaços externos;
-
-\- ignorar diferença entre maiúsculas e minúsculas para verificar duplicidade.
-
-Uma categoria sugerida já existente para a barbearia não deverá ser recriada apenas para obter novamente sua imagem padrão.
-
-\---
-
-**# 33. Tabela** *\`produtos\`*
-
-Representa produtos físicos vendidos e controlados pelo estoque.
-
-Exemplos:
-
-\- bebidas;
-
-\- pomadas;
-
-\- shampoos;
-
-\- produtos para barba;
-
-\- acessórios.
-
-Cada produto pertence a:
-
-\`\`\`text
-
-1 barbearia
-
-\`\`\`
-
-e:
-
-\`\`\`text
-
-1 categoria
-
-\`\`\`
-
-Cada produto poderá possuir uma imagem personalizada opcional através de:
-
-\`\`\`text
-
-produtos.imagem_path
-
-\`\`\`
-
-Também deverá existir uma configuração para definir se, na ausência de imagem personalizada, o produto pode utilizar a imagem padrão de sua categoria.
-
-Conceitualmente:
-
-\`\`\`text
-
-produtos.usar_imagem_categoria
-
-\`\`\`
-
-Padrão:
-
-\`\`\`text
-
-true
-
-\`\`\`
-
-Essa configuração somente influencia a apresentação quando:
-
-\`\`\`text
-
-imagem_path = null
-
-\`\`\`
-
-\---
-
-**# 33.1 Regra de imagem do produto**
-
-A imagem exibida para um produto deverá seguir esta prioridade:
-
-\`\`\`text
-
-1. Existe imagem personalizada do produto?
-   ↓ sim
-   Usar produtos.imagem_path
-
-2. Não existe imagem personalizada
-   + usar_imagem_categoria = true
-   + categoria possui imagem_padrao_path?
-   ↓ sim
-   Usar imagem padrão da categoria
-
-3. Nenhuma das condições anteriores
-   ↓
-   Produto sem imagem
-   ou placeholder neutro da interface
-
-\`\`\`
-
-Exemplo:
-
-\`\`\`text
-
-Produto:
-Pomada Matte
-
-imagem_path = null
-usar_imagem_categoria = true
-
-Categoria:
-Pomada
-
-imagem_padrao_path =
-sistema/categorias/pomada.webp
-
-Resultado:
-→ exibir a imagem padrão de Pomada
-
-\`\`\`
-
-Se o barbeiro enviar uma imagem própria:
-
-\`\`\`text
-
-imagem_path =
-barbearias/{barbeariaId}/produtos/{produtoId}.webp
-
-\`\`\`
-
-a imagem personalizada possui prioridade sobre a imagem padrão da categoria.
-
-\---
-
-**# 33.2 Remoção da imagem personalizada**
-
-Ao remover uma imagem personalizada, o usuário deverá poder escolher entre:
-
-\`\`\`text
-
-Usar imagem padrão da categoria
-
-ou
-
-Ficar sem imagem
-
-\`\`\`
-
-Se escolher:
-
-\`\`\`text
-
-Usar imagem padrão da categoria
-
-\`\`\`
-
-o estado deverá ser:
-
-\`\`\`text
-
-imagem_path = null
-
-usar_imagem_categoria = true
-
-\`\`\`
-
-Se escolher:
-
-\`\`\`text
-
-Ficar sem imagem
-
-\`\`\`
-
-o estado deverá ser:
-
-\`\`\`text
-
-imagem_path = null
-
-usar_imagem_categoria = false
-
-\`\`\`
-
-Não copiar a imagem padrão da categoria para:
-
-\`\`\`text
-
-produtos.imagem_path
-
-\`\`\`
-
-A imagem padrão continua pertencendo à categoria e funciona somente como fallback.
-
-Se uma categoria não possuir imagem padrão e:
-
-\`\`\`text
-
-usar_imagem_categoria = true
-
-\`\`\`
-
-o resultado visual será equivalente a não existir uma imagem disponível, devendo a interface utilizar o estado neutro definido pelo Design System.
-
-\---
-
-**# 34. Produto e categoria no mesmo tenant**
-
-Não será válido:
-
-\`\`\`text
-
-Produto da Barbearia A
-
-        ↓
-
-Categoria da Barbearia B
-
-\`\`\`
-
-O backend deverá validar essa relação.
-
-A migration real também deverá reforçar a consistência através de constraints ou estrutura relacional adequada sempre que possível.
-
-\---
-
-**# 35. Estoque atual**
-
-A tabela *\`produtos\`* mantém:
-
-\`\`\`text
-
-estoque\_atual
-
-\`\`\`
-
-para consulta rápida.
-
-Esse campo representa o saldo atual.
-
-O histórico das alterações será mantido separadamente.
-
-\---
-
-**# 36. Estoque mínimo**
-
-*\`estoque\_minimo\`* é opcional.
-
-Quando existir:
-
-\`\`\`text
-
-estoque\_atual <= estoque\_minimo
-
-\`\`\`
-
-significa:
-
-\`\`\`text
-
-estoque baixo
-
-\`\`\`
-
-Quando:
-
-\`\`\`text
-
-estoque\_minimo = null
-
-\`\`\`
-
-o produto não deverá gerar alerta de estoque mínimo.
-
-Não é necessária coluna:
-
-\`\`\`text
-
-estoque\_baixo
-
-\`\`\`
-
-pois esse estado pode ser calculado.
-
-\---
-
-**# 37. Alteração de estoque**
-
-Depois do cadastro inicial, *\`estoque\_atual\`* não deverá ser editado livremente pela tela comum de produto.
-
-Mudanças deverão ocorrer por operações específicas:
-
-\`\`\`text
-
-REPOSICAO
-
-VENDA
-
-AJUSTE
-
-PERDA
-
-REVERSAO\_VENDA
-
-\`\`\`
-
-\---
-
-**# 38. Tabela** *\`movimentacoes\_estoque\`*
-
-Toda alteração relevante de estoque deverá gerar um registro.
-
-Isso permite responder:
-
-\`\`\`text
-
-Por que havia 10 unidades e agora existem 6?
-
-\`\`\`
-
-O histórico deverá preservar:
-
-\- produto;
-
-\- tipo;
-
-\- quantidade alterada;
-
-\- saldo anterior;
-
-\- saldo posterior;
-
-\- data e hora;
-
-\- motivo quando aplicável;
-
-\- venda relacionada quando aplicável;
-
-\- valores históricos necessários quando houver impacto financeiro ou de resultado.
-
-\---
-
-**# 39. Tipos de movimentação**
-
-O MVP possui:
-
-\`\`\`text
-
-REPOSICAO
-
-VENDA
-
-AJUSTE
-
-PERDA
-
-REVERSAO\_VENDA
-
-\`\`\`
-
-\---
-
-**# 40. Exemplo de venda de estoque**
-
-Antes:
-
-\`\`\`text
-
-estoque = 10
-
-\`\`\`
-
-Venda de 2:
-
-\`\`\`text
-
-quantidade\_delta = -2
-
-saldo\_anterior = 10
-
-saldo\_posterior = 8
-
-tipo = VENDA
-
-\`\`\`
-
-\---
-
-**# 41. Exemplo de reposição**
-
-Antes:
-
-\`\`\`text
-
-estoque = 8
-
-\`\`\`
-
-Reposição:
-
-\`\`\`text
-
-quantidade = 10
-
-\`\`\`
-
-Depois:
-
-\`\`\`text
-
-quantidade\_delta = +10
-
-saldo\_anterior = 8
-
-saldo\_posterior = 18
-
-tipo = REPOSICAO
-
-\`\`\`
-
-\---
-
-**# 42. Reposição e custo**
-
-Ao registrar uma reposição, o sistema recebe:
-
-\- produto;
-
-\- quantidade;
-
-\- custo unitário.
-
-O valor total será:
-
-\`\`\`text
-
-quantidade × custo unitário
-
-\`\`\`
-
-Exemplo:
-
-\`\`\`text
-
-10 unidades × R$ 15,00
-
-\=
-
-R$ 150,00
-
-\`\`\`
-
-\---
-
-**# 43. Reposição e Financeiro**
-
-Reposição de estoque e despesa financeira são registros independentes.
-
-Ao registrar uma reposição, o sistema deverá criar somente a movimentação de estoque. Não criar despesa automática.
-
-Quando a compra precisar aparecer no Financeiro, o barbeiro deverá cadastrar uma despesa separadamente, podendo utilizar a categoria `Estoque`.
-
-Essa separação evita assumir que toda reposição representa uma saída paga naquele momento e impede lançamentos financeiros duplicados.
-
-\---
-
-**# 44. Rastreabilidade opcional da compra**
-
-Uma despesa cadastrada manualmente poderá guardar uma referência opcional à movimentação de reposição para facilitar consulta e auditoria.
-
-Essa referência não poderá criar, alterar ou excluir automaticamente nenhum dos dois registros.
-
-\---
-
-**# 45. Correção de reposição**
-
-Corrigir uma reposição afeta apenas o estoque e sua movimentação. Se houver uma despesa manual relacionada, ela deverá ser corrigida separadamente no Financeiro, sempre com confirmação do usuário.
-
-\---
-
-**# 46. Perda de estoque**
-
-Uma perda deverá:
-
-\- reduzir estoque;
-
-\- gerar movimento *\`PERDA\`*;
-
-\- registrar data e hora automaticamente;
-
-\- preservar o custo do produto no momento da perda.
-
-Exemplo:
-
-\`\`\`text
-
-Custo no momento da perda = R$ 20,00
-
-Quantidade perdida = 2
-
-Valor da perda = R$ 40,00
-
-\`\`\`
-
-\---
-
-**# 47. Snapshot financeiro da perda**
-
-O custo utilizado para calcular uma perda histórica não poderá mudar quando o preço de custo do produto for alterado posteriormente.
-
-Por isso, a movimentação deverá preservar informação suficiente para representar:
-
-\`\`\`text
-
-custo no momento da perda
-
-\`\`\`
-
-e:
-
-\`\`\`text
-
-valor total da perda
-
-\`\`\`
-
-quando aplicável.
-
-\---
-
-**# 48. Perda e fluxo de caixa**
-
-A perda não gera uma segunda saída financeira.
-
-Exemplo:
-
-\`\`\`text
-
-Compra do produto
-
-→ R$ 20,00 de saída
-
-Produto perdido posteriormente
-
-→ prejuízo de estoque de R$ 20,00
-
-→ nenhuma nova saída de caixa
-
-\`\`\`
-
-A perda afeta o resultado estimado, não o caixa novamente.
-
-\---
-
-**# 49. Ajuste de estoque**
-
-O ajuste representa uma correção entre:
-
-\`\`\`text
-
-saldo registrado
-
-\`\`\`
-
-e:
-
-\`\`\`text
-
-quantidade física correta
-
-\`\`\`
-
-O movimento deverá preservar:
-
-\- saldo anterior;
-
-\- saldo posterior;
-
-\- diferença;
-
-\- motivo;
-
-\- data e hora.
-
-Não deverá ser utilizado para substituir reposição ou perda conhecida.
-
-\---
-
-**# 50. Tabela** *\`vendas\`*
-
-Representa somente vendas efetivamente registradas.
-
-Uma comanda em edição não existe nessa tabela.
-
-Fluxo:
-
-\`\`\`text
-
-Comanda temporária
-
-       ↓
-
-Finalizar
-
-       ↓
-
-Backend valida
-
-       ↓
-
-vendas
-
-\`\`\`
-
-\---
-
-**# 51. Status da venda**
-
-O MVP possui somente:
-
-\`\`\`text
-
-CONCLUIDA
-
-CANCELADA
-
-\`\`\`
-
-Não existe:
-
-\`\`\`text
-
-PENDENTE
-
-\`\`\`
-
-para representar uma comanda em edição.
-
-A comanda pertence ao frontend até ser finalizada.
-
-\---
-
-**# 52. Forma de pagamento**
-
-A forma de pagamento registrada em uma venda é opcional.
-
-Ela representa como aquela venda específica foi paga e não deve ser confundida com as formas de pagamento que a barbearia aceita normalmente.
-
-As formas aceitas pela barbearia pertencem à relação *\`barbearia_formas_pagamento\`*.
-
-Valores previstos:
-
-\`\`\`text
-
-PIX
-
-DINHEIRO
-
-DEBITO
-
-CREDITO
-
-OUTRO
-
-\`\`\`
-
-Uma venda poderá permanecer sem forma de pagamento informada.
-
-\---
-
-**# 53. Tabela** *\`venda\_itens\`*
-
-Uma venda poderá possuir vários itens.
-
-Exemplo:
-
-\`\`\`text
-
-Venda 001
-
-├── Corte
-
-├── Barba
-
-└── Coca-Cola x2
-
-\`\`\`
-
-O cabeçalho fica em:
-
-\`\`\`text
-
-vendas
-
-\`\`\`
-
-e os itens em:
-
-\`\`\`text
-
-venda\_itens
-
-\`\`\`
-
-\---
-
-**# 54. Quantidade de serviço**
-
-Serviços não possuem quantidade no fluxo atual.
-
-Cada serviço poderá aparecer apenas uma vez por comanda.
-
-Portanto:
-
-\`\`\`text
-
-tipo = SERVICO
-
-→ quantidade = 1
-
-\`\`\`
-
-A migration deverá reforçar essa regra quando possível.
-
-Produtos podem possuir:
-
-\`\`\`text
-
-quantidade > 1
-
-\`\`\`
-
-conforme estoque disponível.
-
-\---
-
-**# 55. Snapshot de venda**
-
-*\`venda\_itens\`* deverá preservar os valores usados no momento da venda.
-
-Exemplo:
-
-Hoje:
-
-\`\`\`text
-
-Corte = R$ 40,00
-
-\`\`\`
-
-Venda realizada:
-
-\`\`\`text
-
-preco\_unitario\_snapshot = 40,00
-
-\`\`\`
-
-Posteriormente:
-
-\`\`\`text
-
-Corte = R$ 50,00
-
-\`\`\`
-
-A venda antiga continua:
-
-\`\`\`text
-
-R$ 40,00
-
-\`\`\`
-
-\---
-
-**# 56. Dados preservados no item da venda**
-
-O item poderá preservar:
-
-\- nome;
-
-\- quantidade;
-
-\- preço cobrado no momento da venda;
-
-\- custo no momento da venda;
-
-\- subtotal;
-
-\- resultado estimado.
-
-Isso impede que alterações futuras modifiquem o histórico.
-
-\---
-
-**# 57. IDs e snapshots**
-
-Os dois possuem funções diferentes.
-
-O snapshot responde:
-
-\`\`\`text
-
-O que foi vendido e por qual valor?
-
-\`\`\`
-
-O ID responde:
-
-\`\`\`text
-
-Qual cadastro originou esse item?
-
-\`\`\`
-
-Mesmo se o produto ou serviço deixar de existir, o histórico financeiro deverá continuar legível através dos snapshots.
-
-\---
-
-**# 58. Exclusão e histórico**
-
-Se serviço ou produto já tiver sido utilizado, preferir:
-
-\`\`\`text
-
-ativo = false
-
-\`\`\`
-
-em vez de exclusão física.
-
-Se um cadastro nunca tiver sido utilizado, sua exclusão poderá ser permitida conforme a regra funcional.
-
-Em qualquer situação:
-
-\- vendas antigas permanecem;
-
-\- resultados históricos permanecem;
-
-\- snapshots não são alterados.
-
-\---
-
-**# 59. Cancelamento**
-
-Uma venda cancelada não será apagada.
-
-Fluxo:
-
-\`\`\`text
-
-CONCLUIDA
-
-    ↓
-
-cancelamento
-
-    ↓
-
-CANCELADA
-
-\`\`\`
-
-Produtos da venda deverão retornar ao estoque.
-
-\---
-
-**# 60. Reversão de estoque**
-
-No cancelamento:
-
-\`\`\`text
-
-produto vendido
-
-      ↓
-
-retorno ao estoque
-
-      ↓
-
-REVERSAO\_VENDA
-
-\`\`\`
-
-A movimentação deverá manter referência à venda quando aplicável.
-
-\---
-
-**# 61. Operação atômica do PDV**
-
-Finalizar venda é uma operação crítica.
-
-Não executar:
-
-\`\`\`text
-
-criar venda
-
-✓
-
-criar itens
-
-✓
-
-baixar estoque
-
-ERRO
-
-\`\`\`
-
-Esse cenário deixaria o banco inconsistente.
-
-\---
-
-**# 62. Transação da venda**
-
-O resultado deverá ser:
-
-\`\`\`text
-
-Tudo funciona
-
-     ↓
-
-COMMIT
-
-\`\`\`
-
-ou:
-
-\`\`\`text
-
-Algo falha
-
-     ↓
-
-ROLLBACK
-
-\`\`\`
-
-Conceitualmente:
-
-\`\`\`text
-
-BEGIN
-
-validar venda
-
-validar estoque
-
-criar venda
-
-criar itens
-
-atualizar estoque
-
-criar movimentações
-
-COMMIT
-
-\`\`\`
-
-Se alguma etapa falhar:
-
-\`\`\`text
-
-ROLLBACK
-
-\`\`\`
-
-\---
-
-**# 63. Concorrência de estoque**
-
-Considere:
-
-\`\`\`text
-
-estoque = 1
-
-\`\`\`
-
-Duas requisições chegam quase ao mesmo tempo.
-
-As duas não podem vender a última unidade.
-
-O requisito é:
-
-\`\`\`text
-
-estoque nunca pode ficar negativo por concorrência
-
-\`\`\`
-
-A implementação deverá utilizar mecanismo transacional adequado do PostgreSQL.
-
-\---
-
-**# 64. Tabela** *\`despesas\`*
-
-Representa saídas financeiras efetivamente realizadas.
-
-Exemplos:
-
-\- aluguel pago;
-
-\- energia paga;
-
-\- internet paga;
-
-\- material comprado;
-
-\- reposição de estoque.
-
-\---
-
-**# 65. Categorias de despesas**
-
-As categorias são fixas no MVP.
-
-Lista:
-
-\`\`\`text
-
-Aluguel
-
-Água
-
-Energia
-
-Internet
-
-Equipamentos
-
-Materiais de consumo
-
-Manutenção
-
-Marketing
-
-Impostos e taxas
-
-Estoque
-
-Outros
-
-\`\`\`
-
-Não criar categorias personalizadas de despesas no MVP.
-
-\---
-
-**# 66. Categoria** *\`Outros\`*
-
-Não é necessária uma coluna adicional para explicar a categoria.
-
-O campo:
-
-\`\`\`text
-
-nome
-
-\`\`\`
-
-deverá deixar claro o gasto.
-
-Exemplo:
-
-\`\`\`text
-
-Nome: Compra de lâmpadas
-
-Categoria: Outros
-
-\`\`\`
-
-\---
-
-**# 67. Origem da despesa**
-
-Uma despesa poderá ter duas origens funcionais:
-
-\`\`\`text
-
-MANUAL
-
-DESPESA\_RECORRENTE
-
-\`\`\`
-
-Compra de estoque é cadastrada como despesa manual quando o barbeiro desejar registrá-la no Financeiro. `REPOSICAO_ESTOQUE` não deve gerar despesa automaticamente e não deve ser usada como origem ativa na versão inicial.
-
-\---
-
-**# 68. Despesas relacionadas ao estoque**
-
-Uma despesa manual poderá apontar opcionalmente para uma reposição para fins de rastreabilidade. Os registros continuam independentes e nenhuma operação em um deles altera o outro automaticamente.
-
-\---
-
-**# 69. Despesas recorrentes**
-
-A configuração da recorrência não deve ser armazenada como uma despesa já paga.
-
-Por isso deverá existir estrutura própria:
-
-\`\`\`text
-
-despesas\_recorrentes
-
-\`\`\`
-
-Ela representa:
-
-\`\`\`text
-
-configuração futura
-
-\`\`\`
-
-e não:
-
-\`\`\`text
-
-saída de caixa
-
-\`\`\`
-
-\---
-
-**# 70. Tabela** *\`despesas\_recorrentes\`*
-
-Responsável pela configuração da cobrança recorrente.
-
-Exemplos de campos conceituais:
-
-\- barbearia;
-
-\- nome;
-
-\- categoria;
-
-\- valor previsto;
-
-\- frequência;
-
-\- dia do vencimento;
-
-\- descrição;
-
-\- ativa;
-
-\- datas de criação e atualização.
-
-No MVP:
-
-\`\`\`text
-
-frequencia = MENSAL
-
-\`\`\`
-
-\---
-
-**# 71. Dia do vencimento**
-
-Poderá aceitar:
-
-\`\`\`text
-
-1 até 31
-
-\`\`\`
-
-Se o dia não existir no mês, utilizar o último dia disponível.
-
-Exemplo:
-
-\`\`\`text
-
-dia configurado = 31
-
-Janeiro → 31
-
-Fevereiro → 28 ou 29
-
-Abril → 30
-
-\`\`\`
-
-\---
-
-**# 72. Ocorrências de despesas recorrentes**
-
-A configuração recorrente deverá gerar ocorrências separadas.
-
-Estrutura conceitual:
-
-\`\`\`text
-
-despesas\_recorrentes
-
-        │
-
-        ▼
-
-ocorrencias\_despesas\_recorrentes
-
-\`\`\`
-
-Isso permite preservar cada mês individualmente.
-
-\---
-
-**# 73. Status da ocorrência recorrente**
-
-Valores:
-
-\`\`\`text
-
-PENDENTE
-
-PAGA
-
-IGNORADA
-
-\`\`\`
-
-\---
-
-**# 74. Ocorrência pendente**
-
-Uma ocorrência:
-
-\`\`\`text
-
-PENDENTE
-
-\`\`\`
-
-representa somente uma previsão.
-
-Não deverá entrar como saída efetiva de caixa.
-
-\---
-
-**# 75. Ocorrência paga**
-
-Ao marcar como paga, deverão ser preservados:
-
-\- valor previsto;
-
-\- valor realmente pago;
-
-\- vencimento;
-
-\- data do pagamento;
-
-\- status.
-
-Exemplo:
-
-\`\`\`text
-
-Previsto: R$ 100,00
-
-Pago: R$ 105,37
-
-Status: PAGA
-
-\`\`\`
-
-\---
-
-**# 76. Ligação da ocorrência com** *\`despesas\`*
-
-Quando uma ocorrência for marcada como:
-
-\`\`\`text
-
-PAGA
-
-\`\`\`
-
-o sistema deverá registrar a saída financeira correspondente em:
-
-\`\`\`text
-
-despesas
-
-\`\`\`
-
-e preservar uma ligação entre a ocorrência e o lançamento financeiro.
-
-Assim:
-
-\`\`\`text
-
-ocorrência recorrente
-
-        ↓
-
-Marcar como paga
-
-        ↓
-
-despesa efetiva
-
-\`\`\`
-
-\---
-
-**# 77. Ocorrência ignorada**
-
-Quando:
-
-\`\`\`text
-
-status = IGNORADA
-
-\`\`\`
-
-a ocorrência:
-
-\- permanece no histórico;
-
-\- não gera saída financeira;
-
-\- não desativa a recorrência;
-
-\- não interfere nos meses futuros.
-
-\---
-
-**# 78. Alteração de recorrência**
-
-Editar uma configuração recorrente deverá afetar somente períodos futuros.
-
-Ocorrências históricas já criadas ou pagas deverão preservar os dados correspondentes ao período.
-
-\---
-
-**# 79. Desativação de recorrência**
-
-Quando:
-
-\`\`\`text
-
-ativa = false
-
-\`\`\`
-
-não deverão ser geradas novas ocorrências.
-
-O histórico anterior deverá continuar armazenado.
-
-A recorrência poderá ser reativada.
-
-\---
-
-**# 80. Compra de estoque e dupla contagem**
-
-Uma compra de estoque representa:
-
-\`\`\`text
-
-saída de caixa
-
-\`\`\`
-
-Os produtos vendidos também preservam:
-
-\`\`\`text
-
-custo no momento da venda
-
-\`\`\`
-
-Essas informações são utilizadas para cálculos diferentes.
-
-O sistema não deve subtrair a mesma compra duas vezes dentro do mesmo indicador financeiro.
-
-\---
-
-**# 81. Tabela** *\`portfolio\`*
-
-Guarda os metadados das imagens do Portfólio.
-
-A imagem em si deverá ficar no:
-
-\`\`\`text
-
-Supabase Storage
-
-\`\`\`
-
-O banco armazena:
-
-\`\`\`text
-
-imagem\_path
-
-\`\`\`
-
-ou referência equivalente.
-
-\---
-
-**# 82. Dados do Portfólio**
-
-Podem incluir:
-
-\- barbearia;
-
-\- caminho da imagem;
-
-\- descrição;
-
-\- serviço relacionado;
-
-\- status de publicação;
-
-\- data de criação;
-
-\- data de atualização.
-
-Somente itens publicados poderão aparecer na Vitrine.
-
-\---
-
-**# 83. Por que não armazenar imagem no PostgreSQL**
-
-Evitar:
-
-\- Base64;
-
-\- BLOB sem necessidade;
-
-\- duplicação de arquivos.
-
-Fluxo:
-
-\`\`\`text
-
-Imagem
-
- ↓
-
-Supabase Storage
-
- ↓
-
-Path
-
- ↓
-
-portfolio
-
-\`\`\`
-
-O mesmo princípio vale para:
-
-\- logo;
-
-\- capa;
-
-\- imagem de produto.
-
-\---
-
-**# 84. Tabela** *\`horarios\_funcionamento\`*
-
-Guarda os horários públicos da barbearia.
-
-Não representa agenda.
-
-Não existe nessa estrutura:
-
-\- cliente;
-
-\- reserva;
-
-\- horário ocupado;
-
-\- agendamento.
-
-\---
-
-**# 85. Até dois intervalos por dia**
-
-A regra funcional atual permite no máximo dois intervalos por dia.
-
-Exemplo:
-
-\`\`\`text
-
-08:00–12:00
-
-14:00–18:00
-
-\`\`\`
-
-Portanto a modelagem deverá suportar:
-
-\`\`\`text
-
-intervalo 1
-
-intervalo 2 opcional
-
-\`\`\`
-
-\---
-
-**# 86. Dia fechado**
-
-Para um dia fechado:
-
-\`\`\`text
-
-fechado = true
-
-\`\`\`
-
-não deverão existir horários de abertura e fechamento ativos naquele dia.
-
-\---
-
-**# 87. Regras dos intervalos**
-
-Se o dia estiver aberto:
-
-\- primeiro intervalo é obrigatório;
-
-\- segundo intervalo é opcional;
-
-\- abertura deve ser anterior ao fechamento;
-
-\- os dois intervalos não podem se sobrepor.
-
-Exemplo válido:
-
-\`\`\`text
-
-08:00–12:00
-
-14:00–18:00
-
-\`\`\`
-
-Exemplo inválido:
-
-\`\`\`text
-
-08:00–15:00
-
-14:00–18:00
-
-\`\`\`
-
-\---
-
-**# 88. Assistente IA — recurso futuro**
-
-O Assistente IA não faz parte da modelagem da versão inicial.
-
-Não criar nesta etapa colunas, tabelas, cotas ou estruturas específicas de IA.
-
-Quando o recurso entrar no escopo, a expansão deverá ocorrer por nova migration conforme `Documentacao/02-arquitetura-e-tecnologia/ASSISTENTE_IA_FUTURO.md`.
-
-\---
-**# 91. Vitrine pública**
-
-Visitantes não deverão receber acesso irrestrito às tabelas administrativas.
-
-Não utilizar:
-
-\`\`\`sql
-
-SELECT \*
-
-FROM produtos
-
-\`\`\`
-
-e depois esconder informações no frontend.
-
-Nesse caso, os dados privados já teriam sido enviados.
-
-\---
-
-**# 92. Contrato público de produto**
-
-Poderá conter:
-
-\- nome;
-
-\- descrição;
-
-\- categoria;
-
-\- preço de venda;
-
-\- imagem efetiva para apresentação;
-
-\- disponibilidade pública.
-
-A imagem efetiva deverá respeitar a regra de prioridade:
-
-\`\`\`text
-
-imagem personalizada do produto
-↓
-imagem padrão da categoria, quando habilitada
-↓
-sem imagem / placeholder neutro
-
-\`\`\`
-
-O contrato público não precisa expor ao visitante detalhes internos como:
-
-\- `imagem_path`;
-
-\- `imagem_padrao_path`;
-
-\- `usar_imagem_categoria`.
-
-O backend poderá resolver a imagem efetiva e retornar somente a referência pública necessária para apresentação.
-
-Não deverá conter:
-
-\- preço de custo;
-
-\- estoque mínimo;
-
-\- quantidade numérica de estoque;
-
-\- movimentações;
-
-\- informações financeiras.
-
-\---
-
-**# 93. Contrato público de serviço**
-
-Poderá conter:
-
-\- nome;
-
-\- descrição;
-
-\- preço.
-
-Não deverá conter:
-
-\- custo estimado de insumos.
-
-\---
-
-**# 94. Dados públicos da barbearia**
-
-Poderão ser apresentados, conforme configuração:
-
-\- nome da marca;
-
-\- nome profissional;
-
-\- descrição;
-
-\- logo;
-
-\- capa;
-
-\- WhatsApp;
-
-\- Instagram;
-
-\- endereço;
-
-\- horários;
-
-\- atendimento a domicílio;
-
-\- formas de pagamento aceitas.
-
-O fato de um campo existir em *\`barbearias\`* não significa que qualquer endpoint pode expô-lo livremente.
-
-\---
-
-**# 95. Estratégia de leitura pública**
-
-A implementação poderá utilizar:
-
-\- view segura;
-
-\- função SQL/RPC;
-
-\- Route Handler server-side;
-
-\- consulta com colunas explicitamente selecionadas.
-
-O princípio obrigatório é:
-
-\`\`\`text
-
-allowlist
-
-\`\`\`
-
-e não:
-
-\`\`\`text
-
-buscar tudo e esconder depois
-
-\`\`\`
-
-\---
-
-**# 96. RLS**
-
-RLS significa:
-
-\`\`\`text
-
-Row Level Security
-
-\`\`\`
-
-Ela será utilizada para restringir linhas que usuários autenticados podem acessar.
-
-\---
-
-**# 97. RLS do barbeiro**
-
-Regra conceitual:
-
-\`\`\`text
-
-auth.uid()
-
-    ↓
-
-perfis
-
-    ↓
-
-tipo = BARBEIRO
-
-    ↓
-
-barbearia\_id
-
-    ↓
-
-dados daquela barbearia
-
-\`\`\`
-
-\---
-
-**# 98. Exemplo de isolamento**
-
-Se:
-
-\`\`\`text
-
-Usuário A
-
-→ Barbearia A
-
-\`\`\`
-
-ele poderá acessar:
-
-\`\`\`text
-
-produtos onde barbearia\_id = A
-
-\`\`\`
-
-e não:
-
-\`\`\`text
-
-produtos onde barbearia\_id = B
-
-\`\`\`
-
-\---
-
-**# 99. ADMIN e RLS**
-
-O fato de um usuário possuir:
-
-\`\`\`text
-
-tipo = ADMIN
-
-\`\`\`
-
-não significa que todas as policies devem liberar automaticamente todas as tabelas privadas.
-
-O Painel Administrativo deverá possuir um fluxo controlado.
-
-Ações administrativas devem:
-
-1\. validar sessão;
-
-2\. verificar *\`tipo = ADMIN\`*;
-
-3\. validar a ação permitida;
-
-4\. retornar somente as informações necessárias.
-
-\---
-
-**# 100. Acesso administrativo**
-
-O Operador do SaaS poderá realizar ações como:
-
-\- localizar barbearias;
-
-\- visualizar informações necessárias para suporte;
-
-\- consultar plano, validade, pagamentos e histórico permitido;
-
-\- confirmar pagamento e conceder cortesia;
-
-\- cancelar renovação;
-
-\- suspender ou reativar conta;
-
-
-Isso não significa autorização automática para:
-
-\- consultar vendas completas;
-
-\- consultar despesas;
-
-\- alterar estoque;
-
-\- realizar vendas;
-
-\- agir como barbeiro.
-
-\---
-
-**# 101. Área administrativa separada**
-
-Conceitualmente:
-
-\`\`\`text
-
-BARBEIRO
-
-→ políticas do próprio tenant
-
-ADMIN
-
-→ endpoints/ações administrativas autorizadas
-
-\`\`\`
-
-Evitar criar uma policy genérica como:
-
-\`\`\`text
-
-se ADMIN → pode tudo
-
-\`\`\`
-
-sem necessidade.
-
-\---
-
-**# 102. RLS não substitui backend**
-
-O backend também deverá:
-
-\- validar sessão;
-
-\- validar tipo;
-
-\- validar propriedade;
-
-\- validar dados;
-
-\- aplicar regras de negócio.
-
-RLS é uma camada adicional.
-
-\---
-
-**# 103. Backend não substitui RLS**
-
-Também não confiar somente no backend para operações comuns do barbeiro.
-
-Caso uma consulta seja implementada incorretamente, RLS deverá continuar protegendo o isolamento entre tenants quando aplicável.
-
-\---
-
-**# 104. Secret Key**
-
-Operações normais do barbeiro não deverão utilizar a Secret Key administrativa.
-
-Essa chave possui privilégios elevados.
-
-Se necessária:
-
-\- somente no servidor;
-
-\- somente em operações controladas;
-
-\- nunca no navegador.
-
-\---
-
-**# 105. Operações do ADMIN**
-
-Caso alguma operação administrativa precise utilizar privilégios elevados:
-
-\`\`\`text
-
-requisição
-
- ↓
-
-servidor
-
- ↓
-
-validar sessão
-
- ↓
-
-validar tipo = ADMIN
-
- ↓
-
-validar ação
-
- ↓
-
-executar operação necessária
-
-\`\`\`
-
-Nunca confiar apenas na existência da Secret Key no servidor.
-
-\---
-
-**# 106. Índices**
-
-Índices ajudam consultas frequentes.
-
-Exemplos:
-
-\`\`\`text
-
-vendas por barbearia + data
-
-despesas por barbearia + data
-
-produtos por barbearia
-
-movimentações por produto + data
-
-ocorrências recorrentes por barbearia + vencimento
-
-barbearias por status
-
-slug público
-
-\`\`\`
-
-Não criar índice em todas as colunas automaticamente.
-
-Índices também possuem custo.
-
-\---
-
-**# 107. Constraints**
-
-O banco deverá proteger regras simples sempre que adequado.
-
-Exemplos:
-
-\`\`\`text
-
-preço > 0
-
-estoque >= 0
-
-dia da semana entre 0 e 6
-
-dia de vencimento entre 1 e 31
-
-\`\`\`
-
-Também deverá proteger, quando possível:
-
-\- relação entre tipo e barbearia;
-
-\- serviço com quantidade 1 na venda;
-
-\- consistência dos horários;
-
-
-\- estados das despesas recorrentes.
-
-Regras complexas continuam pertencendo à aplicação/backend.
-
-\---
-
-**# 108.** *\`ON DELETE\`*
-
-Existem comportamentos diferentes.
-
-**## CASCADE**
-
-Ao remover o pai, filhos também são removidos.
-
-Utilizar somente quando isso fizer sentido.
-
-**## RESTRICT**
-
-Impede exclusão quando o registro ainda é necessário.
-
-**## SET NULL**
-
-Remove a relação direta, mas preserva o histórico.
-
-A escolha deverá considerar a necessidade de preservar informações financeiras e operacionais.
-
-\---
-
-**# 109. Histórico financeiro**
-
-Vendas e resultados históricos deverão ser preservados.
-
-Por isso:
-
-\- mudança de preço não altera venda antiga;
-
-\- mudança de custo não altera venda antiga;
-
-\- produto inativo não altera histórico;
-
-\- serviço inativo não altera histórico;
-
-\- venda cancelada não é apagada;
-
-\- perda histórica preserva custo;
-
-\- despesa recorrente antiga não muda quando a recorrência é editada.
-
-\---
-
-**# 110. Dados monetários**
+## 16.1 Dinheiro
 
 Utilizar:
 
-\`\`\`sql
-
+```sql
 numeric(12,2)
+```
 
-\`\`\`
+Não utilizar `float` ou `real` como representação financeira principal.
 
-para valores monetários.
+## 16.2 Eventos
 
-Não utilizar:
+Utilizar:
 
-\`\`\`text
-
-float
-
-real
-
-\`\`\`
-
-como representação financeira principal.
-
-\---
-
-**# 111. Timestamps**
-
-Eventos importantes utilizarão:
-
-\`\`\`text
-
+```text
 timestamptz
+```
 
-\`\`\`
+para eventos como:
 
-Exemplos:
+- criação;
+- atualização;
+- venda;
+- cancelamento;
+- movimentação;
+- confirmação administrativa.
 
-\- criação;
+## 16.3 Datas civis
 
-\- atualização;
-
-\- venda;
-
-\- cancelamento;
-
-\- movimentação de estoque;
-
-\- criação de ocorrência.
-
-Datas civis poderão utilizar:
-
-\`\`\`text
-
-date
-
-\`\`\`
+Utilizar `date` quando horário exato não for necessário.
 
 Exemplos:
 
-\- data da despesa;
+- data de despesa;
+- vencimento;
+- data de pagamento.
 
-\- vencimento;
+---
 
-\- data do pagamento.
+# 17. Histórico e snapshots
 
-\---
+O histórico não deve mudar porque o cadastro atual mudou.
 
-**# 112. Storage**
+Exemplos:
 
-Arquivos não deverão ser armazenados diretamente como conteúdo no PostgreSQL.
+- preço novo não altera venda antiga;
+- custo novo não altera venda antiga;
+- produto inativo não apaga histórico;
+- serviço inativo não apaga histórico;
+- venda cancelada permanece registrada;
+- perda preserva o custo do momento;
+- recorrência alterada não muda ocorrências passadas.
 
-Fluxo:
+Quando um produto ou serviço já possui uso histórico, preferir inativação em vez de exclusão física.
 
-\`\`\`text
+---
 
-Banco
+# 18. Exclusão de conta
 
- └── referência
+A exclusão deve ser uma operação controlada no servidor.
 
-Storage
+Fluxo aprovado:
 
- └── arquivo
+1. reautenticar o usuário;
+2. validar a frase de confirmação;
+3. retirar a Vitrine do ar;
+4. invalidar acesso;
+5. criar retenção mínima;
+6. transferir somente registros essenciais permitidos;
+7. apagar dados operacionais;
+8. apagar objetos do Storage;
+9. apagar o usuário do Auth;
+10. reservar tecnicamente o código;
+11. impedir restauração funcional da conta.
 
-\`\`\`
+A retenção não deve servir como backup restaurável.
 
-As policies do Storage também deverão respeitar a barbearia proprietária.
+---
 
-\---
+# 19. Índices
 
-**# 113. Estrutura conceitual do Storage**
+Índices devem ser usados em consultas frequentes.
+
+Exemplos:
+
+```text
+vendas por barbearia + data
+despesas por barbearia + data
+produtos por barbearia
+movimentações por produto + data
+ocorrências por barbearia + vencimento
+barbearias por status
+slug público
+```
+
+Não criar índice em toda coluna automaticamente.
+
+Índices também possuem custo.
+
+---
+
+# 20. Constraints
+
+O banco deve proteger regras simples quando apropriado.
+
+Exemplos:
+
+```text
+preço > 0
+estoque >= 0
+dia da semana entre 0 e 6
+dia de vencimento entre 1 e 31
+```
+
+Também deve proteger, quando possível:
+
+- relação BARBEIRO/barbearia;
+- unicidade do slug;
+- unicidade do código da barbearia;
+- produto e categoria do mesmo tenant;
+- quantidade de serviço em venda;
+- horários válidos;
+- estados permitidos por enums;
+- formas de pagamento sem duplicidade.
+
+Regras complexas continuam no backend/aplicação.
+
+---
+
+# 21. `ON DELETE`
+
+Cada relacionamento pode exigir um comportamento diferente.
+
+## CASCADE
+
+Filhos são removidos junto com o pai.
+
+Usar somente quando isso realmente fizer sentido.
+
+## RESTRICT
+
+Impede exclusão quando o registro ainda é necessário.
+
+## SET NULL
+
+Remove a relação direta, mas preserva o histórico.
+
+Relacionamentos financeiros e históricos devem priorizar preservação quando necessário.
+
+---
+
+# 22. Migrations
+
+Mudanças estruturais devem ser versionadas.
 
 Exemplo:
 
-\`\`\`text
+```text
+001_initial_schema.sql
+002_add_user_type.sql
+003_add_recurring_expenses.sql
+004_update_business_hours.sql
+```
 
-barbearias/
+Os nomes reais podem variar.
 
-  {barbeariaId}/
+Alterações manuais importantes feitas no Supabase devem ser refletidas em migrations.
 
-    logo/
+O mesmo conjunto aprovado deve chegar aos três ambientes.
 
-    capa/
+---
 
-    produtos/
+# 23. Seeds
 
-    portfolio/
+Atualmente, `supabase/seed.sql` existe como arquivo base, mas ainda não popula dados fictícios.
 
-\`\`\`
+Os seeds reais de DEV e STAGING ainda precisam ser definidos.
 
-O nome e organização finais poderão ser ajustados durante implementação.
+## DEV
 
-\---
-
-**# 114. Backup**
-
-Antes da produção deverá ser confirmado:
-
-\- mecanismo de backup disponível;
-
-\- retenção oferecida pelo plano utilizado;
-
-\- processo de restauração;
-
-\- recuperação do banco;
-
-\- estratégia para arquivos do Storage.
-
-Não inventar prazos na documentação.
-
-\---
-
-**# 115. Ambientes**
-
-Idealmente separar:
-
-\`\`\`text
-
-DEV
-
-PROD
-
-\`\`\`
-
-Ambientes de Preview poderão utilizar DEV ou ambiente específico quando necessário.
-
-Não utilizar banco de produção para testes destrutivos ou criação aleatória de dados.
-
-\---
-
-**# 116. Migrations**
-
-Mudanças estruturais deverão possuir histórico.
-
-Exemplo:
-
-\`\`\`text
-
-001\_initial\_schema.sql
-
-002\_add\_user\_type.sql
-
-003\_add\_recurring\_expenses.sql
-
-004\_update\_business\_hours.sql
-
-\`\`\`
-
-Os nomes reais poderão variar.
-
-Alterações manuais importantes no banco deverão posteriormente ser refletidas nas migrations oficiais.
-
-\---
-
-**# 117. Seed**
-
-Poderá existir seed apenas para desenvolvimento.
+Pode ter seed amplo para facilitar desenvolvimento.
 
 Exemplos:
 
-\- barbearia fictícia;
+- barbearia fictícia;
+- serviços;
+- produtos;
+- vendas;
+- despesas;
+- recorrências;
+- conta ADMIN de teste.
 
-\- serviços;
+## STAGING
 
-\- produtos;
+Pode ter seed realista de homologação.
 
-\- vendas;
+Serve para testar o sistema quase como produção.
 
-\- despesas;
+## PROD
 
-\- despesas recorrentes.
+Não recebe seed de demonstração automaticamente.
 
-Também poderá existir conta administrativa de teste em ambiente local.
+---
 
-Nunca executar automaticamente seed de demonstração em produção.
-
-\---
-
-**# 118. Mock e seed**
+# 24. Mock x Seed
 
 Mock:
 
-\`\`\`text
-
-serve para simular o frontend
-
-\`\`\`
+```text
+simula dados no frontend
+```
 
 Seed:
 
-\`\`\`text
+```text
+popula um banco real de desenvolvimento ou homologação
+```
 
-serve para popular um banco de desenvolvimento
+São coisas diferentes.
 
-\`\`\`
+---
 
-São conceitos diferentes.
+# 25. Backup
 
-\---
+Antes de produção deve ser confirmado:
 
-**# 119. Estruturas atuais do banco**
+- mecanismo de backup disponível;
+- retenção do plano contratado;
+- processo de restauração;
+- recuperação do banco;
+- estratégia de arquivos do Storage.
 
-Considerando as funcionalidades atualmente aprovadas, a aplicação deverá possuir conceitualmente 14 tabelas próprias da aplicação:
+Não inventar prazos que não tenham sido confirmados com o provedor.
 
-\`\`\`text
+---
 
-barbearias
+# 26. O que não existe no MVP
 
-perfis
-
-servicos
-
-categorias\_produto
-
-produtos
-
-vendas
-
-venda\_itens
-
-despesas
-
-despesas\_recorrentes
-
-ocorrencias\_despesas\_recorrentes
-
-movimentacoes\_estoque
-
-portfolio
-
-horarios\_funcionamento
-
-barbearia\_formas\_pagamento
-
-\`\`\`
-
-Além de:
-
-\`\`\`text
-
-auth.users
-
-\`\`\`
-
-gerenciado pelo Supabase Auth.
-
-\---
-
-**# 120. Dados que não existem no MVP**
-
-Não criar tabelas apenas para preparar hipóteses futuras.
+Não criar tabelas vazias apenas pensando em hipóteses futuras.
 
 Não existem atualmente:
 
-\`\`\`text
-
+```text
 clientes
-
 agendamentos
-
 lembretes
-
 fidelidade
-
 comissoes
-
 funcionarios
-
 equipes de barbeiros
-
-pagamentos online
-
-assinaturas SaaS automatizadas
-
 campanhas
+```
+
+Também não existe obrigação de cobrança recorrente automatizada por gateway no MVP.
+
+A tabela `assinaturas` existe para controlar o plano e o período comercial.
+
+O Assistente IA também não faz parte da modelagem inicial.
+
+Novos módulos devem entrar através de novas decisões e migrations.
+
+---
+
+# 27. Checklist antes de novas migrations
+
+Antes de criar ou aplicar uma nova migration, revisar:
+
+- lista final de colunas;
+- tipos;
+- nulabilidade;
+- enums;
+- constraints;
+- índices;
+- RLS;
+- policies;
+- BARBEIRO;
+- ADMIN;
+- relações entre tenants;
+- relação produto/categoria;
+- fallback de imagens;
+- formas de pagamento;
+- Onboarding;
+- tema;
+- Vitrine pública;
+- Portfólio;
+- limites de plano;
+- downgrade;
+- despesas recorrentes;
+- ocorrências;
+- transação do PDV;
+- cancelamento;
+- concorrência de estoque;
+- horários;
+- Storage;
+- exclusão e retenção;
+- criação da conta;
+- planos;
+- pagamentos;
+- DEV;
+- STAGING;
+- PROD.
 
-\`\`\`
+---
 
-Quando uma funcionalidade futura for aprovada, a modelagem deverá ser revisada.
+# 28. Resumo rápido
 
-\---
+## Tecnologia
 
-**# 121. SQL de referência**
+```text
+PostgreSQL
+Supabase
+Supabase Auth
+Supabase Storage
+Next.js
+```
 
-O arquivo:
+## ORM
 
-\`\`\`text
+```text
+Prisma: não utilizado no MVP
+```
 
-BANCO\_EXEMPLO.sql
+## Ambientes
 
-\`\`\`
+```text
+DEV
+STAGING
+PROD
+```
 
-é uma representação técnica inicial.
+## Tabelas próprias
 
-Ele serve para visualizar:
+```text
+24
+```
 
-\- tabelas;
+## Auth externo à contagem
 
-\- colunas;
+```text
+auth.users
+```
 
-\- tipos;
+## Perfis
 
-\- nulabilidade;
+```text
+BARBEIRO
+ADMIN
+```
 
-\- enums;
+## Relação principal do MVP
 
-\- relacionamentos;
+```text
+1 BARBEIRO
+→ 1 BARBEARIA
+```
 
-\- constraints principais.
+## Planos
 
-Não deverá ser executado cegamente em produção.
+```text
+GRATIS
+NORMAL
+```
 
-\---
+## Preço atual do Normal
 
-**# 122. Sincronização com o SQL**
+```text
+R$ 49,90/mês
+```
 
-O *\`BANCO\_EXEMPLO.sql\`* deverá permanecer sincronizado com as decisões descritas neste documento.
+## Portfólio
 
-As principais mudanças atuais que também devem existir no SQL são:
+```text
+GRATIS = 5
+NORMAL = 10
+```
 
-\- *\`tipo = BARBEIRO | ADMIN\`*;
+## Descrição pública
 
-\- *\`BARBEIRO\`* como padrão;
+```text
+Banco: TEXT
+Aplicação: máximo 200 caracteres
+```
 
-\- *\`barbearia\_id\`* opcional para *\`ADMIN\`*;
+## Cobrança automática
 
-\- regra entre tipo e barbearia;
+```text
+não obrigatória no MVP
+```
 
-\- tema do usuário persistido em *\`perfis.tema\`*;
+## Imagens
 
-\- 6 etapas de Onboarding na ordem aprovada;
+```text
+arquivo real -> Supabase Storage
+bucket atual -> midia-publica
+limite do bucket -> 10 MiB (10485760 bytes)
+tipos permitidos -> JPG/JPEG, PNG, WebP
+path/referência -> PostgreSQL
+```
 
-\- formas de pagamento aceitas pela barbearia;
+## Segurança
 
-\- configuração de produtos sem estoque na Vitrine;
+```text
+RLS + backend
+```
 
-\- slug estável;
+## Mudanças estruturais
 
-\- despesas com origem identificável;
+```text
+Migration
+→ DEV
+→ STAGING
+→ PROD
+```
 
-\- despesas recorrentes;
+---
 
-\- ocorrências recorrentes;
+# 29. Regra de manutenção deste documento
 
-\- vínculo entre ocorrência paga e saída financeira;
+Sempre que uma decisão funcional aprovada alterar o banco, este arquivo deve ser atualizado junto com o SQL/migration correspondente.
 
-\- suporte a dois intervalos de funcionamento;
+A documentação, o SQL e o comportamento real do sistema não devem evoluir separadamente.
 
-\- custo histórico das perdas;
+Este arquivo deve continuar sendo o documento de entrada para qualquer pessoa ou IA que precise entender rapidamente:
 
-\- reposição sem saída financeira automática e vínculo opcional com despesa manual;
-
-\- planos, assinaturas, pagamentos e histórico administrativo;
-
-\- situação *\`ATIVA/SUSPENSA\`* separada do plano;
-
-\- código imutável *\`BAR-XXXXXX\`* e reserva contra reutilização;
-
-\- retenção separada de contas excluídas;
-
-\- aceite de documentos legais;
-
-
-\---
-
-**# 123. Antes da primeira migration real**
-
-Antes de criar a migration definitiva, revisar:
-
-\- nulabilidade;
-
-\- constraints;
-
-\- enums;
-
-\- índices;
-
-\- RLS;
-
-\- policies;
-
-\- autorização de *\`BARBEIRO\`*;
-
-\- autorização de *\`ADMIN\`*;
-
-\- relações entre tenants;
-
-\- relação entre produto e categoria;
-
-\- imagem padrão das categorias sugeridas;
-
-\- fallback de imagem dos produtos;
-
-\- comportamento ao remover imagem personalizada;
-
-\- separação entre arquivos oficiais do sistema e arquivos dos tenants no Storage;
-
-\- relação entre barbearia e formas de pagamento aceitas;
-
-\- persistência e retomada do Onboarding;
-
-\- persistência do tema do usuário;
-
-\- despesas automáticas;
-
-\- despesas recorrentes;
-
-\- geração das ocorrências;
-
-\- operação transacional do PDV;
-
-\- cancelamento;
-
-\- concorrência de estoque;
-
-\- leitura pública;
-
-\- horários com dois intervalos;
-
-\- Storage;
-
-\- exclusão e retenção;
-
-\- fluxo de criação de conta;
-
-\- atribuição manual de *\`ADMIN\`*.
-
-\---
-
-**# 124. Critério de conclusão**
-
-A modelagem estará pronta para produção quando:
-
-\- refletir o escopo funcional aprovado;
-
-\- todas as tabelas possuírem função clara;
-
-\- *\`BARBEIRO\`* e *\`ADMIN\`* estiverem corretamente representados;
-
-\- cadastro público não puder gerar *\`ADMIN\`*;
-
-\- cada barbeiro estiver associado corretamente à própria barbearia;
-
-\- administradores não forem tratados automaticamente como proprietários de tenants;
-
-\- dados privados estiverem isolados;
-
-\- RLS estiver implementada e testada;
-
-\- relações entre barbearias estiverem protegidas;
-
-\- categorias sugeridas puderem utilizar imagens padrão oficiais sem duplicação por tenant;
-
-\- produtos respeitarem a prioridade entre imagem personalizada, fallback da categoria e ausência de imagem;
-
-\- categorias personalizadas iniciarem sem imagem padrão;
-
-\- formas de pagamento aceitas estiverem isoladas por barbearia;
-
-\- preferência de tema estiver persistida por usuário;
-
-\- Onboarding puder ser retomado e concluído corretamente;
-
-\- PDV for transacional;
-
-\- estoque concorrente estiver protegido;
-
-\- reposição e Financeiro permanecerem consistentes;
-
-\- perdas preservarem custo histórico;
-
-\- despesas recorrentes preservarem ocorrências históricas;
-
-\- Vitrine não expuser campos privados;
-
-\- slug público permanecer estável após sua criação;
-
-\- horários suportarem os dois intervalos aprovados;
-
-\- Vitrine puder apresentar somente as formas de pagamento configuradas como aceitas;
-
-\- migrations estiverem versionadas;
-
-\- Storage possuir policies adequadas;
-
-\- arquivos padrão do sistema estiverem protegidos contra alteração por barbeiros;
-
-
-\---
-
-# 120. Modelagem comercial e administrativa aprovada
-
-As estruturas abaixo complementam o modelo operacional e são obrigatórias para a versão com planos e administração do SaaS.
-
-## `planos`
-
-Catálogo comercial dos planos. Campos mínimos:
-
-- `id`;
-- `codigo` único: `GRATIS` ou `NORMAL`;
-- `nome`;
-- `preco_mensal`;
-- `ativo`;
-- datas de criação e atualização.
-
-Valores da versão inicial: Grátis R$ 0,00 e Normal R$ 49,90. Permissões não ficam duplicadas nessa tabela; são definidas pelo verificador central de recursos no código.
-
-## `assinaturas`
-
-Existe exatamente um registro atual por barbearia, inclusive no Grátis. Campos mínimos:
-
-- `barbearia_id` único;
-- `plano_atual_id`;
-- `inicio_periodo` e `fim_periodo` quando pago ou cortesia;
-- `dia_base`;
-- `origem_periodo`: `GRATIS`, `PAGAMENTO` ou `CORTESIA`;
-- `proximo_plano_id` e `mudanca_agendada_para`;
-- `cancelamento_agendado`;
-- datas de criação e atualização.
-
-O plano efetivo deverá ser calculado pela validade em cada acesso. Período encerrado equivale imediatamente ao Grátis. O Normal somente fica vigente quando houver pagamento confirmado ou cortesia administrativa válida.
-
-## `pagamentos_assinatura`
-
-Um registro imutável por pagamento real. Guardar:
-
-- barbearia ou retenção relacionada;
-- plano comprado e nome do plano como snapshot;
-- preço oficial como snapshot;
-- valor recebido;
-- data real do pagamento;
-- data/hora da confirmação;
-- ADMIN responsável;
-- método de pagamento;
-- status e identificador externo, quando existir.
-
-Cortesia não gera pagamento.
-
-## `historico_administrativo`
-
-Registra eventos permanentes de plano, pagamento, suspensão, reativação, manutenção excepcional e exclusão administrativa. Guardar ator `BARBEIRO`, `ADMIN` ou `SISTEMA`, data/hora, tipo do evento e estados anterior/posterior em JSON controlado.
-
-O histórico administrativo é independente do histórico de vendas e não concede ao ADMIN acesso aos dados operacionais privados da barbearia.
-
-## `configuracoes_sistema`
-
-Registro único do sistema. Deve guardar estado de manutenção, motivo interno, mensagem pública opcional, indicação de exibir motivo, previsão de retorno opcional e ADMIN que realizou a alteração.
-
-## `codigos_reservados`
-
-Protege contra reutilização do código `BAR-XXXXXX`. Enquanto a conta existir ou estiver no período de retenção, o código pode permanecer legível. Depois da eliminação final, conservar apenas uma impressão criptográfica não reversível suficiente para rejeitar uma nova geração igual.
-
-## `retencoes_contas_excluidas`
-
-Não possui dados operacionais nem vínculo restaurável com uma barbearia ativa. Campos mínimos:
-
-- identificador próprio;
-- código, nome e e-mail retidos;
-- data da exclusão;
-- data programada de eliminação, cinco anos depois;
-- data da eliminação efetiva, quando executada.
-
-Pagamentos e ações essenciais podem apontar para essa retenção após a exclusão. Ao eliminar a retenção, os registros identificáveis relacionados também deverão ser apagados.
-
-## `aceites_legais`
-
-Registra o aceite dos Termos de Uso e da Política de Privacidade:
-
-- perfil;
-- tipo do documento;
-- versão;
-- data/hora do aceite.
-
-Não usar a tabela como justificativa para conservar dados após a exclusão além das regras jurídicas aprovadas.
-
-# 121. Alterações em estruturas existentes
-
-`barbearias` deverá possuir:
-
-- `codigo` único, obrigatório e imutável;
-- `status_conta`: `ATIVA` ou `SUSPENSA`;
-- motivo e data da suspensão, quando aplicável.
-
-`perfis.tipo` deverá aceitar somente `BARBEIRO` e `ADMIN`. Cadastro público cria apenas `BARBEIRO`.
-
-# 122. Exclusão transacional
-
-A exclusão deverá ocorrer em operação de servidor controlada:
-
-1. reautenticar o usuário e validar a frase de confirmação;
-2. retirar a Vitrine do ar e invalidar acesso;
-3. criar a retenção mínima;
-4. transferir somente pagamentos e ações essenciais para a retenção;
-5. apagar dados operacionais e objetos do Storage;
-6. apagar o usuário do Auth;
-7. registrar a reserva técnica do código;
-8. impedir qualquer restauração funcional da conta.
-
-Backups antigos expiram pelo ciclo automático e não podem ser usados para reconstruir intencionalmente a conta.
-
-# 123. RLS e acesso administrativo
-
-- BARBEIRO acessa somente a própria barbearia;
-- ADMIN acessa apenas dados administrativos necessários;
-- visitante acessa somente contrato público seguro da Vitrine;
-- usuário autenticado nunca pode alterar o próprio papel para `ADMIN`;
-- registros de retenção ficam fora das consultas normais e exigem acesso técnico restrito e auditado.
-
-# 124. Módulos futuros
-
-Não criar tabelas vazias para Agendamento, Funcionários ou outros módulos ainda inexistentes. Preparar apenas o verificador central de recursos para aceitar novas chaves no futuro.
+> **qual é o banco de dados do Estilo & Gestão e como ele funciona.**

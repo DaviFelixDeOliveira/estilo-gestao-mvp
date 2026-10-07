@@ -1,0 +1,6 @@
+-- ============================================================
+-- SEED DE DESENVOLVIMENTO
+-- ============================================================
+-- Ainda não existem dados fictícios oficiais.
+-- Este arquivo existe para permitir o reset do banco local.
+-- ============================================================
