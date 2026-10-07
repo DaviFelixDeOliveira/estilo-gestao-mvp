@@ -419,13 +419,13 @@ Também concentra configurações simples usadas pela Vitrine Digital.
 | `nome_profissional` | Nome profissional opcional do barbeiro. |
 | `descricao_publica` | Texto curto apresentado publicamente. |
 | `whatsapp` | Número usado para contato público. |
-| `instagram` | Usuário ou referência do Instagram. |
+| `instagram_url` | Usuário ou referência do Instagram. |
 | `tem_numero` | Informa se o endereço possui número. |
 | `numero_endereco` | Número do endereço quando existir. |
-| `atendimento_domicilio` | Informa se a barbearia realiza atendimento externo. |
+| `atende_domicilio` | Informa se a barbearia realiza atendimento externo. |
 | `slug` | Identificador da URL pública da Vitrine. |
 | `vitrine_publicada` | Define se a Vitrine está publicada. |
-| `comportamento_sem_estoque` | Define como produtos sem estoque aparecem na Vitrine. |
+| `produto_sem_estoque_vitrine` | Define como produtos sem estoque aparecem na Vitrine. |
 | `logo_path` | Caminho da logo no Storage. |
 | `capa_path` | Caminho da foto de capa no Storage. |
 | `status_conta` | Estado da conta: `ATIVA` ou `SUSPENSA`. |
@@ -1547,8 +1547,52 @@ onboarding_concluido = true
 
 ---
 
-# 9. Vitrine Digital
+## 8.1 Dados da barbearia após o Onboarding
 
+Depois que o Onboarding é concluído, os dados principais da barbearia podem ser alterados pela RPC:
+
+```text
+update_barbershop_profile(...)
+```
+
+Ela permite alterar somente:
+
+- `nome_marca`;
+- `nome_profissional`;
+- `whatsapp`;
+- `instagram_url`;
+- `descricao_publica`;
+- `logo_path`;
+- `capa_path`;
+- `atende_domicilio`.
+
+Regras principais:
+
+- somente usuário autenticado do tipo `BARBEIRO`;
+- exige `onboarding_concluido = true`;
+- identifica a barbearia pelo perfil do usuário autenticado;
+- não recebe `barbearia_id` informado pelo cliente;
+- `nome_marca` é obrigatório e aceita no máximo 100 caracteres;
+- `nome_profissional` aceita no máximo 100 caracteres;
+- `whatsapp` deve usar o formato brasileiro com `+55` e DDD;
+- `descricao_publica` aceita no máximo 200 caracteres;
+- `logo_path`, quando informado, deve ficar em `barbearias/{barbearia_id}/logo/`;
+- `capa_path`, quando informado, deve ficar em `barbearias/{barbearia_id}/capa/`.
+
+A tabela `barbearias` não possui policy comum de `UPDATE` para o BARBEIRO.
+
+A edição pós-Onboarding acontece por essa RPC com `SECURITY DEFINER`, mantendo o `UPDATE` direto bloqueado pelo RLS.
+
+A RPC não permite alterar campos administrativos ou de publicação, como:
+
+- `codigo`;
+- `slug`;
+- `vitrine_publicada`;
+- `status_conta`;
+- outros campos internos não listados na assinatura da função.
+
+---
+# 9. Vitrine Digital
 A Vitrine não possui tabela própria no MVP.
 
 Ela é montada com dados já existentes em:
