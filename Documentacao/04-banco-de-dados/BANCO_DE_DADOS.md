@@ -1,4 +1,4 @@
-﻿# Banco de Dados — Estilo & Gestão
+# Banco de Dados — Estilo & Gestão
 
 > Documento de arquitetura e funcionamento do banco de dados do MVP.
 
@@ -2577,3 +2577,45 @@ Permissoes esperadas da tabela:
 
 A edicao deve sempre passar pela RPC `update_business_hours`.
 
+## Formas de pagamento da barbearia apos o Onboarding
+
+A edicao das formas de pagamento depois do onboarding deve ser feita pela RPC:
+
+public.update_barbershop_payment_methods(p_formas_pagamento jsonb)
+
+Valores permitidos:
+
+- PIX
+- DINHEIRO
+- DEBITO
+- CREDITO
+- OUTRO
+
+Regras principais:
+
+1. O usuario precisa estar autenticado.
+2. Apenas BARBEIRO pode editar.
+3. O barbearia_id vem do perfil do usuario logado.
+4. O cliente nunca envia o barbearia_id.
+5. O onboarding precisa estar concluido.
+6. A lista precisa ter pelo menos uma forma de pagamento.
+7. A lista pode ter no maximo cinco formas de pagamento.
+8. Nao pode haver forma duplicada.
+9. Valores fora da lista oficial sao bloqueados.
+10. A RPC substitui a lista inteira.
+
+Permissoes:
+
+- authenticated pode executar a RPC.
+- anon nao pode executar a RPC.
+- authenticated pode fazer SELECT direto na tabela respeitando RLS.
+- anon nao tem permissao direta na tabela.
+- escrita direta na tabela fica bloqueada para usuarios comuns.
+
+Tabela relacionada:
+
+public.barbearia_formas_pagamento
+
+Chave primaria:
+
+(barbearia_id, forma_pagamento)
