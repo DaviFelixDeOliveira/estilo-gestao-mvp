@@ -1,4 +1,4 @@
-# Banco de Dados — Estilo & Gestão
+﻿# Banco de Dados — Estilo & Gestão
 
 > Documento de arquitetura e funcionamento do banco de dados do MVP.
 
@@ -2545,3 +2545,35 @@ A documentação, o SQL e o comportamento real do sistema não devem evoluir sep
 Este arquivo deve continuar sendo o documento de entrada para qualquer pessoa ou IA que precise entender rapidamente:
 
 > **qual é o banco de dados do Estilo & Gestão e como ele funciona.**
+
+## Horarios da barbearia apos o Onboarding
+
+A tela `Configuracoes > Barbearia > Horarios` usa a RPC `public.update_business_hours(p_horarios jsonb)`.
+
+Essa RPC permite que o barbeiro edite os horarios da propria barbearia depois que o onboarding ja foi concluido.
+
+Regras principais:
+
+- Somente usuario autenticado pode chamar.
+- Somente perfil `BARBEIRO` pode editar.
+- O `barbearia_id` vem do perfil do usuario, nunca do cliente.
+- O onboarding precisa estar concluido.
+- A lista precisa ter exatamente 7 dias.
+- `dia_semana` precisa ser de 0 a 6.
+- Nao pode repetir dia da semana.
+- Dia fechado nao pode ter horarios.
+- Dia aberto precisa ter horario de abertura e fechamento.
+- Os horarios precisam estar no formato `HH:MM`.
+- O segundo periodo e opcional, mas precisa ter inicio e fim juntos.
+- Os periodos nao podem se sobrepor.
+- Precisa existir pelo menos 1 dia aberto.
+
+A escrita direta na tabela `public.horarios_funcionamento` fica bloqueada para usuarios comuns.
+
+Permissoes esperadas da tabela:
+
+- `authenticated`: somente `SELECT`
+- `anon`: sem permissao direta
+
+A edicao deve sempre passar pela RPC `update_business_hours`.
+
