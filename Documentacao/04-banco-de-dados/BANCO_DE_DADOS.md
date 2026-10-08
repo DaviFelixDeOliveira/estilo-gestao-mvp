@@ -1592,6 +1592,58 @@ A RPC não permite alterar campos administrativos ou de publicação, como:
 - outros campos internos não listados na assinatura da função.
 
 ---
+
+
+## 8.2 Endereço da barbearia após o Onboarding
+
+Depois que o Onboarding é concluído, o endereço da barbearia pode ser alterado pela RPC:
+
+```text
+update_barbershop_address(...)
+```
+
+Ela permite alterar somente os campos de endereço da tabela `barbearias`:
+
+- `cep`;
+- `logradouro`;
+- `tem_numero`;
+- `numero_endereco`;
+- `complemento`;
+- `bairro`;
+- `cidade`;
+- `uf`.
+
+Regras principais:
+
+- somente usuário autenticado do tipo `BARBEIRO`;
+- exige `onboarding_concluido = true`;
+- identifica a barbearia pelo perfil do usuário autenticado;
+- não recebe `barbearia_id` informado pelo cliente;
+- aceita CEP com ou sem máscara, mas salva apenas os 8 dígitos;
+- `logradouro`, `bairro`, `cidade` e `uf` são obrigatórios;
+- `uf` é salva em maiúsculo;
+- se `tem_numero = true`, `numero_endereco` é obrigatório;
+- se `tem_numero = false`, `numero_endereco` é salvo como `null`;
+- não salva `S/N`; quando o endereço não possui número, deve ser usado `tem_numero = false`.
+
+A tabela `barbearias` não possui policy comum de `UPDATE` para o BARBEIRO.
+
+A edição pós-Onboarding do endereço acontece por essa RPC com `SECURITY DEFINER`, mantendo o `UPDATE` direto bloqueado pelo RLS.
+
+Essa RPC não altera dados administrativos ou de publicação, como:
+
+- `codigo`;
+- `slug`;
+- `vitrine_publicada`;
+- `status_conta`;
+- `motivo_suspensao`;
+- `suspensa_em`;
+- `nome_marca`;
+- `whatsapp`;
+- `instagram_url`;
+- `logo_path`;
+- `capa_path`.
+
 # 9. Vitrine Digital
 A Vitrine não possui tabela própria no MVP.
 
