@@ -1510,6 +1510,32 @@ Registra o aceite de documentos legais.
 
 Essa tabela não deve ser usada como justificativa automática para conservar dados além das regras jurídicas aprovadas.
 
+
+### Documentos aceitos
+
+A tabela aceita os seguintes tipos de documento:
+
+- TERMOS_USO
+- POLITICA_PRIVACIDADE
+- POLITICA_COOKIES
+
+Cada aceite guarda:
+
+- qual usuario aceitou
+- qual documento foi aceito
+- qual versao foi aceita
+- quando o aceite aconteceu
+
+Uso esperado:
+
+- Termos de Uso v1.0
+- Politica de Privacidade v1.0
+- Politica de Cookies v1.0
+
+Quando uma nova versao obrigatoria de algum documento for publicada, o sistema deve comparar a versao atual com a versao aceita pelo usuario.
+
+Se o usuario ainda nao aceitou a versao atual, ele deve aceitar antes de continuar usando o painel.
+
 ---
 
 # 8. Onboarding
