@@ -114,7 +114,9 @@ function normalizarNomeChave(value: string): string {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
-    .replace(/\s*\/\s*/g, "/");
+    .split("/")
+    .map((part) => part.trim())
+    .join("/");
 }
 
 function formatForInput(value: number | null | undefined): string {
@@ -274,7 +276,7 @@ export default function ProdutosECategoriasPage() {
       }
     }
 
-    inicializar();
+    void inicializar();
 
     return () => {
       ativo = false;

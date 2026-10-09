@@ -65,8 +65,8 @@ function parseMoneyInput(value: string): number | null {
   if (!trimmed) return null;
   // Permite tanto vírgula quanto ponto
   const normalized = trimmed.replace(/\./g, "").replace(",", ".");
-  const parsed = parseFloat(normalized);
-  if (isNaN(parsed)) return null;
+  const parsed = Number.parseFloat(normalized);
+  if (Number.isNaN(parsed)) return null;
   return Math.round(parsed * 100) / 100;
 }
 

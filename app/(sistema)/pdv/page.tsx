@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -227,7 +227,7 @@ export default function PdvPage() {
       }
     }
 
-    carregarInicial();
+    void carregarInicial();
 
     return () => {
       ativo = false;

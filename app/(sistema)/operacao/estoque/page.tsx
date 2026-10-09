@@ -325,7 +325,7 @@ export default function EstoquePage() {
       }
     }
 
-    inicializar();
+    void inicializar();
 
     return () => {
       ativo = false;
