@@ -1,638 +1,273 @@
-# Termos de Uso — Estilo e Gestão
+Termos de Uso
 
-**Status:** MINUTA PARA REVISÃO JURÍDICA  
-**Versão:** 0.1  
-**Última atualização:** [PREENCHER]
+Versão 1.0
+Última atualização: 09/10/2026
 
-## Objetivo
+1. Introdução
 
-Estes Termos de Uso estabelecem as regras para utilização do **Estilo e Gestão**.
+Estes Termos de Uso apresentam as regras para utilização da plataforma Estilo & Gestão.
 
-Este documento ainda deverá passar por revisão jurídica antes do lançamento comercial.
+Ao criar uma conta ou utilizar o sistema, você declara que leu, entendeu e concorda com estes Termos.
 
-Campos marcados como `[PREENCHER]` ou `[VALIDAR JURIDICAMENTE]` não poderão permanecer assim na versão publicada.
+Caso não concorde com alguma regra, você não deve utilizar a plataforma.
 
----
+2. Identificação do responsável
 
-# 1. Identificação do responsável
+O Estilo & Gestão é uma plataforma mantida por:
 
-O Estilo e Gestão é disponibilizado por:
+Responsável:
+Davi Felix de Oliveira
 
-**Responsável/Razão Social:** `[PREENCHER]`  
-**CPF/CNPJ:** `[PREENCHER]`  
-**Endereço:** `[PREENCHER]`  
-**E-mail de contato:** `[PREENCHER]`  
-**Canal de suporte:** `[PREENCHER]`
+Localidade:
+Mongaguá/SP
 
----
+Canal de contato:
+davifelixoliveira4@gmail.com
 
-# 2. Sobre o Estilo e Gestão
+Neste documento, o nome “Estilo & Gestão” será usado para se referir à plataforma e ao responsável pelo serviço.
 
-O Estilo e Gestão é um software disponibilizado como serviço, destinado principalmente a barbeiros autônomos e pequenas barbearias.
+3. Sobre a plataforma
 
-O sistema poderá oferecer funcionalidades como:
+O Estilo & Gestão é uma plataforma criada para ajudar na organização e gestão de barbearias.
 
-- cadastro de serviços;
-- cadastro de produtos;
-- categorias de produtos;
-- controle de estoque;
-- PDV/Comanda;
-- registro de vendas;
+O sistema pode oferecer recursos como cadastro de serviços, produtos, controle de estoque, registro de vendas, financeiro, relatórios, configurações da barbearia e vitrine digital.
+
+Alguns recursos podem variar de acordo com o plano contratado, com a fase de desenvolvimento da plataforma ou com atualizações futuras.
+
+4. Cadastro e acesso
+
+Para utilizar o sistema, o usuário deve criar uma conta com informações verdadeiras, corretas e atualizadas.
+
+Para criar uma conta, o usuário deve ser maior de 18 anos ou possuir capacidade legal para contratar e utilizar a plataforma em nome próprio ou em nome da barbearia que representa.
+
+Ao criar uma conta, o usuário declara que possui autorização para usar a plataforma em nome da barbearia cadastrada, quando aplicável.
+
+O usuário é responsável por manter a segurança da sua senha e por não compartilhar seu acesso com pessoas não autorizadas.
+
+Atividades realizadas dentro da conta poderão ser consideradas de responsabilidade do próprio usuário.
+
+O Estilo & Gestão poderá impedir ou limitar acessos em caso de suspeita de fraude, uso indevido, risco de segurança ou violação destes Termos.
+
+5. Responsabilidades do usuário
+
+O usuário é responsável pelas informações cadastradas no sistema.
+
+Isso inclui, entre outros dados:
+
+- informações da barbearia;
+- serviços;
+- produtos;
+- preços;
+- imagens;
+- descrições;
+- vendas;
 - despesas;
-- Dashboard;
-- relatórios;
-- Vitrine Digital;
-- Portfólio;
-
-As funcionalidades disponíveis poderão variar conforme o plano contratado.
-
----
-
-# 3. Funcionalidades fora do versão inicial
-
-A versão inicial não inclui:
-
-- agendamento online;
-- cadastro de clientes;
-- lembretes automáticos;
-- programa de fidelidade;
-- gestão de funcionários;
-- comissões;
-- pagamento online;
-- publicação automática em redes sociais.
-
-A inclusão futura de uma funcionalidade poderá exigir atualização destes Termos.
-
----
-
-# 4. Cadastro da conta
-
-Para utilizar as funções administrativas, o usuário deverá possuir uma conta válida.
-
-O usuário deverá fornecer informações verdadeiras e manter seus dados atualizados.
-
-A conta é individual e vinculada à barbearia cadastrada.
-
-Na versão inicial, a estrutura prevista é:
-
-- uma conta administrativa;
-- uma barbearia.
-
----
-
-# 5. Credenciais
-
-O usuário é responsável por proteger suas credenciais de acesso.
-
-O usuário não deverá:
-
-- compartilhar sua senha de forma insegura;
-- permitir uso não autorizado da conta;
-- utilizar credenciais de terceiros sem autorização.
-
-Caso identifique acesso indevido, deverá comunicar o suporte através do canal oficial.
-
----
-
-# 6. Uso permitido
-
-O Estilo e Gestão deverá ser utilizado para finalidades relacionadas à gestão e divulgação legítima da barbearia.
-
-O usuário poderá utilizar o sistema para:
-
-- administrar seus próprios serviços;
-- administrar seus próprios produtos;
-- registrar vendas;
-- controlar estoque;
-- registrar despesas;
-- consultar informações gerenciais;
-- publicar sua Vitrine;
-- publicar trabalhos no Portfólio;
-- utilizar os demais recursos contratados.
-
----
-
-# 7. Uso proibido
-
-É proibido utilizar o Estilo e Gestão para:
-
-- praticar atividade ilícita;
-- tentar acessar dados de outra barbearia;
-- explorar vulnerabilidades;
-- contornar controles de segurança;
-- distribuir malware;
-- obter acesso não autorizado;
-- interferir no funcionamento do serviço;
-- utilizar automações abusivas;
-- publicar conteúdo cuja utilização seja ilegal.
-
-Também é proibido utilizar o sistema para armazenar deliberadamente conteúdo ilícito.
-
----
-
-# 8. Responsabilidade pelas informações cadastradas
-
-O usuário é responsável pelas informações que cadastra no sistema.
-
-Isso inclui, entre outros:
-
-- nome da barbearia;
-- descrição;
-- preços;
-- serviços;
-- produtos;
-- endereço;
+- dados de clientes;
 - horários;
-- contatos;
-- imagens;
-- informações publicadas na Vitrine.
+- formas de pagamento;
+- informações publicadas na vitrine digital.
 
-O Estilo e Gestão fornece a ferramenta, mas não verifica previamente a veracidade de cada informação cadastrada.
+O usuário deve manter essas informações corretas, atualizadas e adequadas ao uso da plataforma.
 
----
+O usuário também é responsável por utilizar o sistema de forma correta, respeitando a lei, estes Termos e os direitos de terceiros.
 
-# 9. Preços e informações comerciais da barbearia
+6. Uso correto da plataforma
 
-O usuário é responsável por manter corretos os preços e informações que divulgar.
+O usuário não deve utilizar o Estilo & Gestão para:
 
-O Estilo e Gestão não define:
+- praticar atividades ilegais;
+- publicar conteúdo ofensivo, falso, discriminatório, abusivo ou inadequado;
+- cadastrar informações falsas;
+- prejudicar o funcionamento da plataforma;
+- tentar acessar contas, dados ou áreas que não lhe pertencem;
+- burlar limites do plano contratado;
+- copiar, modificar ou explorar indevidamente a plataforma;
+- violar direitos de terceiros;
+- praticar fraude ou uso indevido do sistema.
 
-- preço do corte;
-- preço de produtos;
-- horário comercial;
-- formas de atendimento;
-- disponibilidade real dos serviços.
+O Estilo & Gestão poderá adotar medidas para proteger a plataforma, seus usuários e os dados armazenados.
 
-Essas informações são cadastradas pelo próprio usuário.
+7. Propriedade intelectual
 
----
+A plataforma Estilo & Gestão, incluindo seu nome, marca, identidade visual, layout, design, funcionalidades, textos, estrutura, código, componentes e demais elementos do sistema, pertence ao responsável pela plataforma ou aos seus respectivos licenciadores, quando aplicável.
 
-# 10. Vitrine Digital
+O uso da plataforma não transfere ao usuário nenhum direito de propriedade sobre o sistema.
 
-A Vitrine Digital é uma página pública configurada pelo usuário.
+O usuário recebe apenas uma autorização limitada, não exclusiva, temporária e revogável para utilizar a plataforma conforme estes Termos.
 
-Ao publicá-la, determinadas informações ficam acessíveis pela internet.
+Não é permitido copiar, vender, alugar, modificar, distribuir, reproduzir, explorar comercialmente ou tentar extrair o código, estrutura ou funcionamento interno da plataforma sem autorização.
 
-Podem ser publicadas informações como:
+8. Dados de clientes da barbearia
 
-- nome da barbearia;
-- nome profissional;
-- descrição;
-- serviços;
-- preços;
-- produtos;
-- imagens;
-- Portfólio;
-- endereço;
-- horários;
-- WhatsApp;
-- Instagram.
+Caso o usuário cadastre dados de clientes da barbearia, ele será responsável por utilizar essas informações de forma correta e de acordo com a legislação aplicável.
 
-O usuário deverá revisar as informações antes da publicação.
+O Estilo & Gestão fornece a ferramenta para organização desses dados, mas não controla diretamente o relacionamento entre a barbearia e seus clientes finais.
 
----
+Se um cliente da barbearia solicitar acesso, correção ou exclusão de seus dados, a própria barbearia deverá avaliar e responder ao pedido. O Estilo & Gestão poderá auxiliar tecnicamente quando necessário dentro da plataforma.
 
-# 11. Despublicação da Vitrine
+O usuário deve evitar cadastrar dados desnecessários ou sensíveis, especialmente quando não forem importantes para a gestão da barbearia.
 
-O usuário poderá despublicar sua Vitrine através das funções disponíveis.
+9. Planos, limites e recursos
 
-A despublicação impede o acesso normal através do Estilo e Gestão.
+A plataforma pode oferecer planos gratuitos e pagos.
 
-Entretanto, serviços externos como mecanismos de busca podem manter informações temporariamente em cache.
+Cada plano pode possuir limites, recursos disponíveis e condições próprias.
 
-O Estilo e Gestão não controla diretamente caches mantidos por terceiros.
+Os recursos, valores, limites e condições poderão variar conforme o plano contratado.
 
----
+O Estilo & Gestão poderá alterar, adicionar, remover ou limitar recursos, sempre que necessário para manutenção, melhoria, segurança, evolução do sistema ou adequação comercial.
 
-# 12. Portfólio
+Quando uma alteração relevante afetar diretamente o uso do serviço, limites, recursos contratados ou valores de planos pagos, o usuário será informado pelos meios disponíveis.
 
-O Portfólio permite publicar imagens dos trabalhos realizados.
+10. Pagamentos e assinaturas
 
-O usuário declara que deverá possuir autorização ou outra justificativa jurídica válida para utilizar o conteúdo publicado.
+Quando houver planos pagos, o usuário será informado sobre valores, condições, período de cobrança e recursos incluídos antes da contratação.
 
-O usuário é responsável por não publicar:
+A falta de pagamento poderá gerar limitação de recursos, suspensão da conta, interrupção de funcionalidades pagas ou outras medidas informadas previamente.
 
-- imagem obtida ilegalmente;
-- conteúdo que viole direito autoral;
-- conteúdo que viole direito de imagem;
-- conteúdo ofensivo ou ilícito.
+Quando forem utilizados provedores externos de pagamento, o pagamento será processado por esses provedores.
 
----
+Nesses casos, o Estilo & Gestão não armazenará dados completos de cartão de crédito dentro da plataforma.
 
-# 13. Pessoas identificáveis nas imagens
+As regras específicas de pagamento, cancelamento, reembolso, renovação ou direito de arrependimento poderão ser apresentadas no momento da contratação ou em área própria do sistema.
 
-Caso uma imagem permita identificar uma pessoa, o usuário deverá observar as regras aplicáveis ao uso dessa imagem.
+11. Plano gratuito
 
-A publicação de imagens de crianças ou adolescentes exige atenção especial às regras legais aplicáveis.
+O Estilo & Gestão poderá oferecer plano gratuito com recursos limitados.
 
-As obrigações definitivas relacionadas a imagens deverão ser validadas juridicamente antes do lançamento.
+O plano gratuito pode ter restrições de uso, quantidade de cadastros, acesso a funcionalidades, limite de imagens, limite de itens ou outros limites definidos pela plataforma.
 
----
+O plano gratuito poderá ser alterado ou encerrado no futuro, mediante aviso quando necessário.
 
-# 14. Remoção de conteúdo
+12. Vitrine digital
 
-O Estilo e Gestão poderá remover ou bloquear conteúdo quando houver:
+A vitrine digital permite que informações da barbearia sejam exibidas publicamente para clientes.
 
-- determinação legal;
-- ordem de autoridade competente;
+Podem ser exibidas informações como nome da barbearia, descrição pública, endereço, horários, serviços, produtos, imagens, formas de pagamento, redes sociais e WhatsApp.
+
+O usuário é responsável por manter corretos e atualizados os dados publicados na vitrine.
+
+O Estilo & Gestão não se responsabiliza por informações incorretas, desatualizadas ou publicadas pelo próprio usuário.
+
+A vitrine digital poderá sair do ar ou ser limitada em caso de suspensão, exclusão, manutenção, uso indevido, violação destes Termos ou falta de acesso permitido ao recurso.
+
+13. Conteúdos, imagens e informações cadastradas
+
+O usuário deve cadastrar apenas conteúdos que possui direito de uso.
+
+Isso inclui imagens, textos, marcas, logotipos, descrições, nomes, preços, serviços, produtos e demais informações inseridas na plataforma.
+
+O usuário continua sendo responsável e titular dos conteúdos que cadastra, quando esses conteúdos forem seus ou estiverem sob sua autorização de uso.
+
+Ao cadastrar conteúdos na plataforma, o usuário autoriza o Estilo & Gestão a armazenar, processar, organizar, exibir e utilizar esses conteúdos apenas na medida necessária para funcionamento do sistema, incluindo a exibição na vitrine digital quando o próprio usuário configurar essa publicação.
+
+Não é permitido enviar imagens, textos, marcas, logotipos, descrições ou informações que violem direitos de terceiros.
+
+Também não é permitido publicar conteúdos ofensivos, ilegais, discriminatórios, enganosos ou inadequados.
+
+O Estilo & Gestão poderá remover, ocultar ou bloquear conteúdos que violem estes Termos, gerem risco à plataforma ou possam prejudicar terceiros.
+
+14. Privacidade e dados pessoais
+
+O tratamento de dados pessoais é explicado na Política de Privacidade do Estilo & Gestão.
+
+Ao utilizar o sistema, o usuário também deve ler e aceitar a Política de Privacidade.
+
+A Política de Privacidade explica quais dados podem ser coletados, para quais finalidades são usados, como são protegidos e quais direitos o usuário possui.
+
+15. Cookies
+
+A plataforma pode utilizar cookies necessários e tecnologias semelhantes para funcionamento, autenticação, segurança e preferências do usuário.
+
+Mais detalhes estão disponíveis na Política de Cookies.
+
+16. Segurança da conta
+
+O usuário deve manter sua senha protegida e não compartilhar o acesso com terceiros.
+
+Caso suspeite de acesso indevido, o usuário deve alterar sua senha e entrar em contato com o suporte.
+
+O Estilo & Gestão poderá adotar medidas de segurança para proteger contas, dados e funcionamento do sistema.
+
+Essas medidas podem incluir bloqueios, revisões, limitações temporárias ou outras ações necessárias para reduzir riscos.
+
+17. Manutenções e disponibilidade
+
+O Estilo & Gestão poderá passar por atualizações, correções, melhorias, manutenções ou períodos de instabilidade.
+
+Sempre que possível, manutenções planejadas poderão ser informadas previamente.
+
+Apesar do esforço para manter a plataforma funcionando corretamente, não é possível garantir disponibilidade contínua e sem interrupções.
+
+18. Backup e cuidado com informações importantes
+
+O Estilo & Gestão poderá adotar medidas de segurança e cópias de segurança para proteger os dados armazenados, conforme sua estrutura técnica e fase de desenvolvimento.
+
+Mesmo assim, nenhum sistema é totalmente livre de riscos.
+
+O usuário deve manter cuidado com informações importantes do seu negócio e, quando necessário, guardar cópias próprias de dados essenciais, relatórios, registros financeiros ou informações que considere indispensáveis.
+
+Em caso de falha, instabilidade, exclusão indevida ou perda de acesso, o usuário deve entrar em contato com o suporte para análise do ocorrido.
+
+19. Suspensão ou encerramento da conta
+
+A conta poderá ser suspensa, limitada ou encerrada em caso de:
+
+- uso indevido;
 - violação destes Termos;
 - risco de segurança;
-- denúncia considerada válida;
-- utilização claramente ilícita do serviço.
+- fraude;
+- informações falsas;
+- violação de direitos de terceiros;
+- falta de pagamento, quando houver plano pago;
+- solicitação do próprio usuário;
+- obrigação legal ou determinação de autoridade competente.
 
-Quando possível e apropriado, o usuário poderá ser informado.
+20. Exclusão da conta
 
----
+Caso o usuário solicite a exclusão da conta, a conta poderá ser desativada imediatamente e a vitrine pública poderá sair do ar.
 
-# 15. Assistente IA — recurso futuro
+Após a solicitação de exclusão, os dados poderão ficar armazenados por 30 dias para segurança e recuperação.
 
-O Assistente IA não faz parte da versão inicial do serviço. Caso um recurso de inteligência artificial seja disponibilizado futuramente, estes Termos e a Política de Privacidade deverão ser atualizados antes de sua liberação comercial para disciplinar uso, limites, responsabilidades e tratamento de dados aplicáveis.
+Depois desse prazo, os dados da conta e da barbearia poderão ser excluídos permanentemente, salvo quando houver obrigação legal ou necessidade legítima de retenção por prazo maior.
 
----
+Durante o prazo de 30 dias, o usuário poderá solicitar a recuperação da conta pelo suporte oficial.
 
-# 18. Dados financeiros
+21. Limitações de responsabilidade
 
-Os valores apresentados pelo sistema possuem finalidade de gestão interna.
+O Estilo & Gestão é uma ferramenta de apoio à gestão.
 
-Os relatórios do Estilo e Gestão são gerenciais.
+As decisões comerciais, financeiras, operacionais e administrativas da barbearia continuam sendo responsabilidade do usuário.
 
-Eles não constituem, por si só:
+A plataforma não garante aumento de vendas, faturamento, lucro, clientes ou resultados específicos para o negócio.
 
-- escrituração contábil;
-- declaração fiscal;
-- balanço contábil oficial;
-- consultoria financeira;
-- consultoria contábil.
+O Estilo & Gestão também não se responsabiliza por prejuízos causados por informações incorretas cadastradas pelo usuário, mau uso da plataforma, compartilhamento de senha, uso indevido da conta ou decisões tomadas com base nos dados inseridos pelo próprio usuário.
 
-O usuário continua responsável por suas obrigações fiscais, contábeis e legais.
+Nada nestes Termos afasta direitos ou responsabilidades que não possam ser excluídos pela legislação aplicável.
 
----
+22. Alterações nos Termos de Uso
 
-# 19. Estoque
+Estes Termos de Uso poderão ser atualizados para refletir mudanças no sistema, melhorias, novas funcionalidades, ajustes comerciais, segurança ou exigências legais.
 
-O sistema auxilia no controle de estoque com base nas informações cadastradas e nas movimentações registradas.
+Quando houver mudanças importantes, o usuário poderá ser informado e, quando necessário, solicitado a aceitar a nova versão para continuar utilizando a plataforma.
 
-A precisão do estoque depende também da correta utilização do sistema pelo usuário.
+23. Lei aplicável e resolução de conflitos
 
-Exemplos de situações externas ao sistema:
+Estes Termos de Uso são regidos pelas leis da República Federativa do Brasil.
 
-- perda física não registrada;
-- produto retirado sem lançamento;
-- contagem incorreta;
-- dano;
-- furto.
+Em caso de dúvida, reclamação ou conflito relacionado ao uso da plataforma, o usuário deve entrar em contato pelo canal oficial de suporte para tentativa de solução amigável.
 
-Essas situações podem gerar diferença entre estoque físico e estoque registrado.
+Caso não seja possível resolver de forma amigável, eventuais conflitos poderão ser resolvidos pelo foro competente conforme a legislação aplicável.
 
----
+24. Contato
 
-# 20. Disponibilidade do serviço
+Em caso de dúvidas sobre estes Termos de Uso, o usuário poderá entrar em contato pelo canal oficial:
 
-O Estilo e Gestão buscará manter o sistema disponível de forma adequada.
+davifelixoliveira4@gmail.com
 
-Entretanto, poderão ocorrer interrupções relacionadas a:
+25. Histórico de versões
 
-- manutenção;
-- atualização;
-- falha de infraestrutura;
-- fornecedor externo;
-- problema de internet;
-- evento de segurança;
-- caso fortuito ou força maior.
+Versão 1.0 — 09/10/2026
+Primeira versão dos Termos de Uso do Estilo & Gestão.
 
-Não deverá ser prometida disponibilidade de 100%.
-
----
-
-# 21. Manutenção
-
-O serviço poderá entrar temporariamente em manutenção.
-
-Quando possível, o sistema poderá informar:
-
-- motivo público;
-- previsão aproximada de retorno.
-
-A ausência de previsão não significa que o serviço tenha sido encerrado.
-
----
-
-# 22. Serviços de terceiros
-
-O Estilo e Gestão utiliza ou poderá utilizar serviços externos para seu funcionamento.
-
-Entre os fornecedores previstos estão:
-
-- Supabase;
-- Vercel;
-- Google;
-- ViaCEP.
-
-A indisponibilidade de um fornecedor poderá afetar temporariamente determinadas funções.
-
----
-
-# 23. Planos
-
-A versão inicial possui duas modalidades:
-
-## Plano Grátis
-
-Inclui os recursos gratuitos de divulgação previstos para a Vitrine Digital, Portfólio, serviços e produtos. Recursos de gestão pagos permanecem bloqueados para novas alterações, preservando a consulta histórica quando aplicável.
-
-## Plano Normal
-
-Inclui o núcleo completo de gestão disponibilizado comercialmente na versão inicial.
-
-Não existe plano comercial de IA na versão inicial.
-
----
-
-# 24. Preços
-
-O Plano Grátis não possui cobrança mensal.
-
-O Plano Normal possui preço inicial de R$ 49,90 por ciclo mensal, conforme a oferta vigente. Alterações futuras de preço deverão ser informadas de forma adequada antes de produzirem efeitos sobre novas contratações ou renovações, conforme a regra aplicável.
-
-A cobrança inicial do plano pago é feita manualmente por Pix, com confirmação administrativa do pagamento.
-
----
-
-# 25. Contratação
-
-O processo definitivo de contratação deverá ser definido antes do lançamento.
-
-Deverão ser apresentados ao usuário, antes da contratação:
-
-- plano escolhido;
-- preço;
-- periodicidade;
-- funcionalidades principais;
-- condições de cancelamento.
-
----
-
-# 26. Pagamento da assinatura
-
-A cobrança automatizada da assinatura não faz parte da arquitetura inicial do versão inicial.
-
-Enquanto a cobrança for realizada manualmente, o procedimento comercial deverá ser documentado e informado ao usuário.
-
-Quando houver integração com gateway de pagamento, estes Termos deverão ser atualizados.
-
----
-
-# 27. Cancelamento da assinatura
-
-O procedimento definitivo de cancelamento ainda deverá ser definido.
-
-Antes do lançamento deverão ser estabelecidos:
-
-- como solicitar;
-- quando o acesso termina;
-- existência ou não de período já pago;
-- tratamento de valores;
-- acesso aos dados após cancelamento;
-- eventual exportação.
-
-`[VALIDAR JURIDICAMENTE]`
-
----
-
-# 28. Direito de arrependimento
-
-A aplicação do direito de arrependimento e demais normas de proteção ao consumidor deverá ser validada considerando o modelo real de contratação.
-
-`[VALIDAR JURIDICAMENTE]`
-
----
-
-# 29. Suspensão de conta
-
-Uma conta poderá ser suspensa ou desativada quando houver:
-
-- violação destes Termos;
-- risco de segurança;
-- uso ilícito;
-- tentativa de invasão;
-- abuso da infraestrutura;
-- inadimplência, quando prevista contratualmente;
-- determinação legal.
-
-As condições comerciais e procedimentos definitivos deverão ser revisados juridicamente.
-
----
-
-# 30. Encerramento do serviço
-
-Caso o Estilo e Gestão seja encerrado definitivamente, deverá ser definido procedimento adequado para:
-
-- comunicação aos usuários;
-- encerramento das contas;
-- tratamento dos dados;
-- eventual exportação;
-- obrigações legais remanescentes.
-
----
-
-# 31. Exclusão de conta e dados
-
-A exclusão de conta não significa necessariamente eliminação imediata de todos os registros.
-
-Algumas informações poderão precisar ser conservadas quando houver:
-
-- obrigação legal;
-- necessidade de exercício regular de direitos;
-- outra justificativa jurídica válida.
-
-O procedimento completo deverá estar alinhado à Política de Privacidade.
-
----
-
-# 32. Privacidade
-
-O tratamento de dados pessoais é explicado na:
-
-**Política de Privacidade do Estilo e Gestão**
-
-Ao utilizar o serviço, o usuário deverá ter acesso à versão vigente desse documento.
-
----
-
-# 33. Segurança
-
-O Estilo e Gestão adotará medidas destinadas a proteger a aplicação e os dados.
-
-Entretanto, nenhum sistema conectado à internet pode garantir risco zero.
-
-O usuário também deverá adotar medidas adequadas para proteger sua própria conta.
-
----
-
-# 34. Propriedade intelectual do sistema
-
-Salvo disposição contratual diferente, pertencem ao responsável pelo Estilo e Gestão os direitos relativos ao software e materiais próprios, incluindo:
-
-- código;
-- marca;
-- identidade visual;
-- interface original;
-- documentação própria;
-- elementos produzidos especificamente para o serviço.
-
-Bibliotecas e componentes de terceiros permanecem sujeitos às suas próprias licenças.
-
----
-
-# 35. Conteúdo do usuário
-
-O conteúdo enviado pelo usuário continua sujeito aos direitos do próprio usuário ou de seus respectivos titulares.
-
-O envio para o sistema não transfere automaticamente sua propriedade ao Estilo e Gestão.
-
-O usuário concede apenas as permissões necessárias para que o sistema:
-
-- armazene;
-- processe;
-- exiba;
-- disponibilize;
-
-o conteúdo conforme a funcionalidade solicitada.
-
-A redação jurídica final dessa autorização deverá ser revisada.
-
----
-
-# 36. Marca Estilo e Gestão
-
-O nome e a identidade visual do produto não poderão ser utilizados por terceiros de forma que:
-
-- sugira parceria inexistente;
-- cause confusão;
-- represente falsamente o serviço.
-
-A situação de registro da marca deverá ser avaliada separadamente.
-
----
-
-# 37. Suporte
-
-O canal oficial de suporte será:
-
-`[PREENCHER]`
-
-Horários de atendimento:
-
-`[PREENCHER OU DEFINIR COMO NÃO GARANTIDO]`
-
-Prazo de resposta:
-
-`[PREENCHER SE HOUVER COMPROMISSO FORMAL]`
-
-Não informar SLA que ainda não exista.
-
----
-
-# 38. Limitação de responsabilidade
-
-As limitações de responsabilidade deverão respeitar a legislação aplicável.
-
-O texto definitivo deverá ser validado juridicamente.
-
-O Estilo e Gestão não deverá excluir responsabilidade em situações nas quais a legislação não permita essa exclusão.
-
-`[VALIDAR JURIDICAMENTE]`
-
----
-
-# 39. Alterações do sistema
-
-O produto poderá ser atualizado para:
-
-- corrigir erros;
-- melhorar segurança;
-- melhorar desempenho;
-- alterar interface;
-- adicionar funções;
-- remover funções sem uso;
-- adaptar o serviço à legislação.
-
-Mudanças relevantes que afetem contratação ou direitos deverão ser comunicadas quando necessário.
-
----
-
-# 40. Alterações destes Termos
-
-Estes Termos poderão ser atualizados.
-
-A versão publicada deverá conter:
-
-- número da versão;
-- data da atualização.
-
-Alterações relevantes deverão seguir os requisitos legais de informação e comunicação aplicáveis.
-
----
-
-# 41. Legislação aplicável
-
-Estes Termos deverão observar a legislação brasileira aplicável.
-
-Entre as normas que podem ser relevantes estão:
-
-- Código Civil;
-- Código de Defesa do Consumidor;
-- Marco Civil da Internet;
-- Lei Geral de Proteção de Dados Pessoais.
-
-A aplicação de cada norma deverá ser confirmada na revisão jurídica.
-
----
-
-# 42. Foro
-
-A cláusula de foro deverá ser definida considerando:
-
-- responsável legal;
-- modelo comercial;
-- relação de consumo;
-- legislação aplicável.
-
-**Foro:** `[VALIDAR JURIDICAMENTE]`
-
-Não definir um foro arbitrário antes dessa análise.
-
----
-
-# 43. Contato
-
-Para dúvidas relacionadas aos Termos:
-
-**E-mail:** `[PREENCHER]`
-
-Para questões sobre privacidade:
-
-**E-mail:** `[PREENCHER]`
-
----
-
-# 44. Pontos obrigatórios antes da publicação
-
-- [ ] Responsável legal definido.
-- [ ] CPF/CNPJ definido.
-- [ ] Endereço definido.
-- [ ] Canal de suporte definido.
-- [ ] Modelo comercial definido.
-- [ ] Preços definidos.
-- [ ] Forma de contratação definida.
-- [ ] Forma de cobrança definida.
-- [ ] Cancelamento definido.
-- [ ] Inadimplência definida.
-- [ ] Direito de arrependimento revisado.
-- [ ] Exclusão de conta definida.
-- [ ] Responsabilidade por imagens revisada.
-- [ ] Propriedade intelectual revisada.
-- [ ] Limitação de responsabilidade revisada.
-- [ ] Foro revisado.
-- [ ] Política de Privacidade alinhada.
-- [ ] Revisão jurídica concluída.
+Estilo & Gestão — Termos de Uso, versão 1.0.

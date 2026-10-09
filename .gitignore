@@ -36,3 +36,5 @@ Thumbs.db
 *.tmp
 *.temp
 next-env.d.ts
+# Referência visual do AI Studio
+_referencias_ai_studio/

@@ -1,546 +1,297 @@
-# Política de Privacidade — Estilo e Gestão
+Política de Privacidade
 
-**Status:** MINUTA PARA VALIDAÇÃO JURÍDICA  
-**Versão:** 0.1  
-**Data:** [PREENCHER ANTES DA PUBLICAÇÃO]
+Versão 1.0
+Última atualização: 09/10/2026
 
-## Objetivo
+1. Introdução
 
-Esta Política de Privacidade explica, em linguagem simples, quais dados pessoais podem ser tratados pelo **Estilo e Gestão**, para quais finalidades, com quem podem ser compartilhados e quais direitos os titulares possuem.
+Esta Política de Privacidade explica como o Estilo & Gestão coleta, utiliza, armazena, compartilha e protege dados pessoais dos usuários da plataforma.
 
-Este documento ainda deverá passar por revisão jurídica antes do lançamento comercial definitivo.
+O objetivo deste documento é explicar, de forma simples e transparente, quais dados podem ser tratados, por quais motivos eles são usados, como são protegidos e quais direitos o usuário possui.
 
-Campos identificados como `[PREENCHER]` ou `[VALIDAR JURIDICAMENTE]` não poderão permanecer assim na versão publicada.
+Ao criar uma conta ou utilizar o sistema, você declara que leu e entendeu esta Política de Privacidade.
 
----
+2. Identificação do controlador
 
-# 1. Quem é responsável pelo Estilo e Gestão
+O Estilo & Gestão é uma plataforma mantida por:
 
-Responsável legal:
+Responsável:
+Davi Felix de Oliveira
 
-`[PREENCHER NOME/RAZÃO SOCIAL]`
+Localidade:
+Mongaguá/SP
 
-CPF/CNPJ, quando aplicável:
+Canal de contato sobre privacidade e dados pessoais:
+davifelixoliveira4@gmail.com
 
-`[PREENCHER]`
+Neste documento, o nome “Estilo & Gestão” será usado para se referir à plataforma e ao responsável pelo tratamento dos dados nos casos em que a plataforma atua como controladora.
 
-Endereço:
+3. Sobre o Estilo & Gestão
 
-`[PREENCHER]`
+O Estilo & Gestão é uma plataforma criada para ajudar barbearias na organização e gestão do negócio.
 
-Contato geral:
+O sistema pode oferecer recursos como cadastro de serviços, produtos, controle de estoque, registro de vendas, financeiro, relatórios, configurações da barbearia e vitrine digital.
 
-`[PREENCHER]`
+Para que esses recursos funcionem corretamente, alguns dados precisam ser coletados e utilizados.
 
-Contato para assuntos de privacidade:
+4. Papéis no tratamento de dados
 
-`[PREENCHER E-MAIL]`
+Em algumas situações, o Estilo & Gestão atua como controlador dos dados pessoais.
 
-A definição jurídica do papel do Estilo e Gestão como controlador ou operador em cada atividade de tratamento deverá ser confirmada na revisão jurídica.
+Isso acontece, por exemplo, quando tratamos dados da conta do usuário, como nome, e-mail, login, autenticação, suporte, segurança da plataforma e registros necessários para funcionamento do sistema.
 
----
+Em outras situações, a própria barbearia usuária da plataforma pode ser a controladora dos dados.
 
-# 2. O que é o Estilo e Gestão
+Isso acontece, por exemplo, quando a barbearia cadastra dados de clientes, vendas, contatos, observações, histórico ou informações relacionadas ao seu próprio atendimento.
 
-O Estilo e Gestão é um sistema web voltado principalmente para barbeiros autônomos e pequenas barbearias.
+Nesses casos, o Estilo & Gestão atua como operador, tratando os dados conforme o uso feito pela barbearia dentro da plataforma.
 
-O sistema permite administrar:
+De forma simples:
 
-- serviços;
-- produtos;
-- estoque;
-- vendas;
-- despesas;
-- relatórios;
-- informações públicas da barbearia;
-- Portfólio;
-- Vitrine Digital.
+- dados da conta do usuário da plataforma: responsabilidade principal do Estilo & Gestão;
+- dados de clientes da barbearia cadastrados pelo usuário: responsabilidade principal da própria barbearia;
+- o Estilo & Gestão fornece a ferramenta, aplica medidas de segurança e auxilia tecnicamente quando necessário.
 
-A versão inicial não possui:
+Quando clientes finais da barbearia fizerem pedidos sobre seus dados, como acesso, correção ou exclusão, a própria barbearia deverá avaliar e responder ao pedido. O Estilo & Gestão poderá auxiliar tecnicamente quando esse apoio for necessário dentro da plataforma.
 
-- cadastro de clientes;
-- login de clientes;
-- agendamento;
-- lembretes automáticos;
-- pagamento online.
+5. Quais dados podemos coletar
 
----
+Durante o uso da plataforma, podemos coletar ou armazenar dados como:
 
-# 3. Quem pode ter dados tratados
-
-Esta Política pode se aplicar a:
-
-## Usuários do sistema
-
-Barbeiros ou responsáveis por barbearias que criam e utilizam uma conta.
-
-## Visitantes
-
-Pessoas que acessam uma Vitrine pública.
-
-## Pessoas presentes em imagens
-
-Pessoas identificáveis em imagens publicadas no Portfólio ou em outras áreas permitidas.
-
-## Pessoas que entram em contato
-
-Pessoas que enviam mensagens de suporte ou solicitações relacionadas à privacidade.
-
----
-
-# 4. Dados da conta
-
-Para criar e administrar uma conta poderão ser tratados:
-
-- nome, quando informado;
+- nome do usuário;
 - e-mail;
-- identificador interno da conta;
-- informações de autenticação gerenciadas pelo Supabase Auth;
-- dados de sessão.
+- dados de autenticação;
+- senha armazenada de forma protegida pelo serviço de autenticação utilizado;
+- informações da barbearia;
+- nome da barbearia;
+- endereço da barbearia;
+- telefone ou WhatsApp;
+- redes sociais informadas pelo usuário;
+- horários de funcionamento;
+- formas de pagamento aceitas;
+- serviços cadastrados;
+- produtos cadastrados;
+- informações de estoque;
+- registros de vendas;
+- dados financeiros cadastrados pelo usuário;
+- imagens enviadas para logotipo, capa, produtos, serviços ou portfólio;
+- dados de clientes finais cadastrados pela barbearia, quando esse recurso existir ou for utilizado;
+- nome, telefone, observações ou histórico de atendimento de clientes, quando cadastrados pelo usuário;
+- informações técnicas do acesso, como data, horário, navegador, dispositivo e registros de segurança;
+- preferências de uso, como tema visual e preferências de cookies.
 
-A senha não é armazenada em texto pelo Estilo e Gestão.
+A plataforma busca coletar apenas os dados necessários para funcionamento, segurança, prestação do serviço e melhoria da experiência.
 
-A autenticação é realizada pelo serviço de autenticação utilizado pela plataforma.
+6. Dados cadastrados pelo usuário
 
----
+O usuário é responsável pelas informações que cadastra no sistema.
 
-# 5. Dados da barbearia
+Isso inclui dados da barbearia, serviços, produtos, preços, imagens, vendas, despesas, dados de clientes e demais informações inseridas manualmente.
 
-Poderão ser cadastrados:
+Quando o usuário cadastrar dados de clientes finais da barbearia, ele deve garantir que possui uma justificativa adequada para esse cadastro e que utiliza esses dados de forma correta, respeitando a legislação aplicável.
+
+O usuário também deve ter cuidado extra ao cadastrar dados de menores de idade, evitando registrar informações desnecessárias.
+
+O Estilo & Gestão não controla diretamente o relacionamento entre a barbearia e seus clientes finais.
+
+7. Para que usamos os dados
+
+Os dados podem ser utilizados para:
+
+- criar e gerenciar a conta do usuário;
+- permitir login e autenticação;
+- manter a segurança da conta;
+- organizar as informações da barbearia;
+- exibir dados na vitrine digital, quando configurado pelo usuário;
+- cadastrar e gerenciar serviços;
+- cadastrar e gerenciar produtos;
+- controlar estoque;
+- registrar vendas;
+- organizar informações financeiras;
+- gerar relatórios;
+- melhorar a experiência de uso da plataforma;
+- prestar suporte;
+- cumprir obrigações legais ou regulatórias, quando necessário;
+- prevenir fraudes, abusos ou uso indevido da plataforma;
+- proteger a plataforma, os usuários e os dados armazenados.
+
+8. Bases legais utilizadas
+
+O tratamento de dados pessoais pode ocorrer com base em diferentes fundamentos legais, conforme a finalidade.
+
+De forma geral, o Estilo & Gestão pode tratar dados com base em:
+
+Execução de contrato ou prestação do serviço:
+usada para criar conta, permitir login, entregar funcionalidades da plataforma, salvar configurações, registrar informações da barbearia e permitir o uso do sistema.
+
+Legítimo interesse:
+usado para segurança, prevenção de fraude, melhoria do sistema, correção de erros, proteção da plataforma e análise de funcionamento, sempre respeitando os direitos do usuário.
+
+Cumprimento de obrigação legal ou regulatória:
+usado quando houver necessidade de manter ou fornecer informações por exigência legal.
+
+Consentimento:
+usado quando alguma funcionalidade depender de autorização específica do usuário, como preferências de cookies opcionais, quando existirem.
+
+Exercício regular de direitos:
+usado quando necessário em processos administrativos, judiciais ou extrajudiciais.
+
+Quando o tratamento depender de consentimento, o usuário poderá receber informações específicas e, quando aplicável, poderá alterar sua preferência.
+
+9. Vitrine digital
+
+A vitrine digital pode exibir publicamente algumas informações da barbearia.
+
+Podem aparecer na vitrine dados como:
 
 - nome da barbearia;
-- nome profissional;
-- telefone;
-- WhatsApp;
-- Instagram;
-- CEP;
-- rua/logradouro;
-- número;
-- indicação de endereço sem número, quando implementada;
-- bairro;
-- cidade;
-- estado;
-- complemento;
-- informação sobre atendimento a domicílio;
-- horários;
-- descrição;
-- logo;
-- imagem de capa.
-
-Dependendo do contexto, algumas dessas informações podem identificar uma pessoa natural e, portanto, podem ser consideradas dados pessoais.
-
----
-
-# 6. Dados operacionais e financeiros
-
-Durante o uso do sistema poderão ser armazenadas informações relacionadas à operação da barbearia, como:
-
+- descrição pública;
+- endereço;
+- horários de funcionamento;
+- formas de pagamento;
 - serviços;
-- produtos;
-- categorias;
-- estoque;
-- movimentações de estoque;
-- vendas;
-- itens de vendas;
-- valores;
-- despesas;
-- categorias de despesas;
-- forma de pagamento, quando informada;
-- datas e horários;
-- observações inseridas pelo usuário.
-
-O sistema não deve ser utilizado para inserir dados pessoais de clientes em campos de observação quando isso não for necessário à finalidade da funcionalidade.
-
----
-
-# 7. Imagens
-
-O usuário poderá enviar:
-
-- logo;
-- capa;
-- imagens de produtos;
-- fotos para o Portfólio.
-
-Caso uma imagem permita identificar uma pessoa, ela poderá constituir dado pessoal.
-
-O usuário deverá utilizar apenas conteúdo cuja publicação seja permitida.
-
-As regras e responsabilidades relacionadas ao uso de imagens deverão ser confirmadas nos Termos de Uso e na revisão jurídica.
-
----
-
-# 8. Dados da Vitrine Digital
-
-O usuário poderá escolher publicar determinadas informações.
-
-Entre elas:
-
-- nome da barbearia;
-- nome profissional;
-- descrição;
-- logo;
-- capa;
-- serviços;
-- preços;
 - produtos;
 - imagens;
-- horários;
-- endereço;
-- WhatsApp;
-- Instagram;
-- informação de atendimento a domicílio.
+- redes sociais;
+- WhatsApp ou telefone de contato.
 
-Ao publicar a Vitrine, essas informações passam a ficar acessíveis pela internet.
+O usuário controla as informações que cadastra e deve manter esses dados corretos e atualizados.
 
-O usuário deverá revisar quais informações deseja tornar públicas antes da publicação.
+Antes de publicar informações na vitrine, o usuário deve verificar se elas podem ser exibidas publicamente.
 
----
+10. Compartilhamento de dados
 
-# 9. Dados que não são públicos
+O Estilo & Gestão não vende dados pessoais dos usuários.
 
-O Estilo e Gestão não deverá publicar na Vitrine informações administrativas como:
+Os dados poderão ser compartilhados apenas quando necessário para:
 
-- preço de custo;
-- custo estimado interno;
-- quantidade interna de estoque;
-- estoque mínimo;
-- faturamento;
-- despesas;
-- resultado financeiro;
-- histórico de vendas;
-- credenciais;
-- dados técnicos privados.
-
----
-
-# 10. Assistente IA — recurso futuro
-
-O Assistente IA não está disponível na versão inicial. Por isso, nesta etapa não há tratamento de mensagens enviadas a um assistente de IA nem compartilhamento desses conteúdos com fornecedor de modelo de IA.
-
-Antes de uma futura disponibilização, esta Política deverá ser revisada para informar de forma específica os dados tratados, finalidades, fornecedores, retenção e eventuais transferências internacionais.
-
----
-
-# 12. Dados técnicos de acesso
-
-Durante a utilização do sistema, servidores e fornecedores de infraestrutura poderão processar informações técnicas como:
-
-- endereço IP;
-- data e hora;
-- navegador;
-- dispositivo;
-- rota acessada;
-- informações necessárias para segurança e funcionamento.
-
-A forma e o prazo de guarda desses registros deverão observar a legislação aplicável e a configuração dos fornecedores.
-
----
-
-# 13. Cookies e mecanismos semelhantes
-
-O sistema poderá utilizar mecanismos tecnicamente necessários para:
-
-- autenticação;
-- manutenção da sessão;
-- segurança;
-- funcionamento da aplicação.
-
-O uso de ferramentas de analytics, publicidade ou cookies não essenciais não faz parte do escopo atual.
-
-Caso sejam adicionados futuramente, esta Política deverá ser atualizada antes de sua ativação.
-
----
-
-# 14. Consulta de CEP
-
-Para facilitar o preenchimento do endereço, o sistema poderá utilizar o serviço ViaCEP.
-
-Nesse caso, o CEP informado poderá ser enviado ao serviço para consulta das informações correspondentes.
-
-O Estilo e Gestão não deverá enviar ao ViaCEP:
-
-- nome;
-- e-mail;
-- telefone;
-- senha;
-- informações financeiras.
-
----
-
-# 15. Finalidades do tratamento
-
-Os dados poderão ser utilizados para:
-
-- criar e manter a conta;
-- autenticar o usuário;
-- fornecer as funcionalidades contratadas;
-- armazenar configurações;
-- registrar vendas e estoque;
-- gerar relatórios;
-- manter a Vitrine;
-- armazenar imagens;
-- prestar suporte;
-- proteger o sistema;
-- prevenir abuso e fraude;
-- diagnosticar erros;
-- cumprir obrigações legais aplicáveis;
-- atender solicitações de titulares.
-
----
-
-# 16. Bases legais
-
-A base legal aplicável depende da finalidade e do contexto do tratamento.
-
-A versão final desta Política deverá relacionar corretamente cada finalidade às hipóteses legais previstas na LGPD.
-
-Possíveis hipóteses a serem avaliadas juridicamente incluem:
-
-- execução de contrato ou procedimentos relacionados ao contrato;
-- cumprimento de obrigação legal ou regulatória;
-- legítimo interesse, quando aplicável e devidamente avaliado;
-- consentimento, quando necessário;
-- exercício regular de direitos.
-
-**A base legal definitiva de cada atividade deverá ser validada por profissional jurídico antes da publicação.**
-
----
-
-# 17. Compartilhamento com fornecedores
-
-O funcionamento do Estilo e Gestão poderá envolver fornecedores tecnológicos.
-
-Atualmente previstos:
-
-## Supabase
-
-Utilizado para:
-
+- funcionamento técnico da plataforma;
+- hospedagem da aplicação;
 - banco de dados;
 - autenticação;
 - armazenamento de arquivos;
-- infraestrutura relacionada.
+- envio de e-mails transacionais;
+- suporte técnico;
+- monitoramento técnico e segurança;
+- cumprimento de obrigações legais;
+- proteção contra fraude, abuso ou risco de segurança;
+- atendimento a solicitações legítimas de autoridades competentes.
 
-## Vercel
+A plataforma pode utilizar serviços de terceiros para funcionar corretamente, como provedores de hospedagem, banco de dados, autenticação, armazenamento, e-mail, monitoramento técnico e serviços em nuvem.
 
-Utilizada para hospedagem e execução da aplicação web.
+Esses terceiros devem tratar os dados apenas na medida necessária para prestar seus serviços.
 
-## ViaCEP
+Alguns desses serviços podem processar ou armazenar dados fora do Brasil. Quando isso ocorrer, o Estilo & Gestão buscará utilizar fornecedores que adotem medidas adequadas de segurança e proteção de dados.
 
-Utilizado para consulta de CEP.
+11. Segurança dos dados
 
-Antes do lançamento deverá ser confirmado:
+O Estilo & Gestão adota medidas técnicas e administrativas para proteger os dados dos usuários.
 
-- quais dados cada fornecedor recebe;
-- finalidade;
-- região de processamento;
-- condições contratuais;
-- mecanismos de proteção aplicáveis.
+Essas medidas podem incluir:
 
----
+- controle de acesso;
+- autenticação;
+- permissões de usuário;
+- regras de segurança no banco de dados;
+- proteção de sessão;
+- uso de conexões seguras;
+- restrição de acesso a dados pessoais;
+- cópias de segurança;
+- atualização de sistemas e dependências;
+- monitoramento e correção de vulnerabilidades;
+- boas práticas de desenvolvimento;
+- cuidado na escolha de serviços em nuvem.
 
-# 18. Outros compartilhamentos
+O objetivo dessas medidas é proteger os dados contra acessos não autorizados, perda, alteração indevida, destruição, comunicação não autorizada ou uso inadequado.
 
-Dados poderão ser compartilhados quando necessário para:
+Mesmo assim, nenhum sistema é totalmente livre de riscos.
 
-- cumprimento de obrigação legal;
-- atendimento de decisão judicial;
-- atendimento de solicitação válida de autoridade competente;
-- exercício regular de direitos;
-- proteção da segurança do serviço.
+O usuário também deve colaborar com a segurança, mantendo sua senha protegida, evitando compartilhar o acesso e usando dispositivos confiáveis.
 
-O Estilo e Gestão não deverá comercializar dados pessoais como produto.
+12. Senhas e autenticação
 
----
+As senhas não devem ser compartilhadas com outras pessoas.
 
-# 19. Transferência internacional
+O usuário é responsável por manter seus dados de acesso em segurança.
 
-Alguns fornecedores de infraestrutura podem armazenar ou processar dados fora do Brasil.
+Caso suspeite de acesso indevido, o usuário deve alterar sua senha e entrar em contato com o suporte.
 
-A existência, localização e mecanismos aplicáveis à transferência internacional deverão ser confirmados na revisão dos fornecedores e na avaliação jurídica.
+O Estilo & Gestão não precisa conhecer a senha original do usuário para permitir o funcionamento da conta.
 
-A versão final desta Política deverá refletir a situação real da infraestrutura utilizada.
+13. Cookies e tecnologias semelhantes
 
----
+A plataforma pode utilizar cookies e tecnologias semelhantes para funcionamento, autenticação, segurança e preferências do usuário.
 
-# 20. Armazenamento e retenção
+Mais detalhes estão disponíveis na Política de Cookies.
 
-Os dados não deverão ser mantidos por prazo maior que o necessário sem justificativa.
+O uso principal desses recursos é permitir que o sistema funcione corretamente, mantenha a sessão do usuário segura e registre preferências básicas.
 
-A política final de retenção deverá considerar:
+14. Armazenamento e retenção dos dados
 
-- finalidade;
-- relação contratual;
-- obrigações legais;
-- segurança;
-- exercício de direitos;
-- registros técnicos;
-- backups.
+Os dados poderão ser mantidos enquanto a conta estiver ativa e enquanto forem necessários para funcionamento da plataforma.
 
-## Prazos
+Alguns dados poderão ser mantidos por mais tempo quando necessário para segurança, prevenção de fraude, cumprimento de obrigação legal, exercício regular de direitos ou proteção da plataforma.
 
-### Conta
+Dados relacionados a registros financeiros, vendas, pagamentos ou obrigações legais poderão precisar ser mantidos por prazos específicos previstos em lei ou por necessidade de comprovação.
 
-`[DEFINIR/VALIDAR]`
+Caso o usuário solicite a exclusão da conta, a conta poderá ser desativada imediatamente e a vitrine pública poderá sair do ar.
 
-### Dados da barbearia
+Após a solicitação de exclusão, os dados poderão ficar armazenados por 30 dias para segurança e recuperação. Depois desse prazo, os dados da conta e da barbearia poderão ser excluídos permanentemente, salvo quando houver obrigação legal ou necessidade legítima de retenção por prazo maior.
 
-`[DEFINIR/VALIDAR]`
+Durante o prazo de 30 dias, o usuário poderá solicitar a recuperação da conta pelo suporte oficial.
 
-### Vendas e despesas
+15. Incidentes de segurança
 
-`[DEFINIR/VALIDAR]`
+Caso ocorra algum incidente de segurança que possa gerar risco relevante aos dados pessoais dos usuários, o Estilo & Gestão adotará medidas para avaliar, conter e corrigir o problema.
 
-### Imagens
+Quando necessário, os usuários afetados e as autoridades competentes poderão ser comunicados, conforme a legislação aplicável.
 
-`[DEFINIR/VALIDAR]`
+16. Direitos do usuário
 
-### Logs e registros de acesso
+O usuário poderá solicitar informações sobre seus dados pessoais, de acordo com a legislação aplicável.
 
-`[VALIDAR APLICABILIDADE E PRAZOS LEGAIS]`
+Entre os direitos que podem ser exercidos estão:
 
-### Suporte
-
-`[DEFINIR/VALIDAR]`
-
-Não publicar esta Política com prazos indefinidos.
-
----
-
-# 21. Exclusão da conta
-
-O procedimento definitivo de exclusão ainda deverá ser definido.
-
-Uma solicitação de exclusão poderá exigir análise sobre dados que:
-
-- podem ser excluídos;
-- precisam ser mantidos por obrigação legal;
-- precisam ser mantidos para exercício de direitos;
-- podem ser anonimizados.
-
-A exclusão de uma conta não significa necessariamente eliminação imediata de todo registro quando houver obrigação ou justificativa legal para conservação.
-
----
-
-# 22. Segurança
-
-O Estilo e Gestão deverá adotar medidas técnicas e administrativas destinadas a proteger dados contra:
-
-- acesso não autorizado;
-- alteração indevida;
-- perda;
-- destruição;
-- divulgação indevida;
-- tratamento incompatível.
-
-As medidas técnicas detalhadas estão no documento interno **Diretrizes de Segurança e Proteção de Dados**.
-
----
-
-# 23. Direitos dos titulares
-
-Nos termos da legislação aplicável, o titular poderá possuir direitos como:
-
-- confirmação da existência de tratamento;
+- confirmação sobre a existência de tratamento de dados;
 - acesso aos dados;
 - correção de dados incompletos, incorretos ou desatualizados;
-- solicitação de anonimização, bloqueio ou eliminação quando aplicável;
-- portabilidade nos termos da regulamentação aplicável;
-- informações sobre compartilhamento;
-- eliminação de dados tratados com consentimento quando aplicável;
-- revogação do consentimento quando esta for a base utilizada;
-- oposição ao tratamento nas hipóteses previstas em lei.
+- solicitação de exclusão de dados, quando aplicável;
+- informação sobre compartilhamento de dados;
+- revisão de preferências e consentimentos, quando aplicável;
+- oposição ao tratamento, quando houver base legal para isso;
+- informações sobre a possibilidade de não fornecer consentimento e suas consequências, quando aplicável.
 
-O atendimento de cada pedido dependerá das circunstâncias e das obrigações legais aplicáveis.
+Alguns pedidos podem depender de validação de identidade, análise técnica ou obrigação legal de manutenção de determinados dados.
 
----
+O Estilo & Gestão buscará responder às solicitações em até 15 dias. Em alguns casos, esse prazo poderá depender da confirmação da identidade do solicitante ou da complexidade do pedido.
 
-# 24. Como exercer direitos
+17. Dados de menores de idade
 
-O titular deverá entrar em contato através de:
+A plataforma é destinada ao uso por pessoas responsáveis pela gestão de barbearias.
 
-`[PREENCHER E-MAIL/CANAL DE PRIVACIDADE]`
+O Estilo & Gestão não é direcionado para crianças.
 
-A solicitação poderá exigir informações suficientes para confirmar a identidade do solicitante e evitar que dados sejam entregues a terceiros indevidamente.
+Caso seja identificado uso inadequado ou cadastro indevido, medidas poderão ser tomadas para proteção da conta e dos dados envolvidos.
 
-O Estilo e Gestão não deverá solicitar dados excessivos apenas para validar uma solicitação.
+Se a barbearia cadastrar dados de clientes menores de idade, deverá fazer isso apenas quando necessário para sua atividade e com cuidado especial.
 
----
+18. Alterações nesta Política de Privacidade
 
-# 25. Incidentes de segurança
+Esta Política de Privacidade poderá ser atualizada para refletir mudanças no sistema, novas funcionalidades, melhorias de segurança ou exigências legais.
 
-Caso ocorra incidente envolvendo dados pessoais, o Estilo e Gestão deverá:
+Quando houver mudanças importantes, o usuário poderá ser informado e, quando necessário, solicitado a aceitar ou revisar a nova versão.
 
-- investigar;
-- adotar medidas para reduzir os impactos;
-- registrar o incidente;
-- avaliar os riscos envolvidos;
-- cumprir as obrigações de comunicação previstas na legislação e regulamentação vigentes.
+19. Contato
 
-Quando aplicável, titulares e a Autoridade Nacional de Proteção de Dados poderão ser comunicados conforme os critérios legais.
+Em caso de dúvidas sobre esta Política de Privacidade ou sobre o uso de dados pessoais, o usuário poderá entrar em contato pelo canal oficial:
 
----
+davifelixoliveira4@gmail.com
 
-# 26. Dados de crianças e adolescentes
+Esse canal também poderá ser usado para solicitações relacionadas a dados pessoais, privacidade, segurança e exercício de direitos do usuário.
 
-O Estilo e Gestão é desenvolvido para uso administrativo por profissionais e estabelecimentos comerciais.
+20. Histórico de versões
 
-A Vitrine, porém, é uma página pública e poderá ser acessada por diferentes pessoas.
+Versão 1.0 — 09/10/2026
+Primeira versão da Política de Privacidade do Estilo & Gestão.
 
-A aplicabilidade das regras específicas relacionadas a crianças e adolescentes deverá ser validada juridicamente antes do lançamento público.
-
-O sistema não deverá criar perfil de cliente menor de idade no versão inicial.
-
----
-
-# 27. Alterações desta Política
-
-Esta Política poderá ser atualizada quando houver mudanças relevantes em:
-
-- funcionalidades;
-- fornecedores;
-- dados tratados;
-- finalidade;
-- legislação;
-- segurança;
-- modelo comercial.
-
-A versão publicada deverá informar:
-
-- número da versão;
-- data de atualização.
-
-Mudanças relevantes deverão ser comunicadas conforme necessário.
-
----
-
-# 28. Contato
-
-Para dúvidas sobre esta Política:
-
-**Responsável:** `[PREENCHER]`
-
-**E-mail:** `[PREENCHER]`
-
-**Endereço:** `[PREENCHER]`
-
----
-
-# 29. Pontos obrigatórios antes da publicação
-
-- [ ] Definir responsável legal.
-- [ ] Definir CPF/CNPJ quando aplicável.
-- [ ] Definir endereço.
-- [ ] Definir contato de privacidade.
-- [ ] Validar papéis de controlador e operador.
-- [ ] Validar bases legais.
-- [ ] Definir retenção.
-- [ ] Definir exclusão.
-- [ ] Confirmar fornecedores.
-- [ ] Confirmar transferência internacional.
-- [ ] Confirmar tratamento de logs.
-- [ ] Confirmar uso de cookies.
-- [ ] Confirmar regras de imagens.
-- [ ] Validar aplicabilidade de regras sobre menores.
-- [ ] Revisão jurídica concluída.
+Estilo & Gestão — Política de Privacidade, versão 1.0.
