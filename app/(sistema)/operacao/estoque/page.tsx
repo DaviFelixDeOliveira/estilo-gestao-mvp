@@ -81,8 +81,8 @@ function parseMoneyInput(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
   const normalized = trimmed.replace(/\./g, "").replace(",", ".");
-  const parsed = parseFloat(normalized);
-  if (isNaN(parsed)) return null;
+  const parsed = Number.parseFloat(normalized);
+  if (Number.isNaN(parsed)) return null;
   return Math.round(parsed * 100) / 100;
 }
 
@@ -420,8 +420,8 @@ export default function EstoquePage() {
     if (!produtoSelecionado) return null;
 
     const saldoAtual = produtoSelecionado.estoque_atual;
-    const qtdNum = parseInt(quantidadeInput.trim(), 10);
-    const qtdValida = !isNaN(qtdNum) && qtdNum > 0 ? qtdNum : 0;
+    const qtdNum = Number.parseInt(quantidadeInput.trim(), 10);
+    const qtdValida = !Number.isNaN(qtdNum) && qtdNum > 0 ? qtdNum : 0;
 
     if (tipoOperacao === "ADICIONAR") {
       const novoSaldo = saldoAtual + qtdValida;
@@ -472,8 +472,8 @@ export default function EstoquePage() {
 
     setErroModal(null);
 
-    const qtdNum = parseInt(quantidadeInput.trim(), 10);
-    if (isNaN(qtdNum) || qtdNum <= 0) {
+    const qtdNum = Number.parseInt(quantidadeInput.trim(), 10);
+    if (Number.isNaN(qtdNum) || qtdNum <= 0) {
       setErroModal("Informe uma quantidade inteira maior que zero.");
       return;
     }
@@ -686,7 +686,7 @@ export default function EstoquePage() {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
               <input
-                type="text"
+                aria-label="Buscar produto no estoque" type="text"
                 value={buscaProduto}
                 onChange={(e) => setBuscaProduto(e.target.value)}
                 placeholder="Buscar produto ou categoria..."
@@ -857,7 +857,7 @@ export default function EstoquePage() {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
               <input
-                type="text"
+                aria-label="Buscar no histórico de estoque" type="text"
                 value={buscaHistorico}
                 onChange={(e) => setBuscaHistorico(e.target.value)}
                 placeholder="Buscar no histórico por produto ou motivo..."
@@ -868,7 +868,7 @@ export default function EstoquePage() {
             <div className="flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-950">
               <Filter className="h-3.5 w-3.5 text-zinc-400" />
               <select
-                value={filtroTipoHistorico}
+                aria-label="Filtrar histórico por tipo" value={filtroTipoHistorico}
                 onChange={(e) => setFiltroTipoHistorico(e.target.value)}
                 className="bg-transparent text-xs font-medium text-zinc-700 dark:text-zinc-300 focus:outline-none"
               >
@@ -1025,7 +1025,7 @@ export default function EstoquePage() {
                 </h3>
               </div>
               <button
-                onClick={() => setModalAberto(false)}
+                aria-label="Fechar modal de movimentação de estoque" onClick={() => setModalAberto(false)}
                 disabled={salvando}
                 className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
               >
@@ -1083,10 +1083,10 @@ export default function EstoquePage() {
             <form onSubmit={handleSubmitMovimentacao} className="mt-4 space-y-4">
               {/* Seleção do Produto */}
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="estoque-produto" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Produto *
                 </label>
-                <select
+                <select id="estoque-produto"
                   required
                   value={produtoSelecionadoId}
                   onChange={(e) => setProdutoSelecionadoId(e.target.value)}
@@ -1115,10 +1115,10 @@ export default function EstoquePage() {
                 <>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      <label htmlFor="estoque-quantidade-a-adicionar" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                         Quantidade a adicionar *
                       </label>
-                      <input
+                      <input id="estoque-quantidade-a-adicionar"
                         type="number"
                         min="1"
                         required
@@ -1130,10 +1130,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      <label htmlFor="estoque-custo-unitario-opcional" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                         Custo unitário opcional
                       </label>
-                      <input
+                      <input id="estoque-custo-unitario-opcional"
                         type="text"
                         value={custoUnitarioInput}
                         onChange={(e) => setCustoUnitarioInput(e.target.value)}
@@ -1183,10 +1183,10 @@ export default function EstoquePage() {
                 <>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      <label htmlFor="estoque-direcao-do-ajuste" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                         Direção do ajuste *
                       </label>
-                      <select
+                      <select id="estoque-direcao-do-ajuste"
                         value={direcaoAjuste}
                         onChange={(e) => setDirecaoAjuste(e.target.value as "ENTRADA" | "SAIDA")}
                         className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
@@ -1197,10 +1197,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                      <label htmlFor="estoque-quantidade-da-diferenca" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                         Quantidade da diferença *
                       </label>
-                      <input
+                      <input id="estoque-quantidade-da-diferenca"
                         type="number"
                         min="1"
                         required
@@ -1254,10 +1254,10 @@ export default function EstoquePage() {
               {tipoOperacao === "PERDA" && (
                 <>
                   <div>
-                    <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                    <label htmlFor="estoque-quantidade-perdida" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                       Quantidade perdida *
                     </label>
-                    <input
+                    <input id="estoque-quantidade-perdida"
                       type="number"
                       min="1"
                       required
@@ -1309,10 +1309,10 @@ export default function EstoquePage() {
 
               {/* Observação / Motivo */}
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="estoque-observacao-motivo-opcional" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Observação / Motivo (Opcional)
                 </label>
-                <input
+                <input id="estoque-observacao-motivo-opcional"
                   type="text"
                   value={motivoInput}
                   onChange={(e) => setMotivoInput(e.target.value)}
@@ -1324,7 +1324,7 @@ export default function EstoquePage() {
               {/* Botões */}
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-900">
                 <button
-                  type="button"
+                  aria-label="Fechar modal de movimentação de estoque" type="button"
                   onClick={() => setModalAberto(false)}
                   disabled={salvando}
                   className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900"

@@ -104,8 +104,8 @@ function parseMoneyInput(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
   const normalized = trimmed.replace(/\./g, "").replace(",", ".");
-  const parsed = parseFloat(normalized);
-  if (isNaN(parsed)) return null;
+  const parsed = Number.parseFloat(normalized);
+  if (Number.isNaN(parsed)) return null;
   return Math.round(parsed * 100) / 100;
 }
 
@@ -427,8 +427,8 @@ export default function ProdutosECategoriasPage() {
 
     let estoqueMinimoNum: number | null = null;
     if (formProduto.estoque_minimo.trim()) {
-      const parsed = parseInt(formProduto.estoque_minimo.trim(), 10);
-      if (isNaN(parsed) || parsed < 0) {
+      const parsed = Number.parseInt(formProduto.estoque_minimo.trim(), 10);
+      if (Number.isNaN(parsed) || parsed < 0) {
         setErroFormProduto("Estoque mínimo deve ser um número inteiro maior ou igual a zero.");
         return;
       }
@@ -797,7 +797,7 @@ export default function ProdutosECategoriasPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-              <input
+              <input aria-label="Buscar produto"
                 type="text"
                 value={buscaProduto}
                 onChange={(e) => setBuscaProduto(e.target.value)}
@@ -810,7 +810,7 @@ export default function ProdutosECategoriasPage() {
               {/* Filtro de Categoria */}
               <div className="flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-950">
                 <Filter className="h-3.5 w-3.5 text-zinc-400" />
-                <select
+                <select aria-label="Filtrar produtos por categoria"
                   value={filtroCategoria}
                   onChange={(e) => setFiltroCategoria(e.target.value)}
                   className="bg-transparent text-xs font-medium text-zinc-700 dark:text-zinc-300 focus:outline-none"
@@ -1039,7 +1039,7 @@ export default function ProdutosECategoriasPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-              <input
+              <input aria-label="Buscar categoria"
                 type="text"
                 value={buscaCategoria}
                 onChange={(e) => setBuscaCategoria(e.target.value)}
@@ -1200,7 +1200,7 @@ export default function ProdutosECategoriasPage() {
                   {modoEdicaoProduto ? "Editar Produto" : "Novo Produto"}
                 </h3>
               </div>
-              <button
+              <button aria-label="Fechar modal de produto"
                 onClick={() => setModalProdutoAberto(false)}
                 disabled={salvandoProduto}
                 className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
@@ -1219,10 +1219,10 @@ export default function ProdutosECategoriasPage() {
             <form onSubmit={handleSubmitProduto} className="mt-4 space-y-4">
               {/* Nome */}
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="produtos-nome-do-produto" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Nome do Produto *
                 </label>
-                <input
+                <input id="produtos-nome-do-produto"
                   type="text"
                   required
                   value={formProduto.nome}
@@ -1234,10 +1234,10 @@ export default function ProdutosECategoriasPage() {
 
               {/* Categoria */}
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="produtos-categoria" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Categoria *
                 </label>
-                <select
+                <select id="produtos-categoria"
                   required
                   value={formProduto.categoria_id}
                   onChange={(e) => setFormProduto({ ...formProduto, categoria_id: e.target.value })}
@@ -1264,10 +1264,10 @@ export default function ProdutosECategoriasPage() {
 
               {/* Descrição */}
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="produtos-descricao-opcional" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Descrição (Opcional)
                 </label>
-                <textarea
+                <textarea id="produtos-descricao-opcional"
                   rows={2}
                   value={formProduto.descricao}
                   onChange={(e) => setFormProduto({ ...formProduto, descricao: e.target.value })}
@@ -1279,10 +1279,10 @@ export default function ProdutosECategoriasPage() {
               {/* Preços (Venda e Custo) */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  <label htmlFor="produtos-preco-de-venda-r" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                     Preço de Venda (R$) *
                   </label>
-                  <input
+                  <input id="produtos-preco-de-venda-r"
                     type="text"
                     required
                     value={formProduto.preco_venda}
@@ -1293,10 +1293,10 @@ export default function ProdutosECategoriasPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  <label htmlFor="produtos-preco-de-custo-r" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                     Preço de Custo (R$) *
                   </label>
-                  <input
+                  <input id="produtos-preco-de-custo-r"
                     type="text"
                     required
                     value={formProduto.preco_custo}
@@ -1310,10 +1310,10 @@ export default function ProdutosECategoriasPage() {
               {/* Estoque Mínimo e Informação de Estoque Atual */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  <label htmlFor="produtos-estoque-minimo-de-alerta" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                     Estoque Mínimo de Alerta
                   </label>
-                  <input
+                  <input id="produtos-estoque-minimo-de-alerta"
                     type="number"
                     min="0"
                     value={formProduto.estoque_minimo}
@@ -1324,9 +1324,9 @@ export default function ProdutosECategoriasPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-400 dark:text-zinc-500 mb-1">
+                  <p className="block text-xs font-medium text-zinc-400 dark:text-zinc-500 mb-1">
                     Estoque Atual (Somente Leitura)
-                  </label>
+                  </p>
                   <div className="flex h-10 items-center rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400 font-medium">
                     {modoEdicaoProduto
                       ? `${produtos.find((p) => p.id === formProduto.id)?.estoque_atual ?? 0} unidades`
@@ -1395,7 +1395,7 @@ export default function ProdutosECategoriasPage() {
                   {modoEdicaoCategoria ? "Editar Categoria" : "Nova Categoria"}
                 </h3>
               </div>
-              <button
+              <button aria-label="Fechar modal de categoria"
                 onClick={() => setModalCategoriaAberto(false)}
                 disabled={salvandoCategoria}
                 className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
@@ -1413,10 +1413,10 @@ export default function ProdutosECategoriasPage() {
 
             <form onSubmit={handleSubmitCategoria} className="mt-4 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="produtos-nome-da-categoria" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Nome da Categoria *
                 </label>
-                <input
+                <input id="produtos-nome-da-categoria"
                   type="text"
                   required
                   value={formCategoria.nome}
