@@ -157,10 +157,32 @@ export default async function WelcomePage() {
         </div>
 
         {/* Rodapé Institucional Discreto */}
-        <footer className="pt-6 border-t border-neutral-900/80 flex items-center justify-center lg:justify-start">
-          <p className="text-xs text-neutral-500 font-normal tracking-wide text-center lg:text-left">
-            © 2026. Todos os direitos reservados.
+        <footer className="pt-6 border-t border-neutral-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
+          <p className="text-center sm:text-left">
+            © 2026 Estilo &amp; Gestão. Todos os direitos reservados.
           </p>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/termos-de-uso"
+              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+            >
+              Termos
+            </Link>
+            <span className="text-neutral-700">•</span>
+            <Link
+              href="/politica-de-privacidade"
+              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+            >
+              Privacidade
+            </Link>
+            <span className="text-neutral-700">•</span>
+            <Link
+              href="/politica-de-cookies"
+              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+            >
+              Cookies
+            </Link>
+          </div>
         </footer>
       </main>
     </div>
