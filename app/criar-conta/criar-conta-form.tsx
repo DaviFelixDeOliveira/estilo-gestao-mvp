@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Eye,
   EyeOff,
@@ -16,6 +17,7 @@ export function CriarContaForm() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [aceitouTermos, setAceitouTermos] = useState(false);
 
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
@@ -38,6 +40,12 @@ export function CriarContaForm() {
 
     setErro("");
     setSucesso("");
+
+    if (!aceitouTermos) {
+      setErro("Você precisa aceitar os Termos de Uso e a Política de Privacidade para criar uma conta.");
+      return;
+    }
+
     setCarregando(true);
 
     try {
@@ -220,6 +228,43 @@ export function CriarContaForm() {
         </div>
       </div>
 
+      {/* Checkbox de Aceite dos Termos e Privacidade */}
+      <div className="pt-1">
+        <label
+          htmlFor="aceitouTermos"
+          className="flex items-start gap-2.5 cursor-pointer text-xs sm:text-sm select-none group"
+        >
+          <input
+            id="aceitouTermos"
+            type="checkbox"
+            checked={aceitouTermos}
+            onChange={(event) => setAceitouTermos(event.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-neutral-700 bg-neutral-900 text-red-600 focus:ring-red-500 focus:ring-offset-neutral-950 accent-red-600 cursor-pointer shrink-0"
+          />
+          <span className="leading-snug text-neutral-400 group-hover:text-neutral-300 transition-colors">
+            Li e aceito os{" "}
+            <Link
+              href="/termos-de-uso"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white hover:text-red-400 underline underline-offset-2 transition-colors"
+            >
+              Termos de Uso
+            </Link>{" "}
+            e a{" "}
+            <Link
+              href="/politica-de-privacidade"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white hover:text-red-400 underline underline-offset-2 transition-colors"
+            >
+              Política de Privacidade
+            </Link>
+            .
+          </span>
+        </label>
+      </div>
+
       {/* Alertas de Erro e Sucesso */}
       {erro && (
         <p
@@ -243,7 +288,7 @@ export function CriarContaForm() {
       <div className="pt-2">
         <button
           type="submit"
-          disabled={carregando}
+          disabled={carregando || !aceitouTermos}
           className="w-full min-h-[48px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-base shadow-lg shadow-red-950/40 hover:shadow-red-900/50 transition-all duration-200 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
         >
           {carregando ? (
