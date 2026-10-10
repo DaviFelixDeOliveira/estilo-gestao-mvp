@@ -29,11 +29,11 @@ export const MAIN_NAVIGATION_ITEMS: readonly NavigationItem[] = [
   },
   {
     title: "PDV",
-    href: "/pdv",
+    href: "/pdv/nova-venda",
     icon: CreditCard,
     subItems: [
-      { title: "Nova venda", href: "/pdv" },
-      { title: "Histórico de vendas", href: "/pdv" },
+      { title: "Nova venda", href: "/pdv/nova-venda" },
+      { title: "Histórico de vendas", href: "/pdv/historico" },
     ],
   },
   {

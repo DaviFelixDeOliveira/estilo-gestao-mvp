@@ -174,9 +174,9 @@ export function AppSidebar({
           {!collapsed && isPdvExpanded && (
             <div className="ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
               <Link
-                href="/pdv"
+                href="/pdv/nova-venda"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                  pathname === "/pdv"
+                  pathname === "/pdv/nova-venda" || pathname === "/pdv"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
@@ -184,7 +184,7 @@ export function AppSidebar({
                 Nova venda
               </Link>
               <Link
-                href="/pdv"
+                href="/pdv/historico"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/pdv/historico"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"

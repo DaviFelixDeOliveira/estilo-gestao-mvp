@@ -17,8 +17,11 @@ function getHeaderTitles(pathname: string): { title: string; breadcrumb: string 
   if (pathname === "/dashboard") {
     return { title: "Dashboard", breadcrumb: "Dashboard" };
   }
-  if (pathname === "/pdv") {
-    return { title: "Ponto de Venda", breadcrumb: "Ponto de Venda / Nova venda" };
+  if (pathname === "/pdv/nova-venda" || pathname === "/pdv") {
+    return { title: "Nova venda", breadcrumb: "Ponto de Venda / Nova venda" };
+  }
+  if (pathname === "/pdv/historico") {
+    return { title: "Histórico de vendas", breadcrumb: "Ponto de Venda / Histórico de vendas" };
   }
   if (pathname.startsWith("/pdv")) {
     return { title: "Ponto de Venda", breadcrumb: "Ponto de Venda" };
