@@ -42,14 +42,14 @@ export function LogoutButton({ className, children }: LogoutButtonProps) {
   }
 
   const defaultButtonClass =
-    "rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60";
+    "w-full rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
-    <div>
+    <div className="w-full">
       {erro && (
         <p
           role="alert"
-          className="mb-3 text-sm text-red-400"
+          className="mb-2 text-xs text-red-500 font-medium px-2"
         >
           {erro}
         </p>
