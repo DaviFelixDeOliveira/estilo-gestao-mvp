@@ -1,12 +1,20 @@
+import { DollarSign, TrendingUp, ArrowDownRight, PieChart } from "lucide-react";
+
+export type ChartSeries = "faturamento" | "entradas" | "saidas" | "resultado";
+
 interface FinancialCardsProps {
-  totalEntradas: number;
-  totalSaidas: number;
-  resultadoEstimado: number;
+  faturamento: number;
+  entradas: number;
+  saidas: number;
+  resultado: number;
   quantidadeVendas: number;
+  hasData: boolean;
   loading?: boolean;
+  activeSeries: ChartSeries;
+  onSelectSeries: (series: ChartSeries) => void;
 }
 
-function formatCurrency(value: number): string {
+function formatBRL(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -14,178 +22,198 @@ function formatCurrency(value: number): string {
 }
 
 export function FinancialCards({
-  totalEntradas,
-  totalSaidas,
-  resultadoEstimado,
+  faturamento,
+  entradas,
+  saidas,
+  resultado,
   quantidadeVendas,
+  hasData,
   loading = false,
+  activeSeries,
+  onSelectSeries,
 }: FinancialCardsProps) {
+  let resultadoColor = "text-[#2F2F2D] dark:text-[#F4F4F0]";
+  let resultadoActiveRing = "border-neutral-400 dark:border-neutral-400 ring-2 ring-neutral-400/10";
+  let resultadoIconBg = "bg-[#FAF9F5] dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0]";
+
+  if (resultado > 0) {
+    resultadoColor = "text-emerald-600 dark:text-emerald-400";
+    resultadoActiveRing = "border-emerald-500 dark:border-emerald-500 ring-2 ring-emerald-500/10";
+    resultadoIconBg = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+  } else if (resultado < 0) {
+    resultadoColor = "text-rose-600 dark:text-rose-400";
+    resultadoActiveRing = "border-rose-500 dark:border-rose-500 ring-2 ring-rose-500/10";
+    resultadoIconBg = "bg-rose-500/10 text-rose-600 dark:text-rose-400";
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section
+      aria-label="Indicadores principais"
+      className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+    >
       {/* 1. Faturamento */}
-      <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Faturamento
-          </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelectSeries("faturamento")}
+        title="Clique para destacar Faturamento no gráfico"
+        className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between min-h-[128px] cursor-pointer transition-all hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-xs active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+          activeSeries === "faturamento"
+            ? "border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/10"
+            : "border-[#E2E2DD] dark:border-[#3F3F3B]"
+        }`}
+      >
+        <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
+          <span>Faturamento</span>
+          <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <DollarSign className="w-4 h-4" />
           </div>
         </div>
-
-        <div className="mt-4">
-          <div className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <div>
+          <div
+            className={`text-xl sm:text-2xl font-black tracking-tight mt-3 mb-1 text-blue-600 dark:text-blue-400 ${
+              !hasData && !loading
+                ? "opacity-70 text-neutral-400 dark:text-neutral-500"
+                : ""
+            }`}
+          >
             {loading ? (
-              <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-7 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
             ) : (
-              formatCurrency(totalEntradas)
+              formatBRL(faturamento)
             )}
           </div>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {loading ? "..." : `${quantidadeVendas} venda${quantidadeVendas === 1 ? "" : "s"} concluída${quantidadeVendas === 1 ? "" : "s"}`}
+          <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-tight break-words">
+            {loading
+              ? "Carregando..."
+              : hasData
+                ? `${quantidadeVendas} venda${quantidadeVendas === 1 ? "" : "s"} concluída${quantidadeVendas === 1 ? "" : "s"}`
+                : "Nenhuma venda no período"}
           </p>
         </div>
       </div>
 
       {/* 2. Entradas */}
-      <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Entradas
-          </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
-            </svg>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelectSeries("entradas")}
+        title="Clique para destacar Entradas no gráfico"
+        className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between min-h-[128px] cursor-pointer transition-all hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-xs active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
+          activeSeries === "entradas"
+            ? "border-emerald-500 dark:border-emerald-500 ring-2 ring-emerald-500/10"
+            : "border-[#E2E2DD] dark:border-[#3F3F3B]"
+        }`}
+      >
+        <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
+          <span>Entradas</span>
+          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <TrendingUp className="w-4 h-4" />
           </div>
         </div>
-
-        <div className="mt-4">
-          <div className="text-2xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+        <div>
+          <div
+            className={`text-xl sm:text-2xl font-black tracking-tight mt-3 mb-1 text-emerald-600 dark:text-emerald-400 ${
+              !hasData && !loading
+                ? "opacity-70 text-neutral-400 dark:text-neutral-500"
+                : ""
+            }`}
+          >
             {loading ? (
-              <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-7 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
             ) : (
-              formatCurrency(totalEntradas)
+              formatBRL(entradas)
             )}
           </div>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Recebimentos em caixa
+          <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-tight break-words">
+            {loading
+              ? "Carregando..."
+              : hasData
+                ? "Recebimentos em caixa"
+                : "Nenhum recebimento em caixa"}
           </p>
         </div>
       </div>
 
       {/* 3. Saídas */}
-      <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Saídas
-          </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-              />
-            </svg>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelectSeries("saidas")}
+        title="Clique para destacar Saídas no gráfico"
+        className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between min-h-[128px] cursor-pointer transition-all hover:border-rose-400 dark:hover:border-rose-500 hover:shadow-xs active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-rose-400 ${
+          activeSeries === "saidas"
+            ? "border-rose-500 dark:border-rose-500 ring-2 ring-rose-500/10"
+            : "border-[#E2E2DD] dark:border-[#3F3F3B]"
+        }`}
+      >
+        <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
+          <span>Saídas</span>
+          <div className="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+            <ArrowDownRight className="w-4 h-4" />
           </div>
         </div>
-
-        <div className="mt-4">
-          <div className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <div>
+          <div
+            className={`text-xl sm:text-2xl font-black tracking-tight mt-3 mb-1 text-rose-600 dark:text-rose-400 ${
+              !hasData && !loading
+                ? "opacity-70 text-neutral-400 dark:text-neutral-500"
+                : ""
+            }`}
+          >
             {loading ? (
-              <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-7 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
             ) : (
-              formatCurrency(totalSaidas)
+              formatBRL(saidas)
             )}
           </div>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Despesas registradas
+          <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-tight break-words">
+            {saidas > 0 ? "Despesas registradas" : "Sem despesas registradas"}
           </p>
         </div>
       </div>
 
       {/* 4. Resultado estimado */}
-      <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Resultado estimado
-          </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-              />
-            </svg>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelectSeries("resultado")}
+        title="Clique para destacar Resultado no gráfico"
+        className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between min-h-[128px] cursor-pointer transition-all hover:border-neutral-400 dark:hover:border-neutral-500 hover:shadow-xs active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-neutral-400 ${
+          activeSeries === "resultado"
+            ? resultadoActiveRing
+            : "border-[#E2E2DD] dark:border-[#3F3F3B]"
+        }`}
+      >
+        <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
+          <span>Resultado estimado</span>
+          <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${resultadoIconBg}`}>
+            <PieChart className="w-4 h-4" />
           </div>
         </div>
-
-        <div className="mt-4">
+        <div>
           <div
-            className={`text-2xl font-bold tracking-tight ${
-              resultadoEstimado > 0
-                ? "text-emerald-600 dark:text-emerald-400"
-                : resultadoEstimado < 0
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-zinc-900 dark:text-zinc-100"
+            className={`text-xl sm:text-2xl font-black tracking-tight mt-3 mb-1 ${resultadoColor} ${
+              !hasData && !loading
+                ? "opacity-70 text-neutral-400 dark:text-neutral-500"
+                : ""
             }`}
           >
             {loading ? (
-              <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-7 w-28 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800" />
             ) : (
-              formatCurrency(resultadoEstimado)
+              formatBRL(resultado)
             )}
           </div>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Saldo líquido operacional
+          <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-tight break-words">
+            {hasData
+              ? resultado >= 0
+                ? "Saldo líquido positivo"
+                : "Saldo líquido negativo"
+              : "Aguardando movimentação inicial"}
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

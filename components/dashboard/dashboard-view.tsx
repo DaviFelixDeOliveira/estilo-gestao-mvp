@@ -2,13 +2,25 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  Calendar,
+  X,
+  TrendingUp,
+  CheckCircle2,
+  AlertTriangle,
+  RotateCcw,
+  Scissors,
+  Coffee,
+  ShoppingBag,
+  ArrowRight,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { FinancialCards } from "./financial-cards";
+import { FinancialCards, ChartSeries } from "./financial-cards";
 import { OperationalCards } from "./operational-cards";
 import { QuickActions } from "./quick-actions";
 import { LowStockModal, ProdutoEstoqueBaixo } from "./low-stock-modal";
 
-type Periodo = "hoje" | "mes";
+export type PeriodFilter = "hoje" | "semana" | "mes" | "ano" | "personalizado";
 
 interface ResumoFinanceiro {
   total_entradas: number;
@@ -17,34 +29,70 @@ interface ResumoFinanceiro {
   quantidade_vendas: number;
 }
 
-function getPeriodDates(periodo: Periodo): { inicio: string; fim: string } {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const todayStr = `${year}-${month}-${day}`;
+interface TrendPoint {
+  label: string;
+  faturamento: number;
+  entradas: number;
+  saidas: number;
+  resultado: number;
+}
 
-  if (periodo === "hoje") {
-    return {
-      inicio: todayStr,
-      fim: todayStr,
-    };
-  }
+interface ItemOperacionalAgregado {
+  name: string;
+  type: "servicos" | "bebidas" | "produtos";
+  qty: number;
+  total: number;
+  unitPrice: number;
+}
 
-  // Mês
-  const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
-  const lastDayStr = `${year}-${month}-${String(lastDay).padStart(2, "0")}`;
+function getTodayISO(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
-  return {
-    inicio: `${year}-${month}-01`,
-    fim: lastDayStr,
-  };
+function formatBRL(val: number | null | undefined): string {
+  if (val === null || val === undefined) return "R$ 0,00";
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(val);
+}
+
+function formatDateDisplay(dateISO: string): string {
+  if (!dateISO) return "";
+  const parts = dateISO.split("-");
+  if (parts.length < 3) return dateISO;
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
 export function DashboardView() {
   const supabase = useMemo(() => createClient(), []);
 
-  const [periodo, setPeriodo] = useState<Periodo>("hoje");
+  const [activePeriod, setActivePeriod] = useState<PeriodFilter>("hoje");
+  const [customDateRange, setCustomDateRange] = useState<{
+    start: string;
+    end: string;
+  } | null>(null);
+
+  // Séries do gráfico
+  const [chartSeries, setChartSeries] = useState<ChartSeries>("faturamento");
+
+  // Modais
+  const [isCustomDateModalOpen, setIsCustomDateModalOpen] = useState(false);
+  const [customDateError, setCustomDateError] = useState<string | null>(null);
+  const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
+  const [operationalDetailModal, setOperationalDetailModal] = useState<
+    "servicos" | "bebidas" | "produtos" | null
+  >(null);
+
+  const todayStr = getTodayISO();
+  const [tempStartDate, setTempStartDate] = useState(todayStr);
+  const [tempEndDate, setTempEndDate] = useState(todayStr);
+
+  // Estados de dados
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -56,12 +104,51 @@ export function DashboardView() {
   });
 
   const [servicosRealizados, setServicosRealizados] = useState(0);
+  const [bebidasVendidas, setBebidasVendidas] = useState(0);
   const [produtosVendidos, setProdutosVendidos] = useState(0);
   const [produtosEstoqueBaixo, setProdutosEstoqueBaixo] = useState<
     ProdutoEstoqueBaixo[]
   >([]);
-  const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
 
+  const [trendData, setTrendData] = useState<TrendPoint[]>([]);
+  const [operationalBreakdown, setOperationalBreakdown] = useState<
+    ItemOperacionalAgregado[]
+  >([]);
+
+  // Computa as datas ativas
+  const activeDateRange = useMemo(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const today = `${year}-${month}-${day}`;
+
+    if (activePeriod === "hoje") {
+      return { inicio: today, fim: today };
+    }
+    if (activePeriod === "semana") {
+      const d = new Date();
+      d.setDate(d.getDate() - 6);
+      const startY = d.getFullYear();
+      const startM = String(d.getMonth() + 1).padStart(2, "0");
+      const startD = String(d.getDate()).padStart(2, "0");
+      return { inicio: `${startY}-${startM}-${startD}`, fim: today };
+    }
+    if (activePeriod === "mes") {
+      const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+      const lastDayStr = `${year}-${month}-${String(lastDay).padStart(2, "0")}`;
+      return { inicio: `${year}-${month}-01`, fim: lastDayStr };
+    }
+    if (activePeriod === "ano") {
+      return { inicio: `${year}-01-01`, fim: `${year}-12-31` };
+    }
+    if (activePeriod === "personalizado" && customDateRange) {
+      return { inicio: customDateRange.start, fim: customDateRange.end };
+    }
+    return { inicio: today, fim: today };
+  }, [activePeriod, customDateRange]);
+
+  // Carregar dados reais do Supabase
   useEffect(() => {
     let ativo = true;
 
@@ -69,7 +156,7 @@ export function DashboardView() {
       setLoading(true);
       setErro(null);
 
-      const { inicio, fim } = getPeriodDates(periodo);
+      const { inicio, fim } = activeDateRange;
 
       try {
         // 1. Resumo financeiro via RPC do Supabase
@@ -101,7 +188,7 @@ export function DashboardView() {
           });
         }
 
-        // 2. Vendas e itens no período para contagem operacional
+        // 2. Vendas e itens no período
         const startDateTime = `${inicio}T00:00:00.000Z`;
         const endDateTime = `${fim}T23:59:59.999Z`;
 
@@ -110,56 +197,83 @@ export function DashboardView() {
           .select(`
             id,
             status,
+            total_liquido,
+            total_bruto,
             ocorrida_em,
+            created_at,
             venda_itens (
+              id,
               tipo,
-              quantidade
+              nome_snapshot,
+              quantidade,
+              preco_unitario_snapshot,
+              subtotal_snapshot,
+              produto_id
             )
           `)
           .eq("status", "CONCLUIDA")
           .gte("ocorrida_em", startDateTime)
-          .lte("ocorrida_em", endDateTime);
+          .lte("ocorrida_em", endDateTime)
+          .order("ocorrida_em", { ascending: true });
 
         if (!ativo) return;
 
-        if (vendasError) {
-          console.error("Erro ao obter vendas do período:", vendasError.message);
-        } else if (vendasData) {
-          let totalServicos = 0;
-          let totalProdutos = 0;
+        // 3. Despesas do período pela coluna correta 'data_despesa'
+        const { data: despesasData } = await supabase
+          .from("despesas")
+          .select("id, valor, data_despesa, created_at")
+          .gte("data_despesa", inicio)
+          .lte("data_despesa", fim);
 
-          vendasData.forEach((venda) => {
-            const itens = venda.venda_itens as Array<{
-              tipo: string;
-              quantidade: number;
-            }> | null;
+        if (!ativo) return;
 
-            if (itens) {
-              itens.forEach((item) => {
-                if (item.tipo === "SERVICO") {
-                  totalServicos += item.quantidade || 1;
-                } else if (item.tipo === "PRODUTO") {
-                  totalProdutos += item.quantidade || 1;
-                }
-              });
-            }
-          });
-
-          setServicosRealizados(totalServicos);
-          setProdutosVendidos(totalProdutos);
-        }
-
-        // 3. Consulta de produtos ativos com estoque baixo
-        const { data: produtosData, error: produtosError } = await supabase
+        // 4. Produtos e categorias para identificar bebidas vs outros produtos e estoque baixo
+        const { data: produtosData } = await supabase
           .from("produtos")
-          .select("id, nome, estoque_atual, estoque_minimo, preco_venda, ativo")
+          .select(`
+            id,
+            nome,
+            estoque_atual,
+            estoque_minimo,
+            preco_venda,
+            ativo,
+            categoria_id,
+            categorias_produto (
+              id,
+              nome
+            )
+          `)
           .eq("ativo", true);
 
         if (!ativo) return;
 
-        if (produtosError) {
-          console.error("Erro ao consultar estoque:", produtosError.message);
-        } else if (produtosData) {
+        // Mapear produtos que são bebidas
+        const bebidasIds = new Set<string>();
+        if (produtosData) {
+          produtosData.forEach((p) => {
+            const cat = p.categorias_produto as unknown as
+              | { id: string; nome: string }
+              | Array<{ id: string; nome: string }>
+              | null;
+            const catNome = Array.isArray(cat)
+              ? (cat[0]?.nome || "").toLowerCase()
+              : (cat?.nome || "").toLowerCase();
+            const prodNome = (p.nome || "").toLowerCase();
+            if (
+              catNome.includes("bebida") ||
+              catNome.includes("cerveja") ||
+              catNome.includes("refrigerante") ||
+              prodNome.includes("cerveja") ||
+              prodNome.includes("refrigerante") ||
+              prodNome.includes("água") ||
+              prodNome.includes("suco") ||
+              prodNome.includes("energético")
+            ) {
+              bebidasIds.add(p.id);
+            }
+          });
+
+          // Produtos com estoque baixo
           const itensBaixos = produtosData
             .filter(
               (p) =>
@@ -177,6 +291,75 @@ export function DashboardView() {
 
           setProdutosEstoqueBaixo(itensBaixos);
         }
+
+        // Processar itens operacionais
+        let countServicos = 0;
+        let countBebidas = 0;
+        let countProdutos = 0;
+        const breakdownMap: Record<string, ItemOperacionalAgregado> = {};
+
+        if (vendasData && !vendasError) {
+          vendasData.forEach((venda) => {
+            const itens = venda.venda_itens as Array<{
+              id: string;
+              tipo: string;
+              nome_snapshot: string;
+              quantidade: number;
+              preco_unitario_snapshot: number;
+              subtotal_snapshot: number;
+              produto_id: string | null;
+            }> | null;
+
+            if (itens) {
+              itens.forEach((it) => {
+                const qty = Number(it.quantidade ?? 1);
+                const total = Number(it.subtotal_snapshot ?? 0);
+                const unitPrice = Number(it.preco_unitario_snapshot ?? 0);
+                const name = it.nome_snapshot || "Item";
+
+                let targetType: "servicos" | "bebidas" | "produtos" = "produtos";
+                if (it.tipo === "SERVICO") {
+                  targetType = "servicos";
+                  countServicos += qty;
+                } else if (it.produto_id && bebidasIds.has(it.produto_id)) {
+                  targetType = "bebidas";
+                  countBebidas += qty;
+                } else {
+                  targetType = "produtos";
+                  countProdutos += qty;
+                }
+
+                const key = `${targetType}_${name}`;
+                if (!breakdownMap[key]) {
+                  breakdownMap[key] = {
+                    name,
+                    type: targetType,
+                    qty: 0,
+                    total: 0,
+                    unitPrice,
+                  };
+                }
+                breakdownMap[key].qty += qty;
+                breakdownMap[key].total += total;
+              });
+            }
+          });
+        }
+
+        setServicosRealizados(countServicos);
+        setBebidasVendidas(countBebidas);
+        setProdutosVendidos(countProdutos);
+        setOperationalBreakdown(Object.values(breakdownMap));
+
+        // 5. Construir os pontos do Gráfico de Evolução no Período
+        const points = gerarPontosGrafico(
+          activePeriod,
+          inicio,
+          fim,
+          vendasData || [],
+          despesasData || []
+        );
+        setTrendData(points);
       } catch (err) {
         if (!ativo) return;
         console.error("Erro ao carregar dados do dashboard:", err);
@@ -193,58 +376,170 @@ export function DashboardView() {
     return () => {
       ativo = false;
     };
-  }, [periodo, supabase]);
+  }, [activePeriod, activeDateRange, supabase]);
 
-  const temVendasNoPeriodo = financeiro.quantidade_vendas > 0;
+  // HÁ DADOS se houver vendas, entradas OU despesas/saídas
+  const hasData =
+    financeiro.quantidade_vendas > 0 ||
+    financeiro.total_entradas > 0 ||
+    financeiro.total_saidas > 0;
+
+  const handlePeriodChange = (period: PeriodFilter) => {
+    if (period === "personalizado") {
+      setIsCustomDateModalOpen(true);
+    } else {
+      setActivePeriod(period);
+    }
+  };
+
+  const handleApplyCustomDate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCustomDateError(null);
+
+    if (!tempStartDate || !tempEndDate) {
+      setCustomDateError("Informe a data inicial e a data final.");
+      return;
+    }
+
+    if (tempEndDate < tempStartDate) {
+      setCustomDateError("A data final não pode ser anterior à data inicial.");
+      return;
+    }
+
+    if (tempStartDate > todayStr || tempEndDate > todayStr) {
+      setCustomDateError("Não é permitido selecionar datas futuras.");
+      return;
+    }
+
+    setCustomDateRange({ start: tempStartDate, end: tempEndDate });
+    setActivePeriod("personalizado");
+    setIsCustomDateModalOpen(false);
+  };
+
+  // Itens filtrados para o modal operacional
+  const filteredOperationalBreakdown = useMemo(() => {
+    if (!operationalDetailModal) return [];
+    return operationalBreakdown
+      .filter((item) => item.type === operationalDetailModal)
+      .sort((a, b) => b.qty - a.qty);
+  }, [operationalDetailModal, operationalBreakdown]);
+
+  // Total apurado no topo do gráfico de evolução
+  const totalApuradoGrafico = useMemo(() => {
+    if (chartSeries === "faturamento" || chartSeries === "entradas") {
+      return {
+        valor: financeiro.total_entradas,
+        texto: formatBRL(financeiro.total_entradas),
+        cor: "text-blue-600 dark:text-blue-400",
+      };
+    }
+    if (chartSeries === "saidas") {
+      return {
+        valor: financeiro.total_saidas,
+        texto: formatBRL(financeiro.total_saidas),
+        cor: "text-rose-600 dark:text-rose-400",
+      };
+    }
+    // Resultado
+    const res = financeiro.resultado_estimado;
+    let cor = "text-[#2F2F2D] dark:text-[#F4F4F0]";
+    if (res > 0) cor = "text-emerald-600 dark:text-emerald-400";
+    else if (res < 0) cor = "text-rose-600 dark:text-rose-400";
+
+    return {
+      valor: res,
+      texto: formatBRL(res),
+      cor,
+    };
+  }, [chartSeries, financeiro]);
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      {/* 1. Header com Título e Filtro de Período */}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">
-            Dashboard
-          </h1>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 sm:text-sm">
-            Acompanhe o desempenho diário, vendas, entradas, despesas e situação de estoque da sua barbearia.
-          </p>
-        </div>
-
-        {/* Filtro simples: Hoje / Este mês */}
-        <div
-          role="tablist"
-          aria-label="Filtro de período"
-          className="inline-flex items-center gap-1 self-start rounded-xl border border-zinc-200 bg-zinc-100/80 p-1 select-none dark:border-zinc-800 dark:bg-zinc-900 sm:self-center"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={periodo === "hoje"}
-            onClick={() => setPeriodo("hoje")}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-              periodo === "hoje"
-                ? "bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-zinc-100"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-            }`}
-          >
-            Hoje
-          </button>
-
-          <button
-            type="button"
-            role="tab"
-            aria-selected={periodo === "mes"}
-            onClick={() => setPeriodo("mes")}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-              periodo === "mes"
-                ? "bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-zinc-100"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-            }`}
-          >
-            Este mês
-          </button>
-        </div>
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn relative">
+      {/* ======================================================== */}
+      {/* 1. HEADER LIMPO E INFORMATIVO */}
+      {/* ======================================================== */}
+      <section className="space-y-1.5 pb-1">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#2F2F2D] dark:text-[#F4F4F0]">
+          Dashboard
+        </h1>
+        <p className="text-xs sm:text-sm text-[#666662] dark:text-[#B8B8B2] max-w-3xl leading-relaxed">
+          Acompanhe o desempenho da sua barbearia, visualize vendas, entradas, saídas, resultado estimado e indicadores importantes da operação.
+        </p>
       </section>
+
+      {/* ======================================================== */}
+      {/* 2. FILTRO DE PERÍODO (Segmented Control + Personalizado) */}
+      {/* ======================================================== */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Segmented control */}
+          <div
+            role="tablist"
+            aria-label="Filtro de período da Dashboard"
+            className="inline-flex items-center gap-1 p-1 bg-[#EEEDE7] dark:bg-[#222220] rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] select-none"
+          >
+            {(["hoje", "semana", "mes", "ano"] as const).map((period) => {
+              const labelMap = {
+                hoje: "Hoje",
+                semana: "Semana",
+                mes: "Mês",
+                ano: "Ano",
+              };
+              const isActive = activePeriod === period;
+              return (
+                <button
+                  key={period}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => handlePeriodChange(period)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-white dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] shadow-xs"
+                      : "text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white"
+                  }`}
+                >
+                  {labelMap[period]}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Botão Personalizado */}
+          <button
+            type="button"
+            onClick={() => setIsCustomDateModalOpen(true)}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              activePeriod === "personalizado" && customDateRange
+                ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] border-transparent shadow-xs"
+                : "bg-white dark:bg-[#222220] border-[#E2E2DD] dark:border-[#3F3F3B] text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white"
+            }`}
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>
+              {activePeriod === "personalizado" && customDateRange
+                ? `${formatDateDisplay(customDateRange.start)} → ${formatDateDisplay(customDateRange.end)}`
+                : "Personalizado"}
+            </span>
+          </button>
+        </div>
+
+        {/* Indicador de carregamento ou contexto ativo */}
+        <div className="flex items-center gap-3 text-xs text-[#666662] dark:text-[#B8B8B2]">
+          {loading ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] animate-pulse">
+              <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+              <span>Atualizando dados...</span>
+            </span>
+          ) : (
+            <span>
+              {activePeriod === "personalizado" && customDateRange
+                ? `Intervalo ativo: ${formatDateDisplay(customDateRange.start)} até ${formatDateDisplay(customDateRange.end)}`
+                : `Período ativo: ${formatDateDisplay(activeDateRange.inicio)} até ${formatDateDisplay(activeDateRange.fim)}`}
+            </span>
+          )}
+        </div>
+      </div>
 
       {erro && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
@@ -252,174 +547,420 @@ export function DashboardView() {
         </div>
       )}
 
-      {/* 2. Cards Financeiros Principais */}
-      <section aria-label="Indicadores Financeiros">
-        <FinancialCards
-          totalEntradas={financeiro.total_entradas}
-          totalSaidas={financeiro.total_saidas}
-          resultadoEstimado={financeiro.resultado_estimado}
-          quantidadeVendas={financeiro.quantidade_vendas}
-          loading={loading}
-        />
-      </section>
+      {/* ======================================================== */}
+      {/* 3. QUATRO CARDS FINANCEIROS GRANDES */}
+      {/* ======================================================== */}
+      <FinancialCards
+        faturamento={financeiro.total_entradas}
+        entradas={financeiro.total_entradas}
+        saidas={financeiro.total_saidas}
+        resultado={financeiro.resultado_estimado}
+        quantidadeVendas={financeiro.quantidade_vendas}
+        hasData={hasData}
+        loading={loading}
+        activeSeries={chartSeries}
+        onSelectSeries={setChartSeries}
+      />
 
-      {/* 3. Indicadores Operacionais */}
-      <section aria-label="Indicadores Operacionais">
-        <OperationalCards
-          vendasRealizadas={financeiro.quantidade_vendas}
-          servicosRealizados={servicosRealizados}
-          produtosVendidos={produtosVendidos}
-          estoqueBaixoCount={produtosEstoqueBaixo.length}
-          loading={loading}
-          onOpenLowStockModal={() => setIsLowStockModalOpen(true)}
-        />
-      </section>
+      {/* ======================================================== */}
+      {/* 4. QUATRO CARDS OPERACIONAIS MENORES */}
+      {/* ======================================================== */}
+      <OperationalCards
+        servicosRealizados={servicosRealizados}
+        bebidasVendidas={bebidasVendidas}
+        produtosVendidos={produtosVendidos}
+        estoqueBaixoCount={produtosEstoqueBaixo.length}
+        loading={loading}
+        onOpenOperationalDetail={setOperationalDetailModal}
+        onOpenLowStockModal={() => setIsLowStockModalOpen(true)}
+      />
 
-      {/* 4. Atalhos Rápidos Operacionais */}
-      <section aria-label="Atalhos Operacionais">
-        <QuickActions />
-      </section>
-
-      {/* 5. Alerta / Situação do Estoque */}
-      <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900 sm:p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Situação do estoque
-            </h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Monitoramento automático dos níveis mínimos de produtos
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          {produtosEstoqueBaixo.length === 0 ? (
-            <div className="flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 mt-0.5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
+      {/* ======================================================== */}
+      {/* 5. MAIN SPLIT: GRÁFICO (ESQUERDA 8) + OPERAR & ESTOQUE (DIREITA 4) */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Coluna do Gráfico (8 Cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          <section className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-5">
+            {/* Header do Gráfico com seletor de série */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <strong className="block font-bold text-zinc-900 dark:text-zinc-100">
-                  Nenhum alerta de estoque baixo
-                </strong>
-                Todos os produtos cadastrados estão acima da margem mínima definida ou ainda não possuem limite configurado.
+                <h2 className="text-sm sm:text-base font-extrabold tracking-tight text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  Evolução no período
+                </h2>
+                <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                  Série ativa: <strong className="uppercase text-[#2F2F2D] dark:text-white">{chartSeries}</strong>
+                </p>
+              </div>
+
+              {/* Segmented series switcher */}
+              <div className="flex items-center gap-1 p-1 bg-[#EEEDE7] dark:bg-[#2B2B29] rounded-xl text-xs font-bold select-none overflow-x-auto">
+                {(["faturamento", "entradas", "saidas", "resultado"] as const).map((s) => {
+                  const labelMap = {
+                    faturamento: "Faturamento",
+                    entradas: "Entradas",
+                    saidas: "Saídas",
+                    resultado: "Resultado",
+                  };
+
+                  const isActive = chartSeries === s;
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setChartSeries(s)}
+                      className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap ${
+                        isActive
+                          ? "bg-white dark:bg-[#222220] text-[#2F2F2D] dark:text-white shadow-xs"
+                          : "text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white"
+                      }`}
+                    >
+                      {labelMap[s]}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          ) : (
-            <div className="flex flex-col gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-amber-500/20 text-amber-600 dark:text-amber-400 mt-0.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
+
+            {/* Container do Gráfico */}
+            {!hasData && !loading ? (
+              /* Empty state fiel ao AI Studio */
+              <div className="h-64 rounded-xl border border-dashed border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#1E1E1C] p-6 flex flex-col items-center justify-center text-center space-y-2.5">
+                <div className="w-12 h-12 rounded-xl bg-[#EEEDE7] dark:bg-[#2B2B29] flex items-center justify-center text-[#888882] dark:text-[#B8B8B2]">
+                  <TrendingUp className="w-6 h-6" />
                 </div>
-                <div>
-                  <strong className="block font-bold text-amber-800 dark:text-amber-300">
-                    Atenção: há {produtosEstoqueBaixo.length} produto{produtosEstoqueBaixo.length === 1 ? "" : "s"} com estoque baixo
-                  </strong>
-                  <span className="text-zinc-600 dark:text-zinc-400">
-                    Itens que atingiram o limite mínimo exigem reposição para evitar indisponibilidade.
+                <h3 className="text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  Nenhuma movimentação encontrada neste período
+                </h3>
+                <p className="text-xs text-[#666662] dark:text-[#B8B8B2] max-w-sm leading-relaxed">
+                  Ao finalizar vendas no PDV ou lançar despesas, o gráfico de evolução consolidará aqui o fluxo da sua barbearia.
+                </p>
+              </div>
+            ) : (
+              /* Gráfico SVG com barras responsivas */
+              <div className="h-64 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#1E1E1C] p-5 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-xs text-[#666662] dark:text-[#B8B8B2]">
+                  <span>Distribuição ao longo do período selecionado</span>
+                  <span className={`font-extrabold ${totalApuradoGrafico.cor}`}>
+                    Total apurado: {totalApuradoGrafico.texto}
                   </span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                <button
-                  type="button"
-                  onClick={() => setIsLowStockModalOpen(true)}
-                  className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition hover:bg-amber-700 cursor-pointer"
-                >
-                  Ver lista
-                </button>
-                <Link
-                  href="/operacao/estoque"
-                  className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-                >
-                  Repor estoque
-                </Link>
+                {/* Barras SVG */}
+                <div className="h-40 flex items-end justify-around gap-2 sm:gap-3 pt-4 px-2 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
+                  {trendData.map((point, idx) => {
+                    const values = trendData.map((p) => Math.abs(p[chartSeries]));
+                    const maxVal = Math.max(...values, 10);
+                    const val = point[chartSeries];
+                    const absVal = Math.abs(val);
+                    const heightPercent = absVal === 0 ? 8 : Math.max(12, Math.round((absVal / maxVal) * 100));
+
+                    // Cor por série
+                    let barColor = "bg-blue-600 dark:bg-blue-500";
+                    let textLabel = `R$ ${val.toFixed(0)}`;
+
+                    if (chartSeries === "entradas") {
+                      barColor = "bg-emerald-600 dark:bg-emerald-500";
+                      textLabel = `R$ ${val.toFixed(0)}`;
+                    } else if (chartSeries === "saidas") {
+                      barColor = "bg-rose-600 dark:bg-rose-500";
+                      textLabel = `R$ ${absVal.toFixed(0)}`;
+                    } else if (chartSeries === "resultado") {
+                      if (val < 0) {
+                        barColor = "bg-rose-600 dark:bg-rose-500";
+                        textLabel = `-R$ ${absVal.toFixed(0)}`;
+                      } else if (val > 0) {
+                        barColor = "bg-emerald-600 dark:bg-emerald-500";
+                        textLabel = `R$ ${val.toFixed(0)}`;
+                      } else {
+                        barColor = "bg-neutral-400 dark:bg-neutral-600";
+                        textLabel = "R$ 0";
+                      }
+                    }
+
+                    return (
+                      <div
+                        key={idx}
+                        className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group max-w-[64px]"
+                      >
+                        <span className={`text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity truncate max-w-full ${
+                          chartSeries === "saidas" || (chartSeries === "resultado" && val < 0)
+                            ? "text-rose-600 dark:text-rose-400"
+                            : "text-neutral-600 dark:text-neutral-300"
+                        }`}>
+                          {textLabel}
+                        </span>
+                        <div
+                          className={`w-full rounded-t-lg transition-all duration-300 ${barColor} ${absVal === 0 ? "opacity-30" : "opacity-90 hover:opacity-100"}`}
+                          style={{ height: `${heightPercent}%` }}
+                        />
+                        <span className="text-[10px] font-bold text-[#888882] mt-1 truncate max-w-full">
+                          {point.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-[#888882]">
+                  <span>Início do intervalo</span>
+                  <span>Encerramento</span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </section>
         </div>
-      </section>
 
-      {/* 6. Estado Vazio Informativo (quando não houver vendas no período) */}
-      {!loading && !temVendasNoPeriodo && (
-        <section className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/50 p-8 text-center transition-colors dark:border-zinc-800 dark:bg-zinc-900/30 sm:p-12">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
-            </svg>
+        {/* Coluna Direita (4 Cols): Comece a operar + Situação do estoque */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Painel Comece a operar */}
+          <QuickActions />
+
+          {/* Painel Situação do estoque */}
+          <section className="p-5 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3">
+            <div>
+              <h2 className="text-sm font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Situação do estoque
+              </h2>
+              <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                Monitoramento de itens com estoque baixo
+              </p>
+            </div>
+
+            {produtosEstoqueBaixo.length === 0 ? (
+              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3 text-xs leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                <div className="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <strong className="text-[#2F2F2D] dark:text-white block font-bold">
+                    Nenhum alerta de estoque baixo.
+                  </strong>
+                  Todos os itens cadastrados estão acima da margem mínima ou ainda não possuem limite definido.
+                </div>
+              </div>
+            ) : (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-2 text-xs leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold">
+                    <AlertTriangle className="w-4 h-4 shrink-0" />
+                    <span>Aviso: há produtos com estoque baixo</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsLowStockModalOpen(true)}
+                    className="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors shrink-0 cursor-pointer shadow-xs"
+                  >
+                    Ver mais
+                  </button>
+                </div>
+                <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2]">
+                  Existem {produtosEstoqueBaixo.length} produtos abaixo da margem mínima estabelecida.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* 6. MODAL: DETALHAMENTO DE ITENS OPERACIONAIS */}
+      {/* ======================================================== */}
+      {operationalDetailModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="operational-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+        >
+          <div className="w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] p-5 sm:p-6 space-y-4 max-h-[85vh] flex flex-col animate-slideUp">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    operationalDetailModal === "servicos"
+                      ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                      : operationalDetailModal === "bebidas"
+                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      : "bg-purple-500/10 text-purple-600 dark:text-purple-400"
+                  }`}
+                >
+                  {operationalDetailModal === "servicos" && <Scissors className="w-4 h-4" />}
+                  {operationalDetailModal === "bebidas" && <Coffee className="w-4 h-4" />}
+                  {operationalDetailModal === "produtos" && <ShoppingBag className="w-4 h-4" />}
+                </div>
+                <div>
+                  <h3
+                    id="operational-modal-title"
+                    className="text-base font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]"
+                  >
+                    {operationalDetailModal === "servicos" && "Serviços Realizados"}
+                    {operationalDetailModal === "bebidas" && "Bebidas Vendidas"}
+                    {operationalDetailModal === "produtos" && "Outros Produtos Vendidos"}
+                  </h3>
+                  <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2]">
+                    Movimentação apurada no período ativo
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setOperationalDetailModal(null)}
+                className="text-neutral-400 hover:text-neutral-700 dark:hover:text-white p-1 rounded-lg cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Lista de itens agregados */}
+            <div className="divide-y divide-[#EEEEEA] dark:divide-[#3F3F3B] overflow-y-auto flex-1 pr-1 space-y-1">
+              {filteredOperationalBreakdown.length === 0 ? (
+                <div className="py-8 text-center space-y-1.5 text-xs text-[#888882]">
+                  <p className="font-semibold text-neutral-700 dark:text-neutral-300">
+                    Nenhum item registrado no período selecionado.
+                  </p>
+                  <p className="text-[11px]">
+                    Registre novas vendas no PDV para alimentar os indicadores operacionais.
+                  </p>
+                </div>
+              ) : (
+                filteredOperationalBreakdown.map((item, idx) => (
+                  <div key={idx} className="py-3 flex items-center justify-between gap-3 text-xs">
+                    <div>
+                      <h4 className="font-bold text-[#2F2F2D] dark:text-[#F4F4F0] text-sm">
+                        {item.name}
+                      </h4>
+                      <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2] mt-0.5">
+                        {item.qty} {item.qty === 1 ? "unidade" : "unidades"} • {formatBRL(item.unitPrice)} cada
+                      </p>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span className="font-extrabold text-sm text-[#2F2F2D] dark:text-white block">
+                        {formatBRL(item.total)}
+                      </span>
+                      <span className="text-[10px] text-neutral-400">Total gerado</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Modal Actions */}
+            <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#EEEEEA] dark:border-[#3F3F3B]">
+              <Link
+                href="/pdv"
+                onClick={() => setOperationalDetailModal(null)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                <span>Abrir PDV</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => setOperationalDetailModal(null)}
+                className="px-5 py-2.5 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] font-bold text-xs transition-colors cursor-pointer shadow-xs"
+              >
+                Fechar
+              </button>
+            </div>
           </div>
-
-          <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
-            Nenhuma venda registrada {periodo === "hoje" ? "hoje" : "neste mês"}
-          </h3>
-
-          <p className="mt-2 max-w-md text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 sm:text-sm">
-            Assim que você registrar vendas no PDV, seus indicadores de faturamento, serviços realizados e produtos vendidos aparecerão aqui.
-          </p>
-
-          <Link
-            href="/pdv"
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-5 py-2.5 text-xs font-semibold text-white shadow-2xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99]"
-          >
-            <span>Abrir PDV para nova venda</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </Link>
-        </section>
+        </div>
       )}
 
-      {/* Modal de Estoque Baixo */}
+      {/* ======================================================== */}
+      {/* 7. MODAL: FILTRO DE PERÍODO PERSONALIZADO */}
+      {/* ======================================================== */}
+      {isCustomDateModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="custom-period-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+        >
+          <div className="w-full max-w-sm bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] p-5 space-y-4 animate-slideUp">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#2F2F2D] dark:text-[#F4F4F0]" />
+                <h3
+                  id="custom-period-modal-title"
+                  className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]"
+                >
+                  Selecionar período personalizado
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCustomDateModalOpen(false)}
+                className="text-[#888882] hover:text-[#2F2F2D] dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleApplyCustomDate} className="space-y-3">
+              {customDateError && (
+                <p className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-600 dark:text-red-400 font-medium">
+                  {customDateError}
+                </p>
+              )}
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  Data Inicial <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  max={todayStr}
+                  value={tempStartDate}
+                  onChange={(e) => setTempStartDate(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs text-[#2F2F2D] dark:text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  Data Final <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  max={todayStr}
+                  value={tempEndDate}
+                  onChange={(e) => setTempEndDate(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs text-[#2F2F2D] dark:text-white focus:outline-none"
+                />
+              </div>
+
+              <p className="text-[10px] text-[#888882] leading-tight">
+                * Não é permitido selecionar datas futuras. Vendas anteriores são permitidas.
+              </p>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCustomDateModalOpen(false)}
+                  className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl bg-[#2F2F2D] hover:bg-[#3A3A38] dark:bg-[#F4F4F0] dark:hover:bg-[#E9E9E4] text-white dark:text-[#181817] text-xs font-bold transition-all shadow-xs"
+                >
+                  Aplicar período
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* 8. MODAL: PRODUTOS COM ESTOQUE BAIXO */}
+      {/* ======================================================== */}
       <LowStockModal
         isOpen={isLowStockModalOpen}
         onClose={() => setIsLowStockModalOpen(false)}
@@ -427,4 +968,278 @@ export function DashboardView() {
       />
     </div>
   );
+}
+
+// Função auxiliar para gerar pontos do gráfico com dados reais
+function gerarPontosGrafico(
+  periodo: PeriodFilter,
+  inicio: string,
+  fim: string,
+  vendas: Array<{
+    total_liquido?: number | null;
+    total_bruto?: number | null;
+    ocorrida_em?: string | null;
+    created_at?: string | null;
+  }>,
+  despesas: Array<{
+    valor?: number | null;
+    data_despesa?: string | null;
+    created_at?: string | null;
+  }>
+): TrendPoint[] {
+  if (periodo === "hoje") {
+    // 6 blocos horários do dia
+    const slots = [
+      { label: "08h - 10h", startH: 8, endH: 10 },
+      { label: "10h - 12h", startH: 10, endH: 12 },
+      { label: "12h - 14h", startH: 12, endH: 14 },
+      { label: "14h - 16h", startH: 14, endH: 16 },
+      { label: "16h - 18h", startH: 16, endH: 18 },
+      { label: "18h - 22h", startH: 18, endH: 22 },
+    ];
+
+    return slots.map((slot, idx) => {
+      let fat = 0;
+      let sai = 0;
+
+      vendas.forEach((v) => {
+        const d = new Date(v.ocorrida_em || v.created_at || "");
+        const h = d.getHours();
+        if (h >= slot.startH && h < slot.endH) {
+          fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+        }
+      });
+
+      despesas.forEach((dp) => {
+        // Se a despesa tiver created_at com hora, usa a hora; senão distribui no primeiro slot ou proporcional
+        if (dp.created_at) {
+          const d = new Date(dp.created_at);
+          const h = d.getHours();
+          if (h >= slot.startH && h < slot.endH) {
+            sai += Number(dp.valor ?? 0);
+          }
+        } else if (idx === 0) {
+          sai += Number(dp.valor ?? 0);
+        }
+      });
+
+      // Se todas as despesas não tiveram slot horário específico, garantir que somam ao menos no total
+      return {
+        label: slot.label,
+        faturamento: fat,
+        entradas: fat,
+        saidas: sai,
+        resultado: fat - sai,
+      };
+    });
+  }
+
+  if (periodo === "semana") {
+    // 7 dias retroativos a partir de hoje
+    const points: TrendPoint[] = [];
+    const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const dateKey = `${y}-${m}-${day}`;
+      const diaNome = diasSemana[d.getDay()];
+
+      let fat = 0;
+      let sai = 0;
+
+      vendas.forEach((v) => {
+        const vDate = (v.ocorrida_em || v.created_at || "").slice(0, 10);
+        if (vDate === dateKey) {
+          fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+        }
+      });
+
+      despesas.forEach((dp) => {
+        const dpDate = (dp.data_despesa || dp.created_at || "").slice(0, 10);
+        if (dpDate === dateKey) {
+          sai += Number(dp.valor ?? 0);
+        }
+      });
+
+      points.push({
+        label: `${diaNome} ${day}`,
+        faturamento: fat,
+        entradas: fat,
+        saidas: sai,
+        resultado: fat - sai,
+      });
+    }
+
+    return points;
+  }
+
+  if (periodo === "mes") {
+    // 4 semanas do mês corrente
+    const slots = [
+      { label: "Sem 1 (01-07)", startD: 1, endD: 7 },
+      { label: "Sem 2 (08-14)", startD: 8, endD: 14 },
+      { label: "Sem 3 (15-21)", startD: 15, endD: 21 },
+      { label: "Sem 4 (22-31)", startD: 22, endD: 31 },
+    ];
+
+    return slots.map((slot) => {
+      let fat = 0;
+      let sai = 0;
+
+      vendas.forEach((v) => {
+        const d = new Date(v.ocorrida_em || v.created_at || "");
+        const day = d.getDate();
+        if (day >= slot.startD && day <= slot.endD) {
+          fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+        }
+      });
+
+      despesas.forEach((dp) => {
+        const dStr = dp.data_despesa || dp.created_at || "";
+        const parts = dStr.split("-");
+        const day = parts.length >= 3 ? parseInt(parts[2], 10) : new Date(dStr).getDate();
+        if (day >= slot.startD && day <= slot.endD) {
+          sai += Number(dp.valor ?? 0);
+        }
+      });
+
+      return {
+        label: slot.label,
+        faturamento: fat,
+        entradas: fat,
+        saidas: sai,
+        resultado: fat - sai,
+      };
+    });
+  }
+
+  if (periodo === "ano") {
+    // 12 meses
+    const meses = [
+      "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+      "Jul", "Ago", "Set", "Out", "Nov", "Dez",
+    ];
+
+    return meses.map((nome, idx) => {
+      let fat = 0;
+      let sai = 0;
+
+      vendas.forEach((v) => {
+        const d = new Date(v.ocorrida_em || v.created_at || "");
+        if (d.getMonth() === idx) {
+          fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+        }
+      });
+
+      despesas.forEach((dp) => {
+        const dStr = dp.data_despesa || dp.created_at || "";
+        const parts = dStr.split("-");
+        const mesIdx = parts.length >= 2 ? parseInt(parts[1], 10) - 1 : new Date(dStr).getMonth();
+        if (mesIdx === idx) {
+          sai += Number(dp.valor ?? 0);
+        }
+      });
+
+      return {
+        label: nome,
+        faturamento: fat,
+        entradas: fat,
+        saidas: sai,
+        resultado: fat - sai,
+      };
+    });
+  }
+
+  // Personalizado: divide o intervalo em blocos ou dias
+  const startDate = new Date(inicio);
+  const endDate = new Date(fim);
+  const diffDays = Math.max(
+    1,
+    Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)) + 1
+  );
+
+  if (diffDays <= 7) {
+    const points: TrendPoint[] = [];
+    for (let i = 0; i < diffDays; i++) {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const dateKey = `${y}-${m}-${day}`;
+
+      let fat = 0;
+      let sai = 0;
+
+      vendas.forEach((v) => {
+        const vDate = (v.ocorrida_em || v.created_at || "").slice(0, 10);
+        if (vDate === dateKey) {
+          fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+        }
+      });
+
+      despesas.forEach((dp) => {
+        const dpDate = (dp.data_despesa || dp.created_at || "").slice(0, 10);
+        if (dpDate === dateKey) {
+          sai += Number(dp.valor ?? 0);
+        }
+      });
+
+      points.push({
+        label: `${day}/${m}`,
+        faturamento: fat,
+        entradas: fat,
+        saidas: sai,
+        resultado: fat - sai,
+      });
+    }
+    return points;
+  }
+
+  // Se > 7 dias, faz 4 blocos proporcionais
+  const step = Math.ceil(diffDays / 4);
+  const points: TrendPoint[] = [];
+  for (let b = 0; b < 4; b++) {
+    const bStart = new Date(startDate);
+    bStart.setDate(bStart.getDate() + b * step);
+    const bEnd = new Date(startDate);
+    bEnd.setDate(Math.min(endDate.getDate(), bStart.getDate() + step - 1));
+
+    const sDay = String(bStart.getDate()).padStart(2, "0");
+    const sMonth = String(bStart.getMonth() + 1).padStart(2, "0");
+    const eDay = String(bEnd.getDate()).padStart(2, "0");
+    const eMonth = String(bEnd.getMonth() + 1).padStart(2, "0");
+
+    let fat = 0;
+    let sai = 0;
+
+    vendas.forEach((v) => {
+      const d = new Date(v.ocorrida_em || v.created_at || "");
+      if (d >= bStart && d <= bEnd) {
+        fat += Number(v.total_liquido ?? v.total_bruto ?? 0);
+      }
+    });
+
+    despesas.forEach((dp) => {
+      const dStr = dp.data_despesa || dp.created_at || "";
+      const d = new Date(dStr);
+      if (d >= bStart && d <= bEnd) {
+        sai += Number(dp.valor ?? 0);
+      }
+    });
+
+    points.push({
+      label: `${sDay}/${sMonth} - ${eDay}/${eMonth}`,
+      faturamento: fat,
+      entradas: fat,
+      saidas: sai,
+      resultado: fat - sai,
+    });
+  }
+
+  return points;
 }
