@@ -33,11 +33,11 @@ export default async function WelcomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#0B0D0E] text-neutral-100 selection:bg-red-700 selection:text-white">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F4F4F0] dark:bg-[#0B0D0E] text-[#1E1E1C] dark:text-neutral-100 selection:bg-red-700 selection:text-white transition-colors duration-200">
       {/* ============================================================ */}
       {/* LADO ESQUERDO: Painel Visual Hero (Desktop) / Imagem no Topo (Mobile) */}
       {/* ============================================================ */}
-      <section className="relative w-full lg:w-7/12 xl:w-3/5 min-h-[46vh] lg:min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 overflow-hidden border-b lg:border-b-0 lg:border-r border-[#22252A] shrink-0">
+      <section className="relative w-full lg:w-7/12 xl:w-3/5 min-h-[46vh] lg:min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 overflow-hidden border-b lg:border-b-0 lg:border-r border-[#E2E2DD] dark:border-[#22252A] shrink-0">
         {/* Imagem de Fundo de Alta Definição */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -49,8 +49,8 @@ export default async function WelcomePage() {
             sizes="(max-width: 1024px) 100vw, 60vw"
           />
           {/* Gradientes cinematográficos sobrepostos */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D0E] via-[#0B0D0E]/40 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0B0D0E]/20 to-[#0B0D0E]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/30 lg:from-[#0B0D0E] lg:via-[#0B0D0E]/40 lg:to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/80 lg:to-[#0B0D0E]" />
           <div className="absolute inset-0 pointer-events-none opacity-40 mix-blend-soft-light bg-[radial-gradient(circle_at_10%_20%,rgba(229,62,62,0.2)_0%,transparent_45%),radial-gradient(circle_at_90%_80%,rgba(0,114,255,0.15)_0%,transparent_45%)]" />
         </div>
 
@@ -62,7 +62,7 @@ export default async function WelcomePage() {
           </div>
 
           {/* Identificador no Mobile */}
-          <div className="flex lg:hidden items-center justify-center h-9 w-9 rounded-xl bg-neutral-900/80 border border-neutral-800 text-white backdrop-blur-md">
+          <div className="flex lg:hidden items-center justify-center h-9 w-9 rounded-xl bg-black/60 border border-neutral-700/60 text-white backdrop-blur-md">
             <Layers className="h-5 w-5" />
           </div>
         </div>
@@ -88,18 +88,18 @@ export default async function WelcomePage() {
       {/* ============================================================ */}
       {/* LADO DIREITO: Painel de Acesso / Boas-Vindas */}
       {/* ============================================================ */}
-      <main className="w-full lg:w-5/12 xl:w-2/5 flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-[#0E1013] relative z-10">
-        {/* Topo: Identificador Neutro da Marca (Desktop) */}
+      <main className="w-full lg:w-5/12 xl:w-2/5 flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-[#FAF9F5] dark:bg-[#0E1013] relative z-10 transition-colors duration-200">
+        {/* Topo: Identificador Institucional da Marca (Desktop) */}
         <header className="hidden lg:flex w-full items-center justify-between pt-2">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-neutral-900/80 border border-neutral-800 backdrop-blur-sm">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-neutral-950 font-bold">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-neutral-900/80 border border-[#E2E2DD] dark:border-neutral-800 shadow-xs backdrop-blur-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1E1E1C] text-white dark:bg-white dark:text-neutral-950 font-bold">
               <Layers className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-white tracking-wide">
+              <span className="text-xs font-semibold text-[#1E1E1C] dark:text-white tracking-wide">
                 Painel do Barbeiro
               </span>
-              <span className="text-[10px] text-neutral-400">
+              <span className="text-[10px] text-[#666662] dark:text-neutral-400">
                 Gestão • Operação • Divulgação
               </span>
             </div>
@@ -109,15 +109,15 @@ export default async function WelcomePage() {
         {/* Conteúdo Central: Apresentação e Botões de Ação */}
         <div className="my-auto py-8 sm:py-12 lg:py-8 max-w-md w-full mx-auto lg:mx-0">
           <div className="space-y-3.5">
-            <div className="inline-block px-3 py-1 rounded bg-neutral-900 border border-neutral-800 text-[11px] font-medium tracking-widest text-neutral-400 uppercase">
+            <div className="inline-block px-3 py-1 rounded-md bg-white dark:bg-neutral-900 border border-[#E2E2DD] dark:border-neutral-800 text-[11px] font-semibold tracking-widest text-[#666662] dark:text-neutral-400 uppercase shadow-xs">
               Gestão &amp; divulgação
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1E1E1C] dark:text-white leading-tight">
               Sua barbearia organizada. Seu negócio no controle.
             </h2>
 
-            <p className="text-sm sm:text-base text-neutral-400 leading-relaxed pt-1">
+            <p className="text-sm sm:text-base text-[#666662] dark:text-neutral-400 leading-relaxed pt-1">
               Acompanhe vendas, estoque e despesas e mostre seu trabalho com uma Vitrine Digital profissional.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default async function WelcomePage() {
             {/* Botão Primário: Criar Conta */}
             <Link
               href="/criar-conta"
-              className="group relative w-full min-h-[48px] flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg shadow-red-950/40 hover:shadow-red-900/50 transition-all duration-200 active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
+              className="group relative w-full min-h-[48px] flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg shadow-red-950/20 dark:shadow-red-950/40 hover:shadow-red-900/40 transition-all duration-200 active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
             >
               <span>Criar conta</span>
               <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
@@ -136,49 +136,49 @@ export default async function WelcomePage() {
             {/* Botão Secundário: Entrar */}
             <Link
               href="/entrar"
-              className="w-full min-h-[48px] flex items-center justify-center px-6 py-3.5 rounded-xl text-base font-semibold text-neutral-200 bg-neutral-900/90 hover:bg-neutral-800 border border-neutral-800 hover:border-neutral-700 transition-all duration-200 active:bg-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
+              className="w-full min-h-[48px] flex items-center justify-center px-6 py-3.5 rounded-xl text-base font-semibold text-[#2F2F2D] dark:text-neutral-200 bg-white hover:bg-[#F4F4F0] dark:bg-neutral-900/90 dark:hover:bg-neutral-800 border border-[#E2E2DD] hover:border-neutral-400 dark:border-neutral-800 dark:hover:border-neutral-700 transition-all duration-200 shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
             >
               Entrar
             </Link>
           </div>
 
           {/* Selo de Garantia e Disponibilidade */}
-          <div className="mt-8 pt-6 border-t border-neutral-800/60 flex items-center justify-between text-xs text-neutral-400">
+          <div className="mt-8 pt-6 border-t border-[#E2E2DD] dark:border-neutral-800/60 flex items-center justify-between text-xs text-[#666662] dark:text-neutral-400">
             <span className="flex items-center gap-1.5">
-              <Smartphone className="w-4 h-4 text-emerald-400 shrink-0" />
+              <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Acesse de qualquer dispositivo</span>
             </span>
-            <span className="text-neutral-600">•</span>
+            <span className="text-neutral-400 dark:text-neutral-600">•</span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Dados sempre disponíveis</span>
             </span>
           </div>
         </div>
 
         {/* Rodapé Institucional Discreto */}
-        <footer className="pt-6 border-t border-neutral-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
+        <footer className="pt-6 border-t border-[#E2E2DD] dark:border-neutral-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#666662] dark:text-neutral-500">
           <p className="text-center sm:text-left">
             © 2026 Estilo &amp; Gestão. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-3">
             <Link
               href="/termos-de-uso"
-              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+              className="hover:text-[#1E1E1C] dark:hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
             >
               Termos
             </Link>
-            <span className="text-neutral-700">•</span>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
             <Link
               href="/politica-de-privacidade"
-              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+              className="hover:text-[#1E1E1C] dark:hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
             >
               Privacidade
             </Link>
-            <span className="text-neutral-700">•</span>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
             <Link
               href="/politica-de-cookies"
-              className="hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
+              className="hover:text-[#1E1E1C] dark:hover:text-neutral-300 transition-colors underline-offset-4 hover:underline"
             >
               Cookies
             </Link>

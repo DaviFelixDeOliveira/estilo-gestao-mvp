@@ -2,8 +2,21 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const COOKIE_STORAGE_KEY = "estilo_gestao_cookie_notice_seen_v1";
+
+const PUBLIC_ROUTES = [
+  "/",
+  "/entrar",
+  "/criar-conta",
+  "/confirmar-email",
+  "/esqueci-senha",
+  "/redefinir-senha",
+  "/termos-de-uso",
+  "/politica-de-privacidade",
+  "/politica-de-cookies",
+];
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -27,11 +40,19 @@ function getServerSnapshot() {
 }
 
 export function CookieBanner() {
+  const pathname = usePathname();
   const visto = useSyncExternalStore(
     subscribe,
     getSnapshot,
     getServerSnapshot
   );
+
+  // O banner não deve ser exibido em páginas públicas
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
+  if (visto || isPublicRoute) {
+    return null;
+  }
 
   function handleEntendi() {
     try {
@@ -42,15 +63,11 @@ export function CookieBanner() {
     }
   }
 
-  if (visto) {
-    return null;
-  }
-
   return (
     <aside
       aria-label="Aviso sobre cookies"
       role="region"
-      className="fixed z-50 bottom-20 sm:bottom-4 right-4 left-4 sm:left-auto w-auto sm:w-[320px] max-w-full rounded-3xl bg-white dark:bg-[#141619] border border-neutral-200 dark:border-neutral-800 p-6 pt-10 shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all animate-in fade-in slide-in-from-bottom-5 duration-300"
+      className="fixed z-50 bottom-20 sm:bottom-4 right-4 left-4 sm:left-auto w-auto sm:w-[320px] max-w-full rounded-3xl bg-white dark:bg-[#141619] border border-neutral-200 dark:border-neutral-800 p-6 pt-10 shadow-[0_4px_20px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all animate-in fade-in slide-in-from-bottom-5 duration-300"
     >
       <div className="relative flex flex-col">
         {/* Ícone de Cookie Flutuante */}

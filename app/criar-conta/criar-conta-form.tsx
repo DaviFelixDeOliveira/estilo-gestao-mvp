@@ -99,7 +99,7 @@ export function CriarContaForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="email"
-          className="block text-xs sm:text-sm font-medium text-neutral-300"
+          className="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#3A3A38] dark:text-[#D5D5D0]"
         >
           E-mail
         </label>
@@ -111,7 +111,7 @@ export function CriarContaForm() {
           onChange={(event) => setEmail(event.target.value)}
           autoComplete="email"
           placeholder="seu.email@barbearia.com"
-          className="w-full h-11 sm:h-12 px-3.5 sm:px-4 rounded-xl bg-neutral-900/90 border border-neutral-800 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-colors"
+          className="w-full h-11 sm:h-12 px-3.5 sm:px-4 rounded-xl bg-white dark:bg-[#18191E] border border-[#D5D4CD] dark:border-[#2C2E38] text-[#1E1E1C] dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 text-sm focus:outline-none focus:border-red-600 dark:focus:border-red-500 focus:ring-2 focus:ring-red-600/15 dark:focus:ring-red-500/20 transition-all shadow-xs"
         />
       </div>
 
@@ -119,7 +119,7 @@ export function CriarContaForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="senha"
-          className="block text-xs sm:text-sm font-medium text-neutral-300"
+          className="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#3A3A38] dark:text-[#D5D5D0]"
         >
           Senha
         </label>
@@ -133,13 +133,13 @@ export function CriarContaForm() {
             onChange={(event) => setSenha(event.target.value)}
             autoComplete="new-password"
             placeholder="••••••••"
-            className="w-full h-11 sm:h-12 pl-3.5 pr-11 sm:pl-4 sm:pr-12 rounded-xl bg-neutral-900/90 border border-neutral-800 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-colors"
+            className="w-full h-11 sm:h-12 pl-3.5 pr-11 sm:pl-4 sm:pr-12 rounded-xl bg-white dark:bg-[#18191E] border border-[#D5D4CD] dark:border-[#2C2E38] text-[#1E1E1C] dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 text-sm focus:outline-none focus:border-red-600 dark:focus:border-red-500 focus:ring-2 focus:ring-red-600/15 dark:focus:ring-red-500/20 transition-all shadow-xs"
           />
           <button
             type="button"
             onClick={() => setMostrarSenha((prev) => !prev)}
             aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800/80 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-neutral-400 hover:text-[#1E1E1C] dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
           >
             {mostrarSenha ? (
               <EyeOff className="h-4.5 w-4.5" />
@@ -152,37 +152,37 @@ export function CriarContaForm() {
         {/* Indicadores Visuais de Requisitos da Senha */}
         <ul
           aria-label="Requisitos de senha"
-          className="pt-1 space-y-1 text-xs text-neutral-400"
+          className="pt-1 space-y-1 text-xs text-[#666662] dark:text-neutral-400"
         >
           <li className="flex items-center gap-2">
             {temOitoCaracteres ? (
-              <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             ) : (
-              <Circle className="h-2 w-2 text-neutral-600 fill-neutral-600 shrink-0 ml-0.5 mr-1" />
+              <Circle className="h-2 w-2 text-neutral-400 dark:text-neutral-600 fill-neutral-400 dark:fill-neutral-600 shrink-0 ml-0.5 mr-1" />
             )}
-            <span className={temOitoCaracteres ? "text-neutral-200 font-medium" : ""}>
+            <span className={temOitoCaracteres ? "text-[#1E1E1C] dark:text-neutral-200 font-medium" : ""}>
               Mínimo de 8 caracteres
             </span>
           </li>
 
           <li className="flex items-center gap-2">
             {temLetra ? (
-              <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             ) : (
-              <Circle className="h-2 w-2 text-neutral-600 fill-neutral-600 shrink-0 ml-0.5 mr-1" />
+              <Circle className="h-2 w-2 text-neutral-400 dark:text-neutral-600 fill-neutral-400 dark:fill-neutral-600 shrink-0 ml-0.5 mr-1" />
             )}
-            <span className={temLetra ? "text-neutral-200 font-medium" : ""}>
+            <span className={temLetra ? "text-[#1E1E1C] dark:text-neutral-200 font-medium" : ""}>
               Pelo menos 1 letra
             </span>
           </li>
 
           <li className="flex items-center gap-2">
             {temNumero ? (
-              <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             ) : (
-              <Circle className="h-2 w-2 text-neutral-600 fill-neutral-600 shrink-0 ml-0.5 mr-1" />
+              <Circle className="h-2 w-2 text-neutral-400 dark:text-neutral-600 fill-neutral-400 dark:fill-neutral-600 shrink-0 ml-0.5 mr-1" />
             )}
-            <span className={temNumero ? "text-neutral-200 font-medium" : ""}>
+            <span className={temNumero ? "text-[#1E1E1C] dark:text-neutral-200 font-medium" : ""}>
               Pelo menos 1 número
             </span>
           </li>
@@ -193,7 +193,7 @@ export function CriarContaForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="confirmarSenha"
-          className="block text-xs sm:text-sm font-medium text-neutral-300"
+          className="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#3A3A38] dark:text-[#D5D5D0]"
         >
           Confirmar senha
         </label>
@@ -207,7 +207,7 @@ export function CriarContaForm() {
             onChange={(event) => setConfirmarSenha(event.target.value)}
             autoComplete="new-password"
             placeholder="••••••••"
-            className="w-full h-11 sm:h-12 pl-3.5 pr-11 sm:pl-4 sm:pr-12 rounded-xl bg-neutral-900/90 border border-neutral-800 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-colors"
+            className="w-full h-11 sm:h-12 pl-3.5 pr-11 sm:pl-4 sm:pr-12 rounded-xl bg-white dark:bg-[#18191E] border border-[#D5D4CD] dark:border-[#2C2E38] text-[#1E1E1C] dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 text-sm focus:outline-none focus:border-red-600 dark:focus:border-red-500 focus:ring-2 focus:ring-red-600/15 dark:focus:ring-red-500/20 transition-all shadow-xs"
           />
           <button
             type="button"
@@ -217,7 +217,7 @@ export function CriarContaForm() {
                 ? "Ocultar confirmação de senha"
                 : "Mostrar confirmação de senha"
             }
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800/80 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-neutral-400 hover:text-[#1E1E1C] dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-400"
           >
             {mostrarConfirmarSenha ? (
               <EyeOff className="h-4.5 w-4.5" />
@@ -239,15 +239,15 @@ export function CriarContaForm() {
             type="checkbox"
             checked={aceitouTermos}
             onChange={(event) => setAceitouTermos(event.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-neutral-700 bg-neutral-900 text-red-600 focus:ring-red-500 focus:ring-offset-neutral-950 accent-red-600 cursor-pointer shrink-0"
+            className="mt-0.5 h-4 w-4 rounded border-[#D5D4CD] dark:border-neutral-700 bg-white dark:bg-neutral-900 text-red-600 focus:ring-red-500 accent-red-600 cursor-pointer shrink-0"
           />
-          <span className="leading-snug text-neutral-400 group-hover:text-neutral-300 transition-colors">
+          <span className="leading-snug text-[#666662] dark:text-neutral-400 group-hover:text-[#1E1E1C] dark:group-hover:text-neutral-200 transition-colors">
             Li e aceito os{" "}
             <Link
               href="/termos-de-uso"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-white hover:text-red-400 underline underline-offset-2 transition-colors"
+              className="font-semibold text-[#1E1E1C] dark:text-white hover:text-red-600 dark:hover:text-red-400 underline underline-offset-2 transition-colors"
             >
               Termos de Uso
             </Link>{" "}
@@ -256,7 +256,7 @@ export function CriarContaForm() {
               href="/politica-de-privacidade"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-white hover:text-red-400 underline underline-offset-2 transition-colors"
+              className="font-semibold text-[#1E1E1C] dark:text-white hover:text-red-600 dark:hover:text-red-400 underline underline-offset-2 transition-colors"
             >
               Política de Privacidade
             </Link>
@@ -269,7 +269,7 @@ export function CriarContaForm() {
       {erro && (
         <p
           role="alert"
-          className="rounded-xl border border-red-900/70 bg-red-950/50 p-3 text-xs sm:text-sm text-red-300"
+          className="rounded-xl border border-red-200 dark:border-red-900/70 bg-red-50 dark:bg-red-950/50 p-3 text-xs sm:text-sm text-red-700 dark:text-red-300 font-medium"
         >
           {erro}
         </p>
@@ -278,7 +278,7 @@ export function CriarContaForm() {
       {sucesso && (
         <p
           role="status"
-          className="rounded-xl border border-emerald-900/70 bg-emerald-950/50 p-3 text-xs sm:text-sm text-emerald-300"
+          className="rounded-xl border border-emerald-200 dark:border-emerald-900/70 bg-emerald-50 dark:bg-emerald-950/50 p-3 text-xs sm:text-sm text-emerald-700 dark:text-emerald-300 font-medium"
         >
           {sucesso}
         </p>
@@ -289,7 +289,7 @@ export function CriarContaForm() {
         <button
           type="submit"
           disabled={carregando || !aceitouTermos}
-          className="w-full min-h-[48px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-base shadow-lg shadow-red-950/40 hover:shadow-red-900/50 transition-all duration-200 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
+          className="w-full min-h-[48px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-base shadow-lg shadow-red-950/20 dark:shadow-red-950/40 hover:shadow-red-900/40 transition-all duration-200 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
         >
           {carregando ? (
             <>
