@@ -855,7 +855,12 @@ export default function OperacaoProdutosPage() {
       )}
 
       {/* ======================================================== */}
-      {/* 1. CABEÇALHO DA TELA & NAVEGAÇÃO */}
+      {/* 1. NAVEGAÇÃO INTERNA DA OPERAÇÃO (Mobile & Desktop) */}
+      {/* ======================================================== */}
+      <OperationTabs activeTab="produtos" />
+
+      {/* ======================================================== */}
+      {/* 2. CABEÇALHO DA TELA & NAVEGAÇÃO */}
       {/* ======================================================== */}
       <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full max-w-full">
         <div className="space-y-1">
@@ -903,11 +908,6 @@ export default function OperacaoProdutosPage() {
           </button>
         </div>
       </section>
-
-      {/* ======================================================== */}
-      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Mobile & Desktop) */}
-      {/* ======================================================== */}
-      <OperationTabs activeTab="produtos" />
 
       {/* Alerta de Erro de Carregamento */}
       {erroCarregamento && (

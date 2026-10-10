@@ -14,6 +14,7 @@ import {
   AlertCircle,
   RotateCcw,
   Loader2,
+  Info,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -70,6 +71,84 @@ function parseMoneyInput(value: string): number | null {
   const parsed = Number.parseFloat(normalized);
   if (Number.isNaN(parsed)) return null;
   return Math.round(parsed * 100) / 100;
+}
+
+function MargemLucroHelp() {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative inline-flex items-center text-left"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen((prev) => !prev);
+        }}
+        onFocus={() => setIsOpen(true)}
+        onBlur={(e) => {
+          if (!containerRef.current?.contains(e.relatedTarget as Node)) {
+            setIsOpen(false);
+          }
+        }}
+        aria-label="Explicar Margem e Lucro"
+        aria-expanded={isOpen}
+        className="p-1 rounded-full text-[#888882] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] hover:bg-neutral-200/60 dark:hover:bg-[#2B2B29] focus:outline-none focus:ring-2 focus:ring-[#2F2F2D] dark:focus:ring-white transition-all cursor-pointer"
+      >
+        <Info className="w-3.5 h-3.5" />
+      </button>
+
+      {isOpen && (
+        <div
+          role="tooltip"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute right-0 top-full mt-2 z-50 w-72 sm:w-80 p-3.5 rounded-2xl bg-white dark:bg-[#20201E] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl text-left normal-case text-xs text-[#2F2F2D] dark:text-[#F4F4F0] animate-fadeIn pointer-events-auto"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <span className="font-bold text-[11px] text-[#888882] uppercase tracking-wider block">
+              Entenda Margem e Lucro
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="text-[#888882] hover:text-[#2F2F2D] dark:hover:text-white p-0.5 cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-[#2B2B29]"
+              aria-label="Fechar explicação"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <p className="mt-1.5 text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
+            Lucro é o valor que sobra depois de descontar o custo direto do serviço. Margem é a porcentagem desse lucro em relação ao preço de venda.
+          </p>
+          <div className="mt-2.5 p-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD]/80 dark:border-[#3F3F3B]/80 text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
+            <strong className="text-[#2F2F2D] dark:text-[#F4F4F0] font-semibold block mb-0.5">
+              Exemplo:
+            </strong>
+            se o serviço custa R$ 25,00 e o custo direto é R$ 1,00, o lucro é R$ 24,00 e a margem é 96%.
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function OperacaoServicosPage() {
@@ -497,7 +576,12 @@ export default function OperacaoServicosPage() {
       )}
 
       {/* ======================================================== */}
-      {/* 1. CABEÇALHO DA TELA */}
+      {/* 1. NAVEGAÇÃO INTERNA DA OPERAÇÃO (Mobile & Desktop) */}
+      {/* ======================================================== */}
+      <OperationTabs activeTab="servicos" />
+
+      {/* ======================================================== */}
+      {/* 2. CABEÇALHO DA TELA */}
       {/* ======================================================== */}
       <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full max-w-full">
         <div className="space-y-1">
@@ -529,11 +613,6 @@ export default function OperacaoServicosPage() {
           <span>Novo Serviço</span>
         </button>
       </section>
-
-      {/* ======================================================== */}
-      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Mobile & Desktop) */}
-      {/* ======================================================== */}
-      <OperationTabs activeTab="servicos" />
 
       {/* ======================================================== */}
       {/* 2. CARD DE RESUMO / KPIS */}
@@ -773,7 +852,12 @@ export default function OperacaoServicosPage() {
                     <th className="py-3.5 px-4">Serviço</th>
                     <th className="py-3.5 px-3 text-right">Preço de Venda</th>
                     <th className="py-3.5 px-3 text-right">Custo Direto</th>
-                    <th className="py-3.5 px-3 text-right">Margem / Lucro</th>
+                    <th className="py-3.5 px-3 text-right">
+                      <div className="inline-flex items-center justify-end gap-1">
+                        <span>Margem / Lucro</span>
+                        <MargemLucroHelp />
+                      </div>
+                    </th>
                     <th className="py-3.5 px-4 text-center">Vitrine Digital</th>
                     <th className="py-3.5 px-4 text-center">Status</th>
                     <th className="py-3.5 px-4 text-right">Ações</th>
@@ -961,9 +1045,12 @@ export default function OperacaoServicosPage() {
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-[#888882] uppercase font-bold tracking-wider block">
-                        Lucro / Margem
-                      </span>
+                      <div className="flex items-center justify-end gap-1">
+                        <span className="text-[10px] text-[#888882] uppercase font-bold tracking-wider block">
+                          Lucro / Margem
+                        </span>
+                        <MargemLucroHelp />
+                      </div>
                       <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400 block">
                         +{formatBRL(profit)} ({margin.toFixed(0)}%)
                       </span>
