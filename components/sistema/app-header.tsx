@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { TopUserAvatarMenu, getBarbershopInitials } from "./account-menu";
+import { MobileUserAvatarMenu, getBarbershopInitials } from "./account-menu";
 
 interface AppHeaderProps {
   nome?: string | null;
@@ -63,7 +63,7 @@ export function AppHeader({
 
   return (
     <>
-      {/* 1. Desktop Topbar (visível em lg: 1024px+) */}
+      {/* 1. Desktop Topbar (visível em lg: 1024px+) - Sem avatar de perfil no topo direito */}
       <header className="hidden lg:flex items-center justify-between h-16 border-b border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5]/90 dark:bg-[#181817]/90 backdrop-blur-md px-8 sticky top-0 z-30 transition-all duration-200">
         {/* Breadcrumb Path */}
         <nav
@@ -81,11 +81,6 @@ export function AppHeader({
             {breadcrumb}
           </span>
         </nav>
-
-        {/* Top Right User Avatar Menu */}
-        <div className="flex items-center gap-3">
-          <TopUserAvatarMenu nome={nome} nomeMarca={nomeMarca} email={email} />
-        </div>
       </header>
 
       {/* 2. Mobile Compact Header (visível em < lg) */}
@@ -121,7 +116,7 @@ export function AppHeader({
 
         {/* Avatar no Mobile para abrir o Bottom Sheet de perfil */}
         <div className="flex items-center gap-2 shrink-0">
-          <TopUserAvatarMenu nome={nome} nomeMarca={nomeMarca} email={email} />
+          <MobileUserAvatarMenu nome={nome} nomeMarca={nomeMarca} email={email} />
         </div>
       </header>
     </>
