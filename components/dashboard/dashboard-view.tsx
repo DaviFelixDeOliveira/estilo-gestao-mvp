@@ -454,7 +454,7 @@ export function DashboardView() {
   }, [chartSeries, financeiro]);
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn relative">
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn relative w-full max-w-full min-w-0 overflow-x-hidden">
       {/* ======================================================== */}
       {/* 1. HEADER LIMPO E INFORMATIVO */}
       {/* ======================================================== */}
@@ -470,7 +470,7 @@ export function DashboardView() {
       {/* ======================================================== */}
       {/* 2. FILTRO DE PERÍODO (Segmented Control + Personalizado) */}
       {/* ======================================================== */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 max-w-full">
         <div className="flex flex-wrap items-center gap-2">
           {/* Segmented control */}
           <div
@@ -532,7 +532,7 @@ export function DashboardView() {
               <span>Atualizando dados...</span>
             </span>
           ) : (
-            <span>
+            <span className="truncate">
               {activePeriod === "personalizado" && customDateRange
                 ? `Intervalo ativo: ${formatDateDisplay(customDateRange.start)} até ${formatDateDisplay(customDateRange.end)}`
                 : `Período ativo: ${formatDateDisplay(activeDateRange.inicio)} até ${formatDateDisplay(activeDateRange.fim)}`}
@@ -578,12 +578,12 @@ export function DashboardView() {
       {/* ======================================================== */}
       {/* 5. MAIN SPLIT: GRÁFICO (ESQUERDA 8) + OPERAR & ESTOQUE (DIREITA 4) */}
       {/* ======================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start max-w-full min-w-0">
         {/* Coluna do Gráfico (8 Cols) */}
-        <div className="lg:col-span-8 space-y-6">
-          <section className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-5">
+        <div className="lg:col-span-8 space-y-6 max-w-full min-w-0">
+          <section className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-5 max-w-full min-w-0 overflow-hidden">
             {/* Header do Gráfico com seletor de série */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 max-w-full min-w-0">
               <div>
                 <h2 className="text-sm sm:text-base font-extrabold tracking-tight text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Evolução no período
@@ -594,7 +594,7 @@ export function DashboardView() {
               </div>
 
               {/* Segmented series switcher */}
-              <div className="flex items-center gap-1 p-1 bg-[#EEEDE7] dark:bg-[#2B2B29] rounded-xl text-xs font-bold select-none overflow-x-auto">
+              <div className="flex items-center gap-1 p-1 bg-[#EEEDE7] dark:bg-[#2B2B29] rounded-xl text-xs font-bold select-none overflow-x-auto max-w-full">
                 {(["faturamento", "entradas", "saidas", "resultado"] as const).map((s) => {
                   const labelMap = {
                     faturamento: "Faturamento",
@@ -637,72 +637,74 @@ export function DashboardView() {
                 </p>
               </div>
             ) : (
-              /* Gráfico SVG com barras responsivas */
-              <div className="h-64 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#1E1E1C] p-5 flex flex-col justify-between">
-                <div className="flex items-center justify-between text-xs text-[#666662] dark:text-[#B8B8B2]">
-                  <span>Distribuição ao longo do período selecionado</span>
-                  <span className={`font-extrabold ${totalApuradoGrafico.cor}`}>
+              /* Gráfico SVG com barras responsivas e sem vazar */
+              <div className="h-64 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#1E1E1C] p-3.5 sm:p-5 flex flex-col justify-between max-w-full min-w-0 overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-[#666662] dark:text-[#B8B8B2] min-w-0 max-w-full">
+                  <span className="truncate">Distribuição ao longo do período</span>
+                  <span className={`font-extrabold shrink-0 ${totalApuradoGrafico.cor}`}>
                     Total apurado: {totalApuradoGrafico.texto}
                   </span>
                 </div>
 
-                {/* Barras SVG */}
-                <div className="h-40 flex items-end justify-around gap-2 sm:gap-3 pt-4 px-2 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
-                  {trendData.map((point, idx) => {
-                    const values = trendData.map((p) => Math.abs(p[chartSeries]));
-                    const maxVal = Math.max(...values, 10);
-                    const val = point[chartSeries];
-                    const absVal = Math.abs(val);
-                    const heightPercent = absVal === 0 ? 8 : Math.max(12, Math.round((absVal / maxVal) * 100));
+                {/* Barras SVG com container protegido de overflow */}
+                <div className="w-full overflow-x-auto overflow-y-hidden pb-1 max-w-full min-w-0 scrollbar-none">
+                  <div className="h-36 sm:h-40 flex items-end justify-around gap-1 sm:gap-2.5 pt-3 px-1 border-b border-[#E2E2DD] dark:border-[#3F3F3B] min-w-full">
+                    {trendData.map((point, idx) => {
+                      const values = trendData.map((p) => Math.abs(p[chartSeries]));
+                      const maxVal = Math.max(...values, 10);
+                      const val = point[chartSeries];
+                      const absVal = Math.abs(val);
+                      const heightPercent = absVal === 0 ? 8 : Math.max(12, Math.round((absVal / maxVal) * 100));
 
-                    // Cor por série
-                    let barColor = "bg-blue-600 dark:bg-blue-500";
-                    let textLabel = `R$ ${val.toFixed(0)}`;
+                      // Cor por série
+                      let barColor = "bg-blue-600 dark:bg-blue-500";
+                      let textLabel = `R$ ${val.toFixed(0)}`;
 
-                    if (chartSeries === "entradas") {
-                      barColor = "bg-emerald-600 dark:bg-emerald-500";
-                      textLabel = `R$ ${val.toFixed(0)}`;
-                    } else if (chartSeries === "saidas") {
-                      barColor = "bg-rose-600 dark:bg-rose-500";
-                      textLabel = `R$ ${absVal.toFixed(0)}`;
-                    } else if (chartSeries === "resultado") {
-                      if (val < 0) {
-                        barColor = "bg-rose-600 dark:bg-rose-500";
-                        textLabel = `-R$ ${absVal.toFixed(0)}`;
-                      } else if (val > 0) {
+                      if (chartSeries === "entradas") {
                         barColor = "bg-emerald-600 dark:bg-emerald-500";
                         textLabel = `R$ ${val.toFixed(0)}`;
-                      } else {
-                        barColor = "bg-neutral-400 dark:bg-neutral-600";
-                        textLabel = "R$ 0";
+                      } else if (chartSeries === "saidas") {
+                        barColor = "bg-rose-600 dark:bg-rose-500";
+                        textLabel = `R$ ${absVal.toFixed(0)}`;
+                      } else if (chartSeries === "resultado") {
+                        if (val < 0) {
+                          barColor = "bg-rose-600 dark:bg-rose-500";
+                          textLabel = `-R$ ${absVal.toFixed(0)}`;
+                        } else if (val > 0) {
+                          barColor = "bg-emerald-600 dark:bg-emerald-500";
+                          textLabel = `R$ ${val.toFixed(0)}`;
+                        } else {
+                          barColor = "bg-neutral-400 dark:bg-neutral-600";
+                          textLabel = "R$ 0";
+                        }
                       }
-                    }
 
-                    return (
-                      <div
-                        key={idx}
-                        className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group max-w-[64px]"
-                      >
-                        <span className={`text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity truncate max-w-full ${
-                          chartSeries === "saidas" || (chartSeries === "resultado" && val < 0)
-                            ? "text-rose-600 dark:text-rose-400"
-                            : "text-neutral-600 dark:text-neutral-300"
-                        }`}>
-                          {textLabel}
-                        </span>
+                      return (
                         <div
-                          className={`w-full rounded-t-lg transition-all duration-300 ${barColor} ${absVal === 0 ? "opacity-30" : "opacity-90 hover:opacity-100"}`}
-                          style={{ height: `${heightPercent}%` }}
-                        />
-                        <span className="text-[10px] font-bold text-[#888882] mt-1 truncate max-w-full">
-                          {point.label}
-                        </span>
-                      </div>
-                    );
-                  })}
+                          key={idx}
+                          className="flex-1 flex flex-col items-center gap-1 h-full justify-end group max-w-[54px] sm:max-w-[64px] min-w-[32px]"
+                        >
+                          <span className={`text-[9px] sm:text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity truncate max-w-full ${
+                            chartSeries === "saidas" || (chartSeries === "resultado" && val < 0)
+                              ? "text-rose-600 dark:text-rose-400"
+                              : "text-neutral-600 dark:text-neutral-300"
+                          }`}>
+                            {textLabel}
+                          </span>
+                          <div
+                            className={`w-full rounded-t-md sm:rounded-t-lg transition-all duration-300 ${barColor} ${absVal === 0 ? "opacity-30" : "opacity-90 hover:opacity-100"}`}
+                            style={{ height: `${heightPercent}%` }}
+                          />
+                          <span className="text-[9px] sm:text-[10px] font-bold text-[#888882] mt-0.5 truncate max-w-full text-center leading-tight">
+                            {point.label}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-[#888882]">
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-[#888882] pt-1">
                   <span>Início do intervalo</span>
                   <span>Encerramento</span>
                 </div>
@@ -712,12 +714,12 @@ export function DashboardView() {
         </div>
 
         {/* Coluna Direita (4 Cols): Comece a operar + Situação do estoque */}
-        <div className="lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-6 max-w-full min-w-0">
           {/* Painel Comece a operar */}
           <QuickActions />
 
           {/* Painel Situação do estoque */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3">
+          <section className="p-5 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3 max-w-full min-w-0">
             <div>
               <h2 className="text-sm font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
                 Situação do estoque
@@ -1011,7 +1013,6 @@ function gerarPontosGrafico(
       });
 
       despesas.forEach((dp) => {
-        // Se a despesa tiver created_at com hora, usa a hora; senão distribui no primeiro slot ou proporcional
         if (dp.created_at) {
           const d = new Date(dp.created_at);
           const h = d.getHours();
@@ -1023,7 +1024,6 @@ function gerarPontosGrafico(
         }
       });
 
-      // Se todas as despesas não tiveram slot horário específico, garantir que somam ao menos no total
       return {
         label: slot.label,
         faturamento: fat,
@@ -1080,10 +1080,10 @@ function gerarPontosGrafico(
   if (periodo === "mes") {
     // 4 semanas do mês corrente
     const slots = [
-      { label: "Sem 1 (01-07)", startD: 1, endD: 7 },
-      { label: "Sem 2 (08-14)", startD: 8, endD: 14 },
-      { label: "Sem 3 (15-21)", startD: 15, endD: 21 },
-      { label: "Sem 4 (22-31)", startD: 22, endD: 31 },
+      { label: "Sem 1", startD: 1, endD: 7 },
+      { label: "Sem 2", startD: 8, endD: 14 },
+      { label: "Sem 3", startD: 15, endD: 21 },
+      { label: "Sem 4", startD: 22, endD: 31 },
     ];
 
     return slots.map((slot) => {
@@ -1154,7 +1154,7 @@ function gerarPontosGrafico(
     });
   }
 
-  // Personalizado: divide o intervalo em blocos ou dias
+  // Personalizado
   const startDate = new Date(inicio);
   const endDate = new Date(fim);
   const diffDays = Math.max(
@@ -1200,7 +1200,7 @@ function gerarPontosGrafico(
     return points;
   }
 
-  // Se > 7 dias, faz 4 blocos proporcionais
+  // Se > 7 dias, divide em 4 blocos
   const step = Math.ceil(diffDays / 4);
   const points: TrendPoint[] = [];
   for (let b = 0; b < 4; b++) {
@@ -1210,9 +1210,7 @@ function gerarPontosGrafico(
     bEnd.setDate(Math.min(endDate.getDate(), bStart.getDate() + step - 1));
 
     const sDay = String(bStart.getDate()).padStart(2, "0");
-    const sMonth = String(bStart.getMonth() + 1).padStart(2, "0");
     const eDay = String(bEnd.getDate()).padStart(2, "0");
-    const eMonth = String(bEnd.getMonth() + 1).padStart(2, "0");
 
     let fat = 0;
     let sai = 0;
@@ -1233,7 +1231,7 @@ function gerarPontosGrafico(
     });
 
     points.push({
-      label: `${sDay}/${sMonth} - ${eDay}/${eMonth}`,
+      label: `${sDay} a ${eDay}`,
       faturamento: fat,
       entradas: fat,
       saidas: sai,
