@@ -38,7 +38,7 @@ export const MAIN_NAVIGATION_ITEMS: readonly NavigationItem[] = [
   },
   {
     title: "Operação",
-    href: "/operacao",
+    href: "/operacao/servicos",
     icon: Layers,
     subItems: [
       { title: "Serviços", href: "/operacao/servicos" },

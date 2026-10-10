@@ -23,7 +23,7 @@ const BOTTOM_NAV_ITEMS = [
   },
   {
     title: "Operação",
-    href: "/operacao",
+    href: "/operacao/servicos",
     icon: Layers,
   },
   {
@@ -44,7 +44,12 @@ export function BottomNav() {
       {BOTTOM_NAV_ITEMS.map((item) => {
         const isActive = item.exact
           ? pathname === item.href
-          : pathname === item.href || pathname.startsWith(item.href + "/") || (item.href === "/operacao" && pathname.startsWith("/operacao")) || (item.href === "/configuracoes" && (pathname.startsWith("/configuracoes") || pathname.startsWith("/financeiro")));
+          : item.href === "/operacao/servicos"
+          ? pathname.startsWith("/operacao")
+          : item.href === "/configuracoes"
+          ? pathname.startsWith("/configuracoes") || pathname.startsWith("/financeiro")
+          : pathname === item.href || pathname.startsWith(item.href + "/");
+
         const Icon = item.icon;
 
         return (
