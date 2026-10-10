@@ -157,7 +157,7 @@ export default function OperacaoServicosPage() {
       }
     }
 
-    buscarServicos();
+    void buscarServicos();
 
     return () => {
       ativo = false;
@@ -240,6 +240,7 @@ export default function OperacaoServicosPage() {
     return result;
   }, [servicos, searchQuery, statusFilter, vitrineFilter, sortBy]);
 
+  // Checagem se filtros estão no valor padrão
   const isDefaultFilters =
     searchQuery === "" &&
     statusFilter === "todos" &&
@@ -253,7 +254,7 @@ export default function OperacaoServicosPage() {
     setSortBy("nome_asc");
   };
 
-  // Abertura de Modais
+  // Abrir modal de criação
   const handleOpenCreateModal = () => {
     setEditingService(null);
     setFormName("");
@@ -266,14 +267,15 @@ export default function OperacaoServicosPage() {
     setIsModalOpen(true);
   };
 
+  // Abrir modal de edição
   const handleOpenEditModal = (service: ServicoItem) => {
     setEditingService(service);
     setFormName(service.nome);
     setFormDescription(service.descricao || "");
-    setFormPrice(service.preco !== undefined ? String(service.preco).replace(".", ",") : "");
+    setFormPrice(service.preco ? service.preco.toFixed(2).replace(".", ",") : "");
     setFormCost(
       service.custo_estimado !== null && service.custo_estimado !== undefined && service.custo_estimado > 0
-        ? String(service.custo_estimado).replace(".", ",")
+        ? service.custo_estimado.toFixed(2).replace(".", ",")
         : ""
     );
     setFormIsActive(service.ativo !== false);
@@ -283,25 +285,24 @@ export default function OperacaoServicosPage() {
   };
 
   const handleCloseModal = () => {
-    if (salvando) return;
     setIsModalOpen(false);
     setEditingService(null);
     setFormErrors({});
   };
 
-  // Submissão do Formulário (Criar / Editar)
+  // Salvar serviço (Insert / Update) com validação de duplicidade
   const handleSaveService = async (e: FormEvent) => {
     e.preventDefault();
     if (salvando) return;
 
     const errors: FormErrors = {};
 
-    // 1. Validação de Nome
-    const cleanName = formName.trim().replace(/\s+/g, " ");
-    if (!cleanName) {
+    // 1. Validação do Nome
+    const nomeFormatado = formName.trim();
+    if (!nomeFormatado) {
       errors.name = "O nome do serviço é obrigatório.";
     } else {
-      const normInput = normalizeServiceName(formName);
+      const normInput = normalizeServiceName(nomeFormatado);
       const isDuplicate = servicos.some((s) => {
         if (editingService && s.id === editingService.id) return false;
         return normalizeServiceName(s.nome) === normInput;
@@ -312,18 +313,18 @@ export default function OperacaoServicosPage() {
       }
     }
 
-    // 2. Validação de Preço de Venda
+    // 2. Validação do Preço de Venda
     const parsedPrice = parseMoneyInput(formPrice);
     if (parsedPrice === null || parsedPrice <= 0) {
       errors.price = "Informe um preço de venda válido maior que zero.";
     }
 
-    // 3. Validação de Custo Direto (opcional)
-    let parsedCost: number | null = null;
+    // 3. Validação do Custo Direto (opcional)
+    let parsedCost = 0;
     if (formCost.trim()) {
       const costNum = parseMoneyInput(formCost);
       if (costNum === null || costNum < 0) {
-        errors.cost = "O custo direto deve ser maior ou igual a zero.";
+        errors.cost = "O custo direto não pode ser negativo.";
       } else {
         parsedCost = costNum;
       }
@@ -335,98 +336,98 @@ export default function OperacaoServicosPage() {
     }
 
     setSalvando(true);
-    setFormErrors({});
 
     try {
+      let activeBarbeariaId = barbeariaId;
+      if (!activeBarbeariaId) {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user) {
+          const { data: p } = await supabase
+            .from("perfis")
+            .select("barbearia_id")
+            .eq("user_id", userData.user.id)
+            .single();
+          activeBarbeariaId = p?.barbearia_id ?? null;
+          if (activeBarbeariaId) setBarbeariaId(activeBarbeariaId);
+        }
+      }
+
+      if (!activeBarbeariaId) {
+        throw new Error("Não foi possível identificar a barbearia do usuário.");
+      }
+
       if (editingService) {
-        // UPDATE no Supabase
         const { error } = await supabase
           .from("servicos")
           .update({
-            nome: cleanName,
+            nome: nomeFormatado,
             descricao: formDescription.trim() || null,
-            preco: parsedPrice!,
+            preco: parsedPrice,
             custo_estimado: parsedCost,
             ativo: formIsActive,
             visivel_vitrine: formShowInVitrine,
           })
           .eq("id", editingService.id);
 
-        if (error) throw error;
-
-        showToast(`Serviço "${cleanName}" atualizado com sucesso!`);
-      } else {
-        // INSERT no Supabase
-        let bId = barbeariaId;
-        if (!bId) {
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          if (user) {
-            const { data: perfil } = await supabase
-              .from("perfis")
-              .select("barbearia_id")
-              .eq("user_id", user.id)
-              .single();
-            bId = perfil?.barbearia_id || null;
+        if (error) {
+          if (error.code === "23505") {
+            setFormErrors({ name: "Já existe um serviço com esse nome." });
+            return;
           }
+          throw error;
         }
 
-        if (!bId) {
-          throw new Error("Identificação da barbearia não encontrada.");
-        }
-
+        showToast(`Serviço "${nomeFormatado}" atualizado com sucesso!`);
+      } else {
         const { error } = await supabase.from("servicos").insert({
-          barbearia_id: bId,
-          nome: cleanName,
+          barbearia_id: activeBarbeariaId,
+          nome: nomeFormatado,
           descricao: formDescription.trim() || null,
-          preco: parsedPrice!,
+          preco: parsedPrice,
           custo_estimado: parsedCost,
           ativo: formIsActive,
           visivel_vitrine: formShowInVitrine,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.code === "23505") {
+            setFormErrors({ name: "Já existe um serviço com esse nome." });
+            return;
+          }
+          throw error;
+        }
 
-        showToast(`Serviço "${cleanName}" cadastrado com sucesso!`);
+        showToast(`Serviço "${nomeFormatado}" cadastrado com sucesso!`);
       }
 
-      setIsModalOpen(false);
-      setEditingService(null);
+      handleCloseModal();
       await recarregarServicos();
     } catch (err: unknown) {
-      const anyErr = err as { code?: string; message?: string };
-      if (anyErr.code === "23505" || anyErr.message?.includes("servicos_barbearia_nome_normalizado_uidx")) {
-        setFormErrors({ name: "Já existe um serviço com esse nome cadastrado." });
-      } else {
-        const msg = anyErr.message || "Erro ao salvar o serviço. Tente novamente.";
-        showToast(msg, "error");
-      }
+      const msg = err instanceof Error ? err.message : "Erro ao salvar o serviço.";
+      showToast(msg, "error");
     } finally {
       setSalvando(false);
     }
   };
 
-  // Toggle Ativo / Inativo em tempo real
+  // Toggle rápido de Ativo/Inativo
   const handleToggleStatus = async (service: ServicoItem) => {
     if (loadingActionId) return;
     setLoadingActionId(service.id);
 
-    const novoStatus = !service.ativo;
     try {
+      const novoAtivo = !service.ativo;
       const { error } = await supabase
         .from("servicos")
-        .update({ ativo: novoStatus })
+        .update({ ativo: novoAtivo })
         .eq("id", service.id);
 
       if (error) throw error;
 
       setServicos((prev) =>
-        prev.map((s) => (s.id === service.id ? { ...s, ativo: novoStatus } : s))
+        prev.map((s) => (s.id === service.id ? { ...s, ativo: novoAtivo } : s))
       );
-      showToast(
-        `Serviço "${service.nome}" ${novoStatus ? "ativado" : "inativado"} com sucesso.`
-      );
+      showToast(`Serviço "${service.nome}" ${novoAtivo ? "ativado" : "inativado"}.`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao alterar status do serviço.";
       showToast(msg, "error");
@@ -435,13 +436,13 @@ export default function OperacaoServicosPage() {
     }
   };
 
-  // Toggle Vitrine Digital em tempo real
+  // Toggle rápido de Vitrine Digital
   const handleToggleVitrine = async (service: ServicoItem) => {
     if (loadingActionId) return;
     setLoadingActionId(service.id);
 
-    const novaVitrine = !service.visivel_vitrine;
     try {
+      const novaVitrine = !service.visivel_vitrine;
       const { error } = await supabase
         .from("servicos")
         .update({ visivel_vitrine: novaVitrine })
@@ -487,7 +488,7 @@ export default function OperacaoServicosPage() {
           <button
             type="button"
             onClick={() => setFeedbackToast(null)}
-            className="text-neutral-400 hover:text-white p-0.5"
+            className="text-neutral-400 hover:text-white p-0.5 cursor-pointer"
             aria-label="Fechar mensagem"
           >
             <X className="w-3.5 h-3.5" />
@@ -624,7 +625,7 @@ export default function OperacaoServicosPage() {
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 dark:hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 dark:hover:text-white cursor-pointer"
                 aria-label="Limpar busca"
               >
                 <X className="w-3.5 h-3.5" />
@@ -814,7 +815,6 @@ export default function OperacaoServicosPage() {
                     const margin = price > 0 ? (profit / price) * 100 : 0;
                     const isActive = service.ativo !== false;
                     const isVitrine = service.visivel_vitrine !== false;
-                    const isActionLoading = loadingActionId === service.id;
 
                     return (
                       <tr
@@ -872,7 +872,7 @@ export default function OperacaoServicosPage() {
                           <button
                             type="button"
                             onClick={() => handleToggleVitrine(service)}
-                            disabled={isActionLoading}
+                            disabled={loadingActionId === service.id}
                             title={
                               isVitrine
                                 ? "Clique para ocultar da vitrine digital"
@@ -903,7 +903,7 @@ export default function OperacaoServicosPage() {
                           <button
                             type="button"
                             onClick={() => handleToggleStatus(service)}
-                            disabled={isActionLoading}
+                            disabled={loadingActionId === service.id}
                             title={
                               isActive
                                 ? "Clique para inativar o serviço"
@@ -911,8 +911,8 @@ export default function OperacaoServicosPage() {
                             }
                             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                               isActive
-                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 hover:bg-emerald-200"
-                                : "bg-neutral-200/80 text-[#666662] dark:bg-[#2B2B29] dark:text-[#888882] hover:bg-neutral-300"
+                                ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40 hover:bg-emerald-100"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200"
                             }`}
                           >
                             <span
@@ -924,15 +924,16 @@ export default function OperacaoServicosPage() {
                           </button>
                         </td>
 
-                        {/* 7. Ações: Editar */}
+                        {/* 7. Ação Editar */}
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(service)}
-                            title="Editar serviço"
-                            className="p-1.5 rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] transition-colors cursor-pointer"
+                            aria-label={`Editar serviço ${service.nome}`}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] font-medium text-xs transition-colors cursor-pointer"
                           >
-                            <Edit2 className="w-3.5 h-3.5" />
+                            <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                            <span>Editar</span>
                           </button>
                         </td>
                       </tr>
@@ -943,106 +944,109 @@ export default function OperacaoServicosPage() {
             </div>
           </div>
 
-          {/* 4B. CARDS MOBILE (< lg) */}
-          <div className="lg:hidden space-y-3 w-full">
+          {/* 4B. MOBILE CARDS VIEW (< lg: 1024px) */}
+          <div className="lg:hidden space-y-3">
             {filteredServices.map((service) => {
               const price = service.preco || 0;
               const cost = service.custo_estimado || 0;
               const profit = Math.max(0, price - cost);
+              const margin = price > 0 ? (profit / price) * 100 : 0;
               const isActive = service.ativo !== false;
               const isVitrine = service.visivel_vitrine !== false;
-              const isActionLoading = loadingActionId === service.id;
 
               return (
-                <article
+                <div
                   key={service.id}
-                  className={`p-4 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3 transition-all ${
-                    !isActive ? "opacity-75 bg-neutral-50/60 dark:bg-black/20" : ""
+                  className={`p-4 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3 transition-opacity ${
+                    !isActive ? "opacity-75 bg-neutral-50/50 dark:bg-black/10" : ""
                   }`}
                 >
-                  {/* Topo do Card: Título & Status */}
                   <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-0.5 flex-1 min-w-0">
-                      <h3 className="font-extrabold text-sm text-[#2F2F2D] dark:text-[#F4F4F0] truncate">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         {service.nome}
                       </h3>
-                      {service.descricao && (
-                        <p className="text-xs text-[#666662] dark:text-[#B8B8B2] leading-snug line-clamp-2">
+                      {service.descricao ? (
+                        <p className="text-xs text-[#666662] dark:text-[#B8B8B2] mt-0.5 line-clamp-2">
                           {service.descricao}
+                        </p>
+                      ) : (
+                        <p className="text-[11px] text-[#888882] italic mt-0.5">
+                          Sem descrição informada
                         </p>
                       )}
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleToggleStatus(service)}
-                      disabled={isActionLoading}
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 cursor-pointer ${
-                        isActive
-                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
-                          : "bg-neutral-200 text-[#666662] dark:bg-[#2B2B29] dark:text-[#888882]"
-                      }`}
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          isActive ? "bg-emerald-500" : "bg-neutral-400"
-                        }`}
-                      />
-                      <span>{isActive ? "Ativo" : "Inativo"}</span>
-                    </button>
                   </div>
 
-                  {/* Badge de Vitrine */}
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleVitrine(service)}
-                      disabled={isActionLoading}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold cursor-pointer ${
-                        isVitrine
-                          ? "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200/50 dark:border-amber-900/40"
-                          : "bg-neutral-100 text-[#888882] dark:bg-[#2B2B29] dark:text-[#888882]"
-                      }`}
-                    >
-                      {isVitrine ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                      <span>{isVitrine ? "Na Vitrine" : "Oculto da Vitrine"}</span>
-                    </button>
-                  </div>
-
-                  {/* Faixa Financeira */}
-                  <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-center">
+                  {/* Detalhes Financeiros */}
+                  <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] text-xs border border-[#E2E2DD] dark:border-[#3F3F3B]">
                     <div>
-                      <span className="text-[10px] text-[#888882] block">Preço</span>
-                      <span className="text-xs font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <span className="text-[10px] text-[#888882] uppercase font-bold tracking-wider block">
+                        Preço de Venda
+                      </span>
+                      <span className="font-extrabold text-sm text-[#2F2F2D] dark:text-[#F4F4F0]">
                         {formatBRL(price)}
                       </span>
                     </div>
-                    <div>
-                      <span className="text-[10px] text-[#888882] block">Custo Direto</span>
-                      <span className="text-xs font-semibold text-[#666662] dark:text-[#B8B8B2]">
-                        {cost > 0 ? formatBRL(cost) : "R$ 0,00"}
+                    <div className="text-right">
+                      <span className="text-[10px] text-[#888882] uppercase font-bold tracking-wider block">
+                        Lucro / Margem
                       </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-[#888882] block">Lucro Bruto</span>
-                      <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
-                        {formatBRL(profit)}
+                      <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400 block">
+                        +{formatBRL(profit)} ({margin.toFixed(0)}%)
                       </span>
                     </div>
                   </div>
 
-                  {/* Ação: Editar */}
-                  <div className="pt-2 border-t border-[#E2E2DD] dark:border-[#3F3F3B]">
+                  {/* Rodapé do card mobile: Status e Ações */}
+                  <div className="pt-2 border-t border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      {/* Status Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(service)}
+                        disabled={loadingActionId === service.id}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold cursor-pointer ${
+                          isActive
+                            ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700"
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            isActive ? "bg-emerald-500" : "bg-neutral-400"
+                          }`}
+                        />
+                        <span>{isActive ? "Ativo" : "Inativo"}</span>
+                      </button>
+
+                      {/* Vitrine Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => handleToggleVitrine(service)}
+                        disabled={loadingActionId === service.id}
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold cursor-pointer ${
+                          isVitrine
+                            ? "bg-amber-100/70 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+                            : "bg-neutral-100 text-[#888882] dark:bg-[#2B2B29] dark:text-[#888882]"
+                        }`}
+                      >
+                        {isVitrine ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                        <span>{isVitrine ? "Vitrine" : "Oculto"}</span>
+                      </button>
+                    </div>
+
+                    {/* Botão Editar */}
                     <button
                       type="button"
                       onClick={() => handleOpenEditModal(service)}
-                      className="w-full py-2 px-3 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] cursor-pointer"
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
-                      <span>Editar Serviço</span>
+                      <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                      <span>Editar</span>
                     </button>
                   </div>
-                </article>
+                </div>
               );
             })}
           </div>
@@ -1050,32 +1054,32 @@ export default function OperacaoServicosPage() {
       )}
 
       {/* ======================================================== */}
-      {/* 5. MODAL: CRIAR / EDITAR SERVIÇO */}
+      {/* 5. MODAL: NOVO / EDITAR SERVIÇO */}
       {/* ======================================================== */}
       {isModalOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
         >
-          <div className="w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden my-8 max-h-[calc(100dvh-2rem)] flex flex-col">
-            {/* Cabeçalho do Modal */}
+          <div className="w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Header do Modal */}
             <div className="p-4 sm:p-5 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between shrink-0">
-              <div>
-                <h2 className="text-base sm:text-lg font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                  {editingService ? "Editar Serviço" : "Novo Serviço"}
-                </h2>
-                <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
-                  {editingService
-                    ? "Atualize as informações do serviço e visibilidade."
-                    : "Preencha os dados do serviço para disponibilizar no PDV e na vitrine."}
-                </p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <Scissors className="w-4 h-4 text-[#888882]" />
+                </div>
+                <div>
+                  <h2 className="text-base sm:text-lg font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                    {editingService ? "Editar Serviço" : "Novo Serviço"}
+                  </h2>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={handleCloseModal}
                 disabled={salvando}
-                className="p-1.5 rounded-lg text-[#888882] hover:text-[#2F2F2D] dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-white cursor-pointer"
                 aria-label="Fechar modal"
               >
                 <X className="w-4 h-4" />
@@ -1083,8 +1087,8 @@ export default function OperacaoServicosPage() {
             </div>
 
             {/* Corpo do Formulário */}
-            <form onSubmit={handleSaveService} className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1">
-              {/* Campo 1: Nome do Serviço */}
+            <form onSubmit={handleSaveService} className="p-4 sm:p-5 overflow-y-auto space-y-4">
+              {/* Campo 1: Nome */}
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Nome do Serviço <span className="text-red-500">*</span>
