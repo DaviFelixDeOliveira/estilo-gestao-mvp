@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   FormEvent,
@@ -655,11 +655,11 @@ export function ProductPaymentStep({
       className="mt-8 space-y-7"
     >
       <section>
-        <h3 className="font-medium text-zinc-100">
+        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
           Você vende produtos ou bebidas?
         </h3>
 
-        <p className="mt-1 text-sm text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
           Exemplos: bebidas, pomadas,
           shampoos e produtos para barba.
         </p>
@@ -670,17 +670,17 @@ export function ProductPaymentStep({
             onClick={() =>
               alternarVendaProdutos(true)
             }
-            className={`rounded-xl border px-4 py-4 text-left transition ${
+            className={`rounded-xl border p-4 text-left transition ${
               vendeProdutos
-                ? "border-white bg-zinc-800"
-                : "border-zinc-700 bg-zinc-950/50 hover:border-zinc-500"
+                ? "border-red-600/40 bg-red-50/60 dark:border-red-500/40 dark:bg-red-950/20"
+                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
             }`}
           >
-            <span className="font-medium">
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
               Sim
             </span>
 
-            <span className="mt-1 block text-sm text-zinc-400">
+            <span className="mt-1 block text-sm text-zinc-600 dark:text-zinc-400">
               Quero cadastrar produtos.
             </span>
           </button>
@@ -690,17 +690,17 @@ export function ProductPaymentStep({
             onClick={() =>
               alternarVendaProdutos(false)
             }
-            className={`rounded-xl border px-4 py-4 text-left transition ${
+            className={`rounded-xl border p-4 text-left transition ${
               !vendeProdutos
-                ? "border-white bg-zinc-800"
-                : "border-zinc-700 bg-zinc-950/50 hover:border-zinc-500"
+                ? "border-red-600/40 bg-red-50/60 dark:border-red-500/40 dark:bg-red-950/20"
+                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
             }`}
           >
-            <span className="font-medium">
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
               Não
             </span>
 
-            <span className="mt-1 block text-sm text-zinc-400">
+            <span className="mt-1 block text-sm text-zinc-600 dark:text-zinc-400">
               Trabalho apenas com serviços.
             </span>
           </button>
@@ -709,12 +709,12 @@ export function ProductPaymentStep({
 
       {vendeProdutos && (
         <>
-          <section className="border-t border-zinc-800 pt-6">
-            <h3 className="font-medium text-zinc-100">
+          <section className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
+            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
               Categorias
             </h3>
 
-            <p className="mt-1 text-sm text-zinc-400">
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               Selecione as categorias que você
               utiliza ou crie uma personalizada.
             </p>
@@ -732,10 +732,10 @@ export function ProductPaymentStep({
                   return (
                     <label
                       key={categoria.codigo}
-                      className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-3 text-sm transition ${
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm font-medium transition ${
                         selecionada
-                          ? "border-zinc-500 bg-zinc-800 text-white"
-                          : "border-zinc-800 bg-zinc-950/50 text-zinc-300"
+                          ? "border-red-600/40 bg-red-50/40 text-zinc-900 dark:border-red-500/40 dark:bg-red-950/20 dark:text-zinc-100"
+                          : "border-zinc-200 bg-zinc-50/50 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300 dark:hover:border-zinc-700"
                       }`}
                     >
                       <input
@@ -747,6 +747,7 @@ export function ProductPaymentStep({
                             categoria.nome
                           )
                         }
+                        className="accent-red-600"
                       />
 
                       {categoria.nome}
@@ -766,7 +767,7 @@ export function ProductPaymentStep({
                   )
                 }
                 placeholder="Categoria personalizada"
-                className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                className="min-w-0 flex-1 rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
               />
 
               <button
@@ -774,7 +775,7 @@ export function ProductPaymentStep({
                 onClick={
                   adicionarCategoriaPersonalizada
                 }
-                className="rounded-lg border border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800"
+                className="rounded-xl border border-zinc-300 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               >
                 Adicionar categoria
               </button>
@@ -793,7 +794,7 @@ export function ProductPaymentStep({
                   .map((item) => (
                     <div
                       key={item.formId}
-                      className="flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-sm"
+                      className="flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-800 shadow-2xs dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
                     >
                       <span>
                         {item.nome}
@@ -807,7 +808,7 @@ export function ProductPaymentStep({
                           )
                         }
                         aria-label={`Remover categoria ${item.nome}`}
-                        className="text-zinc-500 transition hover:text-red-300"
+                        className="text-zinc-400 transition hover:text-red-600 dark:hover:text-red-400"
                       >
                         ×
                       </button>
@@ -817,14 +818,14 @@ export function ProductPaymentStep({
             )}
           </section>
 
-          <section className="border-t border-zinc-800 pt-6">
+          <section className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h3 className="font-medium text-zinc-100">
+                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
                   Produtos
                 </h3>
 
-                <p className="mt-1 text-sm text-zinc-400">
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                   O estoque inicial será zero.
                 </p>
               </div>
@@ -835,14 +836,14 @@ export function ProductPaymentStep({
                 disabled={
                   categorias.length === 0
                 }
-                className="rounded-lg border border-zinc-700 px-3 py-2 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-xl border border-zinc-300 bg-zinc-50 px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               >
                 + Produto
               </button>
             </div>
 
             {produtos.length === 0 ? (
-              <div className="mt-4 rounded-xl border border-dashed border-zinc-700 p-6 text-center text-sm text-zinc-400">
+              <div className="mt-4 rounded-xl border border-dashed border-zinc-300 bg-zinc-50/50 p-6 text-center text-sm text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400">
                 Selecione uma categoria e
                 adicione pelo menos um produto.
               </div>
@@ -852,10 +853,10 @@ export function ProductPaymentStep({
                   (produto, index) => (
                     <div
                       key={produto.formId}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4"
+                      className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 transition-colors dark:border-zinc-800 dark:bg-zinc-950/50"
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <h4 className="font-medium text-zinc-100">
+                        <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">
                           Produto {index + 1}
                         </h4>
 
@@ -866,7 +867,7 @@ export function ProductPaymentStep({
                               produto.formId
                             )
                           }
-                          className="text-sm font-medium text-red-300 transition hover:text-red-200"
+                          className="text-sm font-medium text-red-600 underline-offset-4 hover:underline dark:text-red-400"
                         >
                           Remover
                         </button>
@@ -874,7 +875,7 @@ export function ProductPaymentStep({
 
                       <div className="mt-4 space-y-4">
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-zinc-200">
+                          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                             Nome *
                           </label>
 
@@ -896,12 +897,12 @@ export function ProductPaymentStep({
                               )
                             }
                             placeholder="Ex.: Pomada modeladora"
-                            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                           />
                         </div>
 
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-zinc-200">
+                          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                             Categoria *
                           </label>
 
@@ -921,7 +922,7 @@ export function ProductPaymentStep({
                                 }
                               )
                             }
-                            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                           >
                             <option value="">
                               Selecione
@@ -947,7 +948,7 @@ export function ProductPaymentStep({
                         </div>
 
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-zinc-200">
+                          <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                             Descrição
                           </label>
 
@@ -968,18 +969,18 @@ export function ProductPaymentStep({
                               )
                             }
                             placeholder="Descrição opcional"
-                            className="w-full resize-y rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                            className="w-full resize-y rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                           />
                         </div>
 
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div>
-                            <label className="mb-2 block text-sm font-medium text-zinc-200">
+                            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                               Preço de custo *
                             </label>
 
-                            <div className="flex rounded-lg border border-zinc-700 bg-zinc-950 focus-within:border-zinc-500">
-                              <span className="flex items-center pl-3 text-sm text-zinc-500">
+                            <div className="flex rounded-xl border border-zinc-300 bg-white focus-within:border-red-600 focus-within:ring-1 focus-within:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:focus-within:border-red-500 dark:focus-within:ring-red-500">
+                              <span className="flex items-center pl-3.5 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                                 R$
                               </span>
 
@@ -1004,18 +1005,18 @@ export function ProductPaymentStep({
                                   )
                                 }
                                 placeholder="0,00"
-                                className="min-w-0 flex-1 bg-transparent px-2 py-2.5 text-white outline-none"
+                                className="min-w-0 flex-1 bg-transparent px-2.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none dark:text-white"
                               />
                             </div>
                           </div>
 
                           <div>
-                            <label className="mb-2 block text-sm font-medium text-zinc-200">
+                            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                               Preço de venda *
                             </label>
 
-                            <div className="flex rounded-lg border border-zinc-700 bg-zinc-950 focus-within:border-zinc-500">
-                              <span className="flex items-center pl-3 text-sm text-zinc-500">
+                            <div className="flex rounded-xl border border-zinc-300 bg-white focus-within:border-red-600 focus-within:ring-1 focus-within:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:focus-within:border-red-500 dark:focus-within:ring-red-500">
+                              <span className="flex items-center pl-3.5 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                                 R$
                               </span>
 
@@ -1040,7 +1041,7 @@ export function ProductPaymentStep({
                                   )
                                 }
                                 placeholder="0,00"
-                                className="min-w-0 flex-1 bg-transparent px-2 py-2.5 text-white outline-none"
+                                className="min-w-0 flex-1 bg-transparent px-2.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none dark:text-white"
                               />
                             </div>
                           </div>
@@ -1055,12 +1056,12 @@ export function ProductPaymentStep({
         </>
       )}
 
-      <section className="border-t border-zinc-800 pt-6">
-        <h3 className="font-medium text-zinc-100">
+      <section className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
+        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
           Formas de pagamento
         </h3>
 
-        <p className="mt-1 text-sm text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
           Selecione todas as formas aceitas pela
           barbearia.
         </p>
@@ -1070,12 +1071,12 @@ export function ProductPaymentStep({
             (forma) => (
               <label
                 key={forma.codigo}
-                className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-3 text-sm transition ${
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm font-medium transition ${
                   formasPagamento.includes(
                     forma.codigo
                   )
-                    ? "border-zinc-500 bg-zinc-800 text-white"
-                    : "border-zinc-800 bg-zinc-950/50 text-zinc-300"
+                    ? "border-red-600/40 bg-red-50/40 text-zinc-900 dark:border-red-500/40 dark:bg-red-950/20 dark:text-zinc-100"
+                    : "border-zinc-200 bg-zinc-50/50 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300 dark:hover:border-zinc-700"
                 }`}
               >
                 <input
@@ -1088,6 +1089,7 @@ export function ProductPaymentStep({
                       forma.codigo
                     )
                   }
+                  className="accent-red-600"
                 />
 
                 {forma.nome}
@@ -1100,17 +1102,17 @@ export function ProductPaymentStep({
       {erro && (
         <p
           role="alert"
-          className="rounded-lg border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-300"
+          className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
         >
           {erro}
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-800 pt-6">
+      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <button
           type="submit"
           disabled={salvando}
-          className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {salvando
             ? "Salvando..."

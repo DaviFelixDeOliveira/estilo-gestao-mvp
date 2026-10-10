@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 
@@ -155,15 +155,15 @@ export function OnboardingFlow({
     (etapaAtual / ETAPAS.length) * 100;
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
+    <main className="min-h-screen bg-[#F8F8F6] text-zinc-900 transition-colors dark:bg-[#0B0D0E] dark:text-zinc-100">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex items-center justify-between border-b border-zinc-800 pb-5">
+        <header className="flex items-center justify-between border-b border-zinc-200 pb-5 dark:border-zinc-800/80">
           <div>
-            <p className="text-sm font-medium text-zinc-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
               Configuração inicial
             </p>
 
-            <h1 className="mt-1 text-xl font-semibold">
+            <h1 className="mt-1 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
               Configure sua barbearia
             </h1>
           </div>
@@ -173,19 +173,18 @@ export function OnboardingFlow({
 
         <div className="mt-6">
           <div className="flex items-center justify-between text-sm">
-            <span className="font-medium text-zinc-200">
-              Etapa {etapaAtual} de{" "}
-              {ETAPAS.length}
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              Etapa {etapaAtual} de {ETAPAS.length}
             </span>
 
-            <span className="text-zinc-500">
+            <span className="font-medium text-zinc-500 dark:text-zinc-400">
               {Math.round(progresso)}%
             </span>
           </div>
 
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-800">
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
             <div
-              className="h-full rounded-full bg-white transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 ease-out"
               style={{
                 width: `${progresso}%`,
               }}
@@ -206,32 +205,32 @@ export function OnboardingFlow({
                 return (
                   <li
                     key={item.numero}
-                    className={`rounded-xl border px-4 py-3 ${
+                    className={`rounded-xl border px-3.5 py-3 transition-colors ${
                       atual
-                        ? "border-zinc-600 bg-zinc-900"
+                        ? "border-red-600/30 bg-red-50/60 dark:border-red-500/30 dark:bg-red-950/20"
                         : "border-transparent"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                          concluida
-                            ? "bg-white text-black"
-                            : atual
-                              ? "border border-white text-white"
-                              : "border border-zinc-700 text-zinc-500"
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                          atual
+                            ? "bg-red-600 text-white shadow-xs"
+                            : concluida
+                              ? "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                              : "border border-zinc-300 text-zinc-400 dark:border-zinc-800 dark:text-zinc-600"
                         }`}
                       >
-                        {item.numero}
+                        {concluida ? "✓" : item.numero}
                       </div>
 
                       <p
                         className={`text-sm font-medium ${
                           atual
-                            ? "text-white"
+                            ? "font-semibold text-red-600 dark:text-red-400"
                             : concluida
-                              ? "text-zinc-300"
-                              : "text-zinc-500"
+                              ? "text-zinc-700 dark:text-zinc-300"
+                              : "text-zinc-400 dark:text-zinc-500"
                         }`}
                       >
                         {item.titulo}
@@ -244,16 +243,16 @@ export function OnboardingFlow({
           </aside>
 
           <section className="flex items-start justify-center">
-            <div className="w-full max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:p-7">
-              <p className="text-sm font-medium text-zinc-500">
+            <div className="w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-7 dark:border-zinc-800/80 dark:bg-zinc-900">
+              <p className="text-xs font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
                 Etapa {etapa.numero}
               </p>
 
-              <h2 className="mt-2 text-2xl font-semibold">
+              <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                 {etapa.titulo}
               </h2>
 
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
+              <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                 {etapa.descricao}
               </p>
 

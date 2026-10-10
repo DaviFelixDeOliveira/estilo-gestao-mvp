@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   FormEvent,
@@ -398,7 +398,7 @@ export function ScheduleStep({
       onSubmit={handleSubmit}
       className="mt-8 space-y-4"
     >
-      <p className="text-sm leading-6 text-zinc-400">
+      <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
         Configure um dia e copie os mesmos
         horários para os outros quando necessário.
       </p>
@@ -407,10 +407,10 @@ export function ScheduleStep({
         {horarios.map((item) => (
           <div
             key={item.dia_semana}
-            className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4"
+            className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 transition-colors dark:border-zinc-800 dark:bg-zinc-950/50"
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="font-medium text-zinc-100">
+              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
                 {DIAS_SEMANA[item.dia_semana]}
               </h3>
 
@@ -420,12 +420,12 @@ export function ScheduleStep({
                   onClick={() =>
                     abrirCopia(item.dia_semana)
                   }
-                  className="text-sm font-medium text-zinc-300 transition hover:text-white"
+                  className="text-sm font-medium text-red-600 underline-offset-4 hover:underline dark:text-red-400"
                 >
                   Copiar horários
                 </button>
 
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-400">
+                <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                   <input
                     type="checkbox"
                     checked={item.fechado}
@@ -435,6 +435,7 @@ export function ScheduleStep({
                         event.target.checked
                       )
                     }
+                    className="accent-red-600"
                   />
 
                   Fechado
@@ -445,13 +446,13 @@ export function ScheduleStep({
             {!item.fechado && (
               <div className="mt-4 space-y-4">
                 <div>
-                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                     Primeiro período
                   </p>
 
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1 block text-xs text-zinc-400">
+                      <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                         Abertura
                       </label>
 
@@ -468,12 +469,12 @@ export function ScheduleStep({
                             }
                           )
                         }
-                        className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                        className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-zinc-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                       />
                     </div>
 
                     <div>
-                      <label className="mb-1 block text-xs text-zinc-400">
+                      <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                         Fechamento
                       </label>
 
@@ -490,13 +491,13 @@ export function ScheduleStep({
                             }
                           )
                         }
-                        className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                        className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-zinc-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                       />
                     </div>
                   </div>
                 </div>
 
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-400">
+                <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                   <input
                     type="checkbox"
                     checked={
@@ -508,6 +509,7 @@ export function ScheduleStep({
                         event.target.checked
                       )
                     }
+                    className="accent-red-600"
                   />
 
                   Possui intervalo
@@ -515,13 +517,13 @@ export function ScheduleStep({
 
                 {item.possui_intervalo && (
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       Segundo período
                     </p>
 
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label className="mb-1 block text-xs text-zinc-400">
+                        <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                           Retorno
                         </label>
 
@@ -538,12 +540,12 @@ export function ScheduleStep({
                               }
                             )
                           }
-                          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-zinc-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                         />
                       </div>
 
                       <div>
-                        <label className="mb-1 block text-xs text-zinc-400">
+                        <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                           Fechamento
                         </label>
 
@@ -560,7 +562,7 @@ export function ScheduleStep({
                               }
                             )
                           }
-                          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+                          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-zinc-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
                         />
                       </div>
                     </div>
@@ -571,10 +573,10 @@ export function ScheduleStep({
 
             {diaOrigemCopia ===
               item.dia_semana && (
-              <div className="mt-4 rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+              <div className="mt-4 rounded-xl border border-zinc-300 bg-zinc-100/70 p-4 dark:border-zinc-700 dark:bg-zinc-900">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-medium text-zinc-100">
+                    <p className="font-semibold text-zinc-900 dark:text-zinc-100">
                       Copiar horários de{" "}
                       {
                         DIAS_SEMANA[
@@ -583,7 +585,7 @@ export function ScheduleStep({
                       }
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-zinc-400">
+                    <p className="mt-1 text-xs leading-5 text-zinc-600 dark:text-zinc-400">
                       Os horários dos dias
                       selecionados serão
                       substituídos.
@@ -593,7 +595,7 @@ export function ScheduleStep({
                   <button
                     type="button"
                     onClick={fecharCopia}
-                    className="text-sm text-zinc-400 transition hover:text-white"
+                    className="text-sm font-medium text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                   >
                     Fechar
                   </button>
@@ -605,7 +607,7 @@ export function ScheduleStep({
                     onClick={
                       selecionarDiasUteis
                     }
-                    className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 transition hover:bg-zinc-800"
+                    className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
                     Segunda a sexta
                   </button>
@@ -613,7 +615,7 @@ export function ScheduleStep({
                   <button
                     type="button"
                     onClick={selecionarTodos}
-                    className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 transition hover:bg-zinc-800"
+                    className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
                     Todos os outros dias
                   </button>
@@ -632,7 +634,7 @@ export function ScheduleStep({
                       return (
                         <label
                           key={diaSemana}
-                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300"
+                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
                         >
                           <input
                             type="checkbox"
@@ -644,6 +646,7 @@ export function ScheduleStep({
                                 diaSemana
                               )
                             }
+                            className="accent-red-600"
                           />
 
                           {nomeDia}
@@ -654,7 +657,7 @@ export function ScheduleStep({
                 </div>
 
                 {erroCopia && (
-                  <p className="mt-3 text-sm text-red-300">
+                  <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
                     {erroCopia}
                   </p>
                 )}
@@ -663,7 +666,7 @@ export function ScheduleStep({
                   <button
                     type="button"
                     onClick={fecharCopia}
-                    className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition hover:bg-zinc-800"
+                    className="rounded-xl border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
                     Cancelar
                   </button>
@@ -671,7 +674,7 @@ export function ScheduleStep({
                   <button
                     type="button"
                     onClick={aplicarCopia}
-                    className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-zinc-200"
+                    className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600"
                   >
                     Aplicar
                   </button>
@@ -685,17 +688,17 @@ export function ScheduleStep({
       {erro && (
         <p
           role="alert"
-          className="rounded-lg border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-300"
+          className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
         >
           {erro}
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-800 pt-6">
+      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <button
           type="submit"
           disabled={salvando}
-          className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {salvando
             ? "Salvando..."

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   FormEvent,
@@ -270,7 +270,7 @@ export function AddressStep({
       <div>
         <label
           htmlFor="cep"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           CEP *
         </label>
@@ -299,14 +299,14 @@ export function AddressStep({
               }
             }}
             placeholder="00000-000"
-            className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+            className="min-w-0 flex-1 rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
           />
 
           <button
             type="button"
             disabled={buscandoCep}
             onClick={() => void buscarCep()}
-            className="rounded-lg border border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl border border-zinc-300 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
           >
             {buscandoCep
               ? "Buscando..."
@@ -315,7 +315,7 @@ export function AddressStep({
         </div>
 
         {avisoCep && (
-          <p className="mt-2 text-xs text-zinc-400">
+          <p className="mt-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
             {avisoCep}
           </p>
         )}
@@ -324,7 +324,7 @@ export function AddressStep({
       <div>
         <label
           htmlFor="logradouro"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Logradouro *
         </label>
@@ -340,7 +340,7 @@ export function AddressStep({
             )
           }
           placeholder="Rua, avenida..."
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
       </div>
 
@@ -348,7 +348,7 @@ export function AddressStep({
         <div>
           <label
             htmlFor="numero"
-            className="mb-2 block text-sm font-medium text-zinc-200"
+            className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
           >
             Número *
           </label>
@@ -365,10 +365,10 @@ export function AddressStep({
               setNumero(event.target.value)
             }
             placeholder="123"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500 dark:disabled:bg-zinc-900"
           />
 
-          <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-zinc-400">
+          <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <input
               type="checkbox"
               checked={!temNumero}
@@ -382,6 +382,7 @@ export function AddressStep({
                   setNumero("");
                 }
               }}
+              className="accent-red-600"
             />
 
             Endereço sem número
@@ -391,7 +392,7 @@ export function AddressStep({
         <div>
           <label
             htmlFor="complemento"
-            className="mb-2 block text-sm font-medium text-zinc-200"
+            className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
           >
             Complemento
           </label>
@@ -406,7 +407,7 @@ export function AddressStep({
               )
             }
             placeholder="Sala, casa, referência..."
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
           />
         </div>
       </div>
@@ -414,7 +415,7 @@ export function AddressStep({
       <div>
         <label
           htmlFor="bairro"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Bairro *
         </label>
@@ -427,7 +428,7 @@ export function AddressStep({
           onChange={(event) =>
             setBairro(event.target.value)
           }
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
       </div>
 
@@ -435,7 +436,7 @@ export function AddressStep({
         <div>
           <label
             htmlFor="cidade"
-            className="mb-2 block text-sm font-medium text-zinc-200"
+            className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
           >
             Cidade *
           </label>
@@ -450,14 +451,14 @@ export function AddressStep({
                 event.target.value
               )
             }
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
           />
         </div>
 
         <div>
           <label
             htmlFor="uf"
-            className="mb-2 block text-sm font-medium text-zinc-200"
+            className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
           >
             UF *
           </label>
@@ -475,7 +476,7 @@ export function AddressStep({
               )
             }
             placeholder="SP"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-center uppercase text-white outline-none transition focus:border-zinc-500"
+            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-center uppercase text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
           />
         </div>
       </div>
@@ -483,17 +484,17 @@ export function AddressStep({
       {erro && (
         <p
           role="alert"
-          className="rounded-lg border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-300"
+          className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
         >
           {erro}
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-800 pt-6">
+      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <button
           type="submit"
           disabled={salvando}
-          className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {salvando
             ? "Salvando..."

@@ -315,7 +315,7 @@ export function BusinessDataStep({
       <div>
         <label
           htmlFor="nome-marca"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Nome da barbearia *
         </label>
@@ -331,14 +331,14 @@ export function BusinessDataStep({
             setNomeMarca(event.target.value)
           }
           placeholder="Ex.: Barbearia Central"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
       </div>
 
       <div>
         <label
           htmlFor="nome-profissional"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Nome profissional
         </label>
@@ -352,14 +352,14 @@ export function BusinessDataStep({
             setNomeProfissional(event.target.value)
           }
           placeholder="Ex.: Davi"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
       </div>
 
       <div>
         <label
           htmlFor="whatsapp"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           WhatsApp *
         </label>
@@ -375,10 +375,10 @@ export function BusinessDataStep({
             setWhatsapp(event.target.value)
           }
           placeholder="(13) 99999-9999"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
 
-        <p className="mt-2 text-xs text-zinc-500">
+        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
           Use um número brasileiro com DDD.
         </p>
       </div>
@@ -386,7 +386,7 @@ export function BusinessDataStep({
       <div>
         <label
           htmlFor="instagram"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Instagram
         </label>
@@ -399,17 +399,23 @@ export function BusinessDataStep({
             setInstagramUrl(event.target.value)
           }
           placeholder="https://instagram.com/suabarbearia"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-white outline-none transition focus:border-zinc-500"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
         />
       </div>
 
       <fieldset>
-        <legend className="mb-3 text-sm font-medium text-zinc-200">
+        <legend className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-200">
           Realiza atendimento em domicílio? *
         </legend>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3">
+          <label
+            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors ${
+              atendeDomicilio === "sim"
+                ? "border-red-600/40 bg-red-50/40 dark:border-red-500/40 dark:bg-red-950/20"
+                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
+            }`}
+          >
             <input
               type="radio"
               name="atende-domicilio"
@@ -418,14 +424,21 @@ export function BusinessDataStep({
               onChange={() =>
                 setAtendeDomicilio("sim")
               }
+              className="accent-red-600"
             />
 
-            <span className="text-sm">
+            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               Sim
             </span>
           </label>
 
-          <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3">
+          <label
+            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors ${
+              atendeDomicilio === "nao"
+                ? "border-red-600/40 bg-red-50/40 dark:border-red-500/40 dark:bg-red-950/20"
+                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
+            }`}
+          >
             <input
               type="radio"
               name="atende-domicilio"
@@ -434,9 +447,10 @@ export function BusinessDataStep({
               onChange={() =>
                 setAtendeDomicilio("nao")
               }
+              className="accent-red-600"
             />
 
-            <span className="text-sm">
+            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               Não
             </span>
           </label>
@@ -446,13 +460,13 @@ export function BusinessDataStep({
       <div>
         <label
           htmlFor="logo"
-          className="mb-2 block text-sm font-medium text-zinc-200"
+          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >
           Logo
         </label>
 
         {logoAtualUrl && (
-          <div className="mb-3 flex items-center gap-4 rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="mb-3 flex items-center gap-4 rounded-xl border border-zinc-200 bg-zinc-50/50 p-3.5 dark:border-zinc-800 dark:bg-zinc-950/50">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logoAtualUrl}
@@ -466,7 +480,7 @@ export function BusinessDataStep({
                 setRemoverLogo(true);
                 setLogoFile(null);
               }}
-              className="text-sm text-zinc-300 underline-offset-4 hover:text-white hover:underline"
+              className="text-sm font-medium text-red-600 underline-offset-4 hover:underline dark:text-red-400"
             >
               Remover logo
             </button>
@@ -487,15 +501,15 @@ export function BusinessDataStep({
               setRemoverLogo(false);
             }
           }}
-          className="block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-zinc-300"
+          className="block w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-700 outline-none file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-zinc-800 hover:file:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:file:bg-zinc-800 dark:file:text-zinc-200 dark:hover:file:bg-zinc-700"
         />
 
-        <p className="mt-2 text-xs text-zinc-500">
+        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
           Opcional. JPEG, PNG ou WEBP, até 5 MB.
         </p>
 
         {logoFile && (
-          <p className="mt-2 text-xs text-zinc-400">
+          <p className="mt-2 text-xs font-medium text-zinc-700 dark:text-zinc-300">
             Arquivo selecionado: {logoFile.name}
           </p>
         )}
@@ -504,17 +518,17 @@ export function BusinessDataStep({
       {erro && (
         <p
           role="alert"
-          className="rounded-lg border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-300"
+          className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
         >
           {erro}
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-800 pt-6">
+      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <button
           type="submit"
           disabled={carregando}
-          className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {carregando
             ? "Salvando..."
