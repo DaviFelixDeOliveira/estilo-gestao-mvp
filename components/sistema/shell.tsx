@@ -10,9 +10,16 @@ interface ShellProps {
   nome?: string | null;
   nomeMarca?: string | null;
   email?: string | null;
+  logoUrl?: string | null;
 }
 
-export function Shell({ children, nome, nomeMarca, email }: ShellProps) {
+export function Shell({
+  children,
+  nome,
+  nomeMarca,
+  email,
+  logoUrl,
+}: ShellProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   function handleToggleCollapse() {
@@ -20,36 +27,38 @@ export function Shell({ children, nome, nomeMarca, email }: ShellProps) {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-900/50 dark:text-zinc-100 flex flex-col">
-      {/* Sidebar Desktop */}
+    <div className="min-h-screen bg-[#F4F4F0] dark:bg-[#181817] text-[#2F2F2D] dark:text-[#F4F4F0] flex flex-col font-sans transition-colors duration-200">
+      {/* 1. Sidebar Desktop (lg: 1024px+) */}
       <AppSidebar
         collapsed={collapsed}
         onToggleCollapse={handleToggleCollapse}
         nome={nome}
         nomeMarca={nomeMarca}
         email={email}
+        logoUrl={logoUrl}
       />
 
-      {/* Main Layout Area */}
+      {/* 2. Main Layout Area */}
       <div
         className={`flex flex-1 flex-col transition-all duration-200 ease-in-out ${
-          collapsed ? "md:pl-[76px]" : "md:pl-[252px]"
+          collapsed ? "lg:pl-[76px]" : "lg:pl-[252px]"
         }`}
       >
         <AppHeader
           nome={nome}
           nomeMarca={nomeMarca}
           email={email}
+          logoUrl={logoUrl}
         />
 
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 pb-24 md:pb-8">
+        <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-8 pb-24 lg:pb-12">
           <div className="mx-auto max-w-6xl w-full">
             {children}
           </div>
         </main>
       </div>
 
-      {/* Bottom Navigation Mobile */}
+      {/* 3. Bottom Navigation Mobile (< lg) */}
       <BottomNav />
     </div>
   );

@@ -36,15 +36,21 @@ export default async function SistemaLayout({
   }
 
   let nomeMarca: string | null = null;
+  let logoUrl: string | null = null;
+
   if (perfil.barbearia_id) {
     const { data: barbearia } = await supabase
       .from("barbearias")
-      .select("nome_marca")
+      .select("nome_marca, logo_path")
       .eq("id", perfil.barbearia_id)
       .single();
 
     if (barbearia?.nome_marca) {
       nomeMarca = barbearia.nome_marca;
+    }
+    if (barbearia?.logo_path) {
+      // Se for uma URL completa ou path
+      logoUrl = barbearia.logo_path;
     }
   }
 
@@ -53,6 +59,7 @@ export default async function SistemaLayout({
       nome={perfil.nome}
       nomeMarca={nomeMarca}
       email={user.email}
+      logoUrl={logoUrl}
     >
       {children}
     </Shell>
