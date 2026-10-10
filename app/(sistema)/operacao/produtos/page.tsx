@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo, useRef, useEffect, useCallback, FormEvent } from "react";
 import Link from "next/link";
+import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
 import {
   Package,
@@ -769,7 +770,9 @@ export default function OperacaoProdutosPage() {
   // Helper para renderizar thumbnail do produto
   const renderProductThumbnail = (item: ProdutoItem) => {
     const cat = item.categoria_id ? categoryMap.get(item.categoria_id) : undefined;
-    const resolvedSrc = item.imagem_path || (item.usar_imagem_categoria !== false ? cat?.imagem_padrao_path : null);
+    const resolvedSrc =
+      item.imagem_path ||
+      (item.usar_imagem_categoria !== false ? cat?.imagem_padrao_path || "/images/categorias/image.png" : null);
 
     if (resolvedSrc) {
       return (
@@ -778,7 +781,12 @@ export default function OperacaoProdutosPage() {
           alt={item.nome}
           className="w-full h-full object-cover"
           onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
+            const target = e.target as HTMLImageElement;
+            if (target.src.indexOf("/images/categorias/image.png") === -1) {
+              target.src = "/images/categorias/image.png";
+            } else {
+              target.style.display = "none";
+            }
           }}
         />
       );
@@ -872,7 +880,7 @@ export default function OperacaoProdutosPage() {
         {/* Botões de Ação Primária */}
         <div className="flex items-center gap-2.5 shrink-0">
           <Link
-            href="/operacao/produtos"
+            href="/operacao/categorias"
             className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] text-xs sm:text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] transition-all cursor-pointer shadow-xs"
           >
             <Tag className="w-4 h-4 text-[#888882]" />
@@ -897,37 +905,9 @@ export default function OperacaoProdutosPage() {
       </section>
 
       {/* ======================================================== */}
-      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Desktop) */}
+      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Mobile & Desktop) */}
       {/* ======================================================== */}
-      <nav
-        aria-label="Abas da Operação"
-        className="hidden lg:flex items-center p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] w-fit overflow-x-auto"
-      >
-        <Link
-          href="/operacao/servicos"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Serviços
-        </Link>
-        <button
-          type="button"
-          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs whitespace-nowrap cursor-default"
-        >
-          Produtos
-        </button>
-        <Link
-          href="/operacao/produtos"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Categorias
-        </Link>
-        <Link
-          href="/operacao/estoque"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Estoque
-        </Link>
-      </nav>
+      <OperationTabs activeTab="produtos" />
 
       {/* Alerta de Erro de Carregamento */}
       {erroCarregamento && (

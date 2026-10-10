@@ -34,11 +34,10 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const pathname = usePathname();
 
-  const [isPdvExpanded, setIsPdvExpanded] = useState(true);
-  const [isOperacaoExpanded, setIsOperacaoExpanded] = useState(false);
-  const [isConfigExpanded, setIsConfigExpanded] = useState(false);
-
-  const businessName = nomeMarca || "Estilo & Gestão";
+  const businessName =
+    (nomeMarca && nomeMarca.trim()) ||
+    (nome && nome.trim()) ||
+    "Barbearia";
   const barbershopInitials = getBarbershopInitials(businessName);
 
   const isPdvActive = pathname.startsWith("/pdv");
@@ -46,6 +45,10 @@ export function AppSidebar({
   const isConfigActive =
     pathname.startsWith("/configuracoes") ||
     pathname.startsWith("/financeiro");
+
+  const [isPdvExpanded, setIsPdvExpanded] = useState<boolean>(true);
+  const [isOperacaoExpanded, setIsOperacaoExpanded] = useState<boolean>(true);
+  const [isConfigExpanded, setIsConfigExpanded] = useState<boolean>(isConfigActive);
 
   return (
     <aside
@@ -250,7 +253,7 @@ export function AppSidebar({
                 Produtos
               </Link>
               <Link
-                href="/operacao/produtos"
+                href="/operacao/categorias"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/categorias"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"

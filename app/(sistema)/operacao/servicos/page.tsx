@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback, FormEvent } from "react";
-import Link from "next/link";
+import { OperationTabs } from "@/components/sistema/operation-tabs";
 import {
   Scissors,
   Plus,
@@ -531,37 +531,9 @@ export default function OperacaoServicosPage() {
       </section>
 
       {/* ======================================================== */}
-      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Desktop) */}
+      {/* ABAS DE NAVEGAÇÃO DA OPERAÇÃO (Mobile & Desktop) */}
       {/* ======================================================== */}
-      <nav
-        aria-label="Abas da Operação"
-        className="hidden lg:flex items-center p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] w-fit overflow-x-auto"
-      >
-        <button
-          type="button"
-          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs whitespace-nowrap cursor-default"
-        >
-          Serviços
-        </button>
-        <Link
-          href="/operacao/produtos"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Produtos
-        </Link>
-        <Link
-          href="/operacao/produtos"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Categorias
-        </Link>
-        <Link
-          href="/operacao/estoque"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Estoque
-        </Link>
-      </nav>
+      <OperationTabs activeTab="servicos" />
 
       {/* ======================================================== */}
       {/* 2. CARD DE RESUMO / KPIS */}

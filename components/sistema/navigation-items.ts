@@ -43,7 +43,7 @@ export const MAIN_NAVIGATION_ITEMS: readonly NavigationItem[] = [
     subItems: [
       { title: "Serviços", href: "/operacao/servicos" },
       { title: "Produtos", href: "/operacao/produtos" },
-      { title: "Categorias", href: "/operacao/produtos" },
+      { title: "Categorias", href: "/operacao/categorias" },
       { title: "Estoque", href: "/operacao/estoque" },
     ],
   },

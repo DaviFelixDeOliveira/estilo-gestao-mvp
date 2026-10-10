@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo, FormEvent } from "react";
 import Link from "next/link";
+import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
 import {
   ArrowLeft,
@@ -564,6 +565,9 @@ export default function EstoquePage() {
           <span>{mensagemSucesso}</span>
         </div>
       )}
+
+      {/* Abas da Operação (Mobile & Desktop) */}
+      <OperationTabs activeTab="estoque" />
 
       {/* Cabeçalho */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
