@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
   "/confirmar-email",
   "/esqueci-senha",
   "/redefinir-senha",
+  "/onboarding",
   "/termos-de-uso",
   "/politica-de-privacidade",
   "/politica-de-cookies",
@@ -64,14 +65,19 @@ export function CookieBanner() {
   }
 
   return (
-    <aside
-      aria-label="Aviso sobre cookies"
-      role="region"
-      className="fixed z-50 bottom-20 sm:bottom-4 right-4 left-4 sm:left-auto w-auto sm:w-[320px] max-w-full rounded-3xl bg-white dark:bg-[#141619] border border-neutral-200 dark:border-neutral-800 p-6 pt-10 shadow-[0_4px_20px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all animate-in fade-in slide-in-from-bottom-5 duration-300"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300"
+      role="presentation"
     >
-      <div className="relative flex flex-col">
-        {/* Ícone de Cookie Flutuante */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none">
+      <aside
+        aria-label="Aviso sobre cookies"
+        role="dialog"
+        aria-modal="true"
+        className="relative w-[calc(100vw-2rem)] sm:w-[380px] max-w-[380px] max-h-[85vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#141619] border border-neutral-200 dark:border-neutral-800 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all animate-in fade-in zoom-in-95 duration-300"
+      >
+      <div className="flex flex-col items-center sm:items-start">
+        {/* Ícone de Cookie */}
+        <div className="flex items-center justify-center mb-3 w-full sm:w-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -124,12 +130,12 @@ export function CookieBanner() {
         </div>
 
         {/* Título */}
-        <h2 className="text-sm sm:text-base font-bold text-neutral-900 dark:text-neutral-100 mb-1.5 text-left">
+        <h2 className="text-sm sm:text-base font-bold text-neutral-900 dark:text-neutral-100 mb-1.5 text-center sm:text-left">
           Usamos cookies necessários
         </h2>
 
         {/* Descrição com Link */}
-        <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed text-left mb-4">
+        <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed text-center sm:text-left mb-5">
           Usamos cookies necessários para o funcionamento, segurança e autenticação
           da plataforma. Para saber mais, leia nossa{" "}
           <Link
@@ -142,16 +148,17 @@ export function CookieBanner() {
         </p>
 
         {/* Botão Entendi */}
-        <div className="flex justify-end w-full">
+        <div className="flex justify-center sm:justify-end w-full">
           <button
             type="button"
             onClick={handleEntendi}
-            className="w-full sm:w-auto px-5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#ddad81] hover:bg-[#634647] text-[#634647] hover:text-[#ddad81] transition-colors duration-150 active:scale-[0.98] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ddad81]"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#ddad81] hover:bg-[#634647] text-[#634647] hover:text-[#ddad81] transition-colors duration-150 active:scale-[0.98] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ddad81]"
           >
             Entendi
           </button>
         </div>
       </div>
-    </aside>
+      </aside>
+    </div>
   );
 }
