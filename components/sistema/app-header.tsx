@@ -38,7 +38,7 @@ function getHeaderTitles(pathname: string): { title: string; breadcrumb: string 
   if (pathname.startsWith("/operacao")) {
     return { title: "Operação", breadcrumb: "Operação" };
   }
-  if (pathname === "/financeiro") {
+  if (pathname === "/configuracoes/negocio/financeiro" || pathname === "/financeiro") {
     return { title: "Financeiro", breadcrumb: "Configurações / Negócio / Financeiro" };
   }
   if (pathname === "/configuracoes") {

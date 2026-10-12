@@ -52,7 +52,7 @@ export const MAIN_NAVIGATION_ITEMS: readonly NavigationItem[] = [
     href: "/configuracoes",
     icon: Settings,
     subItems: [
-      { title: "Financeiro", href: "/financeiro" },
+      { title: "Financeiro", href: "/configuracoes/negocio/financeiro" },
       { title: "Relatórios", href: "/dashboard" },
       { title: "Vitrine Digital", href: "/configuracoes" },
       { title: "Dados da barbearia", href: "/configuracoes" },
