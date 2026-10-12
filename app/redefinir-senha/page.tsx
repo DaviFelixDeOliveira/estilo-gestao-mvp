@@ -62,7 +62,7 @@ function RedefinirSenhaForm() {
     });
 
     if (error) {
-      console.error("Erro ao redefinir senha:", error.message);
+      console.warn("Aviso ao redefinir senha:", error.message);
 
       const mensagem = error.message.toLowerCase();
 
@@ -70,7 +70,7 @@ function RedefinirSenhaForm() {
         mensagem.includes("different from the old password") ||
         mensagem.includes("same password")
       ) {
-        setErro("Sua nova senha não deve ser igual à senha anterior.");
+        setErro("A nova senha precisa ser diferente da senha atual.");
       } else {
         setErro("Não foi possível redefinir sua senha. Solicite um novo link.");
       }
@@ -84,7 +84,7 @@ function RedefinirSenhaForm() {
     await supabase.auth.signOut();
 
     window.setTimeout(() => {
-      router.replace("/entrar");
+      router.replace("/entrar?redefinida=true");
     }, 1200);
   }
 

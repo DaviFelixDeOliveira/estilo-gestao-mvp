@@ -35,16 +35,15 @@ export default function EsqueciSenhaPage() {
     );
 
     if (error) {
-      console.error(
-        "Erro ao solicitar redefinição de senha:",
-        error.message
-      );
+      const mensagem = error.message.toLowerCase();
 
       if (
-        error.message.toLowerCase().includes("rate limit")
+        mensagem.includes("rate limit") ||
+        mensagem.includes("security purposes") ||
+        mensagem.includes("after")
       ) {
         setErro(
-          "Muitas tentativas de envio. Aguarde um pouco e tente novamente."
+          "Já enviamos recentemente. Aguarde alguns segundos antes de tentar novamente."
         );
       } else {
         setErro(
@@ -57,7 +56,7 @@ export default function EsqueciSenhaPage() {
     }
 
     setSucesso(
-      "Se existir uma conta vinculada a este e-mail, enviaremos as instruções para redefinir a senha."
+      "Solicitação recebida. Se este e-mail estiver cadastrado, enviaremos as instruções de recuperação. Verifique sua caixa de entrada e spam."
     );
 
     setCarregando(false);

@@ -18,6 +18,10 @@ export async function GET(request: NextRequest) {
       ? nextParam
       : "/";
 
+  // Links de recuperação de senha devem sempre cair em /redefinir-senha,
+  // independente do que vier no parâmetro "next".
+  const destino = type === "recovery" ? "/redefinir-senha" : next;
+
   if (tokenHash && type) {
     const supabase = await createClient();
 
@@ -29,16 +33,25 @@ export async function GET(request: NextRequest) {
     if (!error) {
       const redirectUrl = request.nextUrl.clone();
 
-      redirectUrl.pathname = next;
+      redirectUrl.pathname = destino;
       redirectUrl.search = "";
 
       return NextResponse.redirect(redirectUrl);
     }
 
-    console.error(
-      "Erro ao validar link de autenticação:",
+    console.warn(
+      "Aviso ao validar link de autenticação:",
       error.message
     );
+
+    if (type === "recovery") {
+      const erroUrl = request.nextUrl.clone();
+
+      erroUrl.pathname = "/redefinir-senha";
+      erroUrl.search = "?erro=link-invalido";
+
+      return NextResponse.redirect(erroUrl);
+    }
   }
 
   const errorUrl = request.nextUrl.clone();

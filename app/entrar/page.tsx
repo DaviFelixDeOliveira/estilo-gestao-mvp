@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Layers, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { FormEvent, Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, Layers, Mail, Lock, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
 
-export default function EntrarPage() {
+function EntrarForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const senhaRedefinida = searchParams.get("redefinida") === "true";
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -34,26 +36,21 @@ export default function EntrarPage() {
     });
 
     if (error) {
-      console.error("Erro ao entrar:", error.message);
-
       const mensagem = error.message.toLowerCase();
 
       if (
         mensagem.includes("email not confirmed") ||
         mensagem.includes("email_not_confirmed")
       ) {
-        setErro(
-          "Seu e-mail ainda não foi confirmado."
-        );
+        setErro("Seu e-mail ainda não foi confirmado.");
       } else if (
         mensagem.includes("invalid login credentials") ||
-        mensagem.includes("invalid_credentials")
+        mensagem.includes("invalid_credentials") ||
+        mensagem.includes("invalid credentials")
       ) {
         setErro("E-mail ou senha incorretos.");
       } else {
-        setErro(
-          "Não foi possível entrar. Tente novamente."
-        );
+        setErro("E-mail ou senha incorretos.");
       }
 
       setCarregando(false);
@@ -75,8 +72,8 @@ export default function EntrarPage() {
       .single();
 
     if (perfilError || !perfil) {
-      console.error(
-        "Erro ao carregar perfil:",
+      console.warn(
+        "Aviso ao carregar perfil:",
         perfilError?.message
       );
 
@@ -140,6 +137,17 @@ export default function EntrarPage() {
               Digite seu e-mail e senha para gerenciar sua barbearia.
             </p>
           </div>
+
+          {/* Mensagem de Senha Redefinida com Sucesso */}
+          {senhaRedefinida && (
+            <div
+              role="status"
+              className="mb-5 rounded-xl border border-emerald-200 dark:border-emerald-900/70 bg-emerald-50 dark:bg-emerald-950/50 p-3.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-200 font-medium flex items-center gap-2.5"
+            >
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span>Senha alterada com sucesso. Entre com sua nova senha.</span>
+            </div>
+          )}
 
           <form
             onSubmit={handleSubmit}
@@ -291,5 +299,19 @@ export default function EntrarPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+export default function EntrarPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#F4F4F0] dark:bg-[#0B0D0E] text-[#666662] dark:text-neutral-400">
+          Carregando...
+        </div>
+      }
+    >
+      <EntrarForm />
+    </Suspense>
   );
 }
