@@ -92,6 +92,42 @@ function opcoesHorario(valor: string) {
   return OPCOES_HORARIO;
 }
 
+// Verifica se o horário está dentro do expediente do dia
+// (strictamente entre abre_1 e fecha_1).
+function estaNoExpediente(
+  horario: string,
+  item: ScheduleFormItem
+) {
+  return Boolean(
+    item.abre_1 &&
+      item.fecha_1 &&
+      horario > item.abre_1 &&
+      horario < item.fecha_1
+  );
+}
+
+// Início do intervalo (abre_2): precisa estar dentro do
+// expediente e depois da abertura.
+function ehInicioIntervaloValido(
+  horario: string,
+  item: ScheduleFormItem
+) {
+  return estaNoExpediente(horario, item);
+}
+
+// Fim do intervalo (fecha_2): precisa estar dentro do
+// expediente e depois do início da pausa.
+function ehFimIntervaloValido(
+  horario: string,
+  item: ScheduleFormItem
+) {
+  return Boolean(
+    item.abre_2 &&
+      estaNoExpediente(horario, item) &&
+      horario > item.abre_2
+  );
+}
+
 function createInitialSchedule(
   initialData: ScheduleData[]
 ): ScheduleFormItem[] {
@@ -681,7 +717,7 @@ export function ScheduleStep({
 
                     {item.possui_intervalo && (
                       <div className="flex flex-wrap items-center gap-2 pl-6 text-xs text-[#666662] dark:text-[#A1A1AA]">
-                        <span>Pausa para almoço das</span>
+                        <span>Pausa das</span>
 
                         <select
                           value={item.abre_2}
@@ -697,14 +733,28 @@ export function ScheduleStep({
                           className="cursor-pointer rounded-lg border border-[#D5D4CD] bg-[#FAF9F5] px-2.5 py-1 font-mono text-xs text-[#1E1E1C] focus:outline-none dark:border-white/10 dark:bg-[#121316] dark:text-white"
                         >
                           {opcoesHorario(item.abre_2).map(
-                            (horario) => (
-                              <option
-                                key={`abre2_${horario}`}
-                                value={horario}
-                              >
-                                {horario}
-                              </option>
-                            )
+                            (horario) => {
+                              const invalido =
+                                !ehInicioIntervaloValido(
+                                  horario,
+                                  item
+                                );
+
+                              return (
+                                <option
+                                  key={`abre2_${horario}`}
+                                  value={horario}
+                                  disabled={invalido}
+                                  className={
+                                    invalido
+                                      ? "opacity-50"
+                                      : undefined
+                                  }
+                                >
+                                  {horario}
+                                </option>
+                              );
+                            }
                           )}
                         </select>
 
@@ -724,14 +774,28 @@ export function ScheduleStep({
                           className="cursor-pointer rounded-lg border border-[#D5D4CD] bg-[#FAF9F5] px-2.5 py-1 font-mono text-xs text-[#1E1E1C] focus:outline-none dark:border-white/10 dark:bg-[#121316] dark:text-white"
                         >
                           {opcoesHorario(item.fecha_2).map(
-                            (horario) => (
-                              <option
-                                key={`fecha2_${horario}`}
-                                value={horario}
-                              >
-                                {horario}
-                              </option>
-                            )
+                            (horario) => {
+                              const invalido =
+                                !ehFimIntervaloValido(
+                                  horario,
+                                  item
+                                );
+
+                              return (
+                                <option
+                                  key={`fecha2_${horario}`}
+                                  value={horario}
+                                  disabled={invalido}
+                                  className={
+                                    invalido
+                                      ? "opacity-50"
+                                      : undefined
+                                  }
+                                >
+                                  {horario}
+                                </option>
+                              );
+                            }
                           )}
                         </select>
                       </div>
