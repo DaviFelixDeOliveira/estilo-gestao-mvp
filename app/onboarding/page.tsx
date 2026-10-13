@@ -123,7 +123,8 @@ export default async function OnboardingPage() {
         nome,
         descricao,
         preco,
-        custo_estimado
+        custo_estimado,
+        visivel_vitrine
       `
     )
     .order("created_at", {
@@ -171,6 +172,7 @@ export default async function OnboardingPage() {
         preco_custo,
         preco_venda,
         imagem_path,
+        visivel_vitrine,
         categoria:categorias_produto (
           nome
         )
@@ -194,6 +196,8 @@ export default async function OnboardingPage() {
       preco_custo: item.preco_custo,
       preco_venda: item.preco_venda,
       imagem_path: item.imagem_path,
+      visivel_vitrine:
+        item.visivel_vitrine ?? true,
       categoria: Array.isArray(
         item.categoria
       )

@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   Edit2,
   Eye,
+  EyeOff,
   HelpCircle,
   Plus,
   Scissors,
@@ -28,6 +29,7 @@ type ServiceData = {
   descricao: string | null;
   preco: number | string;
   custo_estimado: number | string | null;
+  visivel_vitrine: boolean;
 };
 
 type ServiceStepProps = {
@@ -44,6 +46,7 @@ type ServiceFormItem = {
   descricao: string;
   preco: string;
   custo_estimado: string;
+  visivel_vitrine: boolean;
 };
 
 type CampoErros = {
@@ -96,6 +99,7 @@ function criarServicosIniciais(
     custo_estimado: formatInitialMoney(
       item.custo_estimado
     ),
+    visivel_vitrine: item.visivel_vitrine !== false,
   }));
 }
 
@@ -132,9 +136,17 @@ export function ServiceStep({
     ServiceFormItem[]
   >(() => {
     // Restaura o rascunho ignorando serviços completamente vazios.
-    const restaurados = (draftData ?? []).filter(
-      (item) => !ehServicoVazio(item)
-    );
+    // Garante visivel_vitrine com default true (rascunhos antigos
+    // não tinham esse campo).
+    const restaurados = (
+      draftData ?? []
+    )
+      .filter((item) => !ehServicoVazio(item))
+      .map((item) => ({
+        ...item,
+        visivel_vitrine:
+          item.visivel_vitrine !== false,
+      }));
 
     if (restaurados.length > 0) {
       return restaurados;
@@ -165,6 +177,10 @@ export function ServiceStep({
   const [formCusto, setFormCusto] =
     useState("");
 
+  // Visibilidade na Vitrine do serviço em edição (padrão: visível).
+  const [formVisivel, setFormVisivel] =
+    useState(true);
+
   const [touched, setTouched] =
     useState<
       Partial<
@@ -178,6 +194,10 @@ export function ServiceStep({
     useState<CampoErros>({});
   const [mostrarInfoVitrine, setMostrarInfoVitrine] =
     useState(false);
+
+  // Tooltip contextual do card (hover/focus no desktop, toque no mobile).
+  const [activeTooltipId, setActiveTooltipId] =
+    useState<string | null>(null);
 
   // Modal de exclusão
   const [servicoParaExcluir, setServicoParaExcluir] =
@@ -304,6 +324,7 @@ export function ServiceStep({
     setFormPreco("");
     setFormDescricao("");
     setFormCusto("");
+    setFormVisivel(true);
     setTouched({});
     setFormErrors({});
     setMostrarInfoVitrine(false);
@@ -322,6 +343,9 @@ export function ServiceStep({
     );
     setFormDescricao(servico.descricao || "");
     setFormCusto(servico.custo_estimado || "");
+    setFormVisivel(
+      servico.visivel_vitrine !== false
+    );
     setTouched({});
     setFormErrors({});
     setMostrarInfoVitrine(false);
@@ -337,6 +361,7 @@ export function ServiceStep({
     setEditingId(null);
     setTouched({});
     setFormErrors({});
+    setActiveTooltipId(null);
   }
 
   function salvarServico() {
@@ -369,6 +394,7 @@ export function ServiceStep({
       preco: formPreco.trim(),
       descricao: formDescricao.trim(),
       custo_estimado: formCusto.trim(),
+      visivel_vitrine: formVisivel,
     };
 
     if (editingId) {
@@ -402,6 +428,21 @@ export function ServiceStep({
       )
     );
     setServicoParaExcluir(null);
+  }
+
+  // Alterna a visibilidade de um serviço direto no card.
+  function alternarVisibilidade(formId: string) {
+    setServicos((atuais) =>
+      atuais.map((item) =>
+        item.formId === formId
+          ? {
+              ...item,
+              visivel_vitrine:
+                !item.visivel_vitrine,
+            }
+          : item
+      )
+    );
   }
 
   function validarServicos(): string | null {
@@ -481,6 +522,8 @@ export function ServiceStep({
                 item.custo_estimado
               )
             : null,
+        visivel_vitrine:
+          item.visivel_vitrine !== false,
       })
     );
 
@@ -602,11 +645,79 @@ export function ServiceStep({
 
               {/* Rodapé do card */}
               <div className="flex items-center justify-between border-t border-[#E9E9E4]/60 pt-2 text-xs dark:border-white/5">
-                <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-emerald-700 uppercase dark:text-emerald-400">
-                  <Eye className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      alternarVisibilidade(
+                        servico.formId
+                      );
+                      setActiveTooltipId(
+                        activeTooltipId ===
+                          servico.formId
+                          ? null
+                          : servico.formId
+                      );
+                    }}
+                    onMouseEnter={() =>
+                      setActiveTooltipId(
+                        servico.formId
+                      )
+                    }
+                    onMouseLeave={() =>
+                      setActiveTooltipId(null)
+                    }
+                    onFocus={() =>
+                      setActiveTooltipId(
+                        servico.formId
+                      )
+                    }
+                    onBlur={() =>
+                      setActiveTooltipId(null)
+                    }
+                    aria-label={
+                      servico.visivel_vitrine
+                        ? "Visível na Vitrine: Este serviço aparecerá na sua página pública quando ela estiver publicada."
+                        : "Oculto na Vitrine: Este serviço não será exibido para visitantes."
+                    }
+                    className={`inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase transition-colors ${
+                      servico.visivel_vitrine
+                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                        : "bg-black/5 text-[#8E8E89] dark:bg-white/5 dark:text-[#71717A]"
+                    }`}
+                  >
+                    {servico.visivel_vitrine ? (
+                      <>
+                        <Eye className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
 
-                  <span>Visível na Vitrine</span>
-                </span>
+                        <span>Visível na Vitrine</span>
+                      </>
+                    ) : (
+                      <>
+                        <EyeOff className="h-3 w-3" />
+
+                        <span>Oculto na Vitrine</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Tooltip contextual (hover/focus desktop; clique/tap mobile) */}
+                  {activeTooltipId ===
+                    servico.formId && (
+                    <div
+                      role="tooltip"
+                      className="pointer-events-none absolute bottom-full left-0 z-30 mb-2 w-60 rounded-xl border border-white/10 bg-[#1E1E1C] p-2.5 text-[11px] leading-relaxed text-white shadow-xl select-none"
+                    >
+                      <p className="mb-0.5 text-[10px] font-bold tracking-wider text-red-400 uppercase">
+                        Vitrine Digital
+                      </p>
+
+                      {servico.visivel_vitrine
+                        ? "Este serviço aparecerá na sua página pública quando ela estiver publicada."
+                        : "Este serviço não será exibido para visitantes."}
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-1">
                   <button
@@ -681,11 +792,40 @@ export function ServiceStep({
                       servico.preco
                     )}{" "}
                     •{" "}
-                    <span className="font-medium text-emerald-600 dark:text-emerald-400">
-                      Visível na Vitrine
+                    <span
+                      className={
+                        servico.visivel_vitrine
+                          ? "font-medium text-emerald-600 dark:text-emerald-400"
+                          : "font-medium text-[#8E8E89] dark:text-[#71717A]"
+                      }
+                    >
+                      {servico.visivel_vitrine
+                        ? "Visível na Vitrine"
+                        : "Oculto na Vitrine"}
                     </span>
                   </p>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    alternarVisibilidade(
+                      servico.formId
+                    )
+                  }
+                  title={
+                    servico.visivel_vitrine
+                      ? "Ocultar da Vitrine"
+                      : "Tornar visível na Vitrine"
+                  }
+                  className="flex shrink-0 cursor-pointer items-center rounded p-1 text-[#8E8E89] transition-colors hover:text-[#1E1E1C] dark:text-[#71717A] dark:hover:text-white"
+                >
+                  {servico.visivel_vitrine ? (
+                    <Eye className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  ) : (
+                    <EyeOff className="h-3.5 w-3.5" />
+                  )}
+                </button>
               </div>
             ))}
           </div>
@@ -961,52 +1101,107 @@ export function ServiceStep({
                 )}
               </div>
 
-              {/* Visibilidade na Vitrine (informativa: a RPC
-                  save_onboarding_step_4 grava visivel_vitrine = true
-                  durante o onboarding) */}
+              {/* Visibilidade na Vitrine (toggle real salvo no payload) */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between">
                   <span className="block text-xs font-bold tracking-wider text-[#3A3A38] uppercase dark:text-[#D5D5D0]">
                     Visibilidade na Vitrine
                   </span>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setMostrarInfoVitrine(
-                        (visivel) => !visivel
-                      )
-                    }
-                    className="flex cursor-pointer items-center gap-1 text-[11px] text-blue-600 hover:underline dark:text-blue-400"
-                  >
-                    <HelpCircle className="h-3 w-3" />
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMostrarInfoVitrine(
+                          (visivel) => !visivel
+                        )
+                      }
+                      onMouseEnter={() =>
+                        setMostrarInfoVitrine(true)
+                      }
+                      onMouseLeave={() =>
+                        setMostrarInfoVitrine(false)
+                      }
+                      onFocus={() =>
+                        setMostrarInfoVitrine(true)
+                      }
+                      onBlur={() =>
+                        setMostrarInfoVitrine(false)
+                      }
+                      aria-expanded={mostrarInfoVitrine}
+                      aria-label="O que é a Vitrine?"
+                      className="flex cursor-pointer items-center gap-1 text-[11px] text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      <HelpCircle className="h-3 w-3" />
 
-                    <span>O que é a Vitrine?</span>
-                  </button>
+                      <span>O que é a Vitrine?</span>
+                    </button>
+
+                    {mostrarInfoVitrine && (
+                      <div
+                        role="tooltip"
+                        className="pointer-events-none absolute top-full right-0 z-30 mt-2 w-64 rounded-xl border border-white/10 bg-[#1E1E1C] p-3 text-[11px] leading-relaxed text-white shadow-xl select-none"
+                      >
+                        <p className="mb-0.5 text-[10px] font-bold tracking-wider text-red-400 uppercase">
+                          Vitrine Digital
+                        </p>
+
+                        Sua Vitrine é a página pública onde clientes
+                        podem conhecer sua barbearia, serviços,
+                        produtos e trabalhos.
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between rounded-xl border border-[#D5D4CD] bg-[#FAF9F5] p-3 dark:border-white/10 dark:bg-[#121316]">
                   <div className="flex flex-col pr-2">
                     <span className="flex items-center gap-1.5 text-xs font-bold text-[#1E1E1C] dark:text-white">
-                      <Eye className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      {formVisivel ? (
+                        <>
+                          <Eye className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
 
-                      <span>Visível na Vitrine</span>
+                          <span>Visível na Vitrine</span>
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5 text-[#8E8E89] dark:text-[#71717A]" />
+
+                          <span>Oculto na Vitrine</span>
+                        </>
+                      )}
                     </span>
 
                     <span className="mt-0.5 text-[11px] text-[#666662] dark:text-[#A1A1AA]">
-                      Os serviços cadastrados aqui aparecerão na
-                      sua página pública quando ela for publicada.
+                      {formVisivel
+                        ? "Este serviço aparecerá na sua página pública quando ela estiver publicada."
+                        : "Este serviço não será exibido para visitantes."}
                     </span>
                   </div>
-                </div>
 
-                {mostrarInfoVitrine && (
-                  <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-[11px] leading-relaxed text-blue-900 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-200">
-                    <strong>Vitrine Digital:</strong> Sua Vitrine é a
-                    página pública onde clientes podem conhecer sua
-                    barbearia, serviços, produtos e trabalhos.
-                  </div>
-                )}
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={formVisivel}
+                    aria-label="Visível na Vitrine"
+                    onClick={() =>
+                      setFormVisivel((visivel) => !visivel)
+                    }
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-[#C92A2A]/30 focus:outline-none ${
+                      formVisivel
+                        ? "bg-emerald-600"
+                        : "bg-[#D5D4CD] dark:bg-[#2A2D35]"
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
+                        formVisivel
+                          ? "translate-x-5"
+                          : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
 
               {/* Ações do modal */}
