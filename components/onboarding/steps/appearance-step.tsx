@@ -19,7 +19,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   Check,
   Clock,
-  Info,
   MapPin,
   Monitor,
   Moon,
@@ -545,19 +544,6 @@ export function AppearanceStep({
                 </button>
               );
             })}
-          </div>
-
-          <div className="mt-5 flex gap-2.5 rounded-xl border border-[#E9E9E4] bg-[#FAF9F5] p-3.5 dark:border-white/10 dark:bg-[#15171C]">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#C92A2A] dark:text-red-400" />
-
-            <p className="text-xs leading-5 text-[#666662] dark:text-[#A1A1AA]">
-              <strong className="font-semibold text-[#1E1E1C] dark:text-white">
-                Como funciona o tema Sistema:{" "}
-              </strong>
-              com Sistema selecionado, o Estilo e Gestão
-              acompanha automaticamente o tema claro ou
-              escuro configurado no seu dispositivo.
-            </p>
           </div>
         </div>
       </section>
