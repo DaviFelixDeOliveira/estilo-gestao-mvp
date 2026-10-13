@@ -66,6 +66,7 @@ export default async function OnboardingPage() {
         nome_profissional,
         whatsapp,
         instagram_url,
+        descricao_publica,
         logo_path,
         atende_domicilio,
         cep,
