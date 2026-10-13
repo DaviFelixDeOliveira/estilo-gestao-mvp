@@ -18,8 +18,8 @@ import {
   CreditCard,
   Edit2,
   Eye,
+  EyeOff,
   HelpCircle,
-  Info,
   MoreHorizontal,
   Plus,
   QrCode,
@@ -43,6 +43,7 @@ type ProductData = {
   preco_custo: number | string;
   preco_venda: number | string;
   imagem_path: string | null;
+  visivel_vitrine: boolean;
   categoria: {
     nome: string;
   } | null;
@@ -69,6 +70,7 @@ type CategoryFormItem = {
   formId: string;
   codigo_sugerido: string | null;
   nome: string;
+  selecionada: boolean;
 };
 
 type ProductFormItem = {
@@ -78,6 +80,7 @@ type ProductFormItem = {
   categoria_nome: string;
   preco_custo: string;
   preco_venda: string;
+  visivel_vitrine: boolean;
 };
 
 const CATEGORIAS_SUGERIDAS = [
@@ -193,16 +196,46 @@ function findSuggestedCode(
 function createInitialCategories(
   initialCategories: CategoryData[]
 ): CategoryFormItem[] {
-  return initialCategories.map((item) => {
-    const codigo =
-      findSuggestedCode(item.nome);
+  // Começa com todas as categorias padrão disponíveis (não
+  // selecionadas). Elas são marcadas abaixo se já existiam.
+  const categorias: CategoryFormItem[] =
+    CATEGORIAS_SUGERIDAS.map((categoria) => ({
+      formId: `padrao_${categoria.codigo}`,
+      codigo_sugerido: categoria.codigo,
+      nome: "",
+      selecionada: false,
+    }));
 
-    return {
-      formId: item.id,
-      codigo_sugerido: codigo,
-      nome: codigo ? "" : item.nome,
-    };
+  // Adiciona as categorias já existentes (do banco) como
+  // selecionadas, unificando personalizadas e padrão.
+  initialCategories.forEach((item) => {
+    const codigo = findSuggestedCode(item.nome);
+
+    if (codigo) {
+      // Marca a categoria padrão correspondente como selecionada.
+      const indice = categorias.findIndex(
+        (categoria) =>
+          categoria.codigo_sugerido === codigo
+      );
+
+      if (indice >= 0) {
+        categorias[indice] = {
+          ...categorias[indice],
+          selecionada: true,
+        };
+      }
+    } else {
+      // Categoria personalizada já existente.
+      categorias.push({
+        formId: item.id,
+        codigo_sugerido: null,
+        nome: item.nome,
+        selecionada: true,
+      });
+    }
   });
+
+  return categorias;
 }
 
 function createInitialProducts(
@@ -220,6 +253,7 @@ function createInitialProducts(
     preco_venda: formatMoney(
       item.preco_venda
     ),
+    visivel_vitrine: item.visivel_vitrine !== false,
   }));
 }
 
@@ -261,12 +295,53 @@ export function ProductPaymentStep({
     );
 
   const [categorias, setCategorias] =
-    useState<CategoryFormItem[]>(() =>
-      draftData?.categorias ??
-      createInitialCategories(
+    useState<CategoryFormItem[]>(() => {
+      // Restaura o rascunho (drafts antigos não tinham o campo
+      // selecionada, logo assume true).
+      const doRascunho = (
+        draftData?.categorias ?? []
+      ).map((item) => ({
+        ...item,
+        selecionada:
+          item.selecionada !== false,
+      }));
+
+      // Garante que todas as categorias padrão existam como opções
+      // no grid, mesmo quando o rascunho antigo não as guardou.
+      const porCodigo = new Map<string, boolean>();
+      doRascunho.forEach((item) => {
+        if (item.codigo_sugerido) {
+          porCodigo.set(
+            item.codigo_sugerido,
+            item.selecionada
+          );
+        }
+      });
+
+      const padroesFaltando =
+        CATEGORIAS_SUGERIDAS.filter(
+          (categoria) =>
+            !porCodigo.has(categoria.codigo)
+        ).map((categoria) => ({
+          formId: `padrao_${categoria.codigo}`,
+          codigo_sugerido: categoria.codigo,
+          nome: "",
+          selecionada: false,
+        }));
+
+      const mescladas = [
+        ...doRascunho,
+        ...padroesFaltando,
+      ];
+
+      if (mescladas.length > 0) {
+        return mescladas;
+      }
+
+      return createInitialCategories(
         initialCategories
-      )
-    );
+      );
+    });
 
   const [produtos, setProdutos] =
     useState<ProductFormItem[]>(() => {
@@ -274,9 +349,16 @@ export function ProductPaymentStep({
       // vazios (não podem voltar após F5).
       const restaurados = (
         draftData?.produtos ?? []
-      ).filter(
-        (item) => !ehProdutoVazio(item)
-      );
+      )
+        .filter((item) => !ehProdutoVazio(item))
+        .map((item) => ({
+          ...item,
+          // Drafts antigos não tinham o campo visível.
+          visivel_vitrine:
+            item.visivel_vitrine === false
+              ? false
+              : true,
+        }));
 
       if (restaurados.length > 0) {
         return restaurados;
@@ -318,6 +400,8 @@ export function ProductPaymentStep({
     novaCategoria,
     setNovaCategoria,
   ] = useState("");
+  const [erroCategoria, setErroCategoria] =
+    useState("");
 
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] =
@@ -338,6 +422,8 @@ export function ProductPaymentStep({
     useState("");
   const [formDescricao, setFormDescricao] =
     useState("");
+  const [formVisivel, setFormVisivel] =
+    useState(true);
 
   const [produtoTouched, setProdutoTouched] =
     useState<
@@ -418,7 +504,8 @@ export function ProductPaymentStep({
     setErro("");
 
     if (!value) {
-      setCategorias([]);
+      // Desmarcado: a seção é ocultada e o payload sai vazio.
+      // Preserva o estado para o caso de reativar a venda.
       setProdutos([]);
     }
   }
@@ -428,19 +515,31 @@ export function ProductPaymentStep({
     nome: string
   ) {
     setCategorias((atuais) => {
-      const existe = atuais.some(
+      const indice = atuais.findIndex(
         (item) =>
           item.codigo_sugerido === codigo
       );
 
-      if (existe) {
-        const restantes =
-          atuais.filter(
-            (item) =>
-              item.codigo_sugerido !==
-              codigo
-          );
+      // Categoria padrão ainda não está no estado: adiciona.
+      if (indice < 0) {
+        return [
+          ...atuais,
+          {
+            formId: `padrao_${codigo}`,
+            codigo_sugerido: codigo,
+            nome: "",
+            selecionada: true,
+          },
+        ];
+      }
 
+      const item = atuais[indice];
+      const proximaSelecionada =
+        !item.selecionada;
+
+      // Ao desmarcar, produtos que dependiam dessa categoria
+      // ficam sem categoria válida.
+      if (!proximaSelecionada) {
         setProdutos((produtosAtuais) =>
           produtosAtuais.map((produto) =>
             normalizeName(
@@ -453,19 +552,57 @@ export function ProductPaymentStep({
               : produto
           )
         );
-
-        return restantes;
       }
 
-      return [
+      const proximo = [
         ...atuais,
-        {
-          formId: crypto.randomUUID(),
-          codigo_sugerido: codigo,
-          nome: "",
-        },
       ];
+      proximo[indice] = {
+        ...item,
+        selecionada: proximaSelecionada,
+      };
+
+      return proximo;
     });
+
+    setErro("");
+  }
+
+  function alternarCategoriaPersonalizada(
+    formId: string
+  ) {
+    setCategorias((atuais) =>
+      atuais.map((item) => {
+        if (item.formId !== formId) {
+          return item;
+        }
+
+        const proximaSelecionada =
+          !item.selecionada;
+
+        if (!proximaSelecionada) {
+          const nome = getCategoryName(item);
+
+          setProdutos((produtosAtuais) =>
+            produtosAtuais.map((produto) =>
+              normalizeName(
+                produto.categoria_nome
+              ) === normalizeName(nome)
+                ? {
+                    ...produto,
+                    categoria_nome: "",
+                  }
+                : produto
+            )
+          );
+        }
+
+        return {
+          ...item,
+          selecionada: proximaSelecionada,
+        };
+      })
+    );
 
     setErro("");
   }
@@ -476,7 +613,7 @@ export function ProductPaymentStep({
       .replace(/\s+/g, " ");
 
     if (!nome) {
-      setErro(
+      setErroCategoria(
         "Informe o nome da categoria personalizada."
       );
       return;
@@ -490,7 +627,7 @@ export function ProductPaymentStep({
     );
 
     if (existe) {
-      setErro(
+      setErroCategoria(
         "Essa categoria já foi adicionada."
       );
       return;
@@ -502,11 +639,12 @@ export function ProductPaymentStep({
         formId: crypto.randomUUID(),
         codigo_sugerido: null,
         nome,
+        selecionada: true,
       },
     ]);
 
     setNovaCategoria("");
-    setErro("");
+    setErroCategoria("");
   }
 
   function removerCategoria(
@@ -555,6 +693,7 @@ export function ProductPaymentStep({
       nomesCategorias[0]?.nome ?? ""
     );
     setFormDescricao("");
+    setFormVisivel(true);
     setProdutoTouched({});
     setFormProdutoErros({});
     setMostrarInfoVitrineProduto(false);
@@ -570,6 +709,9 @@ export function ProductPaymentStep({
     setFormCusto(produto.preco_custo);
     setFormCategoria(produto.categoria_nome);
     setFormDescricao(produto.descricao || "");
+    setFormVisivel(
+      produto.visivel_vitrine !== false
+    );
     setProdutoTouched({});
     setFormProdutoErros({});
     setMostrarInfoVitrineProduto(false);
@@ -692,6 +834,7 @@ export function ProductPaymentStep({
       preco_custo: formCusto.trim(),
       categoria_nome: formCategoria,
       descricao: formDescricao.trim(),
+      visivel_vitrine: formVisivel,
     };
 
     if (produtoEditandoId) {
@@ -729,6 +872,22 @@ export function ProductPaymentStep({
     setErro("");
   }
 
+  function alternarVisibilidadeVitrine(
+    produto: ProductFormItem
+  ) {
+    setProdutos((atuais) =>
+      atuais.map((item) =>
+        item.formId === produto.formId
+          ? {
+              ...item,
+              visivel_vitrine:
+                item.visivel_vitrine === false,
+            }
+          : item
+      )
+    );
+  }
+
   function alternarFormaPagamento(
     forma: PaymentMethod
   ) {
@@ -752,12 +911,17 @@ export function ProductPaymentStep({
       return null;
     }
 
-    if (categorias.length === 0) {
+    const categoriasSelecionadas =
+      categorias.filter(
+        (item) => item.selecionada
+      );
+
+    if (categoriasSelecionadas.length === 0) {
       return "Selecione ou crie pelo menos uma categoria.";
     }
 
     const nomesCategorias =
-      categorias.map((item) =>
+      categoriasSelecionadas.map((item) =>
         getCategoryName(item)
       );
 
@@ -848,15 +1012,20 @@ export function ProductPaymentStep({
 
     const categoriasPayload =
       vendeProdutos
-        ? categorias.map((item) => ({
-            codigo_sugerido:
-              item.codigo_sugerido,
-            nome: item.codigo_sugerido
-              ? null
-              : item.nome
-                  .trim()
-                  .replace(/\s+/g, " "),
-          }))
+        ? categorias
+            .filter(
+              (item) =>
+                item.selecionada !== false
+            )
+            .map((item) => ({
+              codigo_sugerido:
+                item.codigo_sugerido,
+              nome: item.codigo_sugerido
+                ? null
+                : item.nome
+                    .trim()
+                    .replace(/\s+/g, " "),
+            }))
         : [];
 
     const produtosPayload =
@@ -879,6 +1048,8 @@ export function ProductPaymentStep({
                 item.preco_venda
               ),
             imagem_path: null,
+            visivel_vitrine:
+              item.visivel_vitrine !== false,
           }))
         : [];
 
@@ -932,10 +1103,14 @@ export function ProductPaymentStep({
   }
 
   const nomesCategorias =
-    categorias.map((item) => ({
-      formId: item.formId,
-      nome: getCategoryName(item),
-    }));
+    categorias
+      .filter(
+        (item) => item.selecionada !== false
+      )
+      .map((item) => ({
+        formId: item.formId,
+        nome: getCategoryName(item),
+      }));
 
   return (
     <form
@@ -1007,25 +1182,39 @@ export function ProductPaymentStep({
               utiliza ou crie uma personalizada.
             </p>
 
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {/* Categorias padrão */}
               {CATEGORIAS_SUGERIDAS.map(
                 (categoria) => {
+                  const item = categorias.find(
+                    (c) =>
+                      c.codigo_sugerido ===
+                      categoria.codigo
+                  );
                   const selecionada =
-                    categorias.some(
-                      (item) =>
-                        item.codigo_sugerido ===
-                        categoria.codigo
-                    );
+                    item?.selecionada ?? false;
 
                   return (
                     <label
                       key={categoria.codigo}
-                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm font-medium transition ${
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 text-sm font-medium transition-all duration-150 select-none ${
                         selecionada
-                          ? "border-red-600/40 bg-red-50/40 text-zinc-900 dark:border-red-500/40 dark:bg-red-950/20 dark:text-zinc-100"
-                          : "border-zinc-200 bg-zinc-50/50 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300 dark:hover:border-zinc-700"
+                          ? "border-[#C92A2A] bg-red-50/50 text-zinc-900 shadow-xs dark:border-red-600/60 dark:bg-red-950/20 dark:text-zinc-100"
+                          : "border-[#E9E9E4] bg-white text-zinc-600 hover:border-neutral-300 dark:border-white/10 dark:bg-[#18191E] dark:text-zinc-300 dark:hover:border-white/20"
                       }`}
                     >
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
+                          selecionada
+                            ? "border-[#C92A2A] bg-[#C92A2A] text-white"
+                            : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
+                        }`}
+                      >
+                        {selecionada && (
+                          <Check className="h-3.5 w-3.5 stroke-[3]" />
+                        )}
+                      </span>
+
                       <input
                         type="checkbox"
                         checked={selecionada}
@@ -1035,7 +1224,7 @@ export function ProductPaymentStep({
                             categoria.nome
                           )
                         }
-                        className="accent-red-600"
+                        className="sr-only"
                       />
 
                       {categoria.nome}
@@ -1043,20 +1232,105 @@ export function ProductPaymentStep({
                   );
                 }
               )}
+
+              {/* Categorias personalizadas (junto com as padrão) */}
+              {categorias
+                .filter(
+                  (item) =>
+                    !item.codigo_sugerido
+                )
+                .map((item) => {
+                  const nome =
+                    getCategoryName(item);
+
+                  return (
+                    <div
+                      key={item.formId}
+                      className={`flex items-center gap-3 rounded-xl border p-3.5 text-sm font-medium transition-all duration-150 select-none ${
+                        item.selecionada
+                          ? "border-[#C92A2A] bg-red-50/50 text-zinc-900 shadow-xs dark:border-red-600/60 dark:bg-red-950/20 dark:text-zinc-100"
+                          : "border-[#E9E9E4] bg-white text-zinc-600 hover:border-neutral-300 dark:border-white/10 dark:bg-[#18191E] dark:text-zinc-300 dark:hover:border-white/20"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          alternarCategoriaPersonalizada(
+                            item.formId
+                          )
+                        }
+                        aria-pressed={
+                          item.selecionada
+                        }
+                        className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left"
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
+                            item.selecionada
+                              ? "border-[#C92A2A] bg-[#C92A2A] text-white"
+                              : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
+                          }`}
+                        >
+                          {item.selecionada && (
+                            <Check className="h-3.5 w-3.5 stroke-[3]" />
+                          )}
+                        </span>
+
+                        <span className="truncate">
+                          {nome}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          removerCategoria(
+                            item.formId
+                          )
+                        }
+                        aria-label={`Remover categoria ${nome}`}
+                        className="shrink-0 cursor-pointer rounded p-1 text-zinc-400 transition hover:text-red-600 dark:hover:text-red-400"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  );
+                })}
             </div>
 
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <input
-                type="text"
-                value={novaCategoria}
-                onChange={(event) =>
-                  setNovaCategoria(
-                    event.target.value
-                  )
-                }
-                placeholder="Categoria personalizada"
-                className="min-w-0 flex-1 rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-              />
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
+              <div className="min-w-0 flex-1">
+                <input
+                  type="text"
+                  value={novaCategoria}
+                  onChange={(event) => {
+                    const proximo =
+                      event.target.value;
+                    setNovaCategoria(proximo);
+                    if (proximo.trim()) {
+                      setErroCategoria("");
+                    }
+                  }}
+                  placeholder="Categoria personalizada"
+                  aria-invalid={Boolean(
+                    erroCategoria
+                  )}
+                  className={`min-w-0 w-full rounded-xl border bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:ring-1 dark:bg-zinc-950 dark:text-white ${
+                    erroCategoria
+                      ? "border-red-600 ring-1 ring-red-600 dark:border-red-500 dark:ring-red-500"
+                      : "border-zinc-300 focus:border-red-600 focus:ring-red-600 dark:border-zinc-700 dark:focus:border-red-500 dark:focus:ring-red-500"
+                  }`}
+                />
+
+                {erroCategoria && (
+                  <p
+                    role="alert"
+                    className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400"
+                  >
+                    {erroCategoria}
+                  </p>
+                )}
+              </div>
 
               <button
                 type="button"
@@ -1068,42 +1342,6 @@ export function ProductPaymentStep({
                 Adicionar categoria
               </button>
             </div>
-
-            {categorias.some(
-              (item) =>
-                !item.codigo_sugerido
-            ) && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {categorias
-                  .filter(
-                    (item) =>
-                      !item.codigo_sugerido
-                  )
-                  .map((item) => (
-                    <div
-                      key={item.formId}
-                      className="flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-800 shadow-2xs dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
-                    >
-                      <span>
-                        {item.nome}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removerCategoria(
-                            item.formId
-                          )
-                        }
-                        aria-label={`Remover categoria ${item.nome}`}
-                        className="text-zinc-400 transition hover:text-red-600 dark:hover:text-red-400"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-              </div>
-            )}
           </section>
 
           <section className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
@@ -1122,7 +1360,10 @@ export function ProductPaymentStep({
                 type="button"
                 onClick={abrirNovoProduto}
                 disabled={
-                  categorias.length === 0
+                  categorias.filter(
+                    (item) =>
+                      item.selecionada !== false
+                  ).length === 0
                 }
                 className="inline-flex items-center gap-2 rounded-xl bg-[#C92A2A] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[#B42318] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -1130,24 +1371,6 @@ export function ProductPaymentStep({
 
                 <span>Novo produto</span>
               </button>
-            </div>
-
-            {/* Banner informativo sobre a Vitrine Digital */}
-            <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 text-xs text-[#666662] dark:text-[#A1A1AA]">
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-
-              <div className="space-y-0.5">
-                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                  O que é a Vitrine?
-                </span>
-
-                <p className="leading-relaxed">
-                  É sua página pública, onde clientes podem conhecer
-                  sua barbearia, serviços, produtos e trabalhos.
-                  Produtos cadastrados aqui aparecem para os
-                  visitantes.
-                </p>
-              </div>
             </div>
 
             {produtos.length === 0 ? (
@@ -1224,11 +1447,44 @@ export function ProductPaymentStep({
 
                     {/* Ações e status da Vitrine */}
                     <div className="flex shrink-0 items-center gap-2 border-t border-[#E9E9E4]/60 pt-2 sm:border-t-0 sm:pt-0 dark:border-white/5">
-                      <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
-                        <Eye className="h-3.5 w-3.5" />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          alternarVisibilidadeVitrine(
+                            produto
+                          )
+                        }
+                        aria-pressed={
+                          produto.visivel_vitrine !== false
+                        }
+                        aria-label={`${
+                          produto.visivel_vitrine !== false
+                            ? "Ocultar"
+                            : "Exibir"
+                        } ${produto.nome} na Vitrine`}
+                        title={`${
+                          produto.visivel_vitrine !== false
+                            ? "Clique para ocultar na Vitrine"
+                            : "Clique para exibir na Vitrine"
+                        }`}
+                        className={`cursor-pointer inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                          produto.visivel_vitrine !== false
+                            ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20"
+                            : "bg-black/5 text-[#8E8E89] hover:bg-black/10 dark:bg-white/5 dark:text-[#71717A] dark:hover:bg-white/10"
+                        }`}
+                      >
+                        {produto.visivel_vitrine !== false ? (
+                          <Eye className="h-3.5 w-3.5" />
+                        ) : (
+                          <EyeOff className="h-3.5 w-3.5" />
+                        )}
 
-                        <span>Visível na Vitrine</span>
-                      </span>
+                        <span>
+                          {produto.visivel_vitrine !== false
+                            ? "Visível na Vitrine"
+                            : "Oculto na Vitrine"}
+                        </span>
+                      </button>
 
                       <button
                         type="button"
@@ -1298,8 +1554,16 @@ export function ProductPaymentStep({
                             produto.preco_venda
                           )}{" "}
                           • {produto.categoria_nome} •{" "}
-                          <span className="font-medium text-emerald-600 dark:text-emerald-400">
-                            Visível na Vitrine
+                          <span
+                            className={
+                              produto.visivel_vitrine !== false
+                                ? "font-medium text-emerald-600 dark:text-emerald-400"
+                                : "font-medium text-[#8E8E89] dark:text-[#71717A]"
+                            }
+                          >
+                            {produto.visivel_vitrine !== false
+                              ? "Visível na Vitrine"
+                              : "Oculto na Vitrine"}
                           </span>
                         </p>
                       </div>
@@ -1730,16 +1994,14 @@ export function ProductPaymentStep({
                 />
               </div>
 
-              {/* Vitrine Digital — informativo (a RPC
-                  save_onboarding_step_5 grava visivel_vitrine =
-                  true durante o onboarding) */}
-              <div className="space-y-2 rounded-xl border border-[#E9E9E4] bg-neutral-50 p-3.5 dark:border-white/10 dark:bg-[#202227]">
+              {/* Vitrine Digital — controle real salvo no payload */}
+              <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#1E1E1C] dark:text-[#F4F4F0]">
-                      Exibir na Vitrine Digital
-                    </span>
+                  <span className="block text-xs font-bold tracking-wider text-[#1E1E1C] uppercase dark:text-[#F4F4F0]">
+                    Exibir na Vitrine Digital
+                  </span>
 
+                  <div className="relative">
                     <button
                       type="button"
                       onClick={() =>
@@ -1747,38 +2009,94 @@ export function ProductPaymentStep({
                           (visivel) => !visivel
                         )
                       }
+                      onMouseEnter={() =>
+                        setMostrarInfoVitrineProduto(true)
+                      }
+                      onMouseLeave={() =>
+                        setMostrarInfoVitrineProduto(false)
+                      }
+                      onFocus={() =>
+                        setMostrarInfoVitrineProduto(true)
+                      }
+                      onBlur={() =>
+                        setMostrarInfoVitrineProduto(false)
+                      }
+                      aria-expanded={
+                        mostrarInfoVitrineProduto
+                      }
                       aria-label="O que é a Vitrine?"
-                      className="cursor-pointer text-neutral-400 hover:text-neutral-700 dark:hover:text-white"
+                      className="flex cursor-pointer items-center gap-1 text-[11px] text-blue-600 hover:underline dark:text-blue-400"
                     >
-                      <HelpCircle className="h-3.5 w-3.5" />
+                      <HelpCircle className="h-3 w-3" />
+
+                      <span>O que é a Vitrine?</span>
                     </button>
+
+                    {mostrarInfoVitrineProduto && (
+                      <div
+                        role="tooltip"
+                        className="pointer-events-none absolute top-full right-0 z-30 mt-2 w-64 rounded-xl border border-white/10 bg-[#1E1E1C] p-3 text-[11px] leading-relaxed text-white shadow-xl select-none"
+                      >
+                        <p className="mb-0.5 text-[10px] font-bold tracking-wider text-red-400 uppercase">
+                          Vitrine Digital
+                        </p>
+
+                        Sua Vitrine é a página pública onde clientes
+                        podem conhecer sua barbearia, serviços,
+                        produtos e trabalhos.
+                      </div>
+                    )}
                   </div>
-
-                  <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
-                    <Eye className="h-3 w-3" />
-
-                    <span>Visível</span>
-                  </span>
                 </div>
 
-                <p className="text-[11px] leading-relaxed text-[#666662] dark:text-[#A1A1AA]">
-                  Os produtos cadastrados aqui ficam visíveis na
-                  Vitrine Digital quando ela for publicada.
-                </p>
+                <div className="flex items-center justify-between rounded-xl border border-[#D5D4CD] bg-[#FAF9F5] p-3 dark:border-white/10 dark:bg-[#121316]">
+                  <div className="flex flex-col pr-2">
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-[#1E1E1C] dark:text-white">
+                      {formVisivel ? (
+                        <>
+                          <Eye className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
 
-                {mostrarInfoVitrineProduto && (
-                  <div className="space-y-1 rounded-lg border border-neutral-200 bg-white p-2.5 text-[11px] animate-fadeIn dark:border-white/10 dark:bg-[#18191E]">
-                    <p className="font-bold text-[#1E1E1C] dark:text-[#F4F4F0]">
-                      O que é a Vitrine?
-                    </p>
+                          <span>Visível</span>
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5 text-[#8E8E89] dark:text-[#71717A]" />
 
-                    <p className="leading-relaxed text-[#666662] dark:text-[#A1A1AA]">
-                      É sua página pública, onde clientes podem
-                      conhecer sua barbearia, serviços, produtos e
-                      trabalhos.
-                    </p>
+                          <span>Oculto</span>
+                        </>
+                      )}
+                    </span>
+
+                    <span className="mt-0.5 text-[11px] text-[#666662] dark:text-[#A1A1AA]">
+                      {formVisivel
+                        ? "Este produto aparecerá na sua página pública quando ela estiver publicada."
+                        : "Este produto não será exibido para visitantes."}
+                    </span>
                   </div>
-                )}
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={formVisivel}
+                    aria-label="Exibir na Vitrine Digital"
+                    onClick={() =>
+                      setFormVisivel((visivel) => !visivel)
+                    }
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-[#C92A2A]/30 focus:outline-none ${
+                      formVisivel
+                        ? "bg-emerald-600"
+                        : "bg-[#D5D4CD] dark:bg-[#2A2D35]"
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
+                        formVisivel
+                          ? "translate-x-5"
+                          : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
 
               {/* Ações do modal */}
