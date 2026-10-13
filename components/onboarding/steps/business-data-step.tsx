@@ -2,11 +2,26 @@
 
 import {
   FormEvent,
+  RefObject,
+  useEffect,
   useMemo,
   useState,
 } from "react";
 
+import {
+  AlignLeft,
+  AtSign,
+  Building2,
+  Car,
+  Info,
+  Phone,
+  Store,
+  User,
+} from "lucide-react";
+
 import { createClient } from "@/lib/supabase/client";
+
+import { LogoUploader } from "@/components/onboarding/logo-uploader";
 
 type BusinessData = {
   id: string;
@@ -14,6 +29,7 @@ type BusinessData = {
   nome_profissional: string | null;
   whatsapp: string | null;
   instagram_url: string | null;
+  descricao_publica: string | null;
   logo_path: string | null;
   atende_domicilio: boolean | null;
 };
@@ -21,65 +37,122 @@ type BusinessData = {
 type BusinessDataStepProps = {
   initialData: BusinessData;
   onSaved: (nextStep: number) => void;
+  onSubmittingChange?: (submitting: boolean) => void;
+  formRef?: RefObject<HTMLFormElement | null>;
+  onDraftChange?: (valores: unknown) => void;
+  logoInicialDataUrl?: string | null;
+  logoInicialFileName?: string | null;
 };
 
-const TIPOS_IMAGEM_PERMITIDOS = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-];
+type CampoErros = {
+  nomeMarca?: string;
+  whatsapp?: string;
+  descricao?: string;
+  logo?: string;
+};
 
-const TAMANHO_MAXIMO_LOGO = 5 * 1024 * 1024;
+const CLASSE_LABEL =
+  "block text-xs font-bold uppercase tracking-wider text-[#3A3A38] dark:text-[#D5D5D0]";
 
-function formatWhatsapp(value: string | null) {
-  if (!value) {
+const CLASSE_AJUDA =
+  "text-[11px] text-[#666662] dark:text-[#A1A1AA]";
+
+const CLASSE_ERRO =
+  "text-xs font-medium text-red-600 dark:text-red-400";
+
+const CLASSE_ICONE =
+  "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8E8E89] dark:text-[#71717A]";
+
+const CLASSE_ICONE_TEXTAREA =
+  "pointer-events-none absolute top-3.5 left-0 flex items-center pl-3.5 text-[#8E8E89] dark:text-[#71717A]";
+
+const CLASSE_TEXTAREA =
+  "w-full min-h-[120px] pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#18191E] border text-[#1E1E1C] dark:text-white placeholder-[#8E8E89] dark:placeholder-[#52525B] text-sm focus:outline-none focus:ring-2 transition-all resize-y";
+
+const CLASSE_INPUT_BASE =
+  "w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-[#18191E] border text-[#1E1E1C] dark:text-white placeholder-[#8E8E89] dark:placeholder-[#52525B] text-sm focus:outline-none focus:ring-2 transition-all";
+
+function mascaraWhatsapp(valor: string) {
+  const digitos = valor.replace(/\D/g, "").slice(0, 11);
+
+  if (digitos.length === 0) {
     return "";
   }
 
-  let digits = value.replace(/\D/g, "");
-
-  if (
-    digits.startsWith("55") &&
-    (digits.length === 12 || digits.length === 13)
-  ) {
-    digits = digits.slice(2);
+  if (digitos.length <= 2) {
+    return `(${digitos}`;
   }
 
-  if (digits.length === 11) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(
-      2,
-      7
-    )}-${digits.slice(7)}`;
+  if (digitos.length <= 6) {
+    return `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
   }
 
-  if (digits.length === 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(
+  if (digitos.length <= 10) {
+    return `(${digitos.slice(0, 2)}) ${digitos.slice(
       2,
       6
-    )}-${digits.slice(6)}`;
+    )}-${digitos.slice(6)}`;
   }
 
-  return value;
+  return `(${digitos.slice(0, 2)}) ${digitos.slice(
+    2,
+    7
+  )}-${digitos.slice(7)}`;
 }
 
-function normalizeWhatsapp(value: string) {
-  let digits = value.replace(/\D/g, "");
+function whatsappInicial(valor: string | null) {
+  if (!valor) {
+    return "";
+  }
+
+  let digitos = valor.replace(/\D/g, "");
 
   if (
-    digits.startsWith("55") &&
-    (digits.length === 12 || digits.length === 13)
+    digitos.startsWith("55") &&
+    (digitos.length === 12 || digitos.length === 13)
   ) {
-    digits = digits.slice(2);
+    digitos = digitos.slice(2);
+  }
+
+  return mascaraWhatsapp(digitos);
+}
+
+function normalizeWhatsapp(valor: string) {
+  let digitos = valor.replace(/\D/g, "");
+
+  if (
+    digitos.startsWith("55") &&
+    (digitos.length === 12 || digitos.length === 13)
+  ) {
+    digitos = digitos.slice(2);
   }
 
   if (
-    (digits.length !== 10 && digits.length !== 11) ||
-    digits.startsWith("0")
+    (digitos.length !== 10 && digitos.length !== 11) ||
+    digitos.startsWith("0")
   ) {
     return null;
   }
 
-  return `+55${digits}`;
+  return `+55${digitos}`;
+}
+
+function instagramInicial(valor: string | null) {
+  if (!valor) {
+    return "";
+  }
+
+  let atual = valor.trim().replace(/^@+/, "");
+
+  const parteUrl = atual.match(
+    /instagram\.com\/([^/?#]+)/
+  );
+
+  if (parteUrl) {
+    atual = parteUrl[1];
+  }
+
+  return atual;
 }
 
 function extensionFromMimeType(type: string) {
@@ -95,9 +168,44 @@ function extensionFromMimeType(type: string) {
   }
 }
 
+const LIMITE_LOGO_DATA_URL = 400 * 1024;
+
+function dataUrlParaArquivo(
+  dataUrl: string,
+  nomeArquivo: string | null
+) {
+  try {
+    const partes = dataUrl.split(",");
+    const tipo =
+      /data:([^;,]+)/.exec(partes[0])?.[1] ??
+      "image/png";
+    const binario = atob(partes[1] ?? "");
+    const bytes = new Uint8Array(binario.length);
+
+    for (let index = 0; index < binario.length; index += 1) {
+      bytes[index] = binario.charCodeAt(index);
+    }
+
+    const extensao = tipo.split("/")[1] ?? "png";
+
+    return new File(
+      [bytes],
+      nomeArquivo ?? `logo.${extensao}`,
+      { type: tipo }
+    );
+  } catch {
+    return null;
+  }
+}
+
 export function BusinessDataStep({
   initialData,
   onSaved,
+  onSubmittingChange,
+  formRef,
+  onDraftChange,
+  logoInicialDataUrl,
+  logoInicialFileName,
 }: BusinessDataStepProps) {
   const supabase = useMemo(() => createClient(), []);
 
@@ -109,31 +217,122 @@ export function BusinessDataStep({
     useState(initialData.nome_profissional ?? "");
 
   const [whatsapp, setWhatsapp] = useState(
-    formatWhatsapp(initialData.whatsapp)
+    whatsappInicial(initialData.whatsapp)
   );
 
-  const [instagramUrl, setInstagramUrl] = useState(
-    initialData.instagram_url ?? ""
+  const [instagram, setInstagram] = useState(
+    instagramInicial(initialData.instagram_url)
+  );
+
+  const [descricao, setDescricao] = useState(
+    initialData.descricao_publica ?? ""
   );
 
   const [atendeDomicilio, setAtendeDomicilio] =
-    useState<"" | "sim" | "nao">(
+    useState<boolean>(
       initialData.atende_domicilio === true
-        ? "sim"
-        : initialData.atende_domicilio === false
-          ? "nao"
-          : ""
     );
 
   const [logoFile, setLogoFile] =
-    useState<File | null>(null);
+    useState<File | null>(() => {
+      if (!logoInicialDataUrl) {
+        return null;
+      }
+
+      return dataUrlParaArquivo(
+        logoInicialDataUrl,
+        logoInicialFileName ?? null
+      );
+    });
+
+  const [logoObjetoUrl, setLogoObjetoUrl] =
+    useState<string | null>(
+      logoInicialDataUrl ?? null
+    );
+
+  const [logoDataUrl, setLogoDataUrl] =
+    useState<string | null>(
+      logoInicialDataUrl ?? null
+    );
 
   const [removerLogo, setRemoverLogo] =
     useState(false);
 
-  const [erro, setErro] = useState("");
+  const [erros, setErros] = useState<CampoErros>({});
+  const [erroGeral, setErroGeral] = useState("");
   const [carregando, setCarregando] =
     useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (logoObjetoUrl) {
+        URL.revokeObjectURL(logoObjetoUrl);
+      }
+    };
+  }, [logoObjetoUrl]);
+
+  useEffect(() => {
+    if (!logoFile) {
+      return;
+    }
+
+    if (logoFile.size > LIMITE_LOGO_DATA_URL) {
+      return;
+    }
+
+    let cancelado = false;
+    const leitor = new FileReader();
+
+    leitor.onload = () => {
+      if (!cancelado) {
+        setLogoDataUrl(
+          typeof leitor.result === "string"
+            ? leitor.result
+            : null
+        );
+      }
+    };
+
+    leitor.onerror = () => {
+      if (!cancelado) {
+        setLogoDataUrl(null);
+      }
+    };
+
+    leitor.readAsDataURL(logoFile);
+
+    return () => {
+      cancelado = true;
+    };
+  }, [logoFile]);
+
+  useEffect(() => {
+    onDraftChange?.({
+      nome_marca: nomeMarca,
+      nome_profissional: nomeProfissional,
+      whatsapp,
+      instagram_url: instagram,
+      descricao_publica: descricao,
+      atende_domicilio: atendeDomicilio,
+      logo_path: removerLogo
+        ? null
+        : initialData.logo_path,
+      logo_data_url: logoDataUrl,
+      logo_file_name: logoFile?.name ?? null,
+    });
+  }, [
+    nomeMarca,
+    nomeProfissional,
+    whatsapp,
+    instagram,
+    descricao,
+    atendeDomicilio,
+    removerLogo,
+    logoDataUrl,
+    logoFile,
+    onDraftChange,
+    initialData.logo_path,
+  ]);
 
   const logoAtualUrl =
     initialData.logo_path && !removerLogo
@@ -141,6 +340,30 @@ export function BusinessDataStep({
           .from("midia-publica")
           .getPublicUrl(initialData.logo_path).data.publicUrl
       : null;
+
+  function limparErro(campo: keyof CampoErros) {
+    setErros((prev) => ({ ...prev, [campo]: undefined }));
+    setErroGeral("");
+  }
+
+  function aoSelecionarArquivo(file: File | null) {
+    if (logoObjetoUrl) {
+      URL.revokeObjectURL(logoObjetoUrl);
+    }
+
+    setLogoObjetoUrl(
+      file ? URL.createObjectURL(file) : null
+    );
+    setLogoFile(file);
+
+    if (file) {
+      setRemoverLogo(false);
+    } else if (initialData.logo_path) {
+      setRemoverLogo(true);
+    }
+
+    limparErro("logo");
+  }
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>
@@ -151,46 +374,40 @@ export function BusinessDataStep({
       return;
     }
 
-    setErro("");
+    const proximosErros: CampoErros = {};
 
-    const whatsappNormalizado =
-      normalizeWhatsapp(whatsapp);
-
-    if (!whatsappNormalizado) {
-      setErro(
-        "Informe um WhatsApp brasileiro válido com DDD."
-      );
-      return;
+    if (!nomeMarca.trim()) {
+      proximosErros.nomeMarca =
+        "Informe o nome da barbearia.";
     }
 
-    if (!atendeDomicilio) {
-      setErro(
-        "Informe se você realiza atendimento em domicílio."
-      );
-      return;
+    if (!normalizeWhatsapp(whatsapp)) {
+      if (!whatsapp.replace(/\D/g, "")) {
+        proximosErros.whatsapp =
+          "Informe o WhatsApp da barbearia.";
+      } else {
+        proximosErros.whatsapp =
+          "Informe um WhatsApp válido.";
+      }
     }
 
-    if (logoFile) {
-      if (
-        !TIPOS_IMAGEM_PERMITIDOS.includes(
-          logoFile.type
-        )
-      ) {
-        setErro(
-          "A logo deve estar em JPEG, PNG ou WEBP."
-        );
-        return;
-      }
+    if (descricao.trim().length > 200) {
+      proximosErros.descricao =
+        "A descrição deve ter no máximo 200 caracteres.";
+    }
 
-      if (logoFile.size > TAMANHO_MAXIMO_LOGO) {
-        setErro(
-          "A logo deve possuir no máximo 5 MB."
-        );
-        return;
-      }
+    if (Object.keys(proximosErros).length > 0) {
+      setErros(proximosErros);
+      setErroGeral("");
+      return;
     }
 
     setCarregando(true);
+    onSubmittingChange?.(true);
+    setErroGeral("");
+
+    const whatsappNormalizado =
+      normalizeWhatsapp(whatsapp);
 
     let novoLogoPath: string | null =
       removerLogo ? null : initialData.logo_path;
@@ -204,9 +421,7 @@ export function BusinessDataStep({
         );
 
         if (!extensao) {
-          throw new Error(
-            "Formato de imagem não permitido."
-          );
+          throw new Error("Formato não permitido.");
         }
 
         novoLogoPath =
@@ -222,14 +437,10 @@ export function BusinessDataStep({
             });
 
         if (uploadError) {
-          console.error(
-            "Erro ao enviar logo:",
-            uploadError.message
-          );
-
-          throw new Error(
-            "Não foi possível enviar a logo."
-          );
+          setErros({
+            logo: "Não foi possível enviar a logo. Tente novamente.",
+          });
+          return;
         }
 
         arquivoNovoEnviado = true;
@@ -242,32 +453,24 @@ export function BusinessDataStep({
           p_nome_profissional:
             nomeProfissional.trim() || null,
           p_whatsapp: whatsappNormalizado,
-          p_instagram_url:
-            instagramUrl.trim() || null,
+          p_instagram_url: instagram.trim() || null,
+          p_descricao_publica: descricao.trim() || null,
           p_logo_path: novoLogoPath,
-          p_atende_domicilio:
-            atendeDomicilio === "sim",
+          p_atende_domicilio: atendeDomicilio,
         }
       );
 
       if (error) {
-        console.error(
-          "Erro ao salvar etapa 1:",
-          error.message
-        );
-
-        if (
-          arquivoNovoEnviado &&
-          novoLogoPath
-        ) {
+        if (arquivoNovoEnviado && novoLogoPath) {
           await supabase.storage
             .from("midia-publica")
             .remove([novoLogoPath]);
         }
 
-        throw new Error(
-          "Não foi possível salvar os dados. Verifique as informações e tente novamente."
+        setErroGeral(
+          "Não foi possível salvar os dados. Confira as informações e tente novamente."
         );
+        return;
       }
 
       if (
@@ -290,251 +493,483 @@ export function BusinessDataStep({
       const nextStep = Number(data);
 
       if (!Number.isInteger(nextStep)) {
-        throw new Error(
-          "Resposta inválida ao salvar a etapa."
-        );
+        throw new Error("Resposta inválida da etapa.");
       }
 
+      onDraftChange?.({
+        nome_marca: nomeMarca,
+        nome_profissional: nomeProfissional,
+        whatsapp,
+        instagram_url: instagram,
+        descricao_publica: descricao,
+        atende_domicilio: atendeDomicilio,
+        logo_path: novoLogoPath,
+        logo_data_url: null,
+        logo_file_name: null,
+      });
+
       onSaved(nextStep);
-    } catch (error) {
-      setErro(
-        error instanceof Error
-          ? error.message
-          : "Não foi possível salvar os dados."
+    } catch {
+      setErroGeral(
+        "Não foi possível salvar os dados. Confira as informações e tente novamente."
       );
     } finally {
       setCarregando(false);
+      onSubmittingChange?.(false);
     }
   }
 
+  const logoPreviewUrl =
+    logoObjetoUrl ?? logoAtualUrl;
+
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
-      className="mt-8 space-y-6"
+      noValidate
+      className="space-y-6 sm:space-y-8"
     >
-      <div>
-        <label
-          htmlFor="nome-marca"
-          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          Nome da barbearia *
-        </label>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-extrabold tracking-tight text-[#1E1E1C] sm:text-3xl dark:text-white">
+          Dados da Barbearia
+        </h1>
 
-        <input
-          id="nome-marca"
-          type="text"
-          required
-          maxLength={100}
-          autoFocus
-          value={nomeMarca}
-          onChange={(event) =>
-            setNomeMarca(event.target.value)
-          }
-          placeholder="Ex.: Barbearia Central"
-          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="nome-profissional"
-          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          Nome profissional
-        </label>
-
-        <input
-          id="nome-profissional"
-          type="text"
-          maxLength={100}
-          value={nomeProfissional}
-          onChange={(event) =>
-            setNomeProfissional(event.target.value)
-          }
-          placeholder="Ex.: Davi"
-          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="whatsapp"
-          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          WhatsApp *
-        </label>
-
-        <input
-          id="whatsapp"
-          type="tel"
-          required
-          inputMode="tel"
-          autoComplete="tel"
-          value={whatsapp}
-          onChange={(event) =>
-            setWhatsapp(event.target.value)
-          }
-          placeholder="(13) 99999-9999"
-          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-        />
-
-        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-          Use um número brasileiro com DDD.
+        <p className="text-sm leading-relaxed text-[#666662] dark:text-[#A1A1AA]">
+          Configure a identidade e os canais de contato que
+          seus clientes utilizarão para conhecer seu espaço.
         </p>
       </div>
 
-      <div>
-        <label
-          htmlFor="instagram"
-          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          Instagram
-        </label>
+      <div className="space-y-5">
+        {/* Campo 1: Nome da Barbearia / Negócio (OBRIGATÓRIO) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="business-name"
+              className={CLASSE_LABEL}
+            >
+              Nome da barbearia / negócio{" "}
+              <span className="text-red-500">*</span>
+            </label>
 
-        <input
-          id="instagram"
-          type="url"
-          value={instagramUrl}
-          onChange={(event) =>
-            setInstagramUrl(event.target.value)
-          }
-          placeholder="https://instagram.com/suabarbearia"
-          className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-        />
-      </div>
-
-      <fieldset>
-        <legend className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-200">
-          Realiza atendimento em domicílio? *
-        </legend>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label
-            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors ${
-              atendeDomicilio === "sim"
-                ? "border-red-600/40 bg-red-50/40 dark:border-red-500/40 dark:bg-red-950/20"
-                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
-            }`}
-          >
-            <input
-              type="radio"
-              name="atende-domicilio"
-              value="sim"
-              checked={atendeDomicilio === "sim"}
-              onChange={() =>
-                setAtendeDomicilio("sim")
-              }
-              className="accent-red-600"
-            />
-
-            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Sim
+            <span className="text-[11px] font-medium text-[#C92A2A] dark:text-red-400">
+              Obrigatório
             </span>
-          </label>
+          </div>
 
-          <label
-            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors ${
-              atendeDomicilio === "nao"
-                ? "border-red-600/40 bg-red-50/40 dark:border-red-500/40 dark:bg-red-950/20"
-                : "border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:border-zinc-700"
-            }`}
-          >
+          <div className="relative">
+            <div className={CLASSE_ICONE}>
+              <Store className="h-4 w-4" />
+            </div>
+
             <input
-              type="radio"
-              name="atende-domicilio"
-              value="nao"
-              checked={atendeDomicilio === "nao"}
-              onChange={() =>
-                setAtendeDomicilio("nao")
+              id="business-name"
+              type="text"
+              required
+              maxLength={100}
+              aria-invalid={Boolean(erros.nomeMarca)}
+              aria-describedby={
+                erros.nomeMarca
+                  ? "business-name-error"
+                  : undefined
               }
-              className="accent-red-600"
+              placeholder="Ex: Barbearia Central, Naipe Barber"
+              value={nomeMarca}
+              onChange={(event) => {
+                setNomeMarca(event.target.value);
+                limparErro("nomeMarca");
+              }}
+              className={`${CLASSE_INPUT_BASE} ${
+                erros.nomeMarca
+                  ? "border-red-500 focus:ring-red-500/20 dark:border-red-500"
+                  : "border-[#D5D4CD] focus:border-[#C92A2A] focus:ring-[#C92A2A]/20 dark:border-white/10 dark:focus:border-red-500"
+              }`}
             />
+          </div>
 
-            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Não
-            </span>
-          </label>
+          {erros.nomeMarca ? (
+            <p
+              id="business-name-error"
+              className={`${CLASSE_ERRO} mt-1`}
+            >
+              {erros.nomeMarca}
+            </p>
+          ) : (
+            <p className={CLASSE_AJUDA}>
+              Este é o nome principal do seu estabelecimento
+              exibido aos clientes e no link da vitrine.
+            </p>
+          )}
         </div>
-      </fieldset>
 
-      <div>
-        <label
-          htmlFor="logo"
-          className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          Logo
-        </label>
+        {/* Campo 2: Nome Profissional (OPCIONAL) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="professional-name"
+              className={CLASSE_LABEL}
+            >
+              Nome profissional ou apelido{" "}
+              <span className="font-normal normal-case text-[#8E8E89] dark:text-[#71717A]">
+                (opcional)
+              </span>
+            </label>
 
-        {logoAtualUrl && (
-          <div className="mb-3 flex items-center gap-4 rounded-xl border border-zinc-200 bg-zinc-50/50 p-3.5 dark:border-zinc-800 dark:bg-zinc-950/50">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={logoAtualUrl}
-              alt="Logo atual da barbearia"
-              className="h-16 w-16 rounded-lg object-cover"
+            <span className="text-[11px] text-[#8E8E89] dark:text-[#71717A]">
+              Opcional
+            </span>
+          </div>
+
+          <div className="relative">
+            <div className={CLASSE_ICONE}>
+              <User className="h-4 w-4" />
+            </div>
+
+            <input
+              id="professional-name"
+              type="text"
+              maxLength={100}
+              placeholder="Ex: João, João Barber, Jota"
+              value={nomeProfissional}
+              onChange={(event) =>
+                setNomeProfissional(event.target.value)
+              }
+              className={`${CLASSE_INPUT_BASE} border-[#D5D4CD] focus:border-[#C92A2A] focus:ring-[#C92A2A]/20 dark:border-white/10 dark:focus:border-red-500`}
             />
+          </div>
+
+          <div className="flex items-start gap-1.5 text-[11px] text-[#666662] dark:text-[#A1A1AA]">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8E8E89] dark:text-[#71717A]" />
+
+            <span>
+              Como seus clientes costumam te chamar no
+              atendimento. Caso não preencha, usaremos o nome
+              da barbearia.
+            </span>
+          </div>
+        </div>
+
+        {/* Campo 3: WhatsApp / Telefone Comercial (OBRIGATÓRIO) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="business-phone"
+              className={CLASSE_LABEL}
+            >
+              WhatsApp / Telefone comercial{" "}
+              <span className="text-red-500">*</span>
+            </label>
+
+            <span className="text-[11px] font-medium text-[#C92A2A] dark:text-red-400">
+              Obrigatório
+            </span>
+          </div>
+
+          <div className="relative">
+            <div className={CLASSE_ICONE}>
+              <Phone className="h-4 w-4" />
+            </div>
+
+            <input
+              id="business-phone"
+              type="tel"
+              required
+              inputMode="tel"
+              autoComplete="tel"
+              maxLength={15}
+              aria-invalid={Boolean(erros.whatsapp)}
+              aria-describedby={
+                erros.whatsapp
+                  ? "business-phone-error"
+                  : undefined
+              }
+              placeholder="(11) 99999-9999"
+              value={whatsapp}
+              onChange={(event) => {
+                setWhatsapp(
+                  mascaraWhatsapp(event.target.value)
+                );
+                limparErro("whatsapp");
+              }}
+              className={`${CLASSE_INPUT_BASE} font-mono ${
+                erros.whatsapp
+                  ? "border-red-500 focus:ring-red-500/20 dark:border-red-500"
+                  : "border-[#D5D4CD] focus:border-[#C92A2A] focus:ring-[#C92A2A]/20 dark:border-white/10 dark:focus:border-red-500"
+              }`}
+            />
+          </div>
+
+          {erros.whatsapp ? (
+            <p
+              id="business-phone-error"
+              className={`${CLASSE_ERRO} mt-1`}
+            >
+              {erros.whatsapp}
+            </p>
+          ) : (
+            <p className={CLASSE_AJUDA}>
+              Usado para contato direto com os clientes na sua
+              página e mensagens.
+            </p>
+          )}
+        </div>
+
+        {/* Campo 4: Instagram (OPCIONAL) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="business-instagram"
+              className={CLASSE_LABEL}
+            >
+              Instagram da barbearia{" "}
+              <span className="font-normal normal-case text-[#8E8E89] dark:text-[#71717A]">
+                (opcional)
+              </span>
+            </label>
+
+            <span className="text-[11px] text-[#8E8E89] dark:text-[#71717A]">
+              Opcional
+            </span>
+          </div>
+
+          <div className="relative">
+            <div className={CLASSE_ICONE}>
+              <AtSign className="h-4 w-4" />
+            </div>
+
+            <input
+              id="business-instagram"
+              type="text"
+              placeholder="Ex: @barbeariacentral"
+              value={instagram}
+              onChange={(event) => {
+                setInstagram(
+                  event.target.value
+                    .replace(/@/g, "")
+                    .replace(/\s/g, "")
+                    .toLowerCase()
+                );
+              }}
+              className={`${CLASSE_INPUT_BASE} border-[#D5D4CD] font-mono focus:border-[#C92A2A] focus:ring-[#C92A2A]/20 dark:border-white/10 dark:focus:border-red-500`}
+            />
+          </div>
+
+          <p className={CLASSE_AJUDA}>
+            Seus clientes poderão acessar diretamente o seu
+            perfil do Instagram na Vitrine.
+          </p>
+        </div>
+
+        {/* Campo 5: Descrição ou breve apresentação (OPCIONAL) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="business-description"
+              className={CLASSE_LABEL}
+            >
+              Descrição ou breve apresentação{" "}
+              <span className="font-normal normal-case text-[#8E8E89] dark:text-[#71717A]">
+                (opcional)
+              </span>
+            </label>
+
+            <span className="text-[11px] text-[#8E8E89] dark:text-[#71717A]">
+              Opcional
+            </span>
+          </div>
+
+          <div className="relative">
+            <div className={CLASSE_ICONE_TEXTAREA}>
+              <AlignLeft className="h-4 w-4" />
+            </div>
+
+            <textarea
+              id="business-description"
+              aria-invalid={Boolean(erros.descricao)}
+              aria-describedby={
+                erros.descricao
+                  ? "business-description-error"
+                  : undefined
+              }
+              placeholder="Ex: Especialistas em barba e cortes clássicos e modernos com atendimento de excelência."
+              value={descricao}
+              onChange={(event) => {
+                setDescricao(event.target.value);
+                limparErro("descricao");
+              }}
+              className={`${CLASSE_TEXTAREA} ${
+                erros.descricao
+                  ? "border-red-500 focus:ring-red-500/20 dark:border-red-500"
+                  : "border-[#D5D4CD] focus:border-[#C92A2A] focus:ring-[#C92A2A]/20 dark:border-white/10 dark:focus:border-red-500"
+              }`}
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <p
+              className={`text-[11px] tabular-nums ${
+                descricao.length > 200
+                  ? "font-medium text-red-600 dark:text-red-400"
+                  : "text-[#8E8E89] dark:text-[#71717A]"
+              }`}
+            >
+              {descricao.length}/200 caracteres
+            </p>
+          </div>
+
+          {erros.descricao ? (
+            <p
+              id="business-description-error"
+              className={`${CLASSE_ERRO} mt-1`}
+            >
+              {erros.descricao}
+            </p>
+          ) : (
+            <p className={CLASSE_AJUDA}>
+              Conte um pouco sobre sua barbearia. Essa descrição
+              poderá aparecer na sua Vitrine.
+            </p>
+          )}
+        </div>
+
+        {/* Campo 6: Logo da Barbearia (OPCIONAL) */}
+        <div className="space-y-1.5 pt-2">
+          <div className="flex items-center justify-between">
+            <label className={CLASSE_LABEL}>
+              Logo da barbearia{" "}
+              <span className="font-normal normal-case text-[#8E8E89] dark:text-[#71717A]">
+                (opcional)
+              </span>
+            </label>
+
+            <span className="text-[11px] text-[#8E8E89] dark:text-[#71717A]">
+              Opcional
+            </span>
+          </div>
+
+          <LogoUploader
+            previewUrl={logoPreviewUrl}
+            error={erros.logo}
+            onChange={aoSelecionarArquivo}
+          />
+        </div>
+
+        {/* Campo 7: Atendimento a Domicílio (OBRIGATÓRIO) */}
+        <div className="space-y-1.5 pt-2">
+          <div className="flex items-center justify-between">
+            <span className={CLASSE_LABEL}>
+              Atendimento a domicílio{" "}
+              <span className="text-red-500">*</span>
+            </span>
+
+            <span className="text-[11px] font-medium text-[#C92A2A] dark:text-red-400">
+              Obrigatório
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setAtendeDomicilio(false)}
+              className={`flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 text-left transition-all ${
+                atendeDomicilio === false
+                  ? "border-[#C92A2A] bg-red-50/50 shadow-xs dark:border-red-500 dark:bg-red-950/20"
+                  : "border-[#E9E9E4] bg-white hover:border-[#D5D4CD] dark:border-white/10 dark:bg-[#18191E] dark:hover:border-white/20"
+              }`}
+            >
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                  atendeDomicilio === false
+                    ? "bg-[#C92A2A] text-white"
+                    : "bg-[#FAF9F5] text-[#666662] dark:bg-[#20232A] dark:text-[#A1A1AA]"
+                }`}
+              >
+                <Building2 className="h-5 w-5" />
+              </div>
+
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-[#1E1E1C] dark:text-white">
+                    No estabelecimento
+                  </p>
+
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                      atendeDomicilio === false
+                        ? "border-[#C92A2A] bg-[#C92A2A]"
+                        : "border-[#D5D4CD] dark:border-white/20"
+                    }`}
+                  >
+                    {atendeDomicilio === false && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                    )}
+                  </span>
+                </div>
+
+                <p className="mt-1 text-xs leading-snug text-[#666662] dark:text-[#A1A1AA]">
+                  Atendimentos realizados no seu ponto fixo ou
+                  estúdio.
+                </p>
+              </div>
+            </button>
 
             <button
               type="button"
-              onClick={() => {
-                setRemoverLogo(true);
-                setLogoFile(null);
-              }}
-              className="text-sm font-medium text-red-600 underline-offset-4 hover:underline dark:text-red-400"
+              onClick={() => setAtendeDomicilio(true)}
+              className={`flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 text-left transition-all ${
+                atendeDomicilio === true
+                  ? "border-[#C92A2A] bg-red-50/50 shadow-xs dark:border-red-500 dark:bg-red-950/20"
+                  : "border-[#E9E9E4] bg-white hover:border-[#D5D4CD] dark:border-white/10 dark:bg-[#18191E] dark:hover:border-white/20"
+              }`}
             >
-              Remover logo
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                  atendeDomicilio === true
+                    ? "bg-[#C92A2A] text-white"
+                    : "bg-[#FAF9F5] text-[#666662] dark:bg-[#20232A] dark:text-[#A1A1AA]"
+                }`}
+              >
+                <Car className="h-5 w-5" />
+              </div>
+
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-[#1E1E1C] dark:text-white">
+                    No estabelecimento e a domicílio
+                  </p>
+
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                      atendeDomicilio === true
+                        ? "border-[#C92A2A] bg-[#C92A2A]"
+                        : "border-[#D5D4CD] dark:border-white/20"
+                    }`}
+                  >
+                    {atendeDomicilio === true && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                    )}
+                  </span>
+                </div>
+
+                <p className="mt-1 text-xs leading-snug text-[#666662] dark:text-[#A1A1AA]">
+                  Você recebe clientes no local e também atende
+                  externamente.
+                </p>
+              </div>
             </button>
           </div>
-        )}
-
-        <input
-          id="logo"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={(event) => {
-            const file =
-              event.target.files?.[0] ?? null;
-
-            setLogoFile(file);
-
-            if (file) {
-              setRemoverLogo(false);
-            }
-          }}
-          className="block w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-700 outline-none file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-zinc-800 hover:file:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:file:bg-zinc-800 dark:file:text-zinc-200 dark:hover:file:bg-zinc-700"
-        />
-
-        <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-          Opcional. JPEG, PNG ou WEBP, até 5 MB.
-        </p>
-
-        {logoFile && (
-          <p className="mt-2 text-xs font-medium text-zinc-700 dark:text-zinc-300">
-            Arquivo selecionado: {logoFile.name}
-          </p>
-        )}
+        </div>
       </div>
 
-      {erro && (
-        <p
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
-        >
-          {erro}
+      {erroGeral && (
+        <p className={CLASSE_ERRO} role="alert">
+          {erroGeral}
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
-        <button
-          type="submit"
-          disabled={carregando}
-          className="rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-red-500 hover:to-red-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {carregando
-            ? "Salvando..."
-            : "Continuar"}
-        </button>
-      </div>
+      <button type="submit" className="sr-only">
+        Continuar
+      </button>
     </form>
   );
 }
