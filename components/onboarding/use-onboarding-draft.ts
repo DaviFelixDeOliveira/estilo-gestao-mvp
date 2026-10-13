@@ -16,10 +16,10 @@ export type DraftStep1 = {
   whatsapp: string;
   instagram_url: string;
   descricao_publica: string;
-  atende_domicilio: boolean;
   logo_path: string | null;
   logo_data_url: string | null;
   logo_file_name: string | null;
+  logo_original_data_url: string | null;
 };
 
 export type DraftStep2 = {
@@ -31,6 +31,7 @@ export type DraftStep2 = {
   bairro: string;
   cidade: string;
   uf: string;
+  atende_domicilio: boolean;
 };
 
 export type DraftStep3 = {
@@ -49,6 +50,7 @@ export type DraftStep4 = {
   descricao: string;
   preco: string;
   custo_estimado: string;
+  visivel_vitrine: boolean;
 }[];
 
 export type DraftStep5 = {
@@ -57,6 +59,7 @@ export type DraftStep5 = {
     formId: string;
     codigo_sugerido: string | null;
     nome: string;
+    selecionada: boolean;
   }[];
   produtos: {
     formId: string;
@@ -65,6 +68,7 @@ export type DraftStep5 = {
     categoria_nome: string;
     preco_custo: string;
     preco_venda: string;
+    visivel_vitrine: boolean;
   }[];
   formas_pagamento: string[];
 };

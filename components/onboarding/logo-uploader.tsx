@@ -26,12 +26,70 @@ type LogoUploaderProps = {
   previewUrl: string | null;
   error?: string | null;
   onChange: (file: File | null) => void;
+  originalFile?: File | null;
+  onOriginalChange?: (file: File | null) => void;
 };
+
+// Aplica a orientação EXIF da foto (comum em celulares).
+// Retorna a URL de exibição e o próprio arquivo orientado, para que
+// a imagem original continue disponível em futuras edições.
+async function prepararImagemParaAjuste(
+  file: File
+): Promise<{ url: string; file: File }> {
+  const nomeOriginal = file.name;
+
+  if (typeof createImageBitmap === "function") {
+    try {
+      const bitmap = await createImageBitmap(file, {
+        imageOrientation: "from-image",
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+
+      const contexto = canvas.getContext("2d");
+
+      if (!contexto) {
+        bitmap.close();
+        return { url: URL.createObjectURL(file), file };
+      }
+
+      contexto.drawImage(bitmap, 0, 0);
+      bitmap.close();
+
+      const blob = await new Promise<Blob | null>(
+        (resolve) => {
+          canvas.toBlob(resolve, "image/png");
+        }
+      );
+
+      if (blob) {
+        const orientado = new File(
+          [blob],
+          `${nomeOriginal.replace(/\.[^.]+$/, "")}.png`,
+          { type: "image/png" }
+        );
+
+        return {
+          url: URL.createObjectURL(orientado),
+          file: orientado,
+        };
+      }
+    } catch {
+      // Usa fallback abaixo.
+    }
+  }
+
+  return { url: URL.createObjectURL(file), file };
+}
 
 export function LogoUploader({
   previewUrl,
   error,
   onChange,
+  originalFile,
+  onOriginalChange,
 }: LogoUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState<
@@ -42,20 +100,28 @@ export function LogoUploader({
   const [modalAberto, setModalAberto] = useState(false);
   const [urlParaAjuste, setUrlParaAjuste] =
     useState<string | null>(null);
-  const [urlEditavel, setUrlEditavel] =
+  const [urlOriginal, setUrlOriginal] =
     useState<string | null>(null);
   const [ultimoNome, setUltimoNome] = useState("logo");
 
+  // flag para saber se, ao abrir o modal, já havia uma imagem
+  // confirmada (preview). Evita revogar a original em nova seleção.
+  const tinhasPreviewAoAbrirRef = useRef(false);
+
   const urlParaAjusteRef = useRef<string | null>(null);
-  const urlEditavelRef = useRef<string | null>(null);
+  const urlOriginalRef = useRef<string | null>(null);
 
   useEffect(() => {
     urlParaAjusteRef.current = urlParaAjuste;
   }, [urlParaAjuste]);
 
   useEffect(() => {
-    urlEditavelRef.current = urlEditavel;
-  }, [urlEditavel]);
+    urlOriginalRef.current = urlOriginal;
+  }, [urlOriginal]);
+
+  // Restaura a URL original depois de um F5 (quando o draft devolve
+  // o arquivo original de volta para este componente). A URL é
+  // recriada sob demanda em reabrirEdicao, evitando setState no effect.
 
   useEffect(() => {
     return () => {
@@ -65,56 +131,13 @@ export function LogoUploader({
         urls.add(urlParaAjusteRef.current);
       }
 
-      if (urlEditavelRef.current) {
-        urls.add(urlEditavelRef.current);
+      if (urlOriginalRef.current) {
+        urls.add(urlOriginalRef.current);
       }
 
       urls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, []);
-
-  async function prepararImagemParaAjuste(
-    file: File
-  ): Promise<string> {
-    // Aplica a orientação EXIF da foto (comum em celulares) e
-    // devolve uma URL de objeto. Sem pacote novo: usa
-    // createImageBitmap quando disponível, com fallback simples.
-    if (typeof createImageBitmap === "function") {
-      try {
-        const bitmap = await createImageBitmap(file, {
-          imageOrientation: "from-image",
-        });
-
-        const canvas = document.createElement("canvas");
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-
-        const contexto = canvas.getContext("2d");
-
-        if (!contexto) {
-          bitmap.close();
-          return URL.createObjectURL(file);
-        }
-
-        contexto.drawImage(bitmap, 0, 0);
-        bitmap.close();
-
-        const blob = await new Promise<Blob | null>(
-          (resolve) => {
-            canvas.toBlob(resolve, "image/png");
-          }
-        );
-
-        if (blob) {
-          return URL.createObjectURL(blob);
-        }
-      } catch {
-        // Fallback abaixo.
-      }
-    }
-
-    return URL.createObjectURL(file);
-  }
 
   async function processarArquivo(file: File) {
     setFileError(null);
@@ -133,24 +156,38 @@ export function LogoUploader({
       return;
     }
 
-    const url = await prepararImagemParaAjuste(file);
+    tinhasPreviewAoAbrirRef.current = Boolean(previewUrl);
 
-    setUltimoNome(file.name);
+    const { url, file: orientado } =
+      await prepararImagemParaAjuste(file);
+
+    // Nova imagem selecionada substitui a original anterior.
+    if (urlOriginal && urlOriginal !== url) {
+      URL.revokeObjectURL(urlOriginal);
+    }
+
+    setUltimoNome(orientado.name);
+    setUrlOriginal(url);
     setUrlParaAjuste(url);
     setModalAberto(true);
+    onOriginalChange?.(orientado);
   }
 
   function cancelarAjuste() {
     setModalAberto(false);
 
-    if (
-      urlParaAjuste &&
-      urlParaAjuste !== urlEditavel
-    ) {
+    if (urlParaAjuste && urlParaAjuste !== urlOriginal) {
       URL.revokeObjectURL(urlParaAjuste);
     }
 
     setUrlParaAjuste(null);
+
+    // Nova seleção cancelada antes de confirmar: não havia preview
+    // anterior, então a original recém-criada também deve ser liberada.
+    if (!tinhasPreviewAoAbrirRef.current && urlOriginal) {
+      URL.revokeObjectURL(urlOriginal);
+      setUrlOriginal(null);
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -160,20 +197,14 @@ export function LogoUploader({
   function confirmarAjuste(file: File) {
     setModalAberto(false);
 
-    if (
-      urlParaAjuste &&
-      urlParaAjuste !== urlEditavel
-    ) {
+    if (urlParaAjuste && urlParaAjuste !== urlOriginal) {
       URL.revokeObjectURL(urlParaAjuste);
     }
 
-    if (urlEditavel) {
-      URL.revokeObjectURL(urlEditavel);
-    }
-
     setUrlParaAjuste(null);
-    setUrlEditavel(URL.createObjectURL(file));
-    setUltimoNome(file.name);
+
+    // A imagem original é preservada em urlOriginal para futuras
+    // edições. Apenas o recorte (file) é usado no onChange/upload.
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -185,8 +216,16 @@ export function LogoUploader({
   async function reabrirEdicao() {
     setFileError(null);
 
-    if (urlEditavel) {
-      setUrlParaAjuste(urlEditavel);
+    if (urlOriginal) {
+      setUrlParaAjuste(urlOriginal);
+      setModalAberto(true);
+      return;
+    }
+
+    if (originalFile) {
+      const url = URL.createObjectURL(originalFile);
+      setUrlOriginal(url);
+      setUrlParaAjuste(url);
       setModalAberto(true);
       return;
     }
@@ -207,6 +246,7 @@ export function LogoUploader({
 
         const url = URL.createObjectURL(blob);
 
+        setUrlOriginal(url);
         setUrlParaAjuste(url);
         setModalAberto(true);
         return;
@@ -231,9 +271,9 @@ export function LogoUploader({
   function handleRemove(event: React.MouseEvent) {
     event.stopPropagation();
 
-    if (urlEditavel) {
-      URL.revokeObjectURL(urlEditavel);
-      setUrlEditavel(null);
+    if (urlOriginal) {
+      URL.revokeObjectURL(urlOriginal);
+      setUrlOriginal(null);
     }
 
     if (urlParaAjuste) {
@@ -248,6 +288,7 @@ export function LogoUploader({
     }
 
     onChange(null);
+    onOriginalChange?.(null);
   }
 
   const erroExibido = fileError ?? error;

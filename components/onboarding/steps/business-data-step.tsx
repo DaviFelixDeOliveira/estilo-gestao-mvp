@@ -11,8 +11,6 @@ import {
 import {
   AlignLeft,
   AtSign,
-  Building2,
-  Car,
   Info,
   Phone,
   Store,
@@ -42,6 +40,7 @@ type BusinessDataStepProps = {
   onDraftChange?: (valores: unknown) => void;
   logoInicialDataUrl?: string | null;
   logoInicialFileName?: string | null;
+  logoInicialOriginalDataUrl?: string | null;
 };
 
 type CampoErros = {
@@ -206,6 +205,7 @@ export function BusinessDataStep({
   onDraftChange,
   logoInicialDataUrl,
   logoInicialFileName,
+  logoInicialOriginalDataUrl,
 }: BusinessDataStepProps) {
   const supabase = useMemo(() => createClient(), []);
 
@@ -228,11 +228,6 @@ export function BusinessDataStep({
     initialData.descricao_publica ?? ""
   );
 
-  const [atendeDomicilio, setAtendeDomicilio] =
-    useState<boolean>(
-      initialData.atende_domicilio === true
-    );
-
   const [logoFile, setLogoFile] =
     useState<File | null>(() => {
       if (!logoInicialDataUrl) {
@@ -253,6 +248,24 @@ export function BusinessDataStep({
   const [logoDataUrl, setLogoDataUrl] =
     useState<string | null>(
       logoInicialDataUrl ?? null
+    );
+
+  // Imagem original (sem recorte) preservada para futuras edições.
+  const [logoOriginalFile, setLogoOriginalFile] =
+    useState<File | null>(() => {
+      if (!logoInicialOriginalDataUrl) {
+        return null;
+      }
+
+      return dataUrlParaArquivo(
+        logoInicialOriginalDataUrl,
+        logoInicialFileName ?? null
+      );
+    });
+
+  const [logoOriginalDataUrl, setLogoOriginalDataUrl] =
+    useState<string | null>(
+      logoInicialOriginalDataUrl ?? null
     );
 
   const [removerLogo, setRemoverLogo] =
@@ -307,18 +320,55 @@ export function BusinessDataStep({
   }, [logoFile]);
 
   useEffect(() => {
+    if (!logoOriginalFile) {
+      return;
+    }
+
+    if (logoOriginalFile.size > LIMITE_LOGO_DATA_URL) {
+      return;
+    }
+
+    let cancelado = false;
+    const leitor = new FileReader();
+
+    leitor.onload = () => {
+      if (!cancelado) {
+        setLogoOriginalDataUrl(
+          typeof leitor.result === "string"
+            ? leitor.result
+            : null
+        );
+      }
+    };
+
+    leitor.onerror = () => {
+      if (!cancelado) {
+        setLogoOriginalDataUrl(null);
+      }
+    };
+
+    leitor.readAsDataURL(logoOriginalFile);
+
+    return () => {
+      cancelado = true;
+    };
+  }, [logoOriginalFile]);
+
+  useEffect(() => {
     onDraftChange?.({
       nome_marca: nomeMarca,
       nome_profissional: nomeProfissional,
       whatsapp,
       instagram_url: instagram,
       descricao_publica: descricao,
-      atende_domicilio: atendeDomicilio,
       logo_path: removerLogo
         ? null
         : initialData.logo_path,
       logo_data_url: logoDataUrl,
       logo_file_name: logoFile?.name ?? null,
+      logo_original_data_url: removerLogo
+        ? null
+        : logoOriginalDataUrl,
     });
   }, [
     nomeMarca,
@@ -326,10 +376,10 @@ export function BusinessDataStep({
     whatsapp,
     instagram,
     descricao,
-    atendeDomicilio,
     removerLogo,
     logoDataUrl,
     logoFile,
+    logoOriginalDataUrl,
     onDraftChange,
     initialData.logo_path,
   ]);
@@ -363,6 +413,15 @@ export function BusinessDataStep({
     }
 
     limparErro("logo");
+  }
+
+  // Mantém o arquivo original disponível para futuras edições do modal.
+  function aoSelecionarOriginal(file: File | null) {
+    setLogoOriginalFile(file);
+
+    if (!file) {
+      setLogoOriginalDataUrl(null);
+    }
   }
 
   async function handleSubmit(
@@ -456,7 +515,6 @@ export function BusinessDataStep({
           p_instagram_url: instagram.trim() || null,
           p_descricao_publica: descricao.trim() || null,
           p_logo_path: novoLogoPath,
-          p_atende_domicilio: atendeDomicilio,
         }
       );
 
@@ -502,10 +560,10 @@ export function BusinessDataStep({
         whatsapp,
         instagram_url: instagram,
         descricao_publica: descricao,
-        atende_domicilio: atendeDomicilio,
         logo_path: novoLogoPath,
         logo_data_url: null,
         logo_file_name: null,
+        logo_original_data_url: null,
       });
 
       onSaved(nextStep);
@@ -851,113 +909,9 @@ export function BusinessDataStep({
             previewUrl={logoPreviewUrl}
             error={erros.logo}
             onChange={aoSelecionarArquivo}
+            originalFile={logoOriginalFile}
+            onOriginalChange={aoSelecionarOriginal}
           />
-        </div>
-
-        {/* Campo 7: Atendimento a Domicílio (OBRIGATÓRIO) */}
-        <div className="space-y-1.5 pt-2">
-          <div className="flex items-center justify-between">
-            <span className={CLASSE_LABEL}>
-              Atendimento a domicílio{" "}
-              <span className="text-red-500">*</span>
-            </span>
-
-            <span className="text-[11px] font-medium text-[#C92A2A] dark:text-red-400">
-              Obrigatório
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => setAtendeDomicilio(false)}
-              className={`flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 text-left transition-all ${
-                atendeDomicilio === false
-                  ? "border-[#C92A2A] bg-red-50/50 shadow-xs dark:border-red-500 dark:bg-red-950/20"
-                  : "border-[#E9E9E4] bg-white hover:border-[#D5D4CD] dark:border-white/10 dark:bg-[#18191E] dark:hover:border-white/20"
-              }`}
-            >
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                  atendeDomicilio === false
-                    ? "bg-[#C92A2A] text-white"
-                    : "bg-[#FAF9F5] text-[#666662] dark:bg-[#20232A] dark:text-[#A1A1AA]"
-                }`}
-              >
-                <Building2 className="h-5 w-5" />
-              </div>
-
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-[#1E1E1C] dark:text-white">
-                    No estabelecimento
-                  </p>
-
-                  <span
-                    className={`flex h-4 w-4 items-center justify-center rounded-full border ${
-                      atendeDomicilio === false
-                        ? "border-[#C92A2A] bg-[#C92A2A]"
-                        : "border-[#D5D4CD] dark:border-white/20"
-                    }`}
-                  >
-                    {atendeDomicilio === false && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
-                    )}
-                  </span>
-                </div>
-
-                <p className="mt-1 text-xs leading-snug text-[#666662] dark:text-[#A1A1AA]">
-                  Atendimentos realizados no seu ponto fixo ou
-                  estúdio.
-                </p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setAtendeDomicilio(true)}
-              className={`flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 text-left transition-all ${
-                atendeDomicilio === true
-                  ? "border-[#C92A2A] bg-red-50/50 shadow-xs dark:border-red-500 dark:bg-red-950/20"
-                  : "border-[#E9E9E4] bg-white hover:border-[#D5D4CD] dark:border-white/10 dark:bg-[#18191E] dark:hover:border-white/20"
-              }`}
-            >
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                  atendeDomicilio === true
-                    ? "bg-[#C92A2A] text-white"
-                    : "bg-[#FAF9F5] text-[#666662] dark:bg-[#20232A] dark:text-[#A1A1AA]"
-                }`}
-              >
-                <Car className="h-5 w-5" />
-              </div>
-
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-[#1E1E1C] dark:text-white">
-                    No estabelecimento e a domicílio
-                  </p>
-
-                  <span
-                    className={`flex h-4 w-4 items-center justify-center rounded-full border ${
-                      atendeDomicilio === true
-                        ? "border-[#C92A2A] bg-[#C92A2A]"
-                        : "border-[#D5D4CD] dark:border-white/20"
-                    }`}
-                  >
-                    {atendeDomicilio === true && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
-                    )}
-                  </span>
-                </div>
-
-                <p className="mt-1 text-xs leading-snug text-[#666662] dark:text-[#A1A1AA]">
-                  Você recebe clientes no local e também atende
-                  externamente.
-                </p>
-              </div>
-            </button>
-          </div>
         </div>
       </div>
 
