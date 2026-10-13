@@ -2,6 +2,7 @@
 
 import {
   FormEvent,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -22,7 +23,15 @@ type AddressData = {
 type AddressStepProps = {
   initialData: AddressData;
   onSaved: (nextStep: number) => void;
+  onDraftChange?: (valores: unknown) => void;
+  onBack?: () => void;
 };
+
+const UFS_VALIDAS = [
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
+  "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI",
+  "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+];
 
 function formatCep(value: string | null) {
   if (!value) {
@@ -43,6 +52,8 @@ function formatCep(value: string | null) {
 export function AddressStep({
   initialData,
   onSaved,
+  onDraftChange,
+  onBack,
 }: AddressStepProps) {
   const supabase = useMemo(
     () => createClient(),
@@ -82,12 +93,36 @@ export function AddressStep({
   );
 
   const [erro, setErro] = useState("");
+  const [erroUf, setErroUf] = useState("");
   const [avisoCep, setAvisoCep] = useState("");
   const [buscandoCep, setBuscandoCep] =
     useState(false);
 
   const [salvando, setSalvando] =
     useState(false);
+
+  useEffect(() => {
+    onDraftChange?.({
+      cep,
+      logradouro,
+      tem_numero: temNumero,
+      numero_endereco: numero,
+      complemento,
+      bairro,
+      cidade,
+      uf,
+    });
+  }, [
+    cep,
+    logradouro,
+    temNumero,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    uf,
+    onDraftChange,
+  ]);
 
   async function buscarCep() {
     const digits = cep.replace(/\D/g, "");
@@ -136,6 +171,7 @@ export function AddressStep({
       setBairro(data.bairro ?? "");
       setCidade(data.localidade ?? "");
       setUf(data.uf ?? "");
+      setErroUf("");
 
       if (
         !complemento &&
@@ -204,8 +240,11 @@ export function AddressStep({
     const ufNormalizada =
       uf.trim().toUpperCase();
 
-    if (!/^[A-Z]{2}$/.test(ufNormalizada)) {
-      setErro("Informe uma UF válida.");
+    if (
+      !ufNormalizada ||
+      !UFS_VALIDAS.includes(ufNormalizada)
+    ) {
+      setErroUf("Selecione a UF.");
       return;
     }
 
@@ -463,21 +502,41 @@ export function AddressStep({
             UF *
           </label>
 
-          <input
+          <select
             id="uf"
-            type="text"
-            required
-            maxLength={2}
             value={uf}
-            onChange={(event) =>
-              setUf(
-                event.target.value
-                  .toUpperCase()
-              )
+            onChange={(event) => {
+              setUf(event.target.value);
+              setErroUf("");
+            }}
+            aria-invalid={Boolean(erroUf)}
+            aria-describedby={
+              erroUf ? "erro-uf" : undefined
             }
-            placeholder="SP"
-            className="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-center uppercase text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
-          />
+            className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-zinc-900 outline-none transition focus:ring-1 dark:bg-zinc-950 dark:text-white ${
+              erroUf
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500 dark:focus:border-red-500 dark:focus:ring-red-500"
+                : "border-zinc-300 focus:border-red-600 focus:ring-red-600 dark:border-zinc-700 dark:focus:border-red-500 dark:focus:ring-red-500"
+            }`}
+          >
+            <option value="">Selecione</option>
+
+            {UFS_VALIDAS.map((sigla) => (
+              <option key={sigla} value={sigla}>
+                {sigla}
+              </option>
+            ))}
+          </select>
+
+          {erroUf && (
+            <p
+              id="erro-uf"
+              role="alert"
+              className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400"
+            >
+              {erroUf}
+            </p>
+          )}
         </div>
       </div>
 
@@ -490,7 +549,17 @@ export function AddressStep({
         </p>
       )}
 
-      <div className="flex justify-end border-t border-zinc-200 pt-6 dark:border-zinc-800">
+      <div className="flex justify-end gap-3 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="hidden cursor-pointer items-center rounded-xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-700 shadow-xs transition-all hover:bg-zinc-50 active:scale-[0.99] sm:mr-auto sm:inline-flex dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          >
+            Voltar
+          </button>
+        )}
+
         <button
           type="submit"
           disabled={salvando}
