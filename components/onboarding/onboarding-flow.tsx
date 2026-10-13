@@ -85,6 +85,7 @@ type AddressData = {
   bairro: string | null;
   cidade: string | null;
   uf: string | null;
+  atende_domicilio: boolean | null;
 };
 
 type ScheduleData = {
@@ -102,6 +103,7 @@ type ServiceData = {
   descricao: string | null;
   preco: number | string;
   custo_estimado: number | string | null;
+  visivel_vitrine: boolean;
 };
 
 type CategoryData = {
@@ -117,6 +119,7 @@ type ProductData = {
   preco_custo: number | string;
   preco_venda: number | string;
   imagem_path: string | null;
+  visivel_vitrine: boolean;
   categoria: {
     nome: string;
   } | null;
@@ -315,6 +318,11 @@ export function OnboardingFlow({
   const resumoBarbearia = {
     ...(initialBusinessData ?? {}),
     ...(dadosEtapa1 as Partial<BusinessData>),
+    atende_domicilio:
+      (dadosEtapa2 as Partial<AddressData>)
+        .atende_domicilio ??
+      initialBusinessData?.atende_domicilio ??
+      null,
   };
 
   const resumoLocalizacao = {
@@ -417,6 +425,12 @@ export function OnboardingFlow({
               typeof dadosEtapa1.logo_file_name ===
               "string"
                 ? dadosEtapa1.logo_file_name
+                : null
+            }
+            logoInicialOriginalDataUrl={
+              typeof dadosEtapa1.logo_original_data_url ===
+              "string"
+                ? dadosEtapa1.logo_original_data_url
                 : null
             }
             onDraftChange={aoDraftEtapa1}
