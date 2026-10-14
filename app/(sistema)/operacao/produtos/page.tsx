@@ -5,6 +5,9 @@ import React, { useState, useMemo, useRef, useEffect, useCallback, FormEvent } f
 import Link from "next/link";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
+import { MiniaturaImagem } from "@/components/sistema/miniatura-imagem";
+import { ImageAdjustModal } from "@/components/sistema/image-adjust-modal";
+import { resolverSrcMidia, normalizarImagemCategoria, ehUrlAbsoluta } from "@/lib/imagens";
 import {
   Package,
   Plus,
@@ -25,7 +28,10 @@ import {
   ChevronDown,
   RotateCcw,
   Loader2,
-  Boxes,
+  ImagePlus,
+  UploadCloud,
+  Crop,
+  Trash2,
 } from "lucide-react";
 
 export interface CategoriaItem {
@@ -80,29 +86,6 @@ export const normalizeProductName = (name: string): string => {
     .replace(/\s+/g, " ")
     .replace(/\s*\/\s*/g, "/");
 };
-
-const PRODUCT_IMAGE_PRESETS = [
-  {
-    label: "Pomada Matte",
-    url: "https://images.unsplash.com/photo-1597854710119-a5a84396ee76?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    label: "Óleo para Barba",
-    url: "https://images.unsplash.com/photo-1621607512214-68297480165e?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    label: "Shampoo Mentolado",
-    url: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    label: "Bebida Artesanal",
-    url: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    label: "Pente de Madeira",
-    url: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80",
-  },
-];
 
 interface FormProdutoState {
   id?: string;
@@ -189,6 +172,159 @@ export default function OperacaoProdutosPage() {
   }>({});
   const [salvandoProduto, setSalvandoProduto] = useState(false);
   const [erroFormProduto, setErroFormProduto] = useState<string | null>(null);
+  const [produtoParaExcluir, setProdutoParaExcluir] = useState<ProdutoItem | null>(null);
+  const [excluindoProduto, setExcluindoProduto] = useState(false);
+
+  // Upload de imagem própria do produto
+  const [imagemNovoArquivo, setImagemNovoArquivo] = useState<File | null>(null);
+  const [imagemPreviewUrl, setImagemPreviewUrl] = useState<string>("");
+  const [imagemErro, setImagemErro] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [arrastandoImagem, setArrastandoImagem] = useState(false);
+  // Imagem aberta no modal de ajuste (zoom/reposicionamento).
+  const [imagemAjuste, setImagemAjuste] = useState<{
+    url: string;
+    nome: string;
+  } | null>(null);
+
+  const LIMITE_IMAGEM_PRODUTO = 5 * 1024 * 1024; // 5MB (mesmo limite do bucket)
+  const TIPOS_IMAGEM_PERMITIDOS = ["image/png", "image/jpeg", "image/webp"];
+
+  const extensaoPorMimeImg = (mime: string): string | null => {
+    const mapa: Record<string, string> = {
+      "image/png": "png",
+      "image/jpeg": "jpg",
+      "image/webp": "webp",
+    };
+    return mapa[mime] ?? null;
+  };
+
+  const limparImagemSelecionada = () => {
+    if (imagemPreviewUrl) {
+      URL.revokeObjectURL(imagemPreviewUrl);
+    }
+    setImagemNovoArquivo(null);
+    setImagemPreviewUrl("");
+    setImagemErro(null);
+    // Remove a imagem própria do produto ao salvar (mantém o flag de
+    // "usar imagem da categoria" desmarcado).
+    setFormProduto((prev) => ({ ...prev, imagem_path: "" }));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const tratarSelecaoImagem = (arquivo: File | null) => {
+    if (!arquivo) return;
+    setImagemErro(null);
+    if (!TIPOS_IMAGEM_PERMITIDOS.includes(arquivo.type)) {
+      setImagemErro("Formato de imagem inválido. Use PNG, JPG ou WEBP.");
+      return;
+    }
+    if (arquivo.size > LIMITE_IMAGEM_PRODUTO) {
+      setImagemErro("A imagem deve ter no máximo 5MB.");
+      return;
+    }
+    if (!extensaoPorMimeImg(arquivo.type)) {
+      setImagemErro("Formato de imagem inválido.");
+      return;
+    }
+    // Abre o modal de ajuste (zoom/reposicionamento) com a imagem escolhida.
+    setImagemAjuste({
+      url: URL.createObjectURL(arquivo),
+      nome: arquivo.name,
+    });
+    // Permite selecionar novamente o mesmo arquivo após "Escolher outra".
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // Recebe o arquivo já ajustado (recortado pelo modal) e guarda para upload.
+  const confirmarAjusteImagem = (arquivo: File | null) => {
+    if (!arquivo) return;
+
+    if (imagemPreviewUrl) {
+      URL.revokeObjectURL(imagemPreviewUrl);
+    }
+
+    setImagemNovoArquivo(arquivo);
+    setImagemPreviewUrl(URL.createObjectURL(arquivo));
+    // Ao escolher arquivo, desconsidera a URL/preset antiga.
+    setFormProduto((prev) => ({ ...prev, imagem_path: "" }));
+  };
+
+  // Fecha o modal de ajuste (sem aplicar mudança).
+  const cancelarAjusteImagem = () => {
+    setImagemAjuste((atual) => {
+      if (atual) {
+        URL.revokeObjectURL(atual.url);
+      }
+      return null;
+    });
+  };
+
+  // Reabre o modal de ajuste com a imagem atual (arquivo recém-escolhido ou
+  // imagem própria já salva), permitindo ajustar novamente.
+  const abrirAjusteImagemAtual = async () => {
+    if (imagemNovoArquivo) {
+      setImagemAjuste({
+        url: URL.createObjectURL(imagemNovoArquivo),
+        nome: imagemNovoArquivo.name,
+      });
+      return;
+    }
+
+    const caminhoAtual = formProduto.imagem_path?.trim();
+    if (!caminhoAtual) return;
+
+    const srcResolvida = resolverSrcMidia(caminhoAtual);
+    if (!srcResolvida) return;
+
+    try {
+      const resposta = await fetch(srcResolvida);
+      const blob = await resposta.blob();
+      const nome = caminhoAtual.split("/").pop() ?? "imagem";
+      setImagemAjuste({
+        url: URL.createObjectURL(blob),
+        nome,
+      });
+    } catch (err) {
+      console.error("Erro ao reabrir imagem para ajuste:", err);
+      setImagemErro("Não foi possível reabrir a imagem para ajuste.");
+    }
+  };
+
+  // Remove do Storage um arquivo recém-upado caso a gravação do produto falhe.
+  const limparUploadNovo = async (caminho: string | null) => {
+    if (!caminho) return;
+    await supabase.storage.from("midia-publica").remove([caminho]);
+  };
+
+  // Converte erros do Supabase/banco em mensagens amigáveis para o usuário
+  // (sem expor texto técnico da API/Postgres).
+  const mensagemErroSalvarProduto = (err: unknown): string => {
+    if (typeof err === "object" && err !== null) {
+      const e = err as { code?: string; message?: string };
+      if (typeof e.code === "string") {
+        switch (e.code) {
+          case "23505":
+            return "Já existe um produto com esse nome.";
+          case "23503":
+            return "A categoria selecionada é inválida.";
+          case "23514":
+            return "Os dados do produto são inválidos. Verifique os campos.";
+          case "42501":
+            return "Você não tem permissão para salvar o produto.";
+          default:
+            return "Erro ao salvar o produto.";
+        }
+      }
+      if (typeof e.message === "string" && e.message.trim()) {
+        return e.message;
+      }
+    }
+    if (err instanceof Error && err.message) {
+      return err.message;
+    }
+    return "Erro ao salvar o produto.";
+  };
 
   // Seletor de Categoria Popover no Modal
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
@@ -503,6 +639,12 @@ export default function OperacaoProdutosPage() {
     });
     setFormErrors({});
     setErroFormProduto(null);
+    setImagemNovoArquivo(null);
+    setImagemPreviewUrl("");
+    setImagemErro(null);
+    setImagemAjuste(null);
+    setArrastandoImagem(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setIsCategoryDropdownOpen(false);
     setCategorySearchQuery("");
     setIsModalOpen(true);
@@ -526,6 +668,12 @@ export default function OperacaoProdutosPage() {
     });
     setFormErrors({});
     setErroFormProduto(null);
+    setImagemNovoArquivo(null);
+    setImagemPreviewUrl("");
+    setImagemErro(null);
+    setImagemAjuste(null);
+    setArrastandoImagem(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setIsCategoryDropdownOpen(false);
     setCategorySearchQuery("");
     setIsModalOpen(true);
@@ -538,6 +686,47 @@ export default function OperacaoProdutosPage() {
     setErroFormProduto(null);
     setIsCategoryDropdownOpen(false);
     setCategorySearchQuery("");
+    if (imagemPreviewUrl) {
+      URL.revokeObjectURL(imagemPreviewUrl);
+    }
+    setImagemNovoArquivo(null);
+    setImagemPreviewUrl("");
+    setImagemAjuste(null);
+    setImagemErro(null);
+    setArrastandoImagem(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const confirmarExcluirProduto = async () => {
+    if (!produtoParaExcluir) return;
+    setExcluindoProduto(true);
+    setErroFormProduto(null);
+
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc(
+      "excluir_ou_inativar_produto",
+      { p_produto_id: produtoParaExcluir.id }
+    );
+
+    setExcluindoProduto(false);
+
+    if (error) {
+      console.error("Erro ao remover produto:", error);
+      showToast("Não foi possível remover o produto. Tente novamente.", "error");
+      return;
+    }
+
+    const acao = data?.acao === "excluido" ? "excluido" : "inativado";
+    // Fecha o modal e recarrega a lista
+    const produtoRemovido = produtoParaExcluir;
+    setProdutoParaExcluir(null);
+    void carregarDados();
+
+    if (acao === "excluido") {
+      showToast(`${produtoRemovido.nome}: produto excluído com sucesso.`);
+    } else {
+      showToast(`${produtoRemovido.nome}: produto inativado porque possui venda ou movimentação de estoque.`);
+    }
   };
 
   // Cálculo financeiro em tempo real para o modal de produto
@@ -608,13 +797,10 @@ export default function OperacaoProdutosPage() {
       }
     }
 
-    let estoqueAtualNum = 0;
     if (formProduto.estoque_atual.trim()) {
       const parsed = Number.parseInt(formProduto.estoque_atual.trim(), 10);
       if (Number.isNaN(parsed) || parsed < 0) {
         errors.estoque_atual = "O estoque atual deve ser maior ou igual a zero.";
-      } else {
-        estoqueAtualNum = parsed;
       }
     }
 
@@ -622,6 +808,12 @@ export default function OperacaoProdutosPage() {
       setFormErrors(errors);
       return;
     }
+
+    // Somente usado para registrar a movimentação via RPC (o campo
+    // estoque_atual NÃO possui grant de inserção/atualização direta).
+    const estoqueAtualNum = formProduto.estoque_atual.trim()
+      ? (Number.parseInt(formProduto.estoque_atual.trim(), 10) || 0)
+      : 0;
 
     setSalvandoProduto(true);
 
@@ -644,9 +836,54 @@ export default function OperacaoProdutosPage() {
         throw new Error("Não foi possível identificar a barbearia do usuário.");
       }
 
-      const finalImagePath = formProduto.usar_imagem_categoria
-        ? null
-        : formProduto.imagem_path.trim() || null;
+      // Resolve o caminho final da imagem do produto.
+      let finalImagePath: string | null = null;
+      let imagemAnteriorRemovida: string | null = null;
+      // Caminho original da imagem (vem do registro carregado, pois o form
+      // pode ter sido alterado pelo botão "Remover").
+      const caminhoImagemAnterior = editingProduct?.imagem_path?.trim() ?? "";
+
+      if (formProduto.usar_imagem_categoria) {
+        finalImagePath = null;
+      } else if (imagemNovoArquivo) {
+        // Upload da imagem própria escolhida pelo usuário.
+        const ext = extensaoPorMimeImg(imagemNovoArquivo.type);
+        if (!ext) {
+          throw new Error("Formato de imagem inválido.");
+        }
+        const novoCaminho =
+          `barbearias/${activeBarbeariaId}/produtos/` +
+          `${crypto.randomUUID()}.${ext}`;
+
+        const respostaUpload = await supabase.storage
+          .from("midia-publica")
+          .upload(novoCaminho, imagemNovoArquivo, {
+            contentType: imagemNovoArquivo.type,
+            upsert: false,
+          });
+
+        if (respostaUpload.error) {
+          throw new Error("Não foi possível enviar a imagem do produto.");
+        }
+
+        finalImagePath = novoCaminho;
+      } else {
+        finalImagePath = formProduto.imagem_path.trim() || null;
+      }
+
+      // Se a imagem anterior do Storage foi substituída ou removida
+      // (inclusive ao voltar para a imagem da categoria), agenda a
+      // remoção do arquivo antigo após o salvamento. URLs externas e
+      // assets públicos são preservados.
+      if (
+        editingProduct &&
+        caminhoImagemAnterior &&
+        finalImagePath !== caminhoImagemAnterior &&
+        !ehUrlAbsoluta(caminhoImagemAnterior) &&
+        !caminhoImagemAnterior.startsWith("/")
+      ) {
+        imagemAnteriorRemovida = caminhoImagemAnterior;
+      }
 
       if (editingProduct && formProduto.id) {
         const { error } = await supabase
@@ -667,45 +904,90 @@ export default function OperacaoProdutosPage() {
 
         if (error) {
           if (error.code === "23505") {
+            await limparUploadNovo(finalImagePath);
             setErroFormProduto("Já existe um produto com esse nome.");
             return;
           }
+          await limparUploadNovo(finalImagePath);
           throw error;
+        }
+
+        // Ajusta o estoque via RPC (movimentação auditada) quando o valor mudou.
+        // O campo estoque_atual não possui grant de atualização direta.
+        const estoqueAnterior = editingProduct?.estoque_atual ?? 0;
+        const ajusteEstoque = estoqueAtualNum - estoqueAnterior;
+        if (ajusteEstoque !== 0) {
+          const { error: erroAjuste } = await supabase.rpc("ajustar_estoque", {
+            p_produto_id: formProduto.id,
+            p_quantidade_delta: ajusteEstoque,
+            p_motivo: `Ajuste pelo cadastro do produto (${estoqueAnterior} → ${estoqueAtualNum} un.)`,
+          });
+          if (erroAjuste) {
+            console.error("Erro ao ajustar estoque do produto:", erroAjuste);
+            showToast("Produto salvo, mas não foi possível ajustar o estoque.", "error");
+          }
         }
 
         showToast(`Produto "${nomeFormatado}" atualizado com sucesso!`);
       } else {
-        const { error } = await supabase.from("produtos").insert({
-          barbearia_id: activeBarbeariaId,
-          categoria_id: formProduto.categoria_id,
-          nome: nomeFormatado,
-          descricao: formProduto.descricao.trim() || null,
-          preco_custo: precoCustoNum ?? 0,
-          preco_venda: precoVendaNum ?? 0,
-          estoque_atual: estoqueAtualNum,
-          estoque_minimo: estoqueMinimoNum,
-          imagem_path: finalImagePath,
-          usar_imagem_categoria: formProduto.usar_imagem_categoria,
-          ativo: formProduto.ativo,
-          visivel_vitrine: formProduto.visivel_vitrine,
-        });
+        const { data: novoProduto, error } = await supabase
+          .from("produtos")
+          .insert({
+            barbearia_id: activeBarbeariaId,
+            categoria_id: formProduto.categoria_id,
+            nome: nomeFormatado,
+            descricao: formProduto.descricao.trim() || null,
+            preco_custo: precoCustoNum ?? 0,
+            preco_venda: precoVendaNum ?? 0,
+            estoque_minimo: estoqueMinimoNum,
+            imagem_path: finalImagePath,
+            usar_imagem_categoria: formProduto.usar_imagem_categoria,
+            ativo: formProduto.ativo,
+            visivel_vitrine: formProduto.visivel_vitrine,
+          })
+          .select("id")
+          .single();
 
         if (error) {
           if (error.code === "23505") {
+            await limparUploadNovo(finalImagePath);
             setErroFormProduto("Já existe um produto com esse nome.");
             return;
           }
+          await limparUploadNovo(finalImagePath);
           throw error;
+        }
+
+        // Registra o estoque inicial via RPC (movimentação auditada)
+        // quando o usuário informou um valor maior que zero.
+        const novoId = novoProduto?.id ?? null;
+        if (novoId && estoqueAtualNum > 0) {
+          const { error: erroEstoqueInicial } = await supabase.rpc("ajustar_estoque", {
+            p_produto_id: novoId,
+            p_quantidade_delta: estoqueAtualNum,
+            p_motivo: "Estoque inicial informado no cadastro do produto",
+          });
+          if (erroEstoqueInicial) {
+            console.error("Erro ao registrar estoque inicial:", erroEstoqueInicial);
+            showToast("Produto criado, mas não foi possível registrar o estoque inicial.", "error");
+          }
         }
 
         showToast(`Produto "${nomeFormatado}" cadastrado com sucesso!`);
       }
 
+      // Remove a imagem anterior do Storage (se houve substituição).
+      if (imagemAnteriorRemovida) {
+        await supabase.storage
+          .from("midia-publica")
+          .remove([imagemAnteriorRemovida]);
+      }
+
       handleCloseModal();
       await carregarDados();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Erro ao salvar o produto.";
-      setErroFormProduto(msg);
+      console.error("Erro ao salvar produto:", err);
+      setErroFormProduto(mensagemErroSalvarProduto(err));
     } finally {
       setSalvandoProduto(false);
     }
@@ -770,29 +1052,25 @@ export default function OperacaoProdutosPage() {
   // Helper para renderizar thumbnail do produto
   const renderProductThumbnail = (item: ProdutoItem) => {
     const cat = item.categoria_id ? categoryMap.get(item.categoria_id) : undefined;
+    const imagemPropria = resolverSrcMidia(item.imagem_path);
+    const imagemCategoria = normalizarImagemCategoria(cat?.imagem_padrao_path);
+    // Regra: imagem própria -> imagem da categoria (se usar) -> ícone neutro.
+    // Nunca usa "/images/categorias/image.png".
     const resolvedSrc =
-      item.imagem_path ||
-      (item.usar_imagem_categoria !== false ? cat?.imagem_padrao_path || "/images/categorias/image.png" : null);
+      imagemPropria ||
+      (item.usar_imagem_categoria !== false
+        ? imagemCategoria
+        : null);
 
-    if (resolvedSrc) {
-      return (
-        <img
-          src={resolvedSrc}
-          alt={item.nome}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            if (target.src.indexOf("/images/categorias/image.png") === -1) {
-              target.src = "/images/categorias/image.png";
-            } else {
-              target.style.display = "none";
-            }
-          }}
-        />
-      );
-    }
-
-    return <Package className="w-5 h-5 text-[#888882]" />;
+    return (
+      <MiniaturaImagem
+        src={resolvedSrc}
+        alt={item.nome}
+        icone={Package}
+        classNameImagem="w-full h-full object-cover"
+        classNameIcone="w-full h-full p-2 text-[#888882]"
+      />
+    );
   };
 
   // Helper para renderizar badge de status de estoque
@@ -1383,15 +1661,27 @@ export default function OperacaoProdutosPage() {
 
                       {/* Ações: Editar */}
                       <td className="py-3.5 px-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEditModal(prod)}
-                          aria-label={`Editar produto ${prod.nome}`}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] font-medium text-xs transition-colors cursor-pointer"
-                        >
-                          <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
-                          <span>Editar</span>
-                        </button>
+                        <div className="inline-flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditModal(prod)}
+                            aria-label={`Editar produto ${prod.nome}`}
+                            title="Editar produto"
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] transition-colors cursor-pointer"
+                          >
+                            <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setProdutoParaExcluir(prod)}
+                            aria-label={`Remover produto ${prod.nome}`}
+                            title="Remover produto"
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-red-50 dark:hover:bg-red-950/40 text-[#2F2F2D] dark:text-[#F4F4F0] transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-[#B45309] dark:text-red-400" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1499,14 +1789,27 @@ export default function OperacaoProdutosPage() {
                       </button>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEditModal(prod)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] cursor-pointer"
-                    >
-                      <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
-                      <span>Editar</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditModal(prod)}
+                        aria-label={`Editar produto ${prod.nome}`}
+                        title="Editar produto"
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-white dark:hover:bg-[#2B2B29] cursor-pointer"
+                      >
+                        <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setProdutoParaExcluir(prod)}
+                        aria-label={`Remover produto ${prod.nome}`}
+                        title="Remover produto"
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-red-50 dark:hover:bg-red-950/40 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-[#B45309] dark:text-red-400" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -1550,13 +1853,6 @@ export default function OperacaoProdutosPage() {
 
             {/* Form body */}
             <form onSubmit={handleSubmitProduto} className="p-4 sm:p-6 overflow-y-auto space-y-4">
-              {erroFormProduto && (
-                <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
-                  <AlertCircle className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" />
-                  <span>{erroFormProduto}</span>
-                </div>
-              )}
-
               {/* Categoria */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
@@ -1590,9 +1886,9 @@ export default function OperacaoProdutosPage() {
                       {selectedCategoryObj ? (
                         <>
                           <div className="w-6 h-6 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                            {selectedCategoryObj.imagem_padrao_path ? (
+                            {normalizarImagemCategoria(selectedCategoryObj.imagem_padrao_path) ? (
                               <img
-                                src={selectedCategoryObj.imagem_padrao_path}
+                                src={normalizarImagemCategoria(selectedCategoryObj.imagem_padrao_path) ?? ""}
                                 alt={selectedCategoryObj.nome}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
@@ -1692,9 +1988,9 @@ export default function OperacaoProdutosPage() {
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
                                   <div className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                                    {cat.imagem_padrao_path ? (
+                                    {normalizarImagemCategoria(cat.imagem_padrao_path) ? (
                                       <img
-                                        src={cat.imagem_padrao_path}
+                                        src={normalizarImagemCategoria(cat.imagem_padrao_path) ?? ""}
                                         alt={cat.nome}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
@@ -1870,34 +2166,27 @@ export default function OperacaoProdutosPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                    {editingProduct ? "Estoque Atual (somente leitura)" : "Estoque Inicial (un.)"}
+                    {editingProduct ? "Estoque Atual (un.)" : "Estoque Inicial (un.)"}
                   </label>
-                  {editingProduct ? (
-                    <div className="flex h-10 items-center rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-3.5 text-xs text-[#2F2F2D] dark:text-[#F4F4F0] font-bold">
-                      <Boxes className="w-3.5 h-3.5 text-[#888882] mr-2" />
-                      {formProduto.estoque_atual} unidades
-                    </div>
-                  ) : (
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      required
-                      value={formProduto.estoque_atual}
-                      onChange={(e) => {
-                        setFormProduto({ ...formProduto, estoque_atual: e.target.value });
-                        if (formErrors.estoque_atual) {
-                          setFormErrors((prev) => ({ ...prev, estoque_atual: undefined }));
-                        }
-                      }}
-                      placeholder="10"
-                      className={`w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border text-xs sm:text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none transition-colors ${
-                        formErrors.estoque_atual
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-[#E2E2DD] dark:border-[#3F3F3B] focus:border-[#2F2F2D] dark:focus:border-white"
-                      }`}
-                    />
-                  )}
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    required
+                    value={formProduto.estoque_atual}
+                    onChange={(e) => {
+                      setFormProduto({ ...formProduto, estoque_atual: e.target.value });
+                      if (formErrors.estoque_atual) {
+                        setFormErrors((prev) => ({ ...prev, estoque_atual: undefined }));
+                      }
+                    }}
+                    placeholder="10"
+                    className={`w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border text-xs sm:text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none transition-colors ${
+                      formErrors.estoque_atual
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-[#E2E2DD] dark:border-[#3F3F3B] focus:border-[#2F2F2D] dark:focus:border-white"
+                    }`}
+                  />
                   {formErrors.estoque_atual && (
                     <p className="text-[11px] font-semibold text-red-600 dark:text-red-400">
                       {formErrors.estoque_atual}
@@ -1959,36 +2248,173 @@ export default function OperacaoProdutosPage() {
                   </span>
                 </label>
 
-                {/* Se custom image selecionada */}
-                {!formProduto.usar_imagem_categoria && (
-                  <div className="space-y-2 pt-1 animate-fadeIn">
-                    <input
-                      type="url"
-                      value={formProduto.imagem_path}
-                      onChange={(e) =>
-                        setFormProduto({ ...formProduto, imagem_path: e.target.value })
-                      }
-                      placeholder="URL da imagem (ex: https://images.unsplash.com/...)"
-                      className="w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white transition-colors"
-                    />
+                <div className="space-y-2 pt-1 animate-fadeIn">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={(e) =>
+                      tratarSelecaoImagem(e.target.files?.[0] ?? null)
+                    }
+                  />
 
-                    {/* Presets */}
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {PRODUCT_IMAGE_PRESETS.map((preset) => (
+                  {formProduto.usar_imagem_categoria ? (
+                    /* Estado: usando a imagem padrão da categoria */
+                    <div className="flex items-center gap-3">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center">
+                        {normalizarImagemCategoria(
+                          selectedCategoryObj?.imagem_padrao_path
+                        ) ? (
+                          <img
+                            src={
+                              normalizarImagemCategoria(
+                                selectedCategoryObj?.imagem_padrao_path
+                              ) ?? ""
+                            }
+                            alt={
+                              selectedCategoryObj?.nome ?? "Categoria"
+                            }
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Tag className="w-6 h-6 text-[#888882]" />
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <p className="text-[11px] font-semibold text-[#666662] dark:text-[#B8B8B2]">
+                          Usando a imagem padrão da categoria
+                        </p>
+
                         <button
-                          key={preset.label}
                           type="button"
                           onClick={() =>
-                            setFormProduto({ ...formProduto, imagem_path: preset.url })
+                            setFormProduto((prev) => ({
+                              ...prev,
+                              usar_imagem_categoria: false,
+                            }))
                           }
-                          className="px-2 py-1 rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] text-[10px] font-semibold text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white cursor-pointer"
+                          className="inline-flex items-center gap-1.5 self-start rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-2.5 py-1.5 text-[11px] font-semibold text-[#666662] hover:text-[#2F2F2D] dark:text-[#B8B8B2] dark:hover:text-white cursor-pointer"
                         >
-                          {preset.label}
+                          <ImagePlus className="w-3.5 h-3.5" />
+                          Usar imagem própria
                         </button>
-                      ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : (imagemPreviewUrl ||
+                      resolverSrcMidia(formProduto.imagem_path || null)) ? (
+                    /* Estado: imagem própria (nova seleção ou já salva) */
+                    <div
+                      className="flex items-center gap-3"
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setArrastandoImagem(true);
+                      }}
+                      onDragLeave={() => setArrastandoImagem(false)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setArrastandoImagem(false);
+                        tratarSelecaoImagem(
+                          e.dataTransfer.files?.[0] ?? null
+                        );
+                      }}
+                    >
+                      <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]">
+                        <img
+                          src={
+                            imagemPreviewUrl ||
+                            resolverSrcMidia(formProduto.imagem_path || null) ||
+                            ""
+                          }
+                          alt="Imagem do produto"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="inline-flex items-center gap-1.5 self-start rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-2.5 py-1.5 text-[11px] font-semibold text-[#666662] hover:text-[#2F2F2D] dark:text-[#B8B8B2] dark:hover:text-white cursor-pointer"
+                          >
+                            <ImagePlus className="w-3.5 h-3.5" />
+                            Escolher outra
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={abrirAjusteImagemAtual}
+                            className="inline-flex items-center gap-1.5 self-start rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-2.5 py-1.5 text-[11px] font-semibold text-[#666662] hover:text-[#2F2F2D] dark:text-[#B8B8B2] dark:hover:text-white cursor-pointer"
+                          >
+                            <Crop className="w-3.5 h-3.5" />
+                            Ajustar
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={limparImagemSelecionada}
+                            className="inline-flex items-center gap-1.5 self-start rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 cursor-pointer"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            Remover
+                          </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Estado: sem imagem própria -> área de upload vazia */
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setArrastandoImagem(true);
+                      }}
+                      onDragLeave={() => setArrastandoImagem(false)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setArrastandoImagem(false);
+                        tratarSelecaoImagem(
+                          e.dataTransfer.files?.[0] ?? null
+                        );
+                      }}
+                      onClick={() => fileInputRef.current?.click()}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          fileInputRef.current?.click();
+                        }
+                      }}
+                      className={`cursor-pointer rounded-2xl border-2 border-dashed p-6 text-center transition-colors ${
+                        arrastandoImagem
+                          ? "border-[#2F2F2D] bg-[#FAF9F5] dark:border-white dark:bg-[#222220]"
+                          : "border-[#D5D4CD] dark:border-[#3F3F3B]"
+                      }`}
+                    >
+                      <UploadCloud className="w-8 h-8 mx-auto text-[#888882]" />
+
+                      <p className="mt-2 text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                        Arraste uma imagem ou clique para escolher
+                      </p>
+
+                      <p className="mt-1 text-[11px] text-[#888882]">
+                        PNG, JPG ou WEBP • até 5MB
+                      </p>
+                    </div>
+                  )}
+
+                  {imagemErro && (
+                    <p
+                      role="alert"
+                      className="text-xs font-medium text-red-600 dark:text-red-400"
+                    >
+                      {imagemErro}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Toggles: Ativo & Vitrine */}
@@ -2036,25 +2462,112 @@ export default function OperacaoProdutosPage() {
               </div>
 
               {/* Botões do Rodapé */}
-              <div className="pt-4 border-t border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  disabled={salvandoProduto}
-                  className="px-4 py-2.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-semibold text-[#666662] dark:text-[#B8B8B2] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={salvandoProduto}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] text-xs sm:text-sm font-bold shadow-md hover:bg-black dark:hover:bg-white active:scale-98 transition-all cursor-pointer disabled:opacity-50"
-                >
-                  {salvandoProduto && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{editingProduct ? "Salvar Alterações" : "Cadastrar Produto"}</span>
-                </button>
+              <div className="pt-4 border-t border-[#E2E2DD] dark:border-[#3F3F3B]">
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    disabled={salvandoProduto}
+                    className="px-4 py-2.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-semibold text-[#666662] dark:text-[#B8B8B2] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={salvandoProduto}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] text-xs sm:text-sm font-bold shadow-md hover:bg-black dark:hover:bg-white active:scale-98 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {salvandoProduto && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                    <span>{editingProduct ? "Salvar Alterações" : "Cadastrar Produto"}</span>
+                  </button>
+                </div>
+
+                {erroFormProduto && (
+                  <div className="mt-3 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+                    <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+                    <span>{erroFormProduto}</span>
+                  </div>
+                )}
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {imagemAjuste && (
+        <ImageAdjustModal
+          imageUrl={imagemAjuste.url}
+          fileName={imagemAjuste.nome}
+          title="Ajustar imagem do produto"
+          altText="Imagem do produto a ser ajustada"
+          helperText="Arraste para reposicionar, use a rolagem do mouse ou os controles para ajustar o zoom. A área visível será a imagem final do produto."
+          onConfirm={(arquivo) => {
+            confirmarAjusteImagem(arquivo);
+            cancelarAjusteImagem();
+          }}
+          onCancel={cancelarAjusteImagem}
+        />
+      )}
+
+      {produtoParaExcluir && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl animate-fadeIn overflow-hidden">
+            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
+              <h3 className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Remover produto
+              </h3>
+              <button
+                type="button"
+                onClick={() => setProdutoParaExcluir(null)}
+                disabled={excluindoProduto}
+                aria-label="Fechar"
+                className="p-1 rounded-lg hover:bg-[#F4F3EF] dark:hover:bg-white/10 cursor-pointer disabled:opacity-40"
+              >
+                <X className="w-4 h-4 text-[#666662] dark:text-[#B8B8B2]" />
+              </button>
+            </div>
+
+            <div className="px-5 py-4 space-y-1.5">
+              <p className="text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Tem certeza que deseja remover o produto{" "}
+                <span className="text-red-600 dark:text-red-400">
+                  “{produtoParaExcluir.nome}”
+                </span>
+                ?
+              </p>
+              <p className="text-xs leading-5 text-[#666662] dark:text-[#A1A1AA]">
+                Se ele já tiver vendas ou movimentações de estoque, será apenas inativado para preservar o histórico.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 px-5 pb-5">
+              <button
+                type="button"
+                onClick={() => setProdutoParaExcluir(null)}
+                disabled={excluindoProduto}
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] bg-[#F4F3EF] dark:bg-[#2B2B29] hover:bg-[#E9E8E2] dark:hover:bg-[#343432] cursor-pointer disabled:opacity-40"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmarExcluirProduto}
+                disabled={excluindoProduto}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-red-600 hover:bg-red-700 cursor-pointer disabled:opacity-40"
+              >
+                {excluindoProduto ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Removendo...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Remover
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
