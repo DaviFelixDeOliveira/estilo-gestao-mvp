@@ -1,9 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback, FormEvent } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef, FormEvent } from "react";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
+import { MiniaturaImagem } from "@/components/sistema/miniatura-imagem";
+import { ImageAdjustModal } from "@/components/sistema/image-adjust-modal";
+import { normalizarImagemCategoria, resolverSrcMidia, ehUrlAbsoluta } from "@/lib/imagens";
 import {
   Tag,
   Plus,
@@ -19,6 +22,9 @@ import {
   Check,
   ImageIcon,
   Sparkles,
+  UploadCloud,
+  ImagePlus,
+  Crop,
 } from "lucide-react";
 
 export interface CategoriaItem {
@@ -114,6 +120,19 @@ export default function OperacaoCategoriasPage() {
   const [editingCategory, setEditingCategory] = useState<CategoriaItem | null>(null);
   const [formName, setFormName] = useState("");
   const [formImageUrl, setFormImageUrl] = useState(DEFAULT_CATEGORY_IMAGE);
+  // Upload de imagem própria da categoria (ajustada com zoom/reposicionamento)
+  const [categoriaArquivo, setCategoriaArquivo] = useState<File | null>(null);
+  const [categoriaPreviewUrl, setCategoriaPreviewUrl] = useState<string>("");
+  const [categoriaAjuste, setCategoriaAjuste] = useState<{
+    url: string;
+    nome: string;
+  } | null>(null);
+  const [categoriaErroImagem, setCategoriaErroImagem] = useState<string | null>(null);
+  const [arrastandoCategoriaArquivo, setArrastandoCategoriaArquivo] = useState(false);
+  const fileInputCategoriaRef = useRef<HTMLInputElement>(null);
+
+  const LIMITE_CATEGORIA_ARQUIVO = 5 * 1024 * 1024;
+  const TIPOS_CATEGORIA_PERMITIDOS = ["image/png", "image/jpeg", "image/webp"];
   const [formIsActive, setFormIsActive] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -289,6 +308,8 @@ export default function OperacaoCategoriasPage() {
     setFormImageUrl(DEFAULT_CATEGORY_IMAGE);
     setFormIsActive(true);
     setFormError(null);
+    limparCategoriaImagemNovo();
+    setCategoriaAjuste(null);
     setIsModalOpen(true);
   };
 
@@ -296,14 +317,32 @@ export default function OperacaoCategoriasPage() {
   const handleOpenEditModal = (cat: CategoriaItem) => {
     setEditingCategory(cat);
     setFormName(cat.nome);
-    // Se a imagem no banco for vazia ou inválida, normaliza para o padrão oficial image.png
-    const initialImg =
-      cat.imagem_padrao_path && cat.imagem_padrao_path.startsWith("/images/categorias/") && !cat.imagem_padrao_path.includes("padrao.webp")
-        ? cat.imagem_padrao_path
-        : DEFAULT_CATEGORY_IMAGE;
-    setFormImageUrl(initialImg);
+    // Preserva a imagem salva: asset público, caminho do Storage ou URL.
+    // Caminhos legados (sistema/categorias/...) são normalizados.
+    const caminhoSalvo = cat.imagem_padrao_path?.trim();
+    let imagemInicial = DEFAULT_CATEGORY_IMAGE;
+    if (caminhoSalvo) {
+      if (caminhoSalvo.startsWith("sistema/categorias/")) {
+        imagemInicial =
+          normalizarImagemCategoria(caminhoSalvo) ?? DEFAULT_CATEGORY_IMAGE;
+      } else if (
+        ehUrlAbsoluta(caminhoSalvo) ||
+        caminhoSalvo.startsWith("barbearias/")
+      ) {
+        // Mantém o caminho/URL original para salvar sem alterações
+        imagemInicial = caminhoSalvo;
+      } else if (
+        caminhoSalvo.startsWith("/images/categorias/") &&
+        caminhoSalvo !== "/images/categorias/image.png"
+      ) {
+        imagemInicial = caminhoSalvo;
+      }
+    }
+    setFormImageUrl(imagemInicial);
     setFormIsActive(cat.ativo !== false);
     setFormError(null);
+    limparCategoriaImagemNovo();
+    setCategoriaAjuste(null);
     setIsModalOpen(true);
   };
 
@@ -312,12 +351,100 @@ export default function OperacaoCategoriasPage() {
     setEditingCategory(null);
     setFormError(null);
     setIsSaving(false);
+    limparCategoriaImagemNovo();
+    setCategoriaAjuste(null);
   };
 
   // Obter detalhes do preset selecionado
   const currentPreset = useMemo(() => {
     return CATEGORY_IMAGE_PRESETS.find((p) => p.path === formImageUrl) || CATEGORY_IMAGE_PRESETS[0];
   }, [formImageUrl]);
+
+  // Limpa o estado de upload de imagem própria (sem persistir)
+  const limparCategoriaImagemNovo = () => {
+    if (categoriaPreviewUrl) {
+      URL.revokeObjectURL(categoriaPreviewUrl);
+    }
+    setCategoriaArquivo(null);
+    setCategoriaPreviewUrl("");
+    setCategoriaErroImagem(null);
+    if (fileInputCategoriaRef.current) fileInputCategoriaRef.current.value = "";
+  };
+
+  // Abre o modal de ajuste com a imagem escolhida (ou arrastada)
+  const tratarSelecaoCategoria = (arquivo: File | null) => {
+    if (!arquivo) return;
+    setCategoriaErroImagem(null);
+    if (!TIPOS_CATEGORIA_PERMITIDOS.includes(arquivo.type)) {
+      setCategoriaErroImagem("Formato de imagem inválido. Use PNG, JPG ou WEBP.");
+      return;
+    }
+    if (arquivo.size > LIMITE_CATEGORIA_ARQUIVO) {
+      setCategoriaErroImagem("A imagem deve ter no máximo 5MB.");
+      return;
+    }
+    // Abre o modal de ajuste (zoom/reposicionamento)
+    setCategoriaAjuste({
+      url: URL.createObjectURL(arquivo),
+      nome: arquivo.name,
+    });
+    if (fileInputCategoriaRef.current) fileInputCategoriaRef.current.value = "";
+  };
+
+  // Recebe o arquivo ajustado pelo modal e guarda para upload
+  const confirmarAjusteCategoria = (arquivo: File | null) => {
+    if (!arquivo) return;
+    if (categoriaPreviewUrl) URL.revokeObjectURL(categoriaPreviewUrl);
+    setCategoriaArquivo(arquivo);
+    setCategoriaPreviewUrl(URL.createObjectURL(arquivo));
+    setCategoriaErroImagem(null);
+  };
+
+  // Fecha o modal de ajuste sem aplicar mudança
+  const cancelarAjusteCategoria = () => {
+    setCategoriaAjuste((atual) => {
+      if (atual) URL.revokeObjectURL(atual.url);
+      return null;
+    });
+  };
+
+  // Reabre o modal de ajuste com a imagem atual (arquivo recém-escolhido ou imagem já salva)
+  const reabrirAjusteCategoria = async () => {
+    if (categoriaArquivo) {
+      setCategoriaAjuste({
+        url: URL.createObjectURL(categoriaArquivo),
+        nome: categoriaArquivo.name,
+      });
+      return;
+    }
+
+    const caminhoAtual = formImageUrl.trim();
+    if (!caminhoAtual || caminhoAtual === DEFAULT_CATEGORY_IMAGE) return;
+    const srcResolvida = resolverSrcMidia(caminhoAtual);
+    if (!srcResolvida) return;
+
+    try {
+      const resposta = await fetch(srcResolvida);
+      const blob = await resposta.blob();
+      const nome = caminhoAtual.split("/").pop() ?? "categoria";
+      setCategoriaAjuste({ url: URL.createObjectURL(blob), nome });
+    } catch (err) {
+      console.error("Erro ao reabrir imagem da categoria para ajuste:", err);
+      setCategoriaErroImagem("Não foi possível reabrir a imagem para ajuste.");
+    }
+  };
+
+  // Remove o arquivo recém-upado caso a gravação da categoria falhe
+  const removerArquivoStorage = async (caminho: string | null) => {
+    if (!caminho) return;
+    await supabase.storage.from("midia-publica").remove([caminho]);
+  };
+
+  // Volta a usar a imagem padrão da categoria (preset ou asset público)
+  const voltarParaImagemPadrao = () => {
+    limparCategoriaImagemNovo();
+    setFormImageUrl(DEFAULT_CATEGORY_IMAGE);
+  };
 
   // Salvar categoria no Supabase
   const handleSaveCategory = async (e: FormEvent) => {
@@ -345,9 +472,42 @@ export default function OperacaoCategoriasPage() {
     setIsSaving(true);
     setFormError(null);
 
-    const finalImageToSave = formImageUrl.trim() || DEFAULT_CATEGORY_IMAGE;
+    let finalImageToSave = formImageUrl.trim() || DEFAULT_CATEGORY_IMAGE;
+    const imagemAntigaParaRemover = editingCategory?.imagem_padrao_path?.trim() || null;
+    let caminhoUploadNovo: string | null = null;
 
     try {
+      // Upload da imagem própria ajustada (arquivo recém-gerado pelo modal)
+      if (categoriaArquivo) {
+        const donoId =
+          editingCategory?.barbearia_id ||
+          barbeariaId ||
+          categorias[0]?.barbearia_id;
+
+        if (!donoId) {
+          throw new Error("Não foi possível identificar a barbearia.");
+        }
+
+        const ext = (categoriaArquivo.type.split("/")[1] || "png").replace("jpeg", "jpg");
+        const novoCaminho =
+          `barbearias/${donoId}/categorias/` +
+          `${crypto.randomUUID()}.${ext}`;
+
+        const respostaUpload = await supabase.storage
+          .from("midia-publica")
+          .upload(novoCaminho, categoriaArquivo, {
+            contentType: categoriaArquivo.type,
+            upsert: false,
+          });
+
+        if (respostaUpload.error) {
+          throw new Error("Não foi possível enviar a imagem da categoria.");
+        }
+
+        finalImageToSave = novoCaminho;
+        caminhoUploadNovo = novoCaminho;
+      }
+
       if (editingCategory) {
         const { data, error } = await supabase
           .from("categorias_produto")
@@ -405,8 +565,23 @@ export default function OperacaoCategoriasPage() {
         showToast(`Categoria "${formName.trim()}" cadastrada com sucesso!`, "success");
       }
 
+      // Após salvar com sucesso, remove a imagem antiga do Storage
+      // (apenas caminhos do Storage de categoria; preserva URLs e assets públicos)
+      if (
+        imagemAntigaParaRemover &&
+        !ehUrlAbsoluta(imagemAntigaParaRemover) &&
+        imagemAntigaParaRemover.startsWith("barbearias/") &&
+        imagemAntigaParaRemover !== finalImageToSave
+      ) {
+        await supabase.storage
+          .from("midia-publica")
+          .remove([imagemAntigaParaRemover]);
+      }
+
       handleCloseModal();
     } catch (err: unknown) {
+      // Se o upload novo foi feito mas a categoria não salvou, remove do Storage
+      await removerArquivoStorage(caminhoUploadNovo);
       const msg = err instanceof Error ? err.message : "Erro ao salvar a categoria.";
       setFormError(msg);
     } finally {
@@ -457,26 +632,17 @@ export default function OperacaoCategoriasPage() {
     }
   };
 
-  // Helper para renderizar imagem da categoria com fallback seguro
+  // Helper para renderizar imagem da categoria com fallback seguro (ícone neutro)
   const renderCategoryThumbnail = (imagePath: string | null | undefined, nome: string) => {
-    const src =
-      imagePath && imagePath.trim() && !imagePath.includes("padrao.webp")
-        ? imagePath
-        : DEFAULT_CATEGORY_IMAGE;
+    const src = normalizarImagemCategoria(imagePath);
 
     return (
-      <img
+      <MiniaturaImagem
         src={src}
         alt={nome}
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          if (target.src.indexOf(DEFAULT_CATEGORY_IMAGE) === -1) {
-            target.src = DEFAULT_CATEGORY_IMAGE;
-          } else {
-            target.style.display = "none";
-          }
-        }}
+        icone={Tag}
+        classNameImagem="w-full h-full object-cover"
+        classNameIcone="w-full h-full p-2 text-[#888882]"
       />
     );
   };
@@ -982,7 +1148,7 @@ export default function OperacaoCategoriasPage() {
                 <div className="p-3.5 rounded-2xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center gap-4">
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 shadow-xs flex items-center justify-center">
                     <img
-                      src={formImageUrl}
+                      src={categoriaPreviewUrl || resolverSrcMidia(formImageUrl) || formImageUrl}
                       alt="Preview da categoria"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -992,16 +1158,33 @@ export default function OperacaoCategoriasPage() {
                     />
                   </div>
                   <div className="space-y-1 min-w-0">
-                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] text-[10px] font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                      <Sparkles className="w-3 h-3 text-amber-500" />
-                      <span>Preset Selecionado</span>
-                    </div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] truncate">
-                      {currentPreset.label}
-                    </h4>
-                    <p className="text-[11px] text-[#888882] leading-tight">
-                      {currentPreset.descricao}
-                    </p>
+                    {categoriaPreviewUrl ? (
+                      <>
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] text-[10px] font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                          <ImageIcon className="w-3 h-3 text-[#C92A2A]" />
+                          <span>Imagem personalizada</span>
+                        </div>
+                        <h4 className="text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] truncate">
+                          Imagem própria da categoria
+                        </h4>
+                        <p className="text-[11px] text-[#888882] leading-tight">
+                          A imagem ajustada será enviada ao Storage ao salvar.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] text-[10px] font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                          <Sparkles className="w-3 h-3 text-amber-500" />
+                          <span>Preset Selecionado</span>
+                        </div>
+                        <h4 className="text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] truncate">
+                          {currentPreset.label}
+                        </h4>
+                        <p className="text-[11px] text-[#888882] leading-tight">
+                          {currentPreset.descricao}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -1050,16 +1233,106 @@ export default function OperacaoCategoriasPage() {
                   </div>
                 </div>
 
-                {/* Área informativa de Imagem Personalizada (Futuro) */}
-                <div className="p-3 rounded-xl border border-dashed border-[#E2E2DD] dark:border-[#3F3F3B] bg-transparent flex items-center justify-between text-[#888882] text-xs">
-                  <div className="flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-neutral-400" />
-                    <span>Upload de imagem própria da categoria</span>
+                {/* Área de upload da imagem própria da categoria */}
+                <input
+                  ref={fileInputCategoriaRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={(e) => tratarSelecaoCategoria(e.target.files?.[0] ?? null)}
+                />
+
+                {categoriaPreviewUrl ? (
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B]">
+                      <img
+                        src={categoriaPreviewUrl}
+                        alt="Preview da imagem personalizada"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] text-[10px] font-bold text-[#2F2F2D] dark:text-[#F4F4F0] w-fit">
+                        <ImageIcon className="w-3 h-3 text-[#C92A2A]" />
+                        Imagem personalizada
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => fileInputCategoriaRef.current?.click()}
+                        className="inline-flex items-center gap-1.5 self-start rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-2.5 py-1.5 text-[11px] font-semibold text-[#666662] hover:text-[#2F2F2D] dark:text-[#B8B8B2] dark:hover:text-white cursor-pointer"
+                      >
+                        <ImagePlus className="w-3.5 h-3.5" />
+                        Escolher outra
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={reabrirAjusteCategoria}
+                        className="inline-flex items-center gap-1.5 self-start rounded-lg border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] px-2.5 py-1.5 text-[11px] font-semibold text-[#666662] hover:text-[#2F2F2D] dark:text-[#B8B8B2] dark:hover:text-white cursor-pointer"
+                      >
+                        <Crop className="w-3.5 h-3.5" />
+                        Ajustar
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={voltarParaImagemPadrao}
+                        className="inline-flex items-center gap-1.5 self-start rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        Remover imagem personalizada
+                      </button>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-[#2B2B29] text-neutral-500">
-                    Em breve
-                  </span>
-                </div>
+                ) : (
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setArrastandoCategoriaArquivo(true);
+                    }}
+                    onDragLeave={() => setArrastandoCategoriaArquivo(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setArrastandoCategoriaArquivo(false);
+                      tratarSelecaoCategoria(e.dataTransfer.files?.[0] ?? null);
+                    }}
+                    onClick={() => fileInputCategoriaRef.current?.click()}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        fileInputCategoriaRef.current?.click();
+                      }
+                    }}
+                    className={`cursor-pointer rounded-2xl border-2 border-dashed p-5 text-center transition-colors ${
+                      arrastandoCategoriaArquivo
+                        ? "border-[#2F2F2D] bg-[#FAF9F5] dark:border-white dark:bg-[#222220]"
+                        : "border-[#D5D4CD] dark:border-[#3F3F3B]"
+                    }`}
+                  >
+                    <UploadCloud className="w-7 h-7 mx-auto text-[#888882]" />
+
+                    <p className="mt-1.5 text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      Arraste uma imagem ou clique para escolher
+                    </p>
+
+                    <p className="mt-0.5 text-[11px] text-[#888882]">
+                      Imagem própria da categoria (PNG, JPG ou WEBP • até 5MB)
+                    </p>
+                  </div>
+                )}
+
+                {categoriaErroImagem && (
+                  <p
+                    role="alert"
+                    className="text-xs font-medium text-red-600 dark:text-red-400"
+                  >
+                    {categoriaErroImagem}
+                  </p>
+                )}
               </div>
 
               {/* Toggle de Status Ativo */}
@@ -1104,6 +1377,21 @@ export default function OperacaoCategoriasPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {categoriaAjuste && (
+        <ImageAdjustModal
+          imageUrl={categoriaAjuste.url}
+          fileName={categoriaAjuste.nome}
+          title="Ajustar imagem da categoria"
+          altText="Imagem da categoria a ser ajustada"
+          helperText="Arraste para reposicionar, use a rolagem do mouse ou os controles para ajustar o zoom. A área visível será a imagem final da categoria."
+          onConfirm={(arquivo) => {
+            confirmarAjusteCategoria(arquivo);
+            cancelarAjusteCategoria();
+          }}
+          onCancel={cancelarAjusteCategoria}
+        />
       )}
     </div>
   );
