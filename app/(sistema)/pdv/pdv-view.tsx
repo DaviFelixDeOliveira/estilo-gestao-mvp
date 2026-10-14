@@ -5,6 +5,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
+import { resolverSrcMidia, normalizarImagemCategoria } from "@/lib/imagens";
 import {
   Search,
   Plus,
@@ -744,6 +745,23 @@ export function PdvView({ initialTab }: PdvViewProps) {
   };
 
   // Manipulação de Produtos (+ e - diretos)
+
+  // Regra de imagem do produto (própria -> categoria se herdar -> nenhuma).
+  // Nunca usa "/images/categorias/image.png".
+  const resolverImagemProdutoPdv = (produto: {
+    imagem_path?: string | null;
+    usar_imagem_categoria?: boolean;
+    categoria?: { imagem_padrao_path?: string | null } | null;
+  } | null): string | null => {
+    if (!produto) return null;
+    const imagemPropria = resolverSrcMidia(produto.imagem_path ?? null);
+    if (imagemPropria) return imagemPropria;
+    if (produto.usar_imagem_categoria !== false) {
+      return normalizarImagemCategoria(produto.categoria?.imagem_padrao_path ?? null);
+    }
+    return null;
+  };
+
   const handleProdutoIncrementar = (produto: ProdutoItem) => {
     if (produto.estoque_atual <= 0) return;
 
@@ -768,7 +786,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
           preco: produto.preco_venda,
           quantidade: 1,
           estoque_atual: produto.estoque_atual,
-          imagem_url: produto.imagem_path || produto.categoria?.imagem_padrao_path || "/images/categorias/image.png",
+          imagem_url: resolverImagemProdutoPdv(produto) ?? undefined,
         },
       ];
     });
@@ -1050,21 +1068,24 @@ export function PdvView({ initialTab }: PdvViewProps) {
           </h1>
         </div>
 
-        {/* Abas Superiores com Navegação por URL */}
-        <div className="inline-flex items-center p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shrink-0">
+        {/* Abas Superiores com Navegação por URL
+            Mobile: controle ocupa a largura toda (w-full) com botões flex-1,
+            textos com truncate e min-w-0 -> nunca estoura a tela.
+            Desktop (sm+): volta a ser inline e estreito, como antes. */}
+        <div className="flex w-full items-center gap-1 p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] sm:inline-flex sm:w-auto sm:shrink-0">
           <button
             type="button"
             onClick={() => handleTabChange("nova-venda")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer sm:flex-none sm:gap-2 sm:px-4 sm:py-2 sm:text-sm ${
               activeTab === "nova-venda"
                 ? "bg-white dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] shadow-sm"
                 : "text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
             }`}
           >
-            <ShoppingBag className="w-4 h-4" />
-            <span>Nova Venda</span>
+            <ShoppingBag className="w-4 h-4 shrink-0" />
+            <span className="truncate">Nova Venda</span>
             {comanda.length > 0 && (
-              <span className="w-5 h-5 rounded-full bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] text-[10px] font-black flex items-center justify-center">
+              <span className="w-5 h-5 shrink-0 rounded-full bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] text-[10px] font-black flex items-center justify-center">
                 {comanda.reduce((acc, i) => acc + i.quantidade, 0)}
               </span>
             )}
@@ -1073,14 +1094,14 @@ export function PdvView({ initialTab }: PdvViewProps) {
           <button
             type="button"
             onClick={() => handleTabChange("historico")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer sm:flex-none sm:gap-2 sm:px-4 sm:py-2 sm:text-sm ${
               activeTab === "historico"
                 ? "bg-white dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] shadow-sm"
                 : "text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
             }`}
           >
-            <Clock className="w-4 h-4" />
-            <span>Histórico de Vendas</span>
+            <Clock className="w-4 h-4 shrink-0" />
+            <span className="truncate">Histórico de Vendas</span>
           </button>
         </div>
       </section>
@@ -1247,7 +1268,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                         const qtdSelecionada = itemNaComanda ? itemNaComanda.quantidade : 0;
                         const esgotado = produto.estoque_atual <= 0;
                         const limiteAtingido = qtdSelecionada >= produto.estoque_atual;
-                        const fotoUrl = produto.imagem_path || produto.categoria?.imagem_padrao_path || "/images/categorias/image.png";
+                        const fotoUrl = resolverImagemProdutoPdv(produto);
 
                         return (
                           <article
@@ -1262,11 +1283,21 @@ export function PdvView({ initialTab }: PdvViewProps) {
                           >
                             <div className="space-y-2">
                               <div className="flex items-start gap-2.5">
-                                <img
-                                  src={fotoUrl}
-                                  alt={produto.nome}
-                                  className="w-12 h-12 rounded-xl object-cover bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B]"
-                                />
+                                {fotoUrl ? (
+                                  <img
+                                    src={fotoUrl}
+                                    alt={produto.nome}
+                                    className="w-12 h-12 rounded-xl object-cover bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                                    onError={(e) => {
+                                      const img = e.target as HTMLImageElement;
+                                      img.style.display = "none";
+                                    }}
+                                  />
+                                ) : (
+                                  <span className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center">
+                                    <Package className="w-5 h-5 text-[#888882]" />
+                                  </span>
+                                )}
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
                                     <span>Produto</span>
