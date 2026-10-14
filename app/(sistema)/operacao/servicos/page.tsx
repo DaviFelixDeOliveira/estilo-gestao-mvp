@@ -15,6 +15,7 @@ import {
   RotateCcw,
   Loader2,
   Info,
+  Trash2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -176,6 +177,8 @@ export default function OperacaoServicosPage() {
   const [formShowInVitrine, setFormShowInVitrine] = useState(true);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [salvando, setSalvando] = useState(false);
+  const [servicoParaExcluir, setServicoParaExcluir] = useState<ServicoItem | null>(null);
+  const [excluindoServico, setExcluindoServico] = useState(false);
 
   // Loading individual para ações rápidas de toggle
   const [loadingActionId, setLoadingActionId] = useState<string | null>(null);
@@ -367,6 +370,37 @@ export default function OperacaoServicosPage() {
     setIsModalOpen(false);
     setEditingService(null);
     setFormErrors({});
+  };
+
+  const confirmarExcluirServico = async () => {
+    if (!servicoParaExcluir) return;
+    setExcluindoServico(true);
+
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc(
+      "excluir_ou_inativar_servico",
+      { p_servico_id: servicoParaExcluir.id }
+    );
+
+    setExcluindoServico(false);
+
+    if (error) {
+      console.error("Erro ao remover serviço:", error);
+      showToast("Não foi possível remover o serviço. Tente novamente.", "error");
+      return;
+    }
+
+    const acao = data?.acao === "excluido" ? "excluido" : "inativado";
+    // Fecha o modal e recarrega a lista
+    const servicoRemovido = servicoParaExcluir;
+    setServicoParaExcluir(null);
+    void recarregarServicos();
+
+    if (acao === "excluido") {
+      showToast(`${servicoRemovido.nome}: serviço excluído com sucesso.`);
+    } else {
+      showToast(`${servicoRemovido.nome}: serviço inativado porque possui histórico de venda.`);
+    }
   };
 
   // Salvar serviço (Insert / Update) com validação de duplicidade
@@ -982,15 +1016,27 @@ export default function OperacaoServicosPage() {
 
                         {/* 7. Ação Editar */}
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditModal(service)}
-                            aria-label={`Editar serviço ${service.nome}`}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] font-medium text-xs transition-colors cursor-pointer"
-                          >
-                            <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
-                            <span>Editar</span>
-                          </button>
+                          <div className="inline-flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditModal(service)}
+                              aria-label={`Editar serviço ${service.nome}`}
+                              title="Editar serviço"
+                              className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-[#FAF9F5] dark:hover:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0] transition-colors cursor-pointer"
+                            >
+                              <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setServicoParaExcluir(service)}
+                              aria-label={`Remover serviço ${service.nome}`}
+                              title="Remover serviço"
+                              className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#222220] hover:bg-red-50 dark:hover:bg-red-950/40 text-[#2F2F2D] dark:text-[#F4F4F0] transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5 text-[#B45309] dark:text-red-400" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -1095,15 +1141,28 @@ export default function OperacaoServicosPage() {
                       </button>
                     </div>
 
-                    {/* Botão Editar */}
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEditModal(service)}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] cursor-pointer"
-                    >
-                      <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
-                      <span>Editar</span>
-                    </button>
+                    {/* Botões Editar e Remover */}
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditModal(service)}
+                        aria-label={`Editar serviço ${service.nome}`}
+                        title="Editar serviço"
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-white dark:hover:bg-[#2B2B29] cursor-pointer"
+                      >
+                        <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setServicoParaExcluir(service)}
+                        aria-label={`Remover serviço ${service.nome}`}
+                        title="Remover serviço"
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-red-50 dark:hover:bg-red-950/40 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-[#B45309] dark:text-red-400" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -1359,6 +1418,69 @@ export default function OperacaoServicosPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {servicoParaExcluir && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl animate-fadeIn overflow-hidden">
+            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#E2E2DD] dark:border-[#3F3F3B]">
+              <h3 className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Remover serviço
+              </h3>
+              <button
+                type="button"
+                onClick={() => setServicoParaExcluir(null)}
+                disabled={excluindoServico}
+                aria-label="Fechar"
+                className="p-1 rounded-lg hover:bg-[#F4F3EF] dark:hover:bg-white/10 cursor-pointer disabled:opacity-40"
+              >
+                <X className="w-4 h-4 text-[#666662] dark:text-[#B8B8B2]" />
+              </button>
+            </div>
+
+            <div className="px-5 py-4 space-y-1.5">
+              <p className="text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Tem certeza que deseja remover o serviço{" "}
+                <span className="text-red-600 dark:text-red-400">
+                  “{servicoParaExcluir.nome}”
+                </span>
+                ?
+              </p>
+              <p className="text-xs leading-5 text-[#666662] dark:text-[#A1A1AA]">
+                Se ele já tiver vendas, será apenas inativado para preservar o histórico.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 px-5 pb-5">
+              <button
+                type="button"
+                onClick={() => setServicoParaExcluir(null)}
+                disabled={excluindoServico}
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] bg-[#F4F3EF] dark:bg-[#2B2B29] hover:bg-[#E9E8E2] dark:hover:bg-[#343432] cursor-pointer disabled:opacity-40"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmarExcluirServico}
+                disabled={excluindoServico}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-red-600 hover:bg-red-700 cursor-pointer disabled:opacity-40"
+              >
+                {excluindoServico ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Removendo...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Remover
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
