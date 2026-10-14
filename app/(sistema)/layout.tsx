@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Shell } from "@/components/sistema/shell";
+import { resolverSrcMidia } from "@/lib/imagens";
 
 export default async function SistemaLayout({
   children,
@@ -48,10 +49,10 @@ export default async function SistemaLayout({
     if (barbearia?.nome_marca) {
       nomeMarca = barbearia.nome_marca;
     }
-    if (barbearia?.logo_path) {
-      // Se for uma URL completa ou path
-      logoUrl = barbearia.logo_path;
-    }
+
+    // Logo: URL completa -> usa direto; caminho do bucket midia-publica
+    // -> gera a URL pública; sem valor válido -> sem logo (fallback visual).
+    logoUrl = resolverSrcMidia(barbearia?.logo_path);
   }
 
   return (

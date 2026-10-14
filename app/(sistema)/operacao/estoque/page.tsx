@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
+import { resolverSrcMidia, normalizarImagemCategoria } from "@/lib/imagens";
 import {
   Package,
   Search,
@@ -119,18 +120,23 @@ function obterImagemProduto(
     | ProdutoEstoqueItem
     | {
         imagem_path?: string | null;
+        usar_imagem_categoria?: boolean;
         categoria?: { imagem_padrao_path?: string | null } | null;
       }
     | null
-): string {
-  if (!produto) return "/images/categorias/image.png";
-  if (produto.imagem_path && produto.imagem_path.trim()) {
-    return produto.imagem_path;
+): string | null {
+  if (!produto) return null;
+
+  // Imagem própria do produto, se existir.
+  const imagemPropria = resolverSrcMidia(produto.imagem_path ?? null);
+  if (imagemPropria) return imagemPropria;
+
+  // Imagem da categoria, apenas se o produto herdar a imagem da categoria.
+  if (produto.usar_imagem_categoria !== false) {
+    return normalizarImagemCategoria(produto.categoria?.imagem_padrao_path ?? null);
   }
-  if (produto.categoria?.imagem_padrao_path && produto.categoria.imagem_padrao_path.trim()) {
-    return produto.categoria.imagem_padrao_path;
-  }
-  return "/images/categorias/image.png";
+
+  return null;
 }
 
 function getSituacaoEstoque(atual: number, minimo: number | null): "ok" | "low" | "out" {
@@ -1078,7 +1084,7 @@ export default function EstoquePage() {
                                 alt={p.nome}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                                  (e.target as HTMLImageElement).style.display = "none";
                                 }}
                               />
                             ) : (
@@ -1195,7 +1201,7 @@ export default function EstoquePage() {
                           alt={p.nome}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                            (e.target as HTMLImageElement).style.display = "none";
                           }}
                         />
                       ) : (
@@ -1359,11 +1365,11 @@ export default function EstoquePage() {
                         <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
                           {obterImagemProduto(selectedProduct) ? (
                             <img
-                              src={obterImagemProduto(selectedProduct)}
+                              src={obterImagemProduto(selectedProduct) ?? ""}
                               alt={selectedProduct.nome}
                               className="w-full h-full object-cover"
                               onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                                (e.target as HTMLImageElement).style.display = "none";
                               }}
                             />
                           ) : (
@@ -1441,11 +1447,11 @@ export default function EstoquePage() {
                                 <div className="flex items-center gap-2.5 min-w-0">
                                   <div className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] overflow-hidden shrink-0 flex items-center justify-center">
                                     <img
-                                      src={obterImagemProduto(p)}
+                                      src={obterImagemProduto(p) ?? ""}
                                       alt={p.nome}
                                       className="w-full h-full object-cover"
                                       onError={(e) => {
-                                        (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                                        (e.target as HTMLImageElement).style.display = "none";
                                       }}
                                     />
                                   </div>
@@ -1852,11 +1858,11 @@ export default function EstoquePage() {
                 <div className="flex items-start gap-4">
                   <div className="w-20 h-20 rounded-2xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
                     <img
-                      src={obterImagemProduto(selectedProduct)}
+                      src={obterImagemProduto(selectedProduct) ?? ""}
                       alt={selectedProduct.nome}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                        (e.target as HTMLImageElement).style.display = "none";
                       }}
                     />
                   </div>
@@ -2138,7 +2144,7 @@ export default function EstoquePage() {
                                 alt={m.produto?.nome || "Produto"}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "/images/categorias/image.png";
+                                  (e.target as HTMLImageElement).style.display = "none";
                                 }}
                               />
                             ) : (
