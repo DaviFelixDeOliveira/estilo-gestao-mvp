@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import {
   TrendingUp,
   TrendingDown,
@@ -298,6 +299,8 @@ export default function RelatoriosPage() {
           Analise as vendas, entradas, saídas e resultados da sua barbearia por período.
         </p>
       </header>
+
+      <ConfiguracaoTabs activeTab="relatorios" />
 
       {/* ======================================================== */}
       {/* 2. BOTÃO EXPORTAR */}

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback, useMemo, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
+import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import {
   TrendingDown,
   TrendingUp,
@@ -1093,6 +1094,8 @@ export default function FinanceiroPage() {
           </button>
         </div>
       </header>
+
+      <ConfiguracaoTabs activeTab="financeiro" />
 
       {/* ======================================================== */}
       {/* 2. EDUCATIONAL BANNER */}

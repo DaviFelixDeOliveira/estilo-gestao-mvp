@@ -41,8 +41,30 @@ function getHeaderTitles(pathname: string): { title: string; breadcrumb: string 
   if (pathname === "/configuracoes/negocio/financeiro" || pathname === "/financeiro") {
     return { title: "Financeiro", breadcrumb: "Configurações / Negócio / Financeiro" };
   }
-  if (pathname === "/configuracoes") {
+  if (
+    pathname === "/configuracoes/negocio/relatorio" ||
+    pathname === "/configuracoes/negocio/relatorios" ||
+    pathname === "/relatorios"
+  ) {
+    return { title: "Relatórios", breadcrumb: "Configurações / Negócio / Relatórios" };
+  }
+  if (pathname === "/configuracoes/negocio/vitrine") {
+    return { title: "Vitrine Digital", breadcrumb: "Configurações / Negócio / Vitrine Digital" };
+  }
+  if (
+    pathname === "/configuracoes/barbearia/dados" ||
+    pathname === "/configuracoes"
+  ) {
     return { title: "Dados da barbearia", breadcrumb: "Configurações / Barbearia" };
+  }
+  if (pathname === "/configuracoes/barbearia/endereco") {
+    return { title: "Endereço", breadcrumb: "Configurações / Barbearia / Endereço" };
+  }
+  if (pathname === "/configuracoes/barbearia/horarios") {
+    return { title: "Horários de atendimento", breadcrumb: "Configurações / Barbearia / Horários" };
+  }
+  if (pathname === "/configuracoes/barbearia/formas-pagamento") {
+    return { title: "Formas de pagamento", breadcrumb: "Configurações / Barbearia / Formas de pagamento" };
   }
   if (pathname.startsWith("/configuracoes")) {
     return { title: "Configurações", breadcrumb: "Configurações" };

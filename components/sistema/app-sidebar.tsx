@@ -351,9 +351,9 @@ export function AppSidebar({
                 Barbearia
               </span>
               <Link
-                href="/configuracoes"
+                href="/configuracoes/barbearia/dados"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                  pathname === "/configuracoes"
+                  pathname === "/configuracoes/barbearia/dados"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
@@ -361,9 +361,9 @@ export function AppSidebar({
                 Dados da barbearia
               </Link>
               <Link
-                href="/configuracoes"
+                href="/configuracoes/barbearia/endereco"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                  pathname === "/configuracoes/endereco"
+                  pathname === "/configuracoes/barbearia/endereco"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
@@ -371,9 +371,9 @@ export function AppSidebar({
                 Endereço
               </Link>
               <Link
-                href="/configuracoes"
+                href="/configuracoes/barbearia/horarios"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                  pathname === "/configuracoes/horarios"
+                  pathname === "/configuracoes/barbearia/horarios"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
@@ -381,9 +381,9 @@ export function AppSidebar({
                 Horários
               </Link>
               <Link
-                href="/configuracoes"
+                href="/configuracoes/barbearia/formas-pagamento"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                  pathname === "/configuracoes/pagamento"
+                  pathname === "/configuracoes/barbearia/formas-pagamento"
                     ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
