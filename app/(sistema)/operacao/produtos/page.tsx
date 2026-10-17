@@ -85,7 +85,7 @@ export const normalizeProductName = (name: string): string => {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
-    .replace(/\s*\/\s*/g, "/");
+    .split("/").map((parte) => parte.trim()).join("/");
 };
 
 interface FormProdutoState {
@@ -2021,10 +2021,10 @@ export default function OperacaoProdutosPage() {
 
               {/* Nome do Produto */}
               <div className="space-y-1">
-                <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-prod-nome" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Nome do Produto <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input id="sonar-prod-nome"
                   type="text"
                   required
                   value={formProduto.nome}
@@ -2050,10 +2050,10 @@ export default function OperacaoProdutosPage() {
 
               {/* Descrição */}
               <div className="space-y-1">
-                <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-prod-descricao" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Descrição <span className="text-[10px] font-normal text-[#888882]">(opcional)</span>
                 </label>
-                <textarea
+                <textarea id="sonar-prod-descricao"
                   rows={2}
                   value={formProduto.descricao}
                   onChange={(e) => setFormProduto({ ...formProduto, descricao: e.target.value })}
@@ -2065,14 +2065,14 @@ export default function OperacaoProdutosPage() {
               {/* Preços (Venda e Custo) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-prod-preco-venda" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Preço de Venda (R$) <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
                       R$
                     </span>
-                    <input
+                    <input id="sonar-prod-preco-venda"
                       type="text"
                       required
                       value={formProduto.preco_venda}
@@ -2098,14 +2098,14 @@ export default function OperacaoProdutosPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-prod-preco-custo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Preço de Custo (R$)
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
                       R$
                     </span>
-                    <input
+                    <input id="sonar-prod-preco-custo"
                       type="text"
                       value={formProduto.preco_custo}
                       onChange={(e) => {
@@ -2186,10 +2186,10 @@ export default function OperacaoProdutosPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-prod-estoque-minimo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Estoque Mínimo (alerta)
                   </label>
-                  <input
+                  <input id="sonar-prod-estoque-minimo"
                     type="number"
                     min="0"
                     step="1"
@@ -2398,15 +2398,15 @@ export default function OperacaoProdutosPage() {
               {/* Toggles: Ativo & Vitrine */}
               <div className="pt-2 border-t border-[#E2E2DD] dark:border-[#3F3F3B] space-y-3">
                 <label className="flex items-center justify-between cursor-pointer">
-                  <div>
+                  <span className="block">
                     <span className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block">
                       Produto Ativo
                     </span>
                     <span className="text-[11px] text-[#888882] block">
                       Permite que o produto apareça nas vendas do PDV se houver estoque
                     </span>
-                  </div>
-                  <input
+                  </span>
+                  <input aria-label="Produto Ativo"
                     type="checkbox"
                     checked={formProduto.ativo}
                     onChange={(e) =>
@@ -2417,15 +2417,15 @@ export default function OperacaoProdutosPage() {
                 </label>
 
                 <label className="flex items-center justify-between cursor-pointer">
-                  <div>
+                  <span className="block">
                     <span className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block">
                       Visível na Vitrine Digital
                     </span>
                     <span className="text-[11px] text-[#888882] block">
                       Exibe o produto para visualização dos clientes na vitrine pública
                     </span>
-                  </div>
-                  <input
+                  </span>
+                  <input aria-label="Visível na Vitrine Digital"
                     type="checkbox"
                     checked={formProduto.visivel_vitrine}
                     onChange={(e) =>

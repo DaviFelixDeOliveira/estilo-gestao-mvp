@@ -104,9 +104,7 @@ function criarServicosIniciais(
 }
 
 function novoFormId() {
-  return `svc_${Date.now()}_${Math.random()
-    .toString(36)
-    .substring(2, 6)}`;
+  return `svc_${Date.now()}_${crypto.randomUUID()}`;
 }
 
 // Considera o serviço completamente vazio (nome, descrição,

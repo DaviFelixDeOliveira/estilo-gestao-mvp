@@ -52,7 +52,7 @@ export const normalizeCategoryName = (name: string): string => {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
-    .replace(/\s*\/\s*/g, "/");
+    .split("/").map((parte) => parte.trim()).join("/");
 };
 
 export const DEFAULT_CATEGORY_IMAGE = "";
@@ -1120,10 +1120,10 @@ export default function OperacaoCategoriasPage() {
 
               {/* Nome da Categoria */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-cat-nome" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Nome da Categoria <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input id="sonar-cat-nome"
                   type="text"
                   required
                   value={formName}
@@ -1347,15 +1347,15 @@ export default function OperacaoCategoriasPage() {
               {/* Toggle de Status Ativo */}
               <div className="pt-3 border-t border-[#E2E2DD] dark:border-[#3F3F3B]">
                 <label className="flex items-center justify-between cursor-pointer">
-                  <div>
+                  <span className="block">
                     <span className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block">
                       Categoria Ativa
                     </span>
                     <span className="text-[11px] text-[#888882] block">
                       Categorias ativas ficam disponíveis para seleção em novos produtos
                     </span>
-                  </div>
-                  <input
+                  </span>
+                  <input aria-label="Categoria Ativa"
                     type="checkbox"
                     checked={formIsActive}
                     onChange={(e) => setFormIsActive(e.target.checked)}

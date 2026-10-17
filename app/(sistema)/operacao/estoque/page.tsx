@@ -1338,7 +1338,7 @@ export default function EstoquePage() {
             className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsMovementModalOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />
@@ -1529,10 +1529,10 @@ export default function EstoquePage() {
                 {movementType === "add" && (
                   <div className="space-y-4 animate-fadeIn">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-quantidade-add" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Quantidade a adicionar *
                       </label>
-                      <input
+                      <input id="sonar-est-quantidade-add"
                         type="number"
                         min="1"
                         step="1"
@@ -1544,14 +1544,14 @@ export default function EstoquePage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-custo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Custo unitário desta reposição <span className="font-normal text-[#888882]">(opcional)</span>
                       </label>
                       <div className="relative">
                         <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
                           R$
                         </span>
-                        <input
+                        <input id="sonar-est-custo"
                           type="text"
                           value={costInput}
                           onChange={(e) => setCostInput(e.target.value)}
@@ -1562,10 +1562,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-observacao-add" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Observação <span className="font-normal text-[#888882]">(opcional)</span>
                       </label>
-                      <input
+                      <input id="sonar-est-observacao-add"
                         type="text"
                         value={observationInput}
                         onChange={(e) => setObservationInput(e.target.value)}
@@ -1617,10 +1617,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-contagem" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Estoque físico contado *
                       </label>
-                      <input
+                      <input id="sonar-est-contagem"
                         type="number"
                         min="0"
                         step="1"
@@ -1631,10 +1631,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-motivo-ajuste" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Motivo do ajuste <span className="font-normal text-[#888882]">(opcional)</span>
                       </label>
-                      <input
+                      <input id="sonar-est-motivo-ajuste"
                         type="text"
                         value={observationInput}
                         onChange={(e) => setObservationInput(e.target.value)}
@@ -1684,10 +1684,10 @@ export default function EstoquePage() {
                 {movementType === "loss" && (
                   <div className="space-y-4 animate-fadeIn">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-quantidade-perda" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Quantidade perdida *
                       </label>
-                      <input
+                      <input id="sonar-est-quantidade-perda"
                         type="number"
                         min="1"
                         max={selectedProduct?.estoque_atual ?? 1}
@@ -1723,10 +1723,10 @@ export default function EstoquePage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-est-detalhes-perda" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Detalhes adicionais <span className="font-normal text-[#888882]">(opcional)</span>
                       </label>
-                      <input
+                      <input id="sonar-est-detalhes-perda"
                         type="text"
                         value={observationInput}
                         onChange={(e) => setObservationInput(e.target.value)}
@@ -1829,7 +1829,7 @@ export default function EstoquePage() {
             className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsDetailsModalOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />
@@ -2065,7 +2065,7 @@ export default function EstoquePage() {
             className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsHistoryModalOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />

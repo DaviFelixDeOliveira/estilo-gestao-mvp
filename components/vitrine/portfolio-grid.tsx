@@ -893,7 +893,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
                     )}
                   </div>
                 </div>
-                <div data-arraste-portfolio="true" onContextMenu={(e) => e.preventDefault()} className="relative aspect-[4/3] cursor-grab select-none touch-none overflow-hidden bg-[#181817] active:cursor-grabbing">
+                <div data-arraste-portfolio="true" onContextMenu={(e) => e.preventDefault()} className="relative aspect-4/3 cursor-grab select-none touch-none overflow-hidden bg-[#181817] active:cursor-grabbing">
                   {src ? <Image src={src} alt={foto.titulo || `Trabalho ${indice + 1}`} fill unoptimized className="object-cover" draggable={false} /> : <ImagePlus className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-[#888882]" />}
                   <button type="button" aria-label="Ampliar foto" title="Ampliar foto" className="absolute bottom-2 right-2 z-10 rounded-lg bg-black/75 p-2.5 text-white transition-colors hover:bg-amber-400 hover:text-[#181817] focus-visible:outline-2 focus-visible:outline-amber-400 active:bg-amber-300" onClick={() => setAmpliada(foto)}><Maximize2 className="h-4 w-4" /></button>
                 </div>
@@ -908,7 +908,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
       )}
 
       {fantasma && atualArrastada && typeof document !== "undefined" && createPortal(
-        <div className="pointer-events-none fixed z-[90] flex flex-col overflow-hidden rounded-2xl border-2 border-amber-400 bg-[#222220] shadow-2xl"
+        <div className="pointer-events-none fixed z-90 flex flex-col overflow-hidden rounded-2xl border-2 border-amber-400 bg-[#222220] shadow-2xl"
           style={{ left: fantasma.x, top: fantasma.y, width: fantasma.largura, height: fantasma.altura }}>
           <div className="flex items-center justify-between bg-amber-950/80 px-3 py-2 text-xs font-black text-amber-300"><span><GripVertical className="mr-1 inline h-3 w-3" /> Reposicionando</span><span>#{fotos.findIndex((f) => f.id === atualArrastada.id) + 1}</span></div>
           <div className="relative min-h-0 flex-1 bg-[#181817]">{imagemArrastada && <Image src={imagemArrastada} alt="Foto em movimento" fill unoptimized className="object-cover" />}</div>
@@ -919,7 +919,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
 
       {editando !== null && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[105] flex items-start justify-center overflow-y-auto bg-black/75 p-2 sm:items-center sm:p-4"
+          className="fixed inset-0 z-105 flex items-start justify-center overflow-y-auto bg-black/75 p-2 sm:items-center sm:p-4"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget && !ocupado) fecharEditor();
           }}
@@ -965,7 +965,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
               />
 
               {previaUrl || imagemAtual ? (
-                <div className="group relative mt-2 aspect-[4/3] overflow-hidden rounded-2xl border border-[#3F3F3B] bg-[#181817]">
+                <div className="group relative mt-2 aspect-4/3 overflow-hidden rounded-2xl border border-[#3F3F3B] bg-[#181817]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={previaUrl ?? imagemAtual ?? ""}
@@ -1090,7 +1090,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
           role="dialog"
           aria-modal="true"
           aria-label="Foto ampliada do portfólio"
-          className="fixed inset-0 z-[110] flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-black/95 p-3 sm:p-6"
+          className="fixed inset-0 z-110 flex h-dvh w-screen items-center justify-center overflow-hidden bg-black/95 p-3 sm:p-6"
           onClick={() => setAmpliada(null)}
         >
           <button
@@ -1099,7 +1099,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
             title="Fechar foto"
             onClick={() => setAmpliada(null)}
             style={{ top: "max(12px, env(safe-area-inset-top))" }}
-            className="fixed right-3 z-[111] flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white shadow-lg transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-amber-400 sm:right-6"
+            className="fixed right-3 z-111 flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white shadow-lg transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-amber-400 sm:right-6"
           >
             <X className="h-6 w-6" />
           </button>
@@ -1125,7 +1125,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-black/75 p-3 backdrop-blur-sm sm:p-5"
+            className="fixed inset-0 z-120 flex items-center justify-center overflow-y-auto bg-black/75 p-3 backdrop-blur-sm sm:p-5"
             onClick={(e) => {
               if (
                 e.target === e.currentTarget &&

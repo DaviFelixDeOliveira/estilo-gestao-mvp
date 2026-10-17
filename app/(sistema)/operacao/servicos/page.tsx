@@ -54,7 +54,7 @@ export function normalizeServiceName(name: string): string {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
-    .replace(/\s*\/\s*/g, "/");
+    .split("/").map((parte) => parte.trim()).join("/");
 }
 
 function formatBRL(val: number | null | undefined): string {
@@ -1208,10 +1208,10 @@ export default function OperacaoServicosPage() {
             <form onSubmit={handleSaveService} className="p-4 sm:p-5 overflow-y-auto space-y-4">
               {/* Campo 1: Nome */}
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-srv-nome" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Nome do Serviço <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input id="sonar-srv-nome"
                   type="text"
                   required
                   value={formName}
@@ -1233,10 +1233,10 @@ export default function OperacaoServicosPage() {
 
               {/* Campo 2: Descrição */}
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-srv-descricao" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Descrição detalhada
                 </label>
-                <textarea
+                <textarea id="sonar-srv-descricao"
                   rows={2}
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
@@ -1249,14 +1249,14 @@ export default function OperacaoServicosPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {/* Preço de Venda */}
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-srv-preco" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Preço de Venda <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#888882]">
                       R$
                     </span>
-                    <input
+                    <input id="sonar-srv-preco"
                       type="text"
                       required
                       inputMode="decimal"
@@ -1280,14 +1280,14 @@ export default function OperacaoServicosPage() {
 
                 {/* Custo Direto */}
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-srv-custo" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Custo Direto (opcional)
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#888882]">
                       R$
                     </span>
-                    <input
+                    <input id="sonar-srv-custo"
                       type="text"
                       inputMode="decimal"
                       value={formCost}

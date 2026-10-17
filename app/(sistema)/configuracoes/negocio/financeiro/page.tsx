@@ -226,8 +226,8 @@ function parseMoney(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
   const normalized = trimmed.replace(/\./g, "").replace(",", ".");
-  const parsed = parseFloat(normalized);
-  if (isNaN(parsed)) return null;
+  const parsed = Number.parseFloat(normalized);
+  if (Number.isNaN(parsed)) return null;
   return Math.round(parsed * 100) / 100;
 }
 
@@ -527,7 +527,9 @@ export default function FinanceiroPage() {
         }
       }
     };
-    carregarInicial();
+    void carregarInicial().catch((erro) => {
+      console.error("Falha ao carregar dados financeiros:", erro);
+    });
     return () => {
       ativo = false;
     };
@@ -782,8 +784,8 @@ export default function FinanceiroPage() {
         setIsModalOpen(false);
         await Promise.all([carregarDespesas(), carregarResumo()]);
       } else {
-        const diaNum = parseInt(formDueDay, 10);
-        if (isNaN(diaNum) || diaNum < 1 || diaNum > 31) {
+        const diaNum = Number.parseInt(formDueDay, 10);
+        if (Number.isNaN(diaNum) || diaNum < 1 || diaNum > 31) {
           setFormError("Informe um dia de vencimento válido (entre 1 e 31).");
           setLoadingAcao(false);
           return;
@@ -2034,7 +2036,7 @@ export default function FinanceiroPage() {
             aria-labelledby="modal-title"
             className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex items-center justify-center p-3 sm:p-5 animate-fadeIn"
           >
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsModalOpen(false)}
               className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity z-40"
             />
@@ -2108,10 +2110,10 @@ export default function FinanceiroPage() {
 
                 {/* Nome */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-nome-despesa" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Nome da despesa *
                   </label>
-                  <input
+                  <input id="sonar-fin-nome-despesa"
                     type="text"
                     required
                     value={formName}
@@ -2127,10 +2129,10 @@ export default function FinanceiroPage() {
 
                 {/* Categoria */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-categoria" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Categoria *
                   </label>
-                  <select
+                  <select id="sonar-fin-categoria"
                     value={formCategory}
                     onChange={(e) => {
                       const novaCat = e.target.value as CategoriaDespesa;
@@ -2173,10 +2175,10 @@ export default function FinanceiroPage() {
 
                   {!isRecurring ? (
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-fin-data-despesa" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Data do pagamento *
                       </label>
-                      <input
+                      <input id="sonar-fin-data-despesa"
                         type="date"
                         required
                         value={formDate}
@@ -2186,10 +2188,10 @@ export default function FinanceiroPage() {
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      <label htmlFor="sonar-fin-vencimento" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                         Dia do vencimento *
                       </label>
-                      <input
+                      <input id="sonar-fin-vencimento"
                         type="number"
                         min="1"
                         max="31"
@@ -2206,10 +2208,10 @@ export default function FinanceiroPage() {
                 {/* Vínculo opcional de Estoque */}
                 {!isRecurring && formCategory === "ESTOQUE" && (
                   <div className="rounded-xl border border-indigo-200/80 dark:border-indigo-900/50 bg-indigo-50/40 dark:bg-indigo-950/20 p-3 space-y-1">
-                    <label className="block text-xs font-bold text-indigo-950 dark:text-indigo-300">
+                    <label htmlFor="sonar-fin-vinculo-estoque" className="block text-xs font-bold text-indigo-950 dark:text-indigo-300">
                       Vincular com Reposição de Estoque (Opcional)
                     </label>
-                    <select
+                    <select id="sonar-fin-vinculo-estoque"
                       value={formMovId}
                       onChange={(e) => setFormMovId(e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white"
@@ -2228,10 +2230,10 @@ export default function FinanceiroPage() {
 
                 {/* Descrição */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-descricao" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Descrição <span className="font-normal text-[#888882]">(opcional)</span>
                   </label>
-                  <textarea
+                  <textarea id="sonar-fin-descricao"
                     rows={3}
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
@@ -2283,7 +2285,7 @@ export default function FinanceiroPage() {
             aria-modal="true"
             className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 animate-fadeIn"
           >
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsPayModalOpen(false)}
               className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity z-40"
             />
@@ -2322,14 +2324,14 @@ export default function FinanceiroPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-valor-pago" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Valor efetivamente pago *
                   </label>
                   <div className="relative">
                     <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#888882]">
                       R$
                     </span>
-                    <input
+                    <input id="sonar-fin-valor-pago"
                       type="text"
                       inputMode="decimal"
                       value={payAmountInput}
@@ -2340,10 +2342,10 @@ export default function FinanceiroPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-data-pagamento" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Data do pagamento *
                   </label>
-                  <input
+                  <input id="sonar-fin-data-pagamento"
                     type="date"
                     value={payDateInput}
                     onChange={(e) => setPayDateInput(e.target.value)}
@@ -2386,7 +2388,7 @@ export default function FinanceiroPage() {
             aria-modal="true"
             className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 animate-fadeIn"
           >
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsIgnoreModalOpen(false)}
               className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity z-40"
             />
@@ -2441,7 +2443,7 @@ export default function FinanceiroPage() {
                 {/* Campo Motivo Opcional com Limite de 200 caracteres */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                    <label htmlFor="sonar-fin-motivo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                       Motivo (opcional)
                     </label>
                     <span
@@ -2454,7 +2456,7 @@ export default function FinanceiroPage() {
                       {ignoreReasonInput.length}/200
                     </span>
                   </div>
-                  <textarea
+                  <textarea id="sonar-fin-motivo"
                     rows={3}
                     maxLength={200}
                     value={ignoreReasonInput}
@@ -2501,7 +2503,7 @@ export default function FinanceiroPage() {
             aria-modal="true"
             className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 animate-fadeIn"
           >
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setConfirmModalData((prev) => ({ ...prev, isOpen: false }))}
               className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity z-40"
             />
@@ -2550,7 +2552,7 @@ export default function FinanceiroPage() {
             aria-modal="true"
             className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 animate-fadeIn"
           >
-            <div
+            <button type="button" tabIndex={-1} aria-label="Fechar modal"
               onClick={() => setIsCustomPeriodModalOpen(false)}
               className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity z-40"
             />
@@ -2583,10 +2585,10 @@ export default function FinanceiroPage() {
 
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-data-inicial" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Data inicial *
                   </label>
-                  <input
+                  <input id="sonar-fin-data-inicial"
                     type="date"
                     required
                     value={tempStart}
@@ -2596,10 +2598,10 @@ export default function FinanceiroPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                  <label htmlFor="sonar-fin-data-final" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Data final *
                   </label>
-                  <input
+                  <input id="sonar-fin-data-final"
                     type="date"
                     required
                     value={tempEnd}

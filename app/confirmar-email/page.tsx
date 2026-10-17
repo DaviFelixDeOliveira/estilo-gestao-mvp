@@ -350,7 +350,6 @@ export default function ConfirmarEmailPage() {
                   pattern="[0-9]*"
                   maxLength={1}
                   value={numero}
-                  autoFocus={index === 0}
                   onChange={(event) =>
                     handleChange(
                       index,

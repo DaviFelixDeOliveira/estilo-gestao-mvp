@@ -911,10 +911,10 @@ export function DashboardView() {
               )}
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-dash-inicio" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Data Inicial <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input id="sonar-dash-inicio"
                   type="date"
                   max={todayStr}
                   value={tempStartDate}
@@ -924,10 +924,10 @@ export function DashboardView() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                <label htmlFor="sonar-dash-fim" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Data Final <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input id="sonar-dash-fim"
                   type="date"
                   max={todayStr}
                   value={tempEndDate}
@@ -1101,7 +1101,7 @@ function gerarPontosGrafico(
       despesas.forEach((dp) => {
         const dStr = dp.data_despesa || dp.created_at || "";
         const parts = dStr.split("-");
-        const day = parts.length >= 3 ? parseInt(parts[2], 10) : new Date(dStr).getDate();
+        const day = parts.length >= 3 ? Number.parseInt(parts[2], 10) : new Date(dStr).getDate();
         if (day >= slot.startD && day <= slot.endD) {
           sai += Number(dp.valor ?? 0);
         }
@@ -1138,7 +1138,7 @@ function gerarPontosGrafico(
       despesas.forEach((dp) => {
         const dStr = dp.data_despesa || dp.created_at || "";
         const parts = dStr.split("-");
-        const mesIdx = parts.length >= 2 ? parseInt(parts[1], 10) - 1 : new Date(dStr).getMonth();
+        const mesIdx = parts.length >= 2 ? Number.parseInt(parts[1], 10) - 1 : new Date(dStr).getMonth();
         if (mesIdx === idx) {
           sai += Number(dp.valor ?? 0);
         }

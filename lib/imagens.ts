@@ -37,7 +37,9 @@ export function urlPublicaStorage(
 ): string | null {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base) return null;
-  const baseUrl = base.replace(/\/+$/, "");
+  let fim = base.length;
+  while (fim > 0 && base[fim - 1] === "/") fim--;
+  const baseUrl = base.slice(0, fim);
   return `${baseUrl}/storage/v1/object/public/${bucket}/${path}`;
 }
 

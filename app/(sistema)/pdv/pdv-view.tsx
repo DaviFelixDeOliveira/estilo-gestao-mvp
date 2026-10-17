@@ -983,7 +983,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
     setSplitPayments((prev) => [
       ...prev,
       {
-        id: `pay-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: `pay-${Date.now()}-${crypto.randomUUID()}`,
         forma_pagamento: nextForma,
         valor: Math.round(defaultAmount * 100) / 100,
       },
@@ -999,7 +999,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
       prev.map((item) => {
         if (item.id === id) {
           if (field === "valor") {
-            const num = parseFloat(value.replace(",", ".")) || 0;
+            const num = Number.parseFloat(value.replace(",", ".")) || 0;
             return { ...item, valor: Math.max(0, num) };
           }
           return { ...item, forma_pagamento: value as FormaPagamentoTipo };
@@ -1016,8 +1016,8 @@ export function PdvView({ initialTab }: PdvViewProps) {
   // Aplicar Desconto
   const handleAplicarDesconto = (e: React.FormEvent) => {
     e.preventDefault();
-    const val = parseFloat(discountValueInput.replace(",", "."));
-    if (isNaN(val) || val <= 0) {
+    const val = Number.parseFloat(discountValueInput.replace(",", "."));
+    if (Number.isNaN(val) || val <= 0) {
       showToast("Informe um valor de desconto válido maior que zero.", "error");
       return;
     }
@@ -2428,10 +2428,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
                 </div>
                 {/* Observações */}
                 <div className="space-y-1.5 pt-1">
-                  <label className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2] block">
+                  <label htmlFor="sonar-pdv-observacoes" className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2] block">
                     Observações (opcional)
                   </label>
-                  <input
+                  <input id="sonar-pdv-observacoes"
                     type="text"
                     value={observacaoVenda}
                     onChange={(e) => setObservacaoVenda(e.target.value)}
@@ -2701,7 +2701,6 @@ export function PdvView({ initialTab }: PdvViewProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           >
             <div
-              onClick={(e) => e.stopPropagation()}
               className="w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] flex flex-col max-h-[90vh] overflow-hidden animate-slideUp"
             >
               {/* Header */}
@@ -2958,10 +2957,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2] block">
+                <label htmlFor="sonar-pdv-motivo-cancelamento" className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2] block">
                   Motivo do cancelamento (opcional):
                 </label>
-                <input
+                <input id="sonar-pdv-motivo-cancelamento"
                   type="text"
                   maxLength={200}
                   value={motivoCancelamento}

@@ -86,7 +86,7 @@ function normalizeTime(value: string | null) {
 
 function opcoesHorario(valor: string) {
   if (valor && !OPCOES_HORARIO.includes(valor)) {
-    return [...OPCOES_HORARIO, valor].sort();
+return [...OPCOES_HORARIO, valor].sort((a, b) => a.localeCompare(b));
   }
 
   return OPCOES_HORARIO;

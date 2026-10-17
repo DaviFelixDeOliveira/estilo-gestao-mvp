@@ -264,7 +264,9 @@ export function LogoUploader({
     const file = event.target.files?.[0];
 
     if (file) {
-      processarArquivo(file);
+      void processarArquivo(file).catch(() => {
+        setFileError("Não foi possível processar a imagem. Tente novamente.");
+      });
     }
   }
 
@@ -298,7 +300,7 @@ export function LogoUploader({
       <input
         ref={fileInputRef}
         id="logo-file-input"
-        type="file"
+        type="file" tabIndex={-1}
         accept="image/jpeg,image/png,image/webp"
         className="sr-only"
         onChange={handleInputChange}
@@ -359,8 +361,7 @@ export function LogoUploader({
           </div>
         </div>
       ) : (
-        <label
-          htmlFor="logo-file-input"
+        <div role="button" aria-label="Escolher foto do logotipo" onClick={() => fileInputRef.current?.click()}
           onDragOver={(event) => {
             event.preventDefault();
             setIsDragging(true);
@@ -377,7 +378,9 @@ export function LogoUploader({
               event.dataTransfer.files?.[0];
 
             if (file) {
-              processarArquivo(file);
+              void processarArquivo(file).catch(() => {
+                setFileError("Não foi possível processar a imagem. Tente novamente.");
+              });
             }
           }}
           tabIndex={0}
@@ -483,7 +486,7 @@ export function LogoUploader({
           <span className="mt-0.5 text-[11px] text-white/75">
             JPG, PNG ou WEBP • máximo de 5 MB
           </span>
-        </label>
+        </div>
       )}
 
       {erroExibido && (

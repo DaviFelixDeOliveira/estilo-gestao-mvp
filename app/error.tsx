@@ -9,7 +9,7 @@ interface ErrorProps {
   reset: () => void;
 }
 
-export default function Error({ error, reset }: ErrorProps) {
+export default function ApplicationErrorPage({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log interno em console sem expor detalhes sensíveis na UI
     console.error("Erro capturado pela camada de aplicação:", error?.message);

@@ -21,7 +21,16 @@ export async function POST(request: Request) {
     const senha = body.senha ?? "";
     const confirmarSenha = body.confirmarSenha ?? "";
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const arrobaEmail = email.indexOf("@");
+    const dominioEmail = arrobaEmail >= 0 ? email.slice(arrobaEmail + 1) : "";
+    const pontoDominio = dominioEmail.indexOf(".", 1);
+
+    if (
+      !email ||
+      !/^[^\s@]+@[^\s@]+$/.test(email) ||
+      pontoDominio < 1 ||
+      pontoDominio >= dominioEmail.length - 1
+    ) {
       return NextResponse.json(
         { erro: "Informe um e-mail válido." },
         { status: 400 }
