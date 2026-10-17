@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import {
   TrendingUp,
   TrendingDown,
@@ -251,12 +250,35 @@ export default function RelatoriosPage() {
   }, [dados]);
 
   // Forma de pagamento de maior volume
-  const maiorEntradaPagamento = useMemo(() => {
-    if (!dados || !dados.entradasPorPagamento || dados.entradasPorPagamento.length === 0) return null;
-    return dados.entradasPorPagamento[0];
-  }, [dados]);
 
-  return (
+  // Total das vendas concluídas no período
+  const totalVendasPagamento = Math.max(
+    0,
+    dados?.metrics.faturamento ?? 0
+  );
+
+  // Soma das vendas com forma de pagamento informada
+  const totalComFormaInformada = (
+    dados?.entradasPorPagamento ?? []
+  ).reduce((total, item) => total + item.amount, 0);
+
+  // Diferença sem forma de pagamento identificada
+  const totalSemFormaInformada = Math.max(
+    0,
+    totalVendasPagamento - totalComFormaInformada
+  );
+
+  const percentualComFormaInformada =
+    totalVendasPagamento > 0
+      ? (totalComFormaInformada / totalVendasPagamento) * 100
+      : 0;
+
+  const percentualSemFormaInformada =
+    totalVendasPagamento > 0
+      ? (totalSemFormaInformada / totalVendasPagamento) * 100
+      : 0;
+
+    return (
     <div className="space-y-4 sm:space-y-6 animate-fadeIn pb-12 max-w-full overflow-hidden">
       {/* Toast Notification */}
       {toast && (
@@ -300,7 +322,6 @@ export default function RelatoriosPage() {
         </p>
       </header>
 
-      <ConfiguracaoTabs activeTab="relatorios" />
 
       {/* ======================================================== */}
       {/* 2. BOTÃO EXPORTAR */}
@@ -587,55 +608,121 @@ export default function RelatoriosPage() {
                   </div>
                 </article>
 
-                {/* Card 2: Entradas por forma de pagamento */}
+
+                {/* Card 2: Vendas por forma de pagamento */}
                 <article className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#20201E] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
                       <h3 className="text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                        Entradas por forma de pagamento
+                        Vendas por forma de pagamento
                       </h3>
-                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
-                        100% recebido
+
+                      <span className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2]">
+                        {percentualComFormaInformada.toLocaleString(
+                          "pt-BR",
+                          { maximumFractionDigits: 1 }
+                        )}
+                        % identificado
                       </span>
                     </div>
+
                     <p className="text-[11px] sm:text-xs text-[#666662] dark:text-[#B8B8B2] mb-4">
-                      Distribuição dos valores recebidos por meio de pagamento.
+                      Distribuição das vendas concluídas por forma
+                      de pagamento informada.
                     </p>
 
                     <div className="space-y-3.5">
-                      {dados.entradasPorPagamento.length === 0 ? (
-                        <div className="py-4 text-center text-xs text-[#888882]">
-                          Nenhum pagamento registrado no período.
-                        </div>
-                      ) : (
-                        dados.entradasPorPagamento.map((item) => (
-                          <div key={item.name} className="space-y-1">
-                            <div className="flex justify-between text-xs font-semibold">
-                              <span className="text-[#2F2F2D] dark:text-[#F4F4F0]">{item.name}</span>
-                              <span className="text-[#666662] dark:text-[#B8B8B2]">
-                                {formatMoney(item.amount)}{" "}
-                                <strong className="text-[#2F2F2D] dark:text-[#F4F4F0] ml-1">
-                                  ({item.percentage}%)
-                                </strong>
-                              </span>
-                            </div>
-                            <div className="w-full h-2 rounded-full bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden">
-                              <div
-                                className="h-full bg-emerald-600 dark:bg-emerald-400 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(100, item.percentage)}%` }}
-                              />
-                            </div>
+                      {dados.entradasPorPagamento.map((item) => (
+                        <div key={item.name} className="space-y-1">
+                          <div className="flex justify-between gap-3 text-xs font-semibold">
+                            <span className="text-[#2F2F2D] dark:text-[#F4F4F0]">
+                              {item.name}
+                            </span>
+
+                            <span className="text-[#666662] dark:text-[#B8B8B2] text-right">
+                              {formatMoney(item.amount)}{" "}
+                              <strong className="text-[#2F2F2D] dark:text-[#F4F4F0] ml-1">
+                                ({item.percentage}%)
+                              </strong>
+                            </span>
                           </div>
-                        ))
+
+                          <div className="w-full h-2 rounded-full bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden">
+                            <div
+                              className="h-full bg-emerald-600 dark:bg-emerald-400 rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(
+                                  0,
+                                  Math.min(100, item.percentage)
+                                )}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+
+                      {totalSemFormaInformada > 0.005 && (
+                        <div className="space-y-1">
+                          <div className="flex justify-between gap-3 text-xs font-semibold">
+                            <span className="text-[#666662] dark:text-[#B8B8B2]">
+                              Forma não informada
+                            </span>
+
+                            <span className="text-[#666662] dark:text-[#B8B8B2] text-right">
+                              {formatMoney(totalSemFormaInformada)}{" "}
+                              <strong className="text-[#2F2F2D] dark:text-[#F4F4F0] ml-1">
+                                (
+                                {percentualSemFormaInformada.toLocaleString(
+                                  "pt-BR",
+                                  { maximumFractionDigits: 1 }
+                                )}
+                                %)
+                              </strong>
+                            </span>
+                          </div>
+
+                          <div className="w-full h-2 rounded-full bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden">
+                            <div
+                              className="h-full bg-[#888882] dark:bg-[#71717A] rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.min(
+                                  100,
+                                  percentualSemFormaInformada
+                                )}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {totalVendasPagamento === 0 && (
+                        <div className="py-4 text-center text-xs text-[#888882]">
+                          Nenhuma venda concluída no período.
+                        </div>
                       )}
                     </div>
                   </div>
+
                   <div className="pt-3 mt-4 border-t border-[#E2E2DD]/70 dark:border-[#3F3F3B]/70 text-[11px] text-[#888882]">
-                    {maiorEntradaPagamento && maiorEntradaPagamento.amount > 0
-                      ? `${maiorEntradaPagamento.percentage}% dos recebimentos no período foram via ${maiorEntradaPagamento.name}.`
-                      : "Nenhum recebimento registrado no período."}
+                    {totalVendasPagamento > 0 ? (
+                      <>
+                        Total de vendas concluídas:{" "}
+                        {formatMoney(totalVendasPagamento)}.
+                        {totalSemFormaInformada > 0.005 && (
+                          <>
+                            {" "}
+                            Valores sem forma informada não
+                            significam necessariamente pagamentos
+                            pendentes.
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      "Nenhuma venda registrada no período."
+                    )}
                   </div>
                 </article>
+
               </section>
 
               {/* Card 3: Saídas por categoria */}

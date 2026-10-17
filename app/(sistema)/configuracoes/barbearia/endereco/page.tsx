@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import { EnderecoBarbeariaConfig } from "@/components/sistema/endereco-barbearia-config";
 
 export default async function ConfiguracoesEnderecoBarbeariaPage() {
@@ -48,7 +47,6 @@ export default async function ConfiguracoesEnderecoBarbeariaPage() {
         </p>
       </header>
 
-      <ConfiguracaoTabs activeTab="endereco" />
 
       <EnderecoBarbeariaConfig
         cepInicial={barbearia.cep}

@@ -293,6 +293,130 @@ export function PdvView({ initialTab }: PdvViewProps) {
   const [comanda, setComanda] = useState<ItemComanda[]>([]);
   const [desconto, setDesconto] = useState<DescontoVenda | null>(null);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
+  const [confirmarLimpezaComanda, setConfirmarLimpezaComanda] = useState(false);
+
+  // Rascunho da comanda separado por conta.
+  const [chaveRascunho, setChaveRascunho] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+
+    async function recuperarRascunho() {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+
+        if (!ativo || error || !data.user) return;
+
+        const chave = `estilo-gestao-pdv-rascunho-v1:${data.user.id}`;
+
+        try {
+          const textoSalvo = localStorage.getItem(chave);
+
+          if (textoSalvo) {
+            const dados: unknown = JSON.parse(textoSalvo);
+
+            if (typeof dados === "object" && dados !== null) {
+              const rascunho = dados as {
+                itens?: unknown;
+                desconto?: unknown;
+              };
+
+              if (Array.isArray(rascunho.itens)) {
+                const itensValidos = rascunho.itens.filter(
+                  (entrada: unknown): entrada is ItemComanda => {
+                    if (typeof entrada !== "object" || entrada === null) {
+                      return false;
+                    }
+
+                    const item = entrada as Partial<ItemComanda>;
+
+                    return (
+                      (item.tipo === "SERVICO" || item.tipo === "PRODUTO") &&
+                      typeof item.id === "string" &&
+                      item.id.length > 0 &&
+                      typeof item.nome === "string" &&
+                      item.nome.length > 0 &&
+                      typeof item.preco === "number" &&
+                      Number.isFinite(item.preco) &&
+                      item.preco >= 0 &&
+                      typeof item.quantidade === "number" &&
+                      Number.isInteger(item.quantidade) &&
+                      item.quantidade > 0
+                    );
+                  }
+                );
+
+                if (ativo) {
+                  setComanda(itensValidos);
+                }
+
+                const descontoSalvo = rascunho.desconto;
+
+                if (
+                  ativo &&
+                  itensValidos.length > 0 &&
+                  typeof descontoSalvo === "object" &&
+                  descontoSalvo !== null
+                ) {
+                  const d = descontoSalvo as Partial<DescontoVenda>;
+
+                  if (
+                    (d.tipo === "PERCENTUAL" || d.tipo === "VALOR_FIXO") &&
+                    typeof d.valor === "number" &&
+                    Number.isFinite(d.valor) &&
+                    d.valor > 0 &&
+                    (d.tipo === "VALOR_FIXO" || d.valor <= 100)
+                  ) {
+                    setDesconto({
+                      tipo: d.tipo,
+                      valor: d.valor,
+                    });
+                  }
+                }
+              }
+            }
+          }
+        } catch (erro) {
+          console.warn("Nao foi possivel recuperar a comanda:", erro);
+        }
+
+        if (ativo) {
+          setChaveRascunho(chave);
+        }
+      } catch (erro) {
+        console.warn("Nao foi possivel identificar a conta:", erro);
+      }
+    }
+
+    void recuperarRascunho();
+
+    return () => {
+      ativo = false;
+    };
+  }, [supabase]);
+
+  // Atualiza o rascunho sempre que a comanda mudar.
+  useEffect(() => {
+    if (!chaveRascunho) return;
+
+    try {
+      if (comanda.length === 0) {
+        localStorage.removeItem(chaveRascunho);
+        return;
+      }
+
+      localStorage.setItem(
+        chaveRascunho,
+        JSON.stringify({
+          itens: comanda,
+          desconto,
+        })
+      );
+    } catch (erro) {
+      console.warn("Nao foi possivel guardar a comanda:", erro);
+    }
+  }, [chaveRascunho, comanda, desconto]);
+
 
   // Modais de Venda
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -309,6 +433,9 @@ export function PdvView({ initialTab }: PdvViewProps) {
   // Checkout Form & Pagamentos Divididos (Split)
   const [splitPayments, setSplitPayments] = useState<PaymentSplitEntry[]>([]);
   const [observacaoVenda, setObservacaoVenda] = useState("");
+  const [dataVenda, setDataVenda] = useState("");
+  const [horaVenda, setHoraVenda] = useState("");
+  const [usarHoraAtual, setUsarHoraAtual] = useState(true);
   const [finalizandoVenda, setFinalizandoVenda] = useState(false);
   const [erroFinalizacao, setErroFinalizacao] = useState<string | null>(null);
 
@@ -720,7 +847,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
   }, [totalPagamentosInformados, totalLiquidoComanda]);
 
   const isPagamentoValido = useMemo(() => {
-    if (splitPayments.length === 0) return false;
+    if (splitPayments.length === 0) return true;
     return Math.abs(diferencaPagamento) <= 0.01;
   }, [splitPayments, diferencaPagamento]);
 
@@ -820,16 +947,23 @@ export function PdvView({ initialTab }: PdvViewProps) {
     if (comanda.length === 0) return;
     setErroFinalizacao(null);
 
-    const defaultForma: FormaPagamentoTipo =
-      formasHabilitadas.length > 0 ? formasHabilitadas[0] : "PIX";
+    // Pagamento nao informado e permitido.
+    setSplitPayments([]);
 
-    setSplitPayments([
-      {
-        id: `pay-${Date.now()}-1`,
-        forma_pagamento: defaultForma,
-        valor: Math.round(totalLiquidoComanda * 100) / 100,
-      },
-    ]);
+    const agora = new Date();
+
+    const doisDigitos = (numero: number) =>
+      String(numero).padStart(2, "0");
+
+    setDataVenda(
+      `${agora.getFullYear()}-${doisDigitos(agora.getMonth() + 1)}-${doisDigitos(agora.getDate())}`
+    );
+
+    setHoraVenda(
+      `${doisDigitos(agora.getHours())}:${doisDigitos(agora.getMinutes())}`
+    );
+
+    setUsarHoraAtual(true);
 
     setIsMobileCartOpen(false);
     setIsCheckoutModalOpen(true);
@@ -910,6 +1044,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
     if (finalizandoVenda || comanda.length === 0 || !isPagamentoValido) return;
     setFinalizandoVenda(true);
     setErroFinalizacao(null);
+    const inicioFinalizacao = Date.now();
 
     try {
       const payloadItens = comanda.map((item) => ({
@@ -919,12 +1054,15 @@ export function PdvView({ initialTab }: PdvViewProps) {
       }));
 
       const pagamentosValidos = splitPayments.filter((p) => p.valor > 0);
-      if (pagamentosValidos.length === 0) {
-        throw new Error("Adicione ao menos uma forma de pagamento válida.");
+      if (
+        splitPayments.length > 0 &&
+        pagamentosValidos.length !== splitPayments.length
+      ) {
+        throw new Error("Informe valores válidos para todos os pagamentos.");
       }
 
       const totalPago = pagamentosValidos.reduce((acc, p) => acc + p.valor, 0);
-      if (Math.abs(totalPago - totalLiquidoComanda) > 0.01) {
+      if (pagamentosValidos.length > 0 && Math.abs(totalPago - totalLiquidoComanda) > 0.01) {
         throw new Error(
           `A soma dos pagamentos (${formatBRL(totalPago)}) deve ser igual ao total da venda (${formatBRL(totalLiquidoComanda)}).`
         );
@@ -943,12 +1081,31 @@ export function PdvView({ initialTab }: PdvViewProps) {
         descontoValorParam = Math.round(desconto.valor * 100) / 100;
       }
 
+      // Data e hora em que a venda realmente ocorreu.
+      const agoraVenda = new Date();
+
+      const horaEfetiva = usarHoraAtual
+        ? `${String(agoraVenda.getHours()).padStart(2, "0")}:${String(agoraVenda.getMinutes()).padStart(2, "0")}`
+        : horaVenda;
+
+      if (!dataVenda || !/^\d{2}:\d{2}$/.test(horaEfetiva)) {
+        throw new Error("Informe uma data e hora válidas.");
+      }
+
+      const ocorridaEm = new Date(`${dataVenda}T${horaEfetiva}:00`);
+
+      if (
+        Number.isNaN(ocorridaEm.getTime()) ||
+        ocorridaEm.getTime() > Date.now()
+      ) {
+        throw new Error("A data da venda é inválida ou está no futuro.");
+      }
       const { data, error } = await supabase.rpc("finalizar_venda", {
         p_itens: payloadItens,
         p_desconto_tipo: descontoTipoParam,
         p_desconto_valor: descontoValorParam,
         p_pagamentos: payloadPagamentos,
-        p_ocorrida_em: null,
+        p_ocorrida_em: ocorridaEm.toISOString(),
         p_observacao: observacaoVenda.trim() || null,
       });
 
@@ -966,6 +1123,13 @@ export function PdvView({ initialTab }: PdvViewProps) {
       const resultado = Array.isArray(data) ? data[0] : data;
       const numeroVendaGerado = resultado?.numero_venda || 0;
       const vendaIdGerado = resultado?.venda_id || "";
+
+      // A venda ja foi confirmada no Supabase. Aguarde no minimo 2s
+      // desde o clique antes de exibir o recibo existente.
+      const tempoRestante = Math.max(0, 2000 - (Date.now() - inicioFinalizacao));
+      if (tempoRestante > 0) {
+        await new Promise<void>((resolve) => setTimeout(resolve, tempoRestante));
+      }
 
       setVendaSucessoData({
         venda_id: vendaIdGerado,
@@ -1022,7 +1186,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
   }, [vendas]);
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden pb-24 lg:pb-8">
+    <div className="space-y-6 max-w-full overflow-hidden pb-40 lg:pb-8">
       {/* Toast Feedback */}
       {toastFeedback && (
         <div
@@ -1273,7 +1437,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                         return (
                           <article
                             key={produto.id}
-                            className={`p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between gap-3 transition-all ${
+                            className={`p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#222220] border shadow-xs flex flex-col justify-between gap-2 sm:gap-3 transition-all ${
                               esgotado
                                 ? "opacity-65 bg-neutral-50 dark:bg-neutral-900/40 border-[#E2E2DD] dark:border-[#3F3F3B]"
                                 : qtdSelecionada > 0
@@ -1281,20 +1445,20 @@ export function PdvView({ initialTab }: PdvViewProps) {
                                 : "border-[#E2E2DD] dark:border-[#3F3F3B] hover:border-neutral-400 dark:hover:border-neutral-500"
                             }`}
                           >
-                            <div className="space-y-2">
+                            <div className="space-y-1.5 sm:space-y-2">
                               <div className="flex items-start gap-2.5">
                                 {fotoUrl ? (
                                   <img
                                     src={fotoUrl}
                                     alt={produto.nome}
-                                    className="w-12 h-12 rounded-xl object-cover bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B]"
                                     onError={(e) => {
                                       const img = e.target as HTMLImageElement;
                                       img.style.display = "none";
                                     }}
                                   />
                                 ) : (
-                                  <span className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center">
+                                  <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 shrink-0 border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center">
                                     <Package className="w-5 h-5 text-[#888882]" />
                                   </span>
                                 )}
@@ -1332,18 +1496,18 @@ export function PdvView({ initialTab }: PdvViewProps) {
                             </div>
 
                             {/* Controles Diretos (- / Qtd / +) */}
-                            <div className="mt-2 pt-2.5 border-t border-[#E2E2DD]/70 dark:border-[#3F3F3B]/70 flex items-center justify-between gap-2">
+                            <div className="mt-1 pt-2 sm:mt-2 sm:pt-2.5 border-t border-[#E2E2DD]/70 dark:border-[#3F3F3B]/70 flex items-center justify-between gap-2">
                               {esgotado ? (
                                 <div className="w-full h-8 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] text-neutral-400 dark:text-neutral-500 text-xs font-bold flex items-center justify-center">
                                   Indisponível
                                 </div>
                               ) : (
-                                <div className="w-full flex items-center justify-between bg-[#FAF9F5] dark:bg-[#181817] p-1 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B]">
+                                <div className="ml-auto w-40 sm:ml-0 sm:w-full flex items-center justify-between bg-[#FAF9F5] dark:bg-[#181817] p-1 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B]">
                                   <button
                                     type="button"
                                     disabled={qtdSelecionada === 0}
                                     onClick={() => handleProdutoDecrementar(produto.id)}
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[#2F2F2D] dark:text-white hover:bg-neutral-200 dark:hover:bg-[#2B2B29] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center text-[#2F2F2D] dark:text-white hover:bg-neutral-200 dark:hover:bg-[#2B2B29] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                                     aria-label={`Diminuir quantidade de ${produto.nome}`}
                                   >
                                     <Minus className="w-3.5 h-3.5" />
@@ -1357,7 +1521,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                                     type="button"
                                     disabled={limiteAtingido}
                                     onClick={() => handleProdutoIncrementar(produto)}
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[#2F2F2D] dark:text-white hover:bg-neutral-200 dark:hover:bg-[#2B2B29] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center text-[#2F2F2D] dark:text-white hover:bg-neutral-200 dark:hover:bg-[#2B2B29] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                                     aria-label={`Aumentar quantidade de ${produto.nome}`}
                                   >
                                     <Plus className="w-3.5 h-3.5" />
@@ -1541,22 +1705,6 @@ export function PdvView({ initialTab }: PdvViewProps) {
             </div>
           </aside>
 
-          {/* Barra Flutuante Mobile para abrir comanda */}
-          {comanda.length > 0 && (
-            <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40">
-              <button
-                type="button"
-                onClick={() => setIsMobileCartOpen(true)}
-                className="w-full py-3.5 px-4 rounded-2xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] font-extrabold text-sm shadow-xl flex items-center justify-between cursor-pointer active:scale-98"
-              >
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Ver Comanda ({comanda.reduce((acc, i) => acc + i.quantidade, 0)})</span>
-                </div>
-                <span className="text-base font-black">{formatBRL(totalLiquidoComanda)}</span>
-              </button>
-            </div>
-          )}
         </div>
       )}
 
@@ -1983,6 +2131,52 @@ export function PdvView({ initialTab }: PdvViewProps) {
         </div>
       )}
 
+      {/* Barra flutuante mobile fora do contêiner com animação de página. */}
+      {activeTab === "nova-venda" && typeof document !== "undefined" &&
+        createPortal(
+          <div
+            aria-hidden={comanda.length === 0}
+            inert={comanda.length === 0}
+            className={`fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-3 right-3 z-40 lg:hidden transition-opacity duration-300 ease-out motion-reduce:transition-none ${
+              comanda.length > 0
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
+          >
+              <div className="flex items-center gap-2 rounded-2xl border border-[#E2E2DD] bg-white p-2 shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220]">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileCartOpen(true)}
+                  aria-label="Abrir comanda"
+                  className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl p-1 text-left"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4F4F0] text-[#2F2F2D] dark:bg-[#333331] dark:text-white">
+                    <ShoppingBag className="h-5 w-5" />
+                  </span>
+
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold text-[#2F2F2D] dark:text-white">
+                      {comanda.reduce((total, item) => total + item.quantidade, 0)} itens
+                    </span>
+                    <span className="block whitespace-nowrap text-sm font-extrabold text-[#2F2F2D] dark:text-white">
+                      Total: {formatBRL(totalLiquidoComanda)}
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleAbrirCheckout}
+                  className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F2F2D] px-3.5 text-xs font-bold text-white dark:bg-[#F4F4F0] dark:text-[#181817]"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Finalizar
+                </button>
+              </div>
+          </div>,
+          document.body
+        )}
+
       {/* ======================================================== */}
       {/* MODAL 1: CHECKOUT & FORMAS DE PAGAMENTO */}
       {/* ======================================================== */}
@@ -1994,7 +2188,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
             aria-modal="true"
             aria-labelledby="checkout-modal-title"
           >
-            <div className="w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden flex flex-col max-h-[90vh] animate-slideUp">
+            <div className="relative w-full max-w-lg bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden flex flex-col max-h-[90vh] animate-slideUp">
               {/* Header */}
               <div className="px-5 py-4 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2.5">
@@ -2121,7 +2315,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                           />
                         </div>
 
-                        {splitPayments.length > 1 && (
+                        {(
                           <button
                             type="button"
                             onClick={() => handleRemoveSplitPayment(entry.id)}
@@ -2134,8 +2328,14 @@ export function PdvView({ initialTab }: PdvViewProps) {
                       </div>
                     ))}
 
+                    {splitPayments.length === 0 && (
+                      <p className="rounded-xl border border-dashed border-[#E2E2DD] p-3 text-xs text-[#666662] dark:border-[#3F3F3B] dark:text-[#B8B8B2]">
+                        Nenhuma forma de pagamento informada. A venda será registrada como concluída, com pagamento não informado.
+                      </p>
+                    )}
+
                     {/* Indicador de Balanço */}
-                    <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] flex items-center justify-between text-[11px]">
+                    <div className={`${splitPayments.length === 0 ? "hidden" : "flex"} p-2.5 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] items-center justify-between text-[11px]`}>
                       <span>
                         Total informado: <strong>{formatBRL(totalPagamentosInformados)}</strong>
                       </span>
@@ -2167,7 +2367,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                       </div>
                     )}
 
-                    {isPagamentoValido && (
+                    {isPagamentoValido && splitPayments.length > 0 && (
                       <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 shrink-0" />
                         <span>Valor total coberto com sucesso ({formatBRL(totalPagamentosInformados)}).</span>
@@ -2176,6 +2376,56 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   </div>
                 </div>
 
+                {/* Data e hora da venda */}
+                <div className="space-y-3 border-t border-[#E2E2DD] pt-4 dark:border-[#3F3F3B]">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      Data e hora da venda
+                    </h4>
+                    <p className="mt-1 text-[11px] text-[#666662] dark:text-[#B8B8B2]">
+                      Informe quando a venda aconteceu, mesmo que esteja registrando depois.
+                    </p>
+                  </div>
+
+                  <label className="block space-y-1.5">
+                    <span className="text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      Data da venda
+                    </span>
+                    <input
+                      type="date"
+                      required
+                      value={dataVenda}
+                      max={new Date().toLocaleDateString("en-CA")}
+                      onChange={(e) => setDataVenda(e.target.value)}
+                      className="w-full rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] px-3 py-2.5 text-sm text-[#2F2F2D] dark:border-[#3F3F3B] dark:bg-[#181817] dark:text-white"
+                    />
+                  </label>
+
+                  <label className="flex items-center gap-2 text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                    <input
+                      type="checkbox"
+                      checked={usarHoraAtual}
+                      onChange={(e) => setUsarHoraAtual(e.target.checked)}
+                      className="h-4 w-4"
+                    />
+                    Utilizar a hora atual
+                  </label>
+
+                  {!usarHoraAtual && (
+                    <label className="block space-y-1.5">
+                      <span className="text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                        Hora da venda
+                      </span>
+                      <input
+                        type="time"
+                        required
+                        value={horaVenda}
+                        onChange={(e) => setHoraVenda(e.target.value)}
+                        className="w-full rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] px-3 py-2.5 text-sm text-[#2F2F2D] dark:border-[#3F3F3B] dark:bg-[#181817] dark:text-white"
+                      />
+                    </label>
+                  )}
+                </div>
                 {/* Observações */}
                 <div className="space-y-1.5 pt-1">
                   <label className="text-[11px] font-bold text-[#666662] dark:text-[#B8B8B2] block">
@@ -2222,7 +2472,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   {finalizandoVenda ? (
                     <>
                       <RotateCcw className="w-4 h-4 animate-spin" />
-                      <span>Concluindo...</span>
+                      <span>Criando venda...</span>
                     </>
                   ) : (
                     <>
@@ -2232,6 +2482,25 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   )}
                 </button>
               </div>
+
+              {/* A tela de sucesso continua exatamente como antes. */}
+              {finalizandoVenda && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white/95 px-6 text-center backdrop-blur-sm animate-fadeIn dark:bg-[#222220]/95"
+                >
+                  <Loader2 className="h-11 w-11 animate-spin text-[#2F2F2D] dark:text-[#F4F4F0]" aria-hidden="true" />
+                  <div className="space-y-1.5">
+                    <p className="text-lg font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                      Criando venda...
+                    </p>
+                    <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                      Aguarde enquanto registramos sua venda.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>,
           document.body
@@ -2243,7 +2512,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
       {isDiscountOpen && typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
+            className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
           >
@@ -2330,48 +2599,83 @@ export function PdvView({ initialTab }: PdvViewProps) {
       {/* ======================================================== */}
       {/* MODAL 3: RECIBO DE SUCESSO */}
       {/* ======================================================== */}
-      {isSuccessModalOpen && vendaSucessoData && typeof document !== "undefined" &&
+      {isSuccessModalOpen &&
+        vendaSucessoData &&
+        typeof document !== "undefined" &&
         createPortal(
           <div
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
+            aria-label="Venda concluída com sucesso"
           >
-            <div className="bg-white dark:bg-[#222220] rounded-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl max-w-sm w-full p-6 text-center space-y-4 animate-slideUp">
+            <div className="relative bg-white dark:bg-[#222220] rounded-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl max-w-sm w-full p-6 text-center space-y-4 animate-slideUp">
+              {/* Botão para fechar o modal */}
+              <button
+                type="button"
+                onClick={() => setIsSuccessModalOpen(false)}
+                aria-label="Fechar confirmação da venda"
+                title="Fechar"
+                className="absolute right-3 top-3 z-10 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-[#666662] transition-colors hover:bg-[#F4F4F0] hover:text-[#1C1C1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:text-[#B8B8B2] dark:hover:bg-[#343432] dark:hover:text-white"
+              >
+                <span
+                  aria-hidden="true"
+                  className="text-2xl leading-none"
+                >
+                  ×
+                </span>
+              </button>
+
+              {/* Ícone de sucesso */}
               <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
 
+              {/* Título e número da venda */}
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                   Venda Concluída!
                 </span>
+
                 <h3 className="text-xl font-black text-[#2F2F2D] dark:text-[#F4F4F0] mt-1">
-                  Venda {formatarNumeroVenda(vendaSucessoData.numero_venda)}
+                  Venda{" "}
+                  {formatarNumeroVenda(vendaSucessoData.numero_venda)}
                 </h3>
               </div>
 
+              {/* Resumo da venda */}
               <div className="p-4 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] space-y-2 text-xs text-left">
                 <div className="flex items-center justify-between text-[#666662] dark:text-[#B8B8B2]">
                   <span>Total Pago:</span>
+
                   <strong className="text-sm font-black text-[#2F2F2D] dark:text-[#F4F4F0]">
                     {formatBRL(vendaSucessoData.total)}
                   </strong>
                 </div>
+
                 {vendaSucessoData.desconto > 0 && (
                   <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-bold">
                     <span>Desconto:</span>
-                    <span>-{formatBRL(vendaSucessoData.desconto)}</span>
+
+                    <span>
+                      -{formatBRL(vendaSucessoData.desconto)}
+                    </span>
                   </div>
                 )}
+
                 <div className="flex items-center justify-between text-[#666662] dark:text-[#B8B8B2]">
                   <span>Total de Itens:</span>
+
                   <span className="font-bold text-[#2F2F2D] dark:text-white">
-                    {vendaSucessoData.itensCount} {vendaSucessoData.itensCount === 1 ? "unidade" : "unidades"}
+                    {vendaSucessoData.itensCount}{" "}
+                    {vendaSucessoData.itensCount === 1
+                      ? "unidade"
+                      : "unidades"}
                   </span>
                 </div>
               </div>
 
+              {/* Iniciar nova venda */}
               <button
                 type="button"
                 onClick={() => setIsSuccessModalOpen(false)}
@@ -2387,6 +2691,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
       {/* ======================================================== */}
       {/* MODAL 4: DETALHES DA VENDA (Fiel ao AI Studio) */}
       {/* ======================================================== */}
+
       {detalheVendaId && typeof document !== "undefined" &&
         createPortal(
           <div
@@ -2756,29 +3061,80 @@ export function PdvView({ initialTab }: PdvViewProps) {
             role="dialog"
             aria-modal="true"
           >
-            <div className="bg-white dark:bg-[#222220] rounded-t-3xl border-t border-[#E2E2DD] dark:border-[#3F3F3B] p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-slideUp">
-              <div className="flex items-center justify-between border-b border-[#E2E2DD] dark:border-[#3F3F3B] pb-3">
+            <div className="flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-3xl border-t border-[#E2E2DD] bg-white px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl animate-slideUp sm:p-5 dark:border-[#3F3F3B] dark:bg-[#222220]">
+              <div className="mb-3 flex shrink-0 items-center justify-between border-b border-[#E2E2DD] pb-3 dark:border-[#3F3F3B]">
                 <h3 className="font-extrabold text-base text-[#2F2F2D] dark:text-[#F4F4F0]">
                   Comanda Atual
                 </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsMobileCartOpen(false)}
-                  className="text-[#888882] hover:text-[#2F2F2D] p-1 cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {comanda.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmarLimpezaComanda(true)}
+                      aria-label="Limpar comanda"
+                      title="Limpar comanda"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl text-[#888882] hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setConfirmarLimpezaComanda(false);
+                      setIsMobileCartOpen(false);
+                    }}
+                    aria-label="Fechar comanda"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F4F4F0] text-[#666662] dark:bg-[#333331] dark:text-[#B8B8B2]"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
 
+              {confirmarLimpezaComanda && (
+                <div className="mb-3 shrink-0 space-y-3 rounded-xl border border-red-500/30 bg-red-500/5 p-3">
+                  <p className="text-sm font-bold text-[#2F2F2D] dark:text-white">
+                    Limpar toda a comanda?
+                  </p>
+                  <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                    Todos os itens e o desconto serão removidos.
+                  </p>
+
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setConfirmarLimpezaComanda(false)}
+                      className="min-h-10 rounded-xl border border-[#E2E2DD] px-4 text-xs font-bold dark:border-[#3F3F3B] dark:text-white"
+                    >
+                      Cancelar
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleLimparComanda();
+                        setConfirmarLimpezaComanda(false);
+                        setIsMobileCartOpen(false);
+                      }}
+                      className="min-h-10 rounded-xl bg-red-600 px-4 text-xs font-bold text-white"
+                    >
+                      Limpar tudo
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Lista */}
-              <div className="space-y-2">
+              <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pr-1 pb-2">
                 {comanda.length === 0 ? (
                   <p className="text-xs text-center py-6 text-[#888882]">Comanda vazia</p>
                 ) : (
                   comanda.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between text-xs"
+                      className="flex flex-col gap-2 rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] p-3 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-[#3F3F3B] dark:bg-[#181817]"
                     >
                       <div>
                         <span className="font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block">
@@ -2835,17 +3191,61 @@ export function PdvView({ initialTab }: PdvViewProps) {
 
               {/* Subtotais */}
               {comanda.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-[#E2E2DD] dark:border-[#3F3F3B]">
+                <div className="mt-3 shrink-0 space-y-2 border-t border-[#E2E2DD] pt-3 dark:border-[#3F3F3B]">
                   <div className="flex items-center justify-between text-xs text-[#666662] dark:text-[#B8B8B2]">
                     <span>Subtotal:</span>
                     <strong className="text-[#2F2F2D] dark:text-white">{formatBRL(subtotalComanda)}</strong>
                   </div>
-                  {desconto && (
-                    <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                      <span>Desconto aplicado:</span>
-                      <span>-{formatBRL(valorDescontoCalculado)}</span>
-                    </div>
-                  )}
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+  {desconto ? (
+    <>
+      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+        Desconto ({desconto.tipo === "PERCENTUAL"
+          ? `${desconto.valor}%`
+          : formatBRL(desconto.valor)})
+      </span>
+
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-emerald-600 dark:text-emerald-400">
+          -{formatBRL(valorDescontoCalculado)}
+        </span>
+
+        <button
+          type="button"
+          onClick={() => {
+            setDiscountTypeInput(desconto.tipo);
+            setDiscountValueInput(String(desconto.valor));
+            setIsDiscountOpen(true);
+          }}
+          className="min-h-9 px-2 font-semibold text-blue-600 dark:text-blue-400"
+        >
+          Alterar
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setDesconto(null)}
+          className="min-h-9 px-2 font-semibold text-red-600 dark:text-red-400"
+        >
+          Remover
+        </button>
+      </div>
+    </>
+  ) : (
+    <button
+      type="button"
+      onClick={() => {
+        setDiscountTypeInput("PERCENTUAL");
+        setDiscountValueInput("");
+        setIsDiscountOpen(true);
+      }}
+      className="inline-flex min-h-10 items-center gap-2 font-semibold text-blue-600 dark:text-blue-400"
+    >
+      <Plus className="h-4 w-4" />
+      Adicionar desconto
+    </button>
+  )}
+</div>
                   <div className="flex items-center justify-between text-base font-black text-[#2F2F2D] dark:text-[#F4F4F0] pt-1">
                     <span>Total Líquido:</span>
                     <span>{formatBRL(totalLiquidoComanda)}</span>
@@ -2854,7 +3254,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   <button
                     type="button"
                     onClick={handleAbrirCheckout}
-                    className="w-full py-3 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] font-extrabold text-sm shadow-sm mt-2 cursor-pointer"
+                    className="mt-2 flex min-h-12 w-full items-center justify-center rounded-xl bg-[#2F2F2D] px-4 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:opacity-90 active:scale-[0.99] cursor-pointer dark:bg-[#F4F4F0] dark:text-[#181817]"
                   >
                     Avançar para Pagamento
                   </button>

@@ -12,6 +12,9 @@ import {
   X,
 } from "lucide-react";
 
+import { createPortal } from "react-dom";
+
+
 type LogoAdjustModalProps = {
   imageUrl: string;
   fileName?: string;
@@ -382,9 +385,10 @@ export function LogoAdjustModal({
     ? Math.round((escala / escalaMinima) * 100)
     : 100;
 
-  return (
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto p-4"
       role="dialog"
       aria-modal="true"
       aria-label="Ajustar logo da barbearia"
@@ -395,7 +399,7 @@ export function LogoAdjustModal({
         aria-hidden="true"
       />
 
-      <div className="relative flex max-h-[92vh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-2xl border border-[#D5D4CD] bg-white p-5 shadow-2xl dark:border-white/10 dark:bg-[#18191E]">
+      <div className="relative my-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-2xl border border-[#D5D4CD] bg-white p-5 shadow-2xl dark:border-white/10 dark:bg-[#18191E]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-[15px] font-bold text-[#1E1E1C] dark:text-white">
             Ajustar logo
@@ -552,6 +556,7 @@ export function LogoAdjustModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

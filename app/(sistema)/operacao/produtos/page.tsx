@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useRef, useEffect, useCallback, FormEvent } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
@@ -1052,18 +1053,15 @@ export default function OperacaoProdutosPage() {
   // Helper para renderizar thumbnail do produto
   const renderProductThumbnail = (item: ProdutoItem) => {
     const cat = item.categoria_id ? categoryMap.get(item.categoria_id) : undefined;
-    const imagemPropria = resolverSrcMidia(item.imagem_path);
-    const imagemCategoria = normalizarImagemCategoria(cat?.imagem_padrao_path);
-    // Regra: imagem própria -> imagem da categoria (se usar) -> ícone neutro.
-    // Nunca usa "/images/categorias/image.png".
-    const resolvedSrc =
-      imagemPropria ||
-      (item.usar_imagem_categoria !== false
-        ? imagemCategoria
-        : null);
+    // Respeita a opcao de imagem escolhida no cadastro.
+    // Se nao existir imagem, MiniaturaImagem exibe o icone de produto.
+    const resolvedSrc = item.usar_imagem_categoria !== false
+      ? normalizarImagemCategoria(cat?.imagem_padrao_path ?? item.categoria?.imagem_padrao_path)
+      : resolverSrcMidia(item.imagem_path);
 
     return (
       <MiniaturaImagem
+        key={item.id + ":" + (resolvedSrc ?? "sem-imagem")}
         src={resolvedSrc}
         alt={item.nome}
         icone={Package}
@@ -1821,15 +1819,17 @@ export default function OperacaoProdutosPage() {
       {/* ======================================================== */}
       {/* 5. MODAL NOVO / EDITAR PRODUTO (AI STUDIO FAITHFUL) */}
       {/* ======================================================== */}
-      {isModalOpen && (
-        <div
+      {isModalOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-[70] flex items-start sm:items-center justify-center overflow-y-auto p-2 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
         >
-          <div className="w-full max-w-xl bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden flex flex-col max-h-[92vh]">
+          <div className="flex w-full max-w-xl min-h-0 max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] flex-col overflow-hidden rounded-2xl border border-[#E2E2DD] bg-white shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220]">
             {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between">
+            <div className="shrink-0 p-4 sm:p-5 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center text-[#2F2F2D] dark:text-[#F4F4F0]">
                   <Package className="w-4 h-4 text-[#888882]" />
@@ -1852,7 +1852,7 @@ export default function OperacaoProdutosPage() {
             </div>
 
             {/* Form body */}
-            <form onSubmit={handleSubmitProduto} className="p-4 sm:p-6 overflow-y-auto space-y-4">
+            <form onSubmit={handleSubmitProduto} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-4">
               {/* Categoria */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
@@ -1886,18 +1886,14 @@ export default function OperacaoProdutosPage() {
                       {selectedCategoryObj ? (
                         <>
                           <div className="w-6 h-6 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                            {normalizarImagemCategoria(selectedCategoryObj.imagem_padrao_path) ? (
-                              <img
-                                src={normalizarImagemCategoria(selectedCategoryObj.imagem_padrao_path) ?? ""}
-                                alt={selectedCategoryObj.nome}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <Tag className="w-3.5 h-3.5 text-[#888882]" />
-                            )}
+                            <MiniaturaImagem
+                              key={selectedCategoryObj.id + ":" + (selectedCategoryObj.imagem_padrao_path ?? "sem-imagem")}
+                              src={normalizarImagemCategoria(selectedCategoryObj.imagem_padrao_path)}
+                              alt={selectedCategoryObj.nome}
+                              icone={Tag}
+                              classNameImagem="w-full h-full object-cover"
+                              classNameIcone="w-full h-full p-1 text-[#888882]"
+                            />
                           </div>
                           <span className="font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] truncate">
                             {selectedCategoryObj.nome}
@@ -1988,18 +1984,13 @@ export default function OperacaoProdutosPage() {
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
                                   <div className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                                    {normalizarImagemCategoria(cat.imagem_padrao_path) ? (
-                                      <img
-                                        src={normalizarImagemCategoria(cat.imagem_padrao_path) ?? ""}
-                                        alt={cat.nome}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                          (e.target as HTMLImageElement).style.display = "none";
-                                        }}
-                                      />
-                                    ) : (
-                                      <Tag className="w-3.5 h-3.5 text-[#888882]" />
-                                    )}
+                                    <MiniaturaImagem
+                                      src={normalizarImagemCategoria(cat.imagem_padrao_path)}
+                                      alt={cat.nome}
+                                      icone={Tag}
+                                      classNameImagem="w-full h-full object-cover"
+                                      classNameIcone="w-full h-full p-1.5 text-[#888882]"
+                                    />
                                   </div>
                                   <span className="truncate">{cat.nome}</span>
                                   {isInactive && (
@@ -2263,23 +2254,14 @@ export default function OperacaoProdutosPage() {
                     /* Estado: usando a imagem padrão da categoria */
                     <div className="flex items-center gap-3">
                       <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center">
-                        {normalizarImagemCategoria(
-                          selectedCategoryObj?.imagem_padrao_path
-                        ) ? (
-                          <img
-                            src={
-                              normalizarImagemCategoria(
-                                selectedCategoryObj?.imagem_padrao_path
-                              ) ?? ""
-                            }
-                            alt={
-                              selectedCategoryObj?.nome ?? "Categoria"
-                            }
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <Tag className="w-6 h-6 text-[#888882]" />
-                        )}
+                        <MiniaturaImagem
+                          key={(selectedCategoryObj?.id ?? "sem-categoria") + ":" + (selectedCategoryObj?.imagem_padrao_path ?? "sem-imagem")}
+                          src={normalizarImagemCategoria(selectedCategoryObj?.imagem_padrao_path)}
+                          alt={selectedCategoryObj?.nome ?? "Produto"}
+                          icone={Package}
+                          classNameImagem="w-full h-full object-cover"
+                          classNameIcone="w-full h-full p-4 text-[#888882]"
+                        />
                       </div>
 
                       <div className="flex flex-col gap-1.5">
@@ -2321,17 +2303,13 @@ export default function OperacaoProdutosPage() {
                       }}
                     >
                       <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]">
-                        <img
-                          src={
-                            imagemPreviewUrl ||
-                            resolverSrcMidia(formProduto.imagem_path || null) ||
-                            ""
-                          }
+                        <MiniaturaImagem
+                          key={imagemPreviewUrl || formProduto.imagem_path || "sem-imagem"}
+                          src={imagemPreviewUrl || resolverSrcMidia(formProduto.imagem_path)}
                           alt="Imagem do produto"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
-                          }}
+                          icone={Package}
+                          classNameImagem="w-full h-full object-cover"
+                          classNameIcone="w-full h-full p-4 text-[#888882]"
                         />
                       </div>
 
@@ -2491,8 +2469,9 @@ export default function OperacaoProdutosPage() {
               </div>
             </form>
           </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {imagemAjuste && (
         <ImageAdjustModal

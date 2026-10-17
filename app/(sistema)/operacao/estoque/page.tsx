@@ -71,6 +71,7 @@ export interface MovimentacaoItem {
     id: string;
     nome: string;
     imagem_path?: string | null;
+    usar_imagem_categoria?: boolean;
     categoria_id?: string;
     ativo: boolean;
     categoria?: {
@@ -137,6 +138,44 @@ function obterImagemProduto(
   }
 
   return null;
+}
+
+function ImagemProdutoEstoque({
+  produto,
+  className,
+  iconClassName = "w-5 h-5",
+}: {
+  produto: Parameters<typeof obterImagemProduto>[0];
+  className: string;
+  iconClassName?: string;
+}) {
+  const src = obterImagemProduto(produto);
+
+  const [imagemComErro, setImagemComErro] =
+    useState<string | null>(null);
+
+  const mostrarImagem =
+    Boolean(src) && src !== imagemComErro;
+
+  return (
+    <div
+      className={`${className} overflow-hidden flex items-center justify-center shrink-0`}
+    >
+      {mostrarImagem ? (
+        <img
+          src={src!}
+          alt=""
+          className="w-full h-full object-cover"
+          onError={() => setImagemComErro(src)}
+        />
+      ) : (
+        <Package
+          className={`${iconClassName} text-[#888882]`}
+          aria-hidden="true"
+        />
+      )}
+    </div>
+  );
 }
 
 function getSituacaoEstoque(atual: number, minimo: number | null): "ok" | "low" | "out" {
@@ -260,7 +299,7 @@ export default function EstoquePage() {
         supabase
           .from("movimentacoes_estoque")
           .select(
-            "id, barbearia_id, produto_id, tipo, quantidade_delta, saldo_anterior, saldo_posterior, venda_id, motivo, custo_unitario_snapshot, valor_total_snapshot, created_at, produto:produtos(id, nome, imagem_path, categoria_id, ativo, categoria:categorias_produto(id, nome, imagem_padrao_path))"
+            "id, barbearia_id, produto_id, tipo, quantidade_delta, saldo_anterior, saldo_posterior, venda_id, motivo, custo_unitario_snapshot, valor_total_snapshot, created_at, produto:produtos(id, nome, imagem_path, usar_imagem_categoria, categoria_id, ativo, categoria:categorias_produto(id, nome, imagem_padrao_path))"
           )
           .order("created_at", { ascending: false })
           .limit(50),
@@ -311,7 +350,7 @@ export default function EstoquePage() {
           supabase
             .from("movimentacoes_estoque")
             .select(
-              "id, barbearia_id, produto_id, tipo, quantidade_delta, saldo_anterior, saldo_posterior, venda_id, motivo, custo_unitario_snapshot, valor_total_snapshot, created_at, produto:produtos(id, nome, imagem_path, categoria_id, ativo, categoria:categorias_produto(id, nome, imagem_padrao_path))"
+              "id, barbearia_id, produto_id, tipo, quantidade_delta, saldo_anterior, saldo_posterior, venda_id, motivo, custo_unitario_snapshot, valor_total_snapshot, created_at, produto:produtos(id, nome, imagem_path, usar_imagem_categoria, categoria_id, ativo, categoria:categorias_produto(id, nome, imagem_padrao_path))"
             )
             .order("created_at", { ascending: false })
             .limit(50),
@@ -1066,7 +1105,6 @@ export default function EstoquePage() {
                   const status = getSituacaoEstoque(p.estoque_atual, p.estoque_minimo);
                   const lastAlt = getLastAlteration(p);
                   const catNome = p.categoria?.nome || "Geral";
-                  const thumb = obterImagemProduto(p);
 
                   return (
                     <tr
@@ -1077,20 +1115,10 @@ export default function EstoquePage() {
                       {/* 1. Produto */}
                       <td className="py-3.5 px-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                            {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={p.nome}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <Package className="w-5 h-5 text-[#888882]" />
-                            )}
-                          </div>
+                          <ImagemProdutoEstoque
+                            produto={p}
+                            className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                          />
                           <div className="min-w-0 pr-2">
                             <span className="font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0] block truncate">
                               {p.nome}
@@ -1185,7 +1213,6 @@ export default function EstoquePage() {
             {filteredProducts.map((p) => {
               const status = getSituacaoEstoque(p.estoque_atual, p.estoque_minimo);
               const catNome = p.categoria?.nome || "Geral";
-              const thumb = obterImagemProduto(p);
 
               return (
                 <article
@@ -1194,20 +1221,11 @@ export default function EstoquePage() {
                   className="p-3.5 rounded-2xl bg-white dark:bg-[#20201E] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs space-y-3 cursor-pointer"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                      {thumb ? (
-                        <img
-                          src={thumb}
-                          alt={p.nome}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
-                          }}
-                        />
-                      ) : (
-                        <Package className="w-6 h-6 text-[#888882]" />
-                      )}
-                    </div>
+                    <ImagemProdutoEstoque
+                      produto={p}
+                      className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                      iconClassName="w-6 h-6"
+                    />
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
@@ -1317,16 +1335,16 @@ export default function EstoquePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="movimentar-estoque-title"
-            className="fixed inset-0 z-50 overflow-hidden animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
             <div
               onClick={() => setIsMovementModalOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity z-40"
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />
 
-            {/* Painel Lateral */}
-            <div className="fixed top-0 right-0 bottom-0 left-0 sm:left-auto w-full sm:w-[560px] md:w-[600px] max-w-full h-full h-[100dvh] max-h-[100dvh] bg-white dark:bg-[#20201E] border-l border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl flex flex-col z-50 overflow-hidden">
+            {/* Modal centralizado e adaptável */}
+            <div className="relative z-10 flex w-full max-w-[620px] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-2xl border border-[#E2E2DD] bg-white shadow-2xl dark:border-[#3F3F3B] dark:bg-[#20201E]">
               {/* Topo Fixo */}
               <div className="p-4 sm:p-6 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-start justify-between gap-3 bg-white dark:bg-[#20201E] shrink-0">
                 <div>
@@ -1362,20 +1380,11 @@ export default function EstoquePage() {
                         onClick={() => setIsProductPickerOpen((prev) => !prev)}
                         className="w-full p-2.5 rounded-2xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center gap-3 text-left hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors cursor-pointer"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                          {obterImagemProduto(selectedProduct) ? (
-                            <img
-                              src={obterImagemProduto(selectedProduct) ?? ""}
-                              alt={selectedProduct.nome}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = "none";
-                              }}
-                            />
-                          ) : (
-                            <Package className="w-4 h-4 text-[#888882]" />
-                          )}
-                        </div>
+                        <ImagemProdutoEstoque
+                          produto={selectedProduct}
+                          className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                          iconClassName="w-4 h-4"
+                        />
                         <div className="flex-1 min-w-0">
                           <span className="font-extrabold text-xs sm:text-sm text-[#2F2F2D] dark:text-[#F4F4F0] block truncate">
                             {selectedProduct.nome}
@@ -1445,16 +1454,11 @@ export default function EstoquePage() {
                                 }`}
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
-                                  <div className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-[#2B2B29] overflow-hidden shrink-0 flex items-center justify-center">
-                                    <img
-                                      src={obterImagemProduto(p) ?? ""}
-                                      alt={p.nome}
-                                      className="w-full h-full object-cover"
-                                      onError={(e) => {
-                                        (e.target as HTMLImageElement).style.display = "none";
-                                      }}
-                                    />
-                                  </div>
+                                  <ImagemProdutoEstoque
+                                    produto={p}
+                                    className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-[#2B2B29]"
+                                    iconClassName="w-4 h-4"
+                                  />
                                   <span className="truncate">{p.nome}</span>
                                 </div>
                                 <span className="text-[11px] text-[#888882] shrink-0 font-medium">
@@ -1773,7 +1777,7 @@ export default function EstoquePage() {
               </div>
 
               {/* Rodapé Fixo */}
-              <div className="p-4 sm:p-5 border-t border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#20201E] flex items-center justify-end gap-2.5 shrink-0">
+              <div className="p-3 sm:p-5 border-t border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#20201E] flex flex-col-reverse min-[420px]:flex-row items-stretch min-[420px]:items-center justify-end gap-2.5 shrink-0">
                 <button
                   type="button"
                   onClick={() => setIsMovementModalOpen(false)}
@@ -1787,7 +1791,7 @@ export default function EstoquePage() {
                   type="button"
                   disabled={Boolean(movementCalculation.error) || salvandoMovimentacao}
                   onClick={() => void handleRegisterMovement()}
-                  className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 ${
                     movementCalculation.error || salvandoMovimentacao
                       ? "opacity-40 cursor-not-allowed bg-neutral-300 dark:bg-neutral-800 text-neutral-500"
                       : "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] hover:bg-black dark:hover:bg-white active:scale-98"
@@ -1822,16 +1826,16 @@ export default function EstoquePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="detalhes-produto-title"
-            className="fixed inset-0 z-50 overflow-hidden animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
             <div
               onClick={() => setIsDetailsModalOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity z-40"
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />
 
-            {/* Painel Lateral */}
-            <div className="fixed top-0 right-0 bottom-0 left-0 sm:left-auto w-full sm:w-[560px] md:w-[600px] max-w-full h-full h-[100dvh] max-h-[100dvh] bg-white dark:bg-[#20201E] border-l border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl flex flex-col z-50 overflow-hidden">
+            {/* Modal centralizado e adaptável */}
+            <div className="relative z-10 flex w-full max-w-[620px] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-2xl border border-[#E2E2DD] bg-white shadow-2xl dark:border-[#3F3F3B] dark:bg-[#20201E]">
               {/* Header */}
               <div className="p-4 sm:p-6 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-start justify-between gap-3 bg-white dark:bg-[#20201E] shrink-0">
                 <div>
@@ -1856,16 +1860,11 @@ export default function EstoquePage() {
               <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-5">
                 {/* Hero do Produto */}
                 <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 rounded-2xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center">
-                    <img
-                      src={obterImagemProduto(selectedProduct) ?? ""}
-                      alt={selectedProduct.nome}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  </div>
+                  <ImagemProdutoEstoque
+                    produto={selectedProduct}
+                    className="w-20 h-20 rounded-2xl bg-neutral-100 dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B]"
+                    iconClassName="w-9 h-9"
+                  />
 
                   <div className="flex-1 min-w-0">
                     <h3 className="text-lg sm:text-xl font-black text-[#2F2F2D] dark:text-[#F4F4F0] leading-tight">
@@ -2023,7 +2022,7 @@ export default function EstoquePage() {
               </div>
 
               {/* Rodapé */}
-              <div className="p-4 sm:p-5 border-t border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#20201E] flex items-center justify-end gap-2.5 shrink-0">
+              <div className="p-3 sm:p-5 border-t border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#20201E] flex flex-col-reverse min-[420px]:flex-row items-stretch min-[420px]:items-center justify-end gap-2.5 shrink-0">
                 <button
                   type="button"
                   onClick={() => setIsDetailsModalOpen(false)}
@@ -2063,16 +2062,16 @@ export default function EstoquePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="historico-estoque-title"
-            className="fixed inset-0 z-50 overflow-hidden animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-6 animate-fadeIn"
           >
             {/* Backdrop */}
             <div
               onClick={() => setIsHistoryModalOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity z-40"
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
             />
 
-            {/* Painel Lateral */}
-            <div className="fixed top-0 right-0 bottom-0 left-0 sm:left-auto w-full sm:w-[560px] md:w-[620px] max-w-full h-full h-[100dvh] max-h-[100dvh] bg-white dark:bg-[#20201E] border-l border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl flex flex-col z-50 overflow-hidden">
+            {/* Modal centralizado e adaptável */}
+            <div className="relative z-10 flex w-full max-w-[620px] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-2xl border border-[#E2E2DD] bg-white shadow-2xl dark:border-[#3F3F3B] dark:bg-[#20201E]">
               {/* Header */}
               <div className="p-4 sm:p-6 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-start justify-between gap-3 bg-white dark:bg-[#20201E] shrink-0">
                 <div>
@@ -2129,7 +2128,6 @@ export default function EstoquePage() {
                   filteredStockMovements.map((m) => {
                     const rotulo = getRotuloTipoMovimento(m.tipo);
                     const isAutomatico = m.tipo === "VENDA" || m.tipo === "REVERSAO_VENDA";
-                    const thumb = obterImagemProduto(m.produto);
 
                     return (
                       <div
@@ -2137,20 +2135,11 @@ export default function EstoquePage() {
                         className="p-3.5 rounded-2xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-start justify-between gap-3 text-xs"
                       >
                         <div className="flex items-start gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 flex items-center justify-center mt-0.5">
-                            {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={m.produto?.nome || "Produto"}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <Package className="w-4 h-4 text-[#888882]" />
-                            )}
-                          </div>
+                          <ImagemProdutoEstoque
+                            produto={m.produto}
+                            className="w-10 h-10 rounded-xl bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] mt-0.5"
+                            iconClassName="w-4 h-4"
+                          />
 
                           <div className="min-w-0">
                             <strong className="font-extrabold text-sm text-[#2F2F2D] dark:text-[#F4F4F0] block truncate">

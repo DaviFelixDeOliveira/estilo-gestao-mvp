@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import { HorariosBarbeariaConfig } from "@/components/sistema/horarios-barbearia-config";
 
 export default async function ConfiguracoesHorariosBarbeariaPage() {
@@ -44,7 +43,6 @@ export default async function ConfiguracoesHorariosBarbeariaPage() {
         </p>
       </header>
 
-      <ConfiguracaoTabs activeTab="horarios" />
 
       <HorariosBarbeariaConfig horariosIniciais={horarios ?? []} />
     </div>

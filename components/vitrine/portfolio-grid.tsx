@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import { createPortal } from "react-dom";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent, TouchEvent as ReactTouchEvent } from "react";
 import {
   Check, Eye, EyeOff, GripVertical, ImagePlus, Loader2,
   Maximize2, MoreVertical, Pencil, RotateCcw, Trash2, Upload, X,
@@ -53,9 +54,26 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
   const [arrastandoArquivo, setArrastandoArquivo] = useState(false);
   const inputArquivoRef = useRef<HTMLInputElement | null>(null);
   const [ampliada, setAmpliada] = useState<FotoPortfolio | null>(null);
+  const [fotoParaExcluir, setFotoParaExcluir] = useState<FotoPortfolio | null>(null);
   const [arrastando, setArrastando] = useState<string | null>(null);
   const [fantasma, setFantasma] = useState<{ x: number; y: number; largura: number; altura: number } | null>(null);
-  const dragRef = useRef<{ id: string; pointerId: number; offsetX: number; offsetY: number; largura: number; altura: number; inicial: FotoPortfolio[] } | null>(null);
+  const dragRef = useRef<{
+    id: string;
+    pointerId: number;
+    inicioX: number;
+    inicioY: number;
+    offsetX: number;
+    offsetY: number;
+    largura: number;
+    altura: number;
+    inicial: FotoPortfolio[];
+    ativo: boolean;
+    temporizador: ReturnType<typeof setTimeout> | null;
+    grade: HTMLElement;
+    celulas: { x: number; y: number }[];
+  } | null>(null);
+  const limparArrasteRef = useRef<(() => void) | null>(null);
+  const posicoesAntesRef = useRef<Map<string, DOMRect> | null>(null);
 
   function atualizar(lista: FotoPortfolio[]) {
     fotosRef.current = lista;
@@ -96,66 +114,564 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
     avisar("Ordem do portfólio salva.");
   }
 
-  function iniciarArraste(evento: ReactPointerEvent<HTMLButtonElement>, foto: FotoPortfolio) {
-    if (ocupadoRef.current || (evento.pointerType === "mouse" && evento.button !== 0)) return;
-    const cartao = evento.currentTarget.closest<HTMLElement>("[data-portfolio-id]");
-    if (!cartao) return;
-    evento.preventDefault();
-    evento.stopPropagation();
-    const rect = cartao.getBoundingClientRect();
-    dragRef.current = {
-      id: foto.id, pointerId: evento.pointerId,
-      offsetX: evento.clientX - rect.left, offsetY: evento.clientY - rect.top,
-      largura: rect.width, altura: rect.height, inicial: [...fotosRef.current],
+  function iniciarArraste(evento: ReactPointerEvent<HTMLElement>, foto: FotoPortfolio) {
+    if (evento.pointerType === "touch") return;
+    if (ocupadoRef.current || dragRef.current) return;
+    if (evento.pointerType === "mouse" && evento.button !== 0) return;
+
+    const alvo = evento.target as HTMLElement;
+
+    // Permite arrastar pela foto ou pelo pegador.
+    // Outros botões continuam funcionando normalmente.
+    if (!alvo.closest("[data-arraste-portfolio]")) return;
+    if (alvo.closest("button") && !alvo.closest("button[data-arraste-portfolio]")) return;
+
+    const rect = evento.currentTarget.getBoundingClientRect();
+    const grade = evento.currentTarget.parentElement;
+    if (!grade) return;
+    const gradeRect = grade.getBoundingClientRect();
+    const celulas = Array.from(grade.children)
+      .filter((el): el is HTMLElement =>
+        el instanceof HTMLElement && Boolean(el.dataset.portfolioId))
+      .map((el) => {
+        const r = el.getBoundingClientRect();
+        return {
+          x: r.left - gradeRect.left + r.width / 2,
+          y: r.top - gradeRect.top + r.height / 2,
+        };
+      });
+    if (celulas.length !== fotosRef.current.length) return;
+
+    const drag = {
+      id: foto.id,
+      pointerId: evento.pointerId,
+      inicioX: evento.clientX,
+      inicioY: evento.clientY,
+      offsetX: evento.clientX - rect.left,
+      offsetY: evento.clientY - rect.top,
+      largura: rect.width,
+      altura: rect.height,
+      inicial: [...fotosRef.current],
+      grade,
+      celulas,
+      ativo: false,
+      temporizador: null as ReturnType<typeof setTimeout> | null,
     };
-    evento.currentTarget.setPointerCapture(evento.pointerId);
-    setArrastando(foto.id);
-    setMenu(null);
-    setFantasma({ x: rect.left, y: rect.top, largura: rect.width, altura: rect.height });
-    // Feedback tátil sutil no celular (mesmo comportamento do AI Studio).
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      try {
-        navigator.vibrate?.(40);
-      } catch {
-        // vibração indisponível: ignora
+
+    dragRef.current = drag;
+    let seguranca: ReturnType<typeof setTimeout> | null = null;
+
+    function renovarSeguranca() {
+      if (seguranca !== null) clearTimeout(seguranca);
+      seguranca = setTimeout(() => encerrar(true), 10000);
+    }
+
+    function iniciarMovimento() {
+      if (dragRef.current !== drag || ocupadoRef.current) return;
+
+      drag.ativo = true;
+      try { document.body.setPointerCapture(drag.pointerId); }
+      catch { /* Eventos globais continuam ativos. */ }
+      renovarSeguranca();
+      setArrastando(drag.id);
+      setMenu(null);
+
+      setFantasma({
+        x: rect.left,
+        y: rect.top,
+        largura: rect.width,
+        altura: rect.height,
+      });
+
+      if (evento.pointerType === "touch" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate?.(35);
+        } catch {
+          // Vibração indisponível.
+        }
       }
     }
-  }
 
-  function duranteArraste(evento: ReactPointerEvent<HTMLButtonElement>) {
-    const drag = dragRef.current;
-    if (!drag || drag.pointerId !== evento.pointerId) return;
-    evento.preventDefault();
-    setFantasma({
-      x: evento.clientX - drag.offsetX, y: evento.clientY - drag.offsetY,
-      largura: drag.largura, altura: drag.altura,
-    });
-    const alvo = document.elementFromPoint(evento.clientX, evento.clientY)
-      ?.closest<HTMLElement>("[data-portfolio-id]");
-    const idAlvo = alvo?.dataset.portfolioId;
-    if (idAlvo && idAlvo !== drag.id) {
+    function limparOuvintes() {
+      if (drag.temporizador !== null) clearTimeout(drag.temporizador);
+      if (seguranca !== null) clearTimeout(seguranca);
+      window.removeEventListener("touchend", aoFinalizarToque);
+      window.removeEventListener("touchcancel", aoCancelarToque);
+      window.removeEventListener("touchmove", impedirRolagem);
+      try {
+        if (document.body.hasPointerCapture(drag.pointerId)) {
+          document.body.releasePointerCapture(drag.pointerId);
+        }
+      } catch { /* O navegador ja liberou. */ }
+
+      window.removeEventListener("pointermove", aoMover);
+      window.removeEventListener("pointerup", aoSoltar);
+      window.removeEventListener("pointercancel", aoCancelar);
+      window.removeEventListener("blur", aoPerderFoco);
+      document.removeEventListener("visibilitychange", aoMudarVisibilidade);
+      window.removeEventListener("keydown", aoPressionarTecla);
+
+      limparArrasteRef.current = null;
+    }
+
+    function encerrar(cancelar: boolean) {
+      if (dragRef.current !== drag) return;
+
+      limparOuvintes();
+      dragRef.current = null;
+
+      setArrastando(null);
+      setFantasma(null);
+
+      if (!drag.ativo) return;
+
+      if (cancelar) {
+        atualizar(drag.inicial);
+      } else {
+        void salvarOrdem(drag.inicial, fotosRef.current);
+      }
+    }
+
+    function aoMover(e: PointerEvent) {
+      if (e.pointerId !== drag.pointerId || dragRef.current !== drag) return;
+
+      if (!drag.ativo) {
+        const distancia = Math.hypot(
+          e.clientX - drag.inicioX,
+          e.clientY - drag.inicioY
+        );
+        if (distancia > 12) encerrar(true);
+        return;
+      }
+
+      if (e.cancelable) e.preventDefault();
+      renovarSeguranca();
+      setFantasma({
+        x: e.clientX - drag.offsetX,
+        y: e.clientY - drag.offsetY,
+        largura: drag.largura,
+        altura: drag.altura,
+      });
+
+      // Grade medida antes do arraste: os centros nao trocam com as fotos.
+      const r = drag.grade.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      if (x < -35 || y < -35 || x > r.width + 35 || y > r.height + 35) return;
+
+      let destino = 0;
+      let menor = Infinity;
+      drag.celulas.forEach((centro, indice) => {
+        const d = (centro.x - x) ** 2 + (centro.y - y) ** 2;
+        if (d < menor) {
+          menor = d;
+          destino = indice;
+        }
+      });
+
       const atual = fotosRef.current;
       const de = atual.findIndex((f) => f.id === drag.id);
-      const para = atual.findIndex((f) => f.id === idAlvo);
-      if (de >= 0 && para >= 0) atualizar(mover(atual, de, para));
+      if (de < 0 || de === destino) return;
+
+      // Histerese: evita oscilar quando o dedo esta na divisoria.
+      const centroAtual = drag.celulas[de];
+      const dAtual = (centroAtual.x - x) ** 2 + (centroAtual.y - y) ** 2;
+      const centroDestino = drag.celulas[destino];
+      const distanciaEntreCentros = Math.hypot(
+        centroAtual.x - centroDestino.x, centroAtual.y - centroDestino.y
+      );
+      if (menor + 2 * distanciaEntreCentros * 16 >= dAtual) return;
+
+      const posicoes = new Map<string, DOMRect>();
+      drag.grade.querySelectorAll<HTMLElement>('[data-portfolio-id]').forEach((el) => {
+        if (el.dataset.portfolioId) {
+          posicoes.set(el.dataset.portfolioId, el.getBoundingClientRect());
+        }
+      });
+      posicoesAntesRef.current = posicoes;
+      atualizar(mover(atual, de, destino));
     }
-    const limite = 85;
-    if (evento.clientY < limite) window.scrollBy(0, -9);
-    if (evento.clientY > window.innerHeight - limite) window.scrollBy(0, 9);
+
+    function aoSoltar(e: PointerEvent) {
+      if (e.pointerId === drag.pointerId) encerrar(false);
+    }
+
+    function aoCancelar(e: PointerEvent) {
+      if (e.pointerId === drag.pointerId) encerrar(true);
+    }
+
+    function aoFinalizarToque(e: TouchEvent) {
+      if (e.touches.length === 0) encerrar(false);
+    }
+    function aoCancelarToque(e: TouchEvent) {
+      if (e.touches.length === 0) encerrar(true);
+    }
+    function impedirRolagem(e: TouchEvent) {
+      if (drag.ativo && e.cancelable) e.preventDefault();
+    }
+    function aoPerderFoco() {
+      encerrar(true);
+    }
+
+    function aoMudarVisibilidade() {
+      if (document.visibilityState === "hidden") {
+        encerrar(true);
+      }
+    }
+
+    function aoPressionarTecla(e: KeyboardEvent) {
+      if (e.key === "Escape") encerrar(true);
+    }
+
+    limparArrasteRef.current = () => encerrar(true);
+
+    window.addEventListener("pointermove", aoMover, {
+      passive: false,
+    });
+
+    window.addEventListener("pointerup", aoSoltar);
+    window.addEventListener("pointercancel", aoCancelar);
+    window.addEventListener("touchend", aoFinalizarToque);
+    window.addEventListener("touchcancel", aoCancelarToque);
+    window.addEventListener("touchmove", impedirRolagem, { passive: false });
+    window.addEventListener("blur", aoPerderFoco);
+
+    document.addEventListener(
+      "visibilitychange",
+      aoMudarVisibilidade
+    );
+
+    window.addEventListener("keydown", aoPressionarTecla);
+
+        evento.preventDefault();
+    iniciarMovimento();
   }
 
-  function finalizarArraste(evento: ReactPointerEvent<HTMLButtonElement>, cancelar = false) {
-    const drag = dragRef.current;
-    if (!drag || evento.pointerId !== drag.pointerId) return;
-    dragRef.current = null;
-    if (evento.currentTarget.hasPointerCapture(evento.pointerId)) {
-      evento.currentTarget.releasePointerCapture(evento.pointerId);
+  // Anima as fotos vizinhas quando uma muda de lugar.
+
+  // Controle independente para o celular.
+  function iniciarArrasteToque(
+    evento: ReactTouchEvent<HTMLElement>,
+    foto: FotoPortfolio
+  ) {
+    if (ocupadoRef.current || dragRef.current || limparArrasteRef.current) return;
+    if (evento.touches.length !== 1) return;
+
+    const alvo = evento.target as HTMLElement;
+
+    if (!alvo.closest("[data-arraste-portfolio]")) return;
+
+    if (
+      alvo.closest("button") &&
+      !alvo.closest("button[data-arraste-portfolio]")
+    ) return;
+
+    const cartao = evento.currentTarget;
+    const grade = cartao.parentElement;
+    if (!grade) return;
+
+    const dedo = evento.touches[0];
+    const identificador = dedo.identifier;
+    const inicioX = dedo.clientX;
+    const inicioY = dedo.clientY;
+    const inicioRect = cartao.getBoundingClientRect();
+    const anterior = [...fotosRef.current];
+
+    let ativo = false;
+    let encerrado = false;
+    let celulas: { x: number; y: number }[] = [];
+    let espera: ReturnType<typeof setTimeout> | null = null;
+    let seguranca: ReturnType<typeof setTimeout> | null = null;
+
+    function dedoDoEvento(e: TouchEvent): Touch | undefined {
+      return Array.from(e.changedTouches).find(
+        (t) => t.identifier === identificador
+      );
     }
-    setArrastando(null);
-    setFantasma(null);
-    if (cancelar) atualizar(drag.inicial);
-    else void salvarOrdem(drag.inicial, fotosRef.current);
+
+    function limpar() {
+      if (espera !== null) clearTimeout(espera);
+      if (seguranca !== null) clearTimeout(seguranca);
+
+      window.removeEventListener("touchmove", moverToque, true);
+      window.removeEventListener("touchend", soltarToque, true);
+      window.removeEventListener("touchcancel", cancelarToque, true);
+      window.removeEventListener("blur", perderFoco);
+      document.removeEventListener("visibilitychange", mudarVisibilidade);
+      window.removeEventListener("keydown", tecla);
+
+      limparArrasteRef.current = null;
+    }
+
+    function encerrar(cancelar: boolean) {
+      if (encerrado) return;
+      encerrado = true;
+      limpar();
+
+      if (!ativo) return;
+
+      setArrastando(null);
+      setFantasma(null);
+
+      if (cancelar) {
+        atualizar(anterior);
+      } else {
+        void salvarOrdem(anterior, fotosRef.current);
+      }
+    }
+
+    function renovarSeguranca() {
+      if (seguranca !== null) clearTimeout(seguranca);
+      seguranca = setTimeout(() => encerrar(true), 6000);
+    }
+
+    function ativar() {
+      if (encerrado || ocupadoRef.current) return;
+
+      const rectGrade = grade!.getBoundingClientRect();
+
+      celulas = Array.from(grade!.children)
+        .filter(
+          (el): el is HTMLElement =>
+            el instanceof HTMLElement &&
+            Boolean(el.dataset.portfolioId)
+        )
+        .map((el) => {
+          const r = el.getBoundingClientRect();
+
+          return {
+            x: r.left - rectGrade.left + r.width / 2,
+            y: r.top - rectGrade.top + r.height / 2,
+          };
+        });
+
+      if (celulas.length !== anterior.length) {
+        encerrar(true);
+        return;
+      }
+
+      ativo = true;
+      setMenu(null);
+      setArrastando(foto.id);
+
+      setFantasma({
+        x: inicioRect.left,
+        y: inicioRect.top,
+        largura: inicioRect.width,
+        altura: inicioRect.height,
+      });
+
+      renovarSeguranca();
+
+      try {
+        navigator.vibrate?.(35);
+      } catch {
+        // Vibração indisponível.
+      }
+    }
+
+    function moverToque(e: TouchEvent) {
+      const touch = dedoDoEvento(e);
+      if (!touch || encerrado) return;
+
+      if (!ativo) {
+        const distancia = Math.hypot(
+          touch.clientX - inicioX,
+          touch.clientY - inicioY
+        );
+
+        // Tolera pequenos movimentos involuntários.
+        if (distancia > 26) encerrar(true);
+        return;
+      }
+
+      if (e.cancelable) e.preventDefault();
+      renovarSeguranca();
+
+      setFantasma({
+        x: touch.clientX - (inicioX - inicioRect.left),
+        y: touch.clientY - (inicioY - inicioRect.top),
+        largura: inicioRect.width,
+        altura: inicioRect.height,
+      });
+
+      const rectGrade = grade!.getBoundingClientRect();
+      const x = touch.clientX - rectGrade.left;
+      const y = touch.clientY - rectGrade.top;
+
+      if (
+        x < -40 ||
+        y < -40 ||
+        x > rectGrade.width + 40 ||
+        y > rectGrade.height + 40
+      ) return;
+
+      let destino = 0;
+      let menor = Infinity;
+
+      celulas.forEach((centro, indice) => {
+        const distancia =
+          (centro.x - x) ** 2 + (centro.y - y) ** 2;
+
+        if (distancia < menor) {
+          menor = distancia;
+          destino = indice;
+        }
+      });
+
+      const atual = fotosRef.current;
+      const de = atual.findIndex((f) => f.id === foto.id);
+
+      if (de < 0 || de === destino) return;
+
+      // Evita os cartões oscilarem entre posições.
+      const centroAtual = celulas[de];
+      const centroDestino = celulas[destino];
+
+      const distanciaCentros = Math.hypot(
+        centroAtual.x - centroDestino.x,
+        centroAtual.y - centroDestino.y
+      );
+
+      const dAtual =
+        (centroAtual.x - x) ** 2 +
+        (centroAtual.y - y) ** 2;
+
+      if (menor + 2 * distanciaCentros * 16 >= dAtual) return;
+
+      const posicoes = new Map<string, DOMRect>();
+
+      grade!
+        .querySelectorAll<HTMLElement>("[data-portfolio-id]")
+        .forEach((item) => {
+          if (item.dataset.portfolioId) {
+            posicoes.set(
+              item.dataset.portfolioId,
+              item.getBoundingClientRect()
+            );
+          }
+        });
+
+      posicoesAntesRef.current = posicoes;
+      atualizar(mover(atual, de, destino));
+    }
+
+    function soltarToque(e: TouchEvent) {
+      if (dedoDoEvento(e)) encerrar(false);
+    }
+
+    function cancelarToque(e: TouchEvent) {
+      if (dedoDoEvento(e)) encerrar(true);
+    }
+
+    function perderFoco() {
+      encerrar(true);
+    }
+
+    function mudarVisibilidade() {
+      if (document.hidden) encerrar(true);
+    }
+
+    function tecla(e: KeyboardEvent) {
+      if (e.key === "Escape") encerrar(true);
+    }
+
+    limparArrasteRef.current = () => encerrar(true);
+
+    window.addEventListener("touchmove", moverToque, {
+      passive: false,
+      capture: true,
+    });
+
+    window.addEventListener("touchend", soltarToque, true);
+    window.addEventListener("touchcancel", cancelarToque, true);
+    window.addEventListener("blur", perderFoco);
+
+    document.addEventListener(
+      "visibilitychange",
+      mudarVisibilidade
+    );
+
+    window.addEventListener("keydown", tecla);
+
+    // Aproximadamente 1 segundo segurando a foto.
+    espera = setTimeout(ativar, 950);
   }
+
+  useLayoutEffect(() => {
+    const antes = posicoesAntesRef.current;
+    posicoesAntesRef.current = null;
+
+    if (
+      !antes ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) return;
+
+    document
+      .querySelectorAll<HTMLElement>("[data-portfolio-id]")
+      .forEach((cartao) => {
+        if (cartao.dataset.portfolioId === arrastando) return;
+
+        const anterior = antes.get(
+          cartao.dataset.portfolioId ?? ""
+        );
+
+        if (!anterior) return;
+
+        const atual = cartao.getBoundingClientRect();
+        const dx = anterior.left - atual.left;
+        const dy = anterior.top - atual.top;
+
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+        cartao.getAnimations().forEach((animacao) => {
+          animacao.cancel();
+        });
+
+        cartao.animate(
+          [
+            {
+              transform:
+                "translate(" + dx + "px, " + dy + "px)",
+            },
+            {
+              transform: "translate(0, 0)",
+            },
+          ],
+          {
+            duration: 190,
+            easing: "ease-out",
+          }
+        );
+      });
+  }, [fotos, arrastando]);
+
+  // Limpa qualquer movimento se o componente desaparecer.
+  useEffect(
+    () => () => limparArrasteRef.current?.(),
+    []
+  );
+
+  // Tecla Escape fecha a visualização ou o editor.
+  useEffect(() => {
+    if (!ampliada && editando === null) return;
+
+    function aoEscape(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+
+      if (ampliada) {
+        setAmpliada(null);
+      } else if (!ocupadoRef.current) {
+        setEditando(null);
+      }
+    }
+
+    window.addEventListener("keydown", aoEscape);
+
+    return () => {
+      window.removeEventListener("keydown", aoEscape);
+    };
+  }, [ampliada, editando]);
 
   function mudarPeloTeclado(foto: FotoPortfolio, direcao: number) {
     if (ocupadoRef.current) return;
@@ -290,8 +806,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
   }
 
   async function excluir(foto: FotoPortfolio) {
-    setMenu(null);
-    if (ocupadoRef.current || !window.confirm(`Excluir a foto "${foto.titulo || "Sem título"}"?`)) return;
+    if (ocupadoRef.current) return;
     ocupadoRef.current = true;
     setOcupado(true);
     const { error } = await supabase.from("portfolio")
@@ -305,6 +820,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
     }
     ocupadoRef.current = false;
     setOcupado(false);
+    setFotoParaExcluir(null);
   }
 
   const atualArrastada = fotos.find((f) => f.id === arrastando);
@@ -325,7 +841,7 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
             </span>
           </h2>
           <p className="mt-1 text-xs text-[#666662] dark:text-[#B8B8B2]">
-            Arraste pelo ícone de pegador para definir a ordem da vitrine. No celular, segure o pegador e mova o dedo.
+            Arraste a foto ou o pegador para mudar a ordem. No celular, toque e segure a foto por 1 segundo e depois mova o dedo.
           </p>
         </div>
         <button type="button" className={estilosBotao} disabled={ocupado || fotos.length >= 10} onClick={() => abrirEditor("nova")}>
@@ -344,40 +860,42 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
             const src = resolverSrcMidia(foto.imagem_path);
             return (
               <article key={foto.id} data-portfolio-id={foto.id}
-                className={`relative min-w-0 overflow-hidden rounded-2xl border bg-white shadow-sm dark:bg-[#222220] ${arrastando === foto.id ? "border-dashed border-amber-400 opacity-30" : "border-[#E2E2DD] dark:border-[#3F3F3B]"}`}>
+                onPointerDown={(e) => iniciarArraste(e, foto)}
+                onTouchStart={(e) => iniciarArrasteToque(e, foto)}
+                className={`relative min-w-0 overflow-visible rounded-2xl border bg-white shadow-sm dark:bg-[#222220] ${menu === foto.id ? "z-30" : ""} ${arrastando === foto.id ? "border-dashed border-amber-400 opacity-30" : "border-[#E2E2DD] dark:border-[#3F3F3B]"}`}>
                 <div className="flex items-center justify-between border-b border-[#E2E2DD] bg-[#FAF9F5] px-2 py-2 dark:border-[#3F3F3B] dark:bg-[#262624]">
-                  <button type="button" aria-label={`Arrastar foto ${indice + 1} para reorganizar`}
-                    title="Arrastar para mudar a ordem. Setas também funcionam."
+                  <button type="button" data-arraste-portfolio="true" aria-label={`Arrastar foto ${indice + 1} para reorganizar`}
+                    title="Arraste para mudar a ordem. No celular, segure por 1 segundo. Setas do teclado também funcionam."
                     disabled={ocupado}
-                    onPointerDown={(e) => iniciarArraste(e, foto)}
-                    onPointerMove={duranteArraste}
-                    onPointerUp={(e) => finalizarArraste(e)}
-                    onPointerCancel={(e) => finalizarArraste(e, true)}
+                    onContextMenu={(e) => e.preventDefault()}
                     onKeyDown={(e) => {
                       if (["ArrowRight", "ArrowDown"].includes(e.key)) { e.preventDefault(); mudarPeloTeclado(foto, 1); }
                       if (["ArrowLeft", "ArrowUp"].includes(e.key)) { e.preventDefault(); mudarPeloTeclado(foto, -1); }
                     }}
                     style={{ touchAction: "none" }}
-                    className="flex cursor-grab touch-none items-center gap-1 rounded-lg p-1 text-xs font-bold text-[#888882] hover:bg-[#E2E2DD] active:cursor-grabbing dark:hover:bg-[#3F3F3B]">
+                    className="flex cursor-grab touch-none select-none items-center gap-1 rounded-lg p-1 text-xs font-bold text-[#888882] transition-colors hover:bg-[#E2E2DD] hover:text-[#2F2F2D] active:cursor-grabbing dark:hover:bg-[#3F3F3B] dark:hover:text-white">
                     <GripVertical className="h-4 w-4" /> #{indice + 1}
                     {!foto.visivel_vitrine && <span className="rounded bg-[#E2E2DD] px-1 text-[9px] dark:bg-[#3F3F3B]">Oculta</span>}
                   </button>
                   <div className="relative" data-menu-foto="true">
-                    <button type="button" aria-label="Opções da foto" className="rounded-lg p-1 text-[#888882] hover:bg-[#E2E2DD] dark:hover:bg-[#3F3F3B]" onClick={() => setMenu(menu === foto.id ? null : foto.id)}>
+                    <button type="button" aria-label="Opções da foto" title="Opções da foto" className="rounded-lg p-2 text-[#888882] transition-colors hover:bg-[#E2E2DD] hover:text-[#2F2F2D] focus-visible:outline-2 focus-visible:outline-amber-400 dark:hover:bg-[#3F3F3B] dark:hover:text-white" onClick={() => setMenu(menu === foto.id ? null : foto.id)}>
                       <MoreVertical className="h-4 w-4" />
                     </button>
                     {menu === foto.id && (
                       <div className="absolute right-0 top-8 z-20 w-44 rounded-xl border border-[#3F3F3B] bg-[#222220] p-1 text-xs text-[#F4F4F0] shadow-2xl">
                         <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-[#3F3F3B]" onClick={() => abrirEditor(foto)}><Pencil className="h-4 w-4" /> Editar foto</button>
                         <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-[#3F3F3B]" onClick={() => void alternar(foto)}>{foto.visivel_vitrine ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}{foto.visivel_vitrine ? "Ocultar da vitrine" : "Mostrar na vitrine"}</button>
-                        <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-rose-400 hover:bg-rose-950/40" onClick={() => void excluir(foto)}><Trash2 className="h-4 w-4" /> Excluir</button>
+                        <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-rose-400 hover:bg-rose-950/40" onClick={() => {
+                          setMenu(null);
+                          setFotoParaExcluir(foto);
+                        }}><Trash2 className="h-4 w-4" /> Excluir</button>
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="relative aspect-[4/3] bg-[#181817]">
+                <div data-arraste-portfolio="true" onContextMenu={(e) => e.preventDefault()} className="relative aspect-[4/3] cursor-grab select-none touch-none overflow-hidden bg-[#181817] active:cursor-grabbing">
                   {src ? <Image src={src} alt={foto.titulo || `Trabalho ${indice + 1}`} fill unoptimized className="object-cover" draggable={false} /> : <ImagePlus className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-[#888882]" />}
-                  <button type="button" aria-label="Ampliar foto" className="absolute bottom-2 right-2 rounded-lg bg-black/70 p-2 text-white" onClick={() => setAmpliada(foto)}><Maximize2 className="h-4 w-4" /></button>
+                  <button type="button" aria-label="Ampliar foto" title="Ampliar foto" className="absolute bottom-2 right-2 z-10 rounded-lg bg-black/75 p-2.5 text-white transition-colors hover:bg-amber-400 hover:text-[#181817] focus-visible:outline-2 focus-visible:outline-amber-400 active:bg-amber-300" onClick={() => setAmpliada(foto)}><Maximize2 className="h-4 w-4" /></button>
                 </div>
                 <div className="min-h-20 p-3">
                   <p className="truncate text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">{foto.titulo || "Sem título"}</p>
@@ -389,18 +907,19 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
         </div>
       )}
 
-      {fantasma && atualArrastada && (
-        <div className="pointer-events-none fixed z-[90] overflow-hidden rounded-2xl border-2 border-amber-400 bg-[#222220] shadow-2xl"
+      {fantasma && atualArrastada && typeof document !== "undefined" && createPortal(
+        <div className="pointer-events-none fixed z-[90] flex flex-col overflow-hidden rounded-2xl border-2 border-amber-400 bg-[#222220] shadow-2xl"
           style={{ left: fantasma.x, top: fantasma.y, width: fantasma.largura, height: fantasma.altura }}>
           <div className="flex items-center justify-between bg-amber-950/80 px-3 py-2 text-xs font-black text-amber-300"><span><GripVertical className="mr-1 inline h-3 w-3" /> Reposicionando</span><span>#{fotos.findIndex((f) => f.id === atualArrastada.id) + 1}</span></div>
-          <div className="relative h-[75%] bg-[#181817]">{imagemArrastada && <Image src={imagemArrastada} alt="Foto em movimento" fill unoptimized className="object-cover" />}</div>
+          <div className="relative min-h-0 flex-1 bg-[#181817]">{imagemArrastada && <Image src={imagemArrastada} alt="Foto em movimento" fill unoptimized className="object-cover" />}</div>
           <p className="truncate px-3 py-2 text-sm font-bold text-white">{atualArrastada.titulo || "Sem título"}</p>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {editando !== null && (
+      {editando !== null && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/75 p-4"
+          className="fixed inset-0 z-[105] flex items-start justify-center overflow-y-auto bg-black/75 p-2 sm:items-center sm:p-4"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget && !ocupado) fecharEditor();
           }}
@@ -409,9 +928,9 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
             role="dialog"
             aria-modal="true"
             aria-label={editando === "nova" ? "Adicionar foto do portfólio" : "Editar foto do portfólio"}
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#3F3F3B] bg-[#222220] p-5 text-white shadow-2xl"
+            className="my-1 max-h-[calc(100dvh-1rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-[#3F3F3B] bg-[#222220] p-5 text-white shadow-2xl sm:max-h-[calc(100dvh-2rem)]"
           >
-            <div className="flex items-center justify-between border-b border-[#3F3F3B] pb-3">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#3F3F3B] bg-[#222220] pb-3">
               <div className="flex items-center gap-2">
                 {editando === "nova" ? (
                   <ImagePlus className="h-4 w-4 text-amber-400" />
@@ -562,17 +1081,147 @@ export function PortfolioGrid({ barbeariaId, inicial, onChange, avisar }: Props)
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {ampliada && (
-        <div className="fixed inset-0 z-[96] flex items-center justify-center bg-black/90 p-4" onClick={() => setAmpliada(null)}>
-          <button type="button" className="absolute right-5 top-5 rounded-full bg-white/20 p-3 text-white" aria-label="Fechar foto ampliada" onClick={() => setAmpliada(null)}><X className="h-5 w-5" /></button>
-          <div className="relative h-[75vh] w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
-            {resolverSrcMidia(ampliada.imagem_path) && <Image src={resolverSrcMidia(ampliada.imagem_path)!} alt={ampliada.titulo || "Foto do portfólio"} fill unoptimized className="object-contain" />}
+      {ampliada && typeof document !== "undefined" && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Foto ampliada do portfólio"
+          className="fixed inset-0 z-[110] flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-black/95 p-3 sm:p-6"
+          onClick={() => setAmpliada(null)}
+        >
+          <button
+            type="button"
+            aria-label="Fechar foto ampliada"
+            title="Fechar foto"
+            onClick={() => setAmpliada(null)}
+            style={{ top: "max(12px, env(safe-area-inset-top))" }}
+            className="fixed right-3 z-[111] flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white shadow-lg transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-amber-400 sm:right-6"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div
+            className="relative h-full w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {resolverSrcMidia(ampliada.imagem_path) && (
+              <Image
+                src={resolverSrcMidia(ampliada.imagem_path)!}
+                alt={ampliada.titulo || "Foto do portfólio"}
+                fill
+                unoptimized
+                className="object-contain"
+              />
+            )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
+
+      {fotoParaExcluir &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-black/75 p-3 backdrop-blur-sm sm:p-5"
+            onClick={(e) => {
+              if (
+                e.target === e.currentTarget &&
+                !ocupado
+              ) {
+                setFotoParaExcluir(null);
+              }
+            }}
+          >
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="titulo-excluir-portfolio"
+              aria-describedby="descricao-excluir-portfolio"
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && !ocupado) {
+                  e.stopPropagation();
+                  setFotoParaExcluir(null);
+                }
+              }}
+              className="w-full max-w-md overflow-hidden rounded-2xl border border-[#3F3F3B] bg-[#222220] text-[#F4F4F0] shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-[#3F3F3B] px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10 text-red-400">
+                    <Trash2 className="h-5 w-5" />
+                  </div>
+
+                  <h3
+                    id="titulo-excluir-portfolio"
+                    className="text-base font-extrabold"
+                  >
+                    Excluir foto
+                  </h3>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label="Fechar"
+                  disabled={ocupado}
+                  onClick={() => setFotoParaExcluir(null)}
+                  className="rounded-lg p-2 text-[#B8B8B2] transition-colors hover:bg-[#3F3F3B] hover:text-white disabled:opacity-40"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="space-y-3 px-5 py-5">
+                <p className="text-sm font-semibold leading-relaxed">
+                  Tem certeza que deseja excluir a foto{" "}
+                  <span className="text-red-400">
+                    &ldquo;{fotoParaExcluir.titulo || "Sem título"}&rdquo;
+                  </span>
+                  ?
+                </p>
+
+                <p
+                  id="descricao-excluir-portfolio"
+                  className="text-xs leading-relaxed text-[#B8B8B2]"
+                >
+                  A foto será removida do Portfólio e da
+                  Vitrine Digital. Essa ação não poderá ser desfeita.
+                </p>
+              </div>
+
+              <div className="flex flex-col-reverse gap-2 border-t border-[#3F3F3B] px-5 py-4 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  autoFocus
+                  disabled={ocupado}
+                  onClick={() => setFotoParaExcluir(null)}
+                  className="min-h-11 rounded-xl border border-[#3F3F3B] bg-[#2B2B29] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F3F3B] disabled:opacity-40"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  disabled={ocupado}
+                  onClick={() => void excluir(fotoParaExcluir)}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {ocupado ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
+
+                  {ocupado ? "Excluindo..." : "Excluir foto"}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
     </section>
   );
 }

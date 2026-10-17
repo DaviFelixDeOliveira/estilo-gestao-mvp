@@ -262,6 +262,10 @@ export function OnboardingFlow({
 
   const etapa = ETAPAS[etapaAtual - 1];
 
+  useEffect(() => {
+    document.title = etapa.titulo;
+  }, [etapa.titulo]);
+
   function mudarEtapa(proximoEtapa: number) {
     const destino = Math.min(
       Math.max(proximoEtapa, 1),

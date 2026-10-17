@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import QRCode from "qrcode";
 import { createClient } from "@/lib/supabase/client";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import { PortfolioGrid, type FotoPortfolio } from "@/components/vitrine/portfolio-grid";
 
 type RegraEstoque = "INDISPONIVEL" | "OCULTAR";
@@ -430,7 +429,6 @@ export function VitrineConfig({
         </div>
       </header>
 
-      <ConfiguracaoTabs activeTab="vitrine" />
 
       <section className="overflow-hidden rounded-2xl border border-[#3F3F3B] bg-[#1C1C1B] p-5 text-white shadow-xs dark:border-neutral-700 dark:bg-[#181817] sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">

@@ -146,7 +146,7 @@ export function AccountMenu({
 
           {/* Item 1: Perfil */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/perfil"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"
@@ -157,7 +157,7 @@ export function AccountMenu({
 
           {/* Item 2: Aparência */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/aparencia"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"
@@ -168,7 +168,7 @@ export function AccountMenu({
 
           {/* Item 3: Alterar senha */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/alterar-senha"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"
@@ -330,7 +330,7 @@ export function MobileUserAvatarMenu({
 
           {/* Item 1: Perfil */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/perfil"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"
@@ -341,7 +341,7 @@ export function MobileUserAvatarMenu({
 
           {/* Item 2: Aparência */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/aparencia"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"
@@ -352,7 +352,7 @@ export function MobileUserAvatarMenu({
 
           {/* Item 3: Alterar senha */}
           <Link
-            href="/conta"
+            href="/configuracoes/conta/alterar-senha"
             role="menuitem"
             onClick={closeMenu}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] transition-colors"

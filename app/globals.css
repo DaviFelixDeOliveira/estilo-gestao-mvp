@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #f8f8f6;
@@ -12,14 +13,78 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b0d0e;
-    --foreground: #f4f4f0;
-  }
+:root.dark {
+  --background: #0b0d0e;
+  --foreground: #f4f4f0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+
+/* Transicao suave entre as telas do sistema */
+@keyframes entrada-suave-pagina {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.transicao-pagina-entrada {
+  animation: entrada-suave-pagina 220ms ease-out both;
+}
+
+/* Respeitar usuarios que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .transicao-pagina-entrada {
+    animation: none;
+  }
+}
+
+/* Destaque da opcao selecionada no menu desktop */
+@keyframes entrada-selecao-sidebar {
+  from {
+    opacity: 0.55;
+    transform: translateX(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-selecao-entrada {
+  animation: entrada-selecao-sidebar 250ms ease-out both;
+}
+
+/* Entrada suave dos submenus */
+@keyframes entrada-submenu-sidebar {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sidebar-submenu-entrada {
+  animation: entrada-submenu-sidebar 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-selecao-entrada,
+  .sidebar-submenu-entrada {
+    animation: none;
+  }
 }

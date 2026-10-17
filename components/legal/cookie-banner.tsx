@@ -48,8 +48,13 @@ export function CookieBanner() {
     getServerSnapshot
   );
 
-  // O banner não deve ser exibido em páginas públicas
-  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
+  // Não exibe o aviso nas páginas públicas do sistema
+  // nem nas vitrines digitais compartilhadas com clientes.
+  const isPublicRoute =
+    PUBLIC_ROUTES.includes(pathname) ||
+    pathname === "/v" ||
+    pathname.startsWith("/v/");
 
   if (visto || isPublicRoute) {
     return null;

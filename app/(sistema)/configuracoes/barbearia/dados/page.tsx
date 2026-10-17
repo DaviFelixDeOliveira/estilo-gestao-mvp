@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import { DadosBarbeariaConfig } from "@/components/sistema/dados-barbearia-config";
 
 export default async function ConfiguracoesDadosBarbeariaPage() {
@@ -28,7 +27,7 @@ export default async function ConfiguracoesDadosBarbeariaPage() {
   const { data: barbearia } = await supabase
     .from("barbearias")
     .select(
-      "nome_marca, nome_profissional, whatsapp, instagram_url, descricao_publica, logo_path, capa_path, atende_domicilio"
+      "codigo, nome_marca, nome_profissional, whatsapp, instagram_url, descricao_publica, logo_path, capa_path, atende_domicilio"
     )
     .eq("id", perfil.barbearia_id)
     .single();
@@ -48,10 +47,10 @@ export default async function ConfiguracoesDadosBarbeariaPage() {
         </p>
       </header>
 
-      <ConfiguracaoTabs activeTab="dados" />
 
       <DadosBarbeariaConfig
         barbeariaId={perfil.barbearia_id}
+        codigoBarbearia={barbearia.codigo}
         nomeMarcaInicial={barbearia.nome_marca ?? ""}
         nomeProfissionalInicial={barbearia.nome_profissional}
         whatsappInicial={barbearia.whatsapp}

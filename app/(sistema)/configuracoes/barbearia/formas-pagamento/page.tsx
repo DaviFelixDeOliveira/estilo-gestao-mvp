@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { ConfiguracaoTabs } from "@/components/sistema/configuracao-tabs";
 import {
   FormasPagamentoConfig,
   type FormaPagamento,
@@ -58,7 +57,6 @@ export default async function ConfiguracoesFormasPagamentoPage() {
         </p>
       </header>
 
-      <ConfiguracaoTabs activeTab="pagamento" />
 
       <FormasPagamentoConfig formasPagamentoIniciais={formasPagamento} />
     </div>

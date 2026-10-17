@@ -297,17 +297,16 @@ function obterPerfilInstagram(valor: string | null) {
 // ======================================================
 
 function resolverImagemProduto(produto: ProdutoPublico) {
-  const propria = resolverSrcMidia(produto.imagem_path);
-
-  if (propria) return propria;
-
+  // Quando a opcao esta marcada, usa SOMENTE a imagem da categoria.
+  // Se a categoria nao tem imagem, o cartao mostra o icone padrao.
   if (produto.usar_imagem_categoria) {
     return normalizarImagemCategoria(
       produto.categoria_imagem_padrao_path
     );
   }
 
-  return null;
+  // Se a opcao esta desmarcada, usa apenas a foto do produto.
+  return resolverSrcMidia(produto.imagem_path);
 }
 
 function montarEndereco(endereco: EnderecoPublico) {
@@ -353,7 +352,7 @@ function iniciais(nome: string) {
 }
 
 // ======================================================
-// AGRUPAR PRODUTOS POR CATEGORIA
+// PRODUTOS POR CATEGORIA
 // ======================================================
 
 function agruparProdutosPorCategoria(
@@ -505,7 +504,6 @@ function TituloSecao({
 
 // ======================================================
 // GOOGLE MAPS
-// BOTÃO ORIGINAL COM ALINHAMENTO À ESQUERDA
 // ======================================================
 
 function BotaoGoogleMaps({ href }: { href: string }) {
@@ -557,8 +555,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
       </div>
 
       <style>{`
-        /* ÁREA DO BOTÃO: CENTRALIZADA */
-
         .vitrine-map-area {
           display: flex;
           justify-content: center;
@@ -581,13 +577,10 @@ function BotaoGoogleMaps({ href }: { href: string }) {
           display: flex;
           width: fit-content;
           max-width: 100%;
-
           background-color: var(--btn-color);
-
           font-size: 16px;
           font-family: Inter, sans-serif;
           user-select: none;
-
           overflow: hidden;
           border-radius: 50ch;
 
@@ -603,28 +596,21 @@ function BotaoGoogleMaps({ href }: { href: string }) {
             background-color var(--transition-dur) ease;
         }
 
-        /* LINK */
-
         .vitrine-map-area .map-btn {
           cursor: pointer;
           position: relative;
           z-index: 2;
-
           display: block;
           padding: 1em 1.5em 1em 3.5em;
           border-radius: 50ch;
-
           background: transparent;
           font-weight: 600;
           color: var(--text-color);
           text-decoration: none;
           white-space: nowrap;
-
           transition:
             color var(--transition-dur) ease-in-out;
         }
-
-        /* TEXTO ACIMA DO MAPA */
 
         .vitrine-map-area .map-btn-label {
           position: relative;
@@ -640,22 +626,17 @@ function BotaoGoogleMaps({ href }: { href: string }) {
           z-index: -1;
           border-radius: 8px;
           opacity: 0;
-
           transition:
             opacity var(--transition-dur) ease;
         }
 
-        /* MARCADOR */
-
         .vitrine-map-area .pinpoint {
           pointer-events: none;
           position: absolute;
-
           height: 60%;
           aspect-ratio: 1;
           top: 20%;
           left: 0.75em;
-
           border-radius: 50%;
           background-color: var(--text-color);
           transform: rotateZ(45deg);
@@ -677,12 +658,9 @@ function BotaoGoogleMaps({ href }: { href: string }) {
           z-index: 4;
         }
 
-        /* MAPA ORIGINAL DENTRO DO BOTÃO */
-
         .vitrine-map-area .map-container {
           pointer-events: none;
           position: absolute;
-
           left: 0;
           top: 115px;
           perspective: 120px;
@@ -705,10 +683,8 @@ function BotaoGoogleMaps({ href }: { href: string }) {
         .vitrine-map-area .map {
           position: absolute;
           bottom: 100px;
-
           width: 120px;
           height: 200px;
-
           background-color: var(--water-color);
 
           background-image: linear-gradient(
@@ -724,13 +700,10 @@ function BotaoGoogleMaps({ href }: { href: string }) {
         .vitrine-map-area .map::after {
           content: "";
           position: absolute;
-
           top: -40px;
           left: 12px;
-
           width: 100%;
           height: 200%;
-
           background-color: var(--land-color);
           filter: url(#vitrine-map-land);
 
@@ -739,8 +712,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
 
           z-index: 0;
         }
-
-        /* DOBRAS */
 
         .vitrine-map-area .fold-1,
         .vitrine-map-area .fold-2,
@@ -782,19 +753,14 @@ function BotaoGoogleMaps({ href }: { href: string }) {
         .vitrine-map-area .fold-4::before {
           content: "";
           position: absolute;
-
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-
           box-shadow:
             inset 0 10px 16px 3px #0004;
-
           z-index: 1;
         }
-
-        /* HOVER DESKTOP */
 
         @media (hover: hover) and (pointer: fine) {
           .vitrine-map-area .map-btn-wrapper:hover {
@@ -833,8 +799,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
           }
         }
 
-        /* TECLADO */
-
         .vitrine-map-area
         .map-btn-wrapper:focus-within {
           background-color: #fff;
@@ -866,8 +830,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
           outline-offset: -3px;
         }
 
-        /* CLIQUE */
-
         .vitrine-map-area
         .map-btn-wrapper:has(.map-btn:active) {
           transform:
@@ -896,8 +858,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
             calc(var(--transition-dur) * 0.5);
         }
 
-        /* TELAS ESTRETAS */
-
         @media (max-width: 639px) {
           .vitrine-map-area {
             margin-top: 24px;
@@ -908,8 +868,6 @@ function BotaoGoogleMaps({ href }: { href: string }) {
             font-size: 14px;
           }
         }
-
-        /* MOBILE */
 
         @media (hover: none), (pointer: coarse) {
           .vitrine-map-area .map-btn-wrapper {
@@ -990,7 +948,6 @@ function BotaoInstagram({
       <style>{`
         .vitrine-instagram-button {
           --ig-red: #ff202d;
-
           position: relative;
           isolation: isolate;
           display: inline-flex;
@@ -1000,13 +957,11 @@ function BotaoInstagram({
           max-width: 100%;
           min-height: 54px;
           padding: 12px 22px;
-
           border: 1px solid var(--ig-red);
           border-radius: 999px;
           background: transparent;
           color: var(--ig-red);
           overflow: hidden;
-
           font-size: 17px;
           font-weight: 600;
           text-decoration: none;
@@ -1026,11 +981,9 @@ function BotaoInstagram({
           height: 440px;
           border-radius: 50%;
           background: var(--ig-red);
-
           transform:
             translate(-50%, -50%)
             scale(0);
-
           transition: transform .5s ease-out;
           pointer-events: none;
         }
@@ -1087,6 +1040,9 @@ function CardProduto({
   produto: ProdutoPublico;
 }) {
   const imagem = resolverImagemProduto(produto);
+  // Guarda a URL que falhou. Se a URL mudar, a nova foto e exibida.
+  const [imagemComErro, setImagemComErro] = useState<string | null>(null);
+  const mostrarImagem = Boolean(imagem) && imagem !== imagemComErro;
   const indisponivel = !produto.disponivel;
 
   return (
@@ -1096,13 +1052,14 @@ function CardProduto({
       }`}
     >
       <div className="relative aspect-[4/3] bg-[#1A202C]">
-        {imagem ? (
+        {mostrarImagem && imagem ? (
           <Image
             src={imagem}
             alt={produto.nome}
             fill
             unoptimized
             className="object-cover"
+            onError={() => setImagemComErro(imagem)}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[#C5A059]/60">
@@ -1235,7 +1192,6 @@ export function VitrinePublica({
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#0B0D11] text-slate-200 antialiased selection:bg-[#C5A059] selection:text-black">
-
       {/* HEADER FIXO */}
 
       <header className="sticky top-0 z-50 border-b border-[#232936] bg-[#0B0D11]/95 backdrop-blur-md">
@@ -1306,7 +1262,7 @@ export function VitrinePublica({
         </div>
       </header>
 
-      {/* HERO */}
+      {/* HERO - CAPA MAIS VISÍVEL */}
 
       <section
         id="inicio"
@@ -1320,13 +1276,23 @@ export function VitrinePublica({
               fill
               priority
               unoptimized
-              className="object-cover opacity-25 grayscale"
+              className="object-cover object-center"
             />
           ) : (
             <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(197,160,89,0.16),transparent_40%),linear-gradient(135deg,#0B0D11,#111827)]" />
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D11] via-[#0B0D11]/90 to-[#0B0D11]/60" />
+          {/*
+            A camada é mais escura à esquerda,
+            onde aparecem os textos.
+            À direita, a foto fica mais visível.
+          */}
+          {capaUrl && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0B0D11]/85 via-[#0B0D11]/40 to-[#0B0D11]/15" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D11]/65 via-transparent to-[#0B0D11]/20" />
+            </>
+          )}
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl">
@@ -1366,6 +1332,7 @@ export function VitrinePublica({
                 }
               >
                 <Store className="h-3.5 w-3.5 text-[#C5A059]" />
+
                 {barbearia.atende_domicilio
                   ? "No salão e a domicílio"
                   : "Atendimento no salão"}
@@ -1433,7 +1400,7 @@ export function VitrinePublica({
         aria-label="Navegação rápida"
         className="sticky top-14 z-40 border-b border-[#232936] bg-[#0B0D11]/95 px-4 py-2 backdrop-blur sm:top-20 lg:hidden"
       >
-        <div className="flex gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
+        <div className="flex snap-x gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <LinkNavegacao id="inicio" mobile>
             Início
           </LinkNavegacao>
@@ -1454,7 +1421,10 @@ export function VitrinePublica({
             Horários & Local
           </LinkNavegacao>
 
-          <span className="snap-start w-px shrink-0" aria-hidden="true" />
+          <span
+            className="w-px shrink-0 snap-start"
+            aria-hidden="true"
+          />
         </div>
       </nav>
 
@@ -1695,7 +1665,6 @@ export function VitrinePublica({
           />
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-
             {/* CARD DE HORÁRIOS */}
 
             <div className="rounded-3xl border border-[#232936] bg-[#131720] p-5 sm:p-8">
@@ -1746,15 +1715,9 @@ export function VitrinePublica({
               )}
             </div>
 
-            {/* CARD ONDE ESTAMOS
-                TÍTULO NO TOPO
-                ENDEREÇO ABAIXO
-                BOTÃO NO CANTO INFERIOR ESQUERDO */}
+            {/* CARD DE LOCALIZAÇÃO */}
 
             <div className="flex flex-col justify-between rounded-3xl border border-[#232936] bg-[#131720] p-5 sm:p-8">
-
-              {/* CONTEÚDO SUPERIOR */}
-
               <div>
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 shrink-0 text-[#C5A059]" />
@@ -1769,8 +1732,6 @@ export function VitrinePublica({
                     "Endereço ainda não informado."}
                 </p>
               </div>
-
-              {/* BOTÃO INFERIOR */}
 
               {mapsLink && (
                 <BotaoGoogleMaps href={mapsLink} />

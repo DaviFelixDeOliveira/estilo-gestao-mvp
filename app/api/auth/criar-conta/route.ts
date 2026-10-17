@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verificarLimiteCadastro } from "@/lib/seguranca/rate-limit-cadastro";
 
 type CriarContaBody = {
   email?: string;
@@ -11,6 +12,9 @@ type CriarContaBody = {
 
 export async function POST(request: Request) {
   try {
+    const bloqueio = await verificarLimiteCadastro(request);
+    if (bloqueio) return bloqueio;
+
     const body = (await request.json()) as CriarContaBody;
 
     const email = body.email?.trim().toLowerCase() ?? "";

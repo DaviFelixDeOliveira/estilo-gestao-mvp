@@ -130,7 +130,7 @@ export function AppSidebar({
           title="Dashboard"
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
             pathname === "/dashboard"
-              ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+              ? "sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
               : "text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
           } ${collapsed ? "justify-center px-0" : ""}`}
         >
@@ -153,7 +153,7 @@ export function AppSidebar({
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               isPdvActive
                 ? collapsed
-                  ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                  ? "sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                   : "bg-[#FAF9F5] dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0]"
                 : "text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
             } ${collapsed ? "justify-center px-0" : ""}`}
@@ -172,12 +172,12 @@ export function AppSidebar({
           </button>
 
           {!collapsed && isPdvExpanded && (
-            <div className="ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
+            <div className="sidebar-submenu-entrada ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
               <Link
                 href="/pdv/nova-venda"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/pdv/nova-venda" || pathname === "/pdv"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -187,7 +187,7 @@ export function AppSidebar({
                 href="/pdv/historico"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/pdv/historico"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -212,7 +212,7 @@ export function AppSidebar({
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               isOperacaoActive
                 ? collapsed
-                  ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                  ? "sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                   : "bg-[#FAF9F5] dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0]"
                 : "text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
             } ${collapsed ? "justify-center px-0" : ""}`}
@@ -231,12 +231,12 @@ export function AppSidebar({
           </button>
 
           {!collapsed && isOperacaoExpanded && (
-            <div className="ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
+            <div className="sidebar-submenu-entrada ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
               <Link
                 href="/operacao/servicos"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/servicos"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -246,7 +246,7 @@ export function AppSidebar({
                 href="/operacao/produtos"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/produtos"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -256,7 +256,7 @@ export function AppSidebar({
                 href="/operacao/categorias"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/categorias"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -266,7 +266,7 @@ export function AppSidebar({
                 href="/operacao/estoque"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/estoque"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -291,7 +291,7 @@ export function AppSidebar({
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               isConfigActive
                 ? collapsed
-                  ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                  ? "sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                   : "bg-[#FAF9F5] dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-[#F4F4F0]"
                 : "text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
             } ${collapsed ? "justify-center px-0" : ""}`}
@@ -310,7 +310,7 @@ export function AppSidebar({
           </button>
 
           {!collapsed && isConfigExpanded && (
-            <div className="ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
+            <div className="sidebar-submenu-entrada ml-4 pl-3.5 mt-1 border-l border-[#E2E2DD] dark:border-[#3F3F3B] space-y-1 py-0.5">
               <span className="block px-2.5 pt-1 text-[10px] font-bold uppercase tracking-wider text-[#888882]">
                 Negócio
               </span>
@@ -318,7 +318,7 @@ export function AppSidebar({
                 href="/configuracoes/negocio/financeiro"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/negocio/financeiro" || pathname === "/financeiro"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -330,7 +330,7 @@ export function AppSidebar({
                   pathname === "/configuracoes/negocio/relatorio" ||
                   pathname === "/configuracoes/negocio/relatorios" ||
                   pathname === "/relatorios"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -340,7 +340,7 @@ export function AppSidebar({
                 href="/configuracoes/negocio/vitrine"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/negocio/vitrine"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -354,7 +354,7 @@ export function AppSidebar({
                 href="/configuracoes/barbearia/dados"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/barbearia/dados"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -364,7 +364,7 @@ export function AppSidebar({
                 href="/configuracoes/barbearia/endereco"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/barbearia/endereco"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -374,7 +374,7 @@ export function AppSidebar({
                 href="/configuracoes/barbearia/horarios"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/barbearia/horarios"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >
@@ -384,7 +384,7 @@ export function AppSidebar({
                 href="/configuracoes/barbearia/formas-pagamento"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/barbearia/formas-pagamento"
-                    ? "font-bold bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
+                    ? "font-bold sidebar-selecao-entrada bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] shadow-xs"
                     : "font-medium text-[#666662] dark:text-[#B8B8B2] hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0]"
                 }`}
               >

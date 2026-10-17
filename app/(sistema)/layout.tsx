@@ -1,6 +1,10 @@
+
 import { redirect } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Shell } from "@/components/sistema/shell";
+import { SincronizarTemaConta } from "@/components/sistema/sincronizar-tema-conta";
 import { resolverSrcMidia } from "@/lib/imagens";
 
 export default async function SistemaLayout({
@@ -20,7 +24,9 @@ export default async function SistemaLayout({
 
   const { data: perfil } = await supabase
     .from("perfis")
-    .select("user_id, nome, tipo, onboarding_concluido, barbearia_id")
+    .select(
+      "user_id, nome, tipo, onboarding_concluido, barbearia_id, tema"
+    )
     .eq("user_id", user.id)
     .single();
 
@@ -28,10 +34,46 @@ export default async function SistemaLayout({
     redirect("/entrar");
   }
 
+  // Administradores do sistema continuam usando o painel admin.
   if (perfil.tipo === "ADMIN") {
     redirect("/admin");
   }
 
+  // Verifica se a barbearia possui exclusão pendente.
+  // A consulta administrativa acontece somente no servidor.
+  if (perfil.barbearia_id) {
+    const admin = createAdminClient();
+
+    const {
+      data: solicitacao,
+      error: erroExclusao,
+    } = await admin
+      .from("solicitacoes_exclusao")
+      .select("id")
+      .eq("barbearia_id", perfil.barbearia_id)
+      .eq("status", "PENDENTE")
+      .maybeSingle();
+
+    if (erroExclusao) {
+      console.error(
+        "Erro ao verificar exclusão pendente:",
+        erroExclusao.message
+      );
+
+      throw new Error(
+        "Não foi possível verificar a situação da barbearia."
+      );
+    }
+
+    // Durante os 30 dias, impede acesso às páginas
+    // normais do sistema.
+    if (solicitacao) {
+      redirect("/exclusao-pendente");
+    }
+  }
+
+  // Usuários que não concluíram o cadastro
+  // continuam sendo enviados ao onboarding.
   if (!perfil.onboarding_concluido) {
     redirect("/onboarding");
   }
@@ -50,19 +92,22 @@ export default async function SistemaLayout({
       nomeMarca = barbearia.nome_marca;
     }
 
-    // Logo: URL completa -> usa direto; caminho do bucket midia-publica
-    // -> gera a URL pública; sem valor válido -> sem logo (fallback visual).
+    // Resolve a URL da logo da barbearia.
     logoUrl = resolverSrcMidia(barbearia?.logo_path);
   }
 
   return (
-    <Shell
-      nome={perfil.nome}
-      nomeMarca={nomeMarca}
-      email={user.email}
-      logoUrl={logoUrl}
-    >
-      {children}
-    </Shell>
+    <>
+      <SincronizarTemaConta tema={perfil.tema} />
+
+      <Shell
+        nome={perfil.nome}
+        nomeMarca={nomeMarca}
+        email={user.email}
+        logoUrl={logoUrl}
+      >
+        {children}
+      </Shell>
+    </>
   );
 }

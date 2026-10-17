@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useCallback, useRef, FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
 import { MiniaturaImagem } from "@/components/sistema/miniatura-imagem";
@@ -54,14 +55,14 @@ export const normalizeCategoryName = (name: string): string => {
     .replace(/\s*\/\s*/g, "/");
 };
 
-export const DEFAULT_CATEGORY_IMAGE = "/images/categorias/image.png";
+export const DEFAULT_CATEGORY_IMAGE = "";
 
 export const CATEGORY_IMAGE_PRESETS = [
   {
     id: "padrao",
-    label: "Padrão Geral",
-    path: "/images/categorias/image.png",
-    descricao: "Identidade clássica de barbearia",
+    label: "Sem imagem",
+    path: "",
+    descricao: "Mostra o ícone padrão da categoria",
   },
   {
     id: "pomadas-ceras",
@@ -357,7 +358,7 @@ export default function OperacaoCategoriasPage() {
 
   // Obter detalhes do preset selecionado
   const currentPreset = useMemo(() => {
-    return CATEGORY_IMAGE_PRESETS.find((p) => p.path === formImageUrl) || CATEGORY_IMAGE_PRESETS[0];
+    return CATEGORY_IMAGE_PRESETS.find((p) => p.path === formImageUrl) || { label: "Imagem personalizada", descricao: "Imagem salva nesta categoria" };
   }, [formImageUrl]);
 
   // Limpa o estado de upload de imagem própria (sem persistir)
@@ -472,7 +473,7 @@ export default function OperacaoCategoriasPage() {
     setIsSaving(true);
     setFormError(null);
 
-    let finalImageToSave = formImageUrl.trim() || DEFAULT_CATEGORY_IMAGE;
+    let finalImageToSave: string | null = formImageUrl.trim() || null;
     const imagemAntigaParaRemover = editingCategory?.imagem_padrao_path?.trim() || null;
     let caminhoUploadNovo: string | null = null;
 
@@ -638,6 +639,7 @@ export default function OperacaoCategoriasPage() {
 
     return (
       <MiniaturaImagem
+        key={src ?? "sem-imagem"}
         src={src}
         alt={nome}
         icone={Tag}
@@ -1067,15 +1069,17 @@ export default function OperacaoCategoriasPage() {
       {/* ======================================================== */}
       {/* 6. MODAL: NOVA / EDITAR CATEGORIA */}
       {/* ======================================================== */}
-      {isModalOpen && (
-        <div
+      {isModalOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto p-2 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
         >
-          <div className="w-full max-w-xl bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden flex flex-col max-h-[92vh]">
+          <div className="flex w-full max-w-xl min-h-0 max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] flex-col overflow-hidden rounded-2xl border border-[#E2E2DD] bg-white shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220]">
             {/* Header do Modal */}
-            <div className="p-4 sm:p-5 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between">
+            <div className="shrink-0 p-4 sm:p-5 border-b border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-[#FAF9F5] dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center justify-center text-[#2F2F2D] dark:text-[#F4F4F0]">
                   <Tag className="w-4 h-4 text-[#888882]" />
@@ -1102,7 +1106,7 @@ export default function OperacaoCategoriasPage() {
             </div>
 
             {/* Formulário */}
-            <form onSubmit={handleSaveCategory} className="p-4 sm:p-6 overflow-y-auto space-y-5">
+            <form onSubmit={handleSaveCategory} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5">
               {/* Mensagem de Erro Inline */}
               {formError && (
                 <div
@@ -1147,14 +1151,13 @@ export default function OperacaoCategoriasPage() {
                 {/* Card de Preview da Imagem Selecionada */}
                 <div className="p-3.5 rounded-2xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center gap-4">
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-white dark:bg-[#2B2B29] border border-[#E2E2DD] dark:border-[#3F3F3B] overflow-hidden shrink-0 shadow-xs flex items-center justify-center">
-                    <img
-                      src={categoriaPreviewUrl || resolverSrcMidia(formImageUrl) || formImageUrl}
-                      alt="Preview da categoria"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = DEFAULT_CATEGORY_IMAGE;
-                      }}
+                    <MiniaturaImagem
+                      key={categoriaPreviewUrl || formImageUrl || "sem-imagem"}
+                      src={categoriaPreviewUrl || normalizarImagemCategoria(formImageUrl)}
+                      alt="Prévia da categoria"
+                      icone={Tag}
+                      classNameImagem="w-full h-full object-cover"
+                      classNameIcone="w-full h-full p-6 text-[#888882]"
                     />
                   </div>
                   <div className="space-y-1 min-w-0">
@@ -1200,7 +1203,10 @@ export default function OperacaoCategoriasPage() {
                         <button
                           key={preset.id}
                           type="button"
-                          onClick={() => setFormImageUrl(preset.path)}
+                          onClick={() => {
+                            limparCategoriaImagemNovo();
+                            setFormImageUrl(preset.path);
+                          }}
                           className={`flex items-center gap-2.5 p-2 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden group ${
                             isSelected
                               ? "border-[#2F2F2D] dark:border-white bg-[#FAF9F5] dark:bg-[#2B2B29] shadow-xs ring-1 ring-[#2F2F2D] dark:ring-white"
@@ -1208,10 +1214,13 @@ export default function OperacaoCategoriasPage() {
                           }`}
                         >
                           <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-800 border border-[#E2E2DD] dark:border-[#3F3F3B]">
-                            <img
-                              src={preset.path}
+                            <MiniaturaImagem
+                              key={preset.path || "sem-imagem"}
+                              src={normalizarImagemCategoria(preset.path)}
                               alt={preset.label}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              icone={Tag}
+                              classNameImagem="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              classNameIcone="w-full h-full p-2 text-[#888882]"
                             />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -1376,8 +1385,9 @@ export default function OperacaoCategoriasPage() {
               </div>
             </form>
           </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {categoriaAjuste && (
         <ImageAdjustModal
