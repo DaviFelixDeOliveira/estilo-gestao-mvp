@@ -1235,7 +1235,7 @@ export default function FinanceiroPage() {
       {/* ======================================================== */}
       {/* 5. TABS NAVIGATION (Visão geral, Despesas, Recorrentes) */}
       {/* ======================================================== */}
-      <section className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] w-fit border border-[#E2E2DD] dark:border-[#3F3F3B]">
+      <section className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] w-fit max-w-full overflow-x-auto border border-[#E2E2DD] dark:border-[#3F3F3B]">
         <button
           type="button"
           onClick={() => setActiveTab("overview")}
@@ -1270,7 +1270,7 @@ export default function FinanceiroPage() {
         >
           <span>Recorrentes</span>
           {pendingOccurrences.length > 0 && (
-            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500 text-white">
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500 text-white whitespace-nowrap shrink-0">
               {pendingOccurrences.length} pendente{pendingOccurrences.length > 1 ? "s" : ""}
             </span>
           )}
