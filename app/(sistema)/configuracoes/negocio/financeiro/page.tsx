@@ -627,6 +627,13 @@ export default function FinanceiroPage() {
     "Dezembro",
   ];
 
+  // Exibição amigável da competência (ex.: "2026-10-01" -> "outubro de 2026")
+  const formatCompetenciaDisplay = (competencia: string): string => {
+    const [ano, mes] = competencia.split("-").map(Number);
+    if (!ano || !mes || mes < 1 || mes > 12) return competencia;
+    return `${nomesMeses[mes - 1]} de ${ano}`;
+  };
+
   // Cálculo de Ocorrências Pendentes e Próximo Pagamento
   const pendingOccurrences = useMemo(() => {
     return ocorrencias.filter((o) => o.status === "PENDENTE");
@@ -1264,7 +1271,7 @@ export default function FinanceiroPage() {
           <span>Recorrentes</span>
           {pendingOccurrences.length > 0 && (
             <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500 text-white">
-              {pendingOccurrences.length}
+              {pendingOccurrences.length} pendente{pendingOccurrences.length > 1 ? "s" : ""}
             </span>
           )}
         </button>
@@ -1316,7 +1323,7 @@ export default function FinanceiroPage() {
                     <strong className="text-[#2F2F2D] dark:text-[#F4F4F0]">
                       {nextPayment.formattedDate}
                     </strong>{" "}
-                    (Competência {nextPayment.ocorrencia.competencia}).
+                    (Referente a {formatCompetenciaDisplay(nextPayment.ocorrencia.competencia)}).
                   </p>
                 </div>
 
@@ -1945,7 +1952,8 @@ export default function FinanceiroPage() {
                 Nenhuma despesa recorrente cadastrada. Clique em &quot;Nova despesa&quot; e marque a opção recorrente.
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <>
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse table-fixed text-xs sm:text-sm">
                   <thead>
                     <tr className="border-b border-[#E2E2DD] dark:border-[#3F3F3B] text-[11px] font-bold uppercase tracking-wider text-[#666662] dark:text-[#B8B8B2]">
@@ -2020,6 +2028,81 @@ export default function FinanceiroPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile: cartões responsivos (a tabela fica oculta em telas pequenas) */}
+              <div className="md:hidden space-y-3">
+                {recorrencias.map((rec) => (
+                  <div
+                    key={rec.id}
+                    className={`p-4 rounded-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] space-y-3 ${
+                      !rec.ativa ? "opacity-60" : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <strong className="font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block truncate">
+                          {rec.nome}
+                        </strong>
+                        {rec.descricao && (
+                          <span className="text-[11px] text-[#888882] block truncate">
+                            {rec.descricao}
+                          </span>
+                        )}
+                        {!rec.ativa && (
+                          <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[10px] font-bold bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                            Inativa
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditRecurring(rec)}
+                          className="p-1.5 rounded-lg text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-[#2B2B29] transition-colors cursor-pointer"
+                          title="Editar recorrência"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+
+                        {rec.ativa && (
+                          <button
+                            type="button"
+                            onClick={() => handlePromptInactivateRecurring(rec)}
+                            className="p-1.5 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors cursor-pointer"
+                            title="Inativar recorrência"
+                          >
+                            <Ban className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-[#E2E2DD] dark:border-[#3F3F3B] space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <span className="text-[11px] font-medium text-[#888882] block">Categoria</span>
+                          <div className="mt-1">{renderCategoryBadge(rec.categoria)}</div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-[11px] font-medium text-[#888882] block">Vencimento</span>
+                          <span className="text-xs font-semibold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                            Todo dia {rec.dia_vencimento}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="text-[11px] font-medium text-[#888882] block">Valor previsto</span>
+                        <strong className="text-base font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                          {formatMoney(rec.valor_previsto)}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              </>
             )}
           </div>
         </section>
