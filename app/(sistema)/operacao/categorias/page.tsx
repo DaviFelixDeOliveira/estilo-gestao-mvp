@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback, useRef, FormEvent } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import { createClient } from "@/lib/supabase/client";
 import { MiniaturaImagem } from "@/components/sistema/miniatura-imagem";
@@ -715,6 +716,18 @@ export default function OperacaoCategoriasPage() {
             <Plus className="w-4 h-4" />
             <span>Nova Categoria</span>
           </button>
+        </div>
+      </section>
+
+      {/* Faixa padronizada de orientacao: cores do Servicos, fonte do Dashboard */}
+      <section aria-labelledby="categorias-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="categorias-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Crie categorias para organizar produtos e bebidas, como pomadas, bebidas e acessórios. Use <strong>Nova Categoria</strong> para cadastrar uma ou <strong>Editar</strong> para alterar nome e imagem. Depois, vá em{" "}
+            <Link href="/operacao/produtos" className="font-bold underline underline-offset-2 hover:text-sky-950 dark:hover:text-white">Produtos</Link> para escolher a categoria de cada item.
+          </p>
         </div>
       </section>
 
