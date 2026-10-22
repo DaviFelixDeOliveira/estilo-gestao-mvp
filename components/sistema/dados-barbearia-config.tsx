@@ -93,7 +93,12 @@ const BANCO_RASCUNHOS = "estilo-gestao-rascunhos-v1";
 const LOJA_ARQUIVOS = "imagens";
 
 function mascaraWhatsapp(valor: string) {
-  const d = valor.replace(/\D/g, "").slice(0, 11);
+  const numeros = valor.replace(/\D/g, "");
+  const d =
+    numeros.startsWith("55") &&
+    (numeros.length === 12 || numeros.length === 13)
+      ? numeros.slice(2)
+      : numeros.slice(0, 11);
 
   if (!d) return "";
   if (d.length <= 2) return `(${d}`;
@@ -812,6 +817,9 @@ export function DadosBarbeariaConfig({
             setCampos({
               ...iniciais,
               ...draft.campos,
+              whatsapp: mascaraWhatsapp(
+                draft.campos.whatsapp ?? iniciais.whatsapp
+              ),
             });
           }
 
@@ -2106,10 +2114,26 @@ export function DadosBarbeariaConfig({
                 <Phone className="h-4 w-4" />
               </div>
 
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 left-10 flex items-center text-sm font-bold text-[#1E1E1C] dark:text-white"
+              >
+                +55
+              </span>
+
               <input
                 id="cfg-whatsapp"
                 type="tel"
                 inputMode="numeric"
+                autoComplete="tel-national"
+                aria-label="WhatsApp com codigo +55 fixo. Informe DDD e numero"
+                style={{ paddingLeft: "5.25rem" }}
+                onKeyDown={(event) => {
+                  if (event.ctrlKey || event.metaKey || event.altKey) return;
+                  if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
                 value={campos.whatsapp}
                 onChange={(ev) => {
                   atualizar(
