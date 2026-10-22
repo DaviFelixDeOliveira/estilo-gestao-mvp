@@ -28,7 +28,7 @@ export const MAIN_NAVIGATION_ITEMS: readonly NavigationItem[] = [
     exact: true,
   },
   {
-    title: "PDV",
+    title: "Ponto de Venda",
     href: "/pdv/nova-venda",
     icon: CreditCard,
     subItems: [

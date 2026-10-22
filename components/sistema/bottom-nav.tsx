@@ -17,7 +17,7 @@ const BOTTOM_NAV_ITEMS = [
     exact: true,
   },
   {
-    title: "PDV",
+    title: "Ponto de Venda",
     href: "/pdv",
     icon: CreditCard,
   },

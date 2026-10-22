@@ -149,7 +149,7 @@ export function AppSidebar({
                 setIsPdvExpanded((prev) => !prev);
               }
             }}
-            title="PDV"
+            title="Ponto de Venda"
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               isPdvActive
                 ? collapsed
@@ -160,7 +160,7 @@ export function AppSidebar({
           >
             <div className="flex items-center gap-3">
               <CreditCard className="w-4 h-4 shrink-0" />
-              {!collapsed && <span>PDV</span>}
+              {!collapsed && <span>Ponto de Venda</span>}
             </div>
             {!collapsed && (
               <ChevronDown
