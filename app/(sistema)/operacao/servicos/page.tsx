@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback, FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { OperationTabs } from "@/components/sistema/operation-tabs";
 import {
   Scissors,
@@ -16,6 +17,7 @@ import {
   Loader2,
   Info,
   Trash2,
+  MoreVertical,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -65,6 +67,32 @@ function formatBRL(val: number | null | undefined): string {
   }).format(val);
 }
 
+function corResultado(valor: number): string {
+  if (valor < 0) return "text-rose-600 dark:text-rose-400";
+  if (valor > 0) return "text-emerald-600 dark:text-emerald-400";
+  return "text-[#666662] dark:text-[#B8B8B2]";
+}
+
+function formatMoneySaved(value: number | null | undefined): string {
+  const numero = Number(value ?? 0);
+  return Number.isFinite(numero)
+    ? numero.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : "0,00";
+}
+
+function formatMoneyInput(value: string): string {
+  const digits = value
+    .replace(/\D/g, "")
+    .replace(/^0+(?=\d)/, "")
+    .slice(0, 12);
+
+  const cents = Number(digits || "0");
+
+  return (cents / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 function parseMoneyInput(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
@@ -76,79 +104,294 @@ function parseMoneyInput(value: string): number | null {
 
 function MargemLucroHelp() {
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const tituloId = React.useId();
+  const descricaoId = React.useId();
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+    if (!isOpen) return;
+
+    closeRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
         setIsOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !dialogRef.current) return;
+
+      const elementos = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (elementos.length === 0) return;
+      const primeiro = elementos[0];
+      const ultimo = elementos[elementos.length - 1];
+      if (event.shiftKey && document.activeElement === primeiro) {
+        event.preventDefault();
+        ultimo.focus();
+      } else if (!event.shiftKey && document.activeElement === ultimo) {
+        event.preventDefault();
+        primeiro.focus();
       }
     }
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+      triggerRef.current?.focus();
     };
   }, [isOpen]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative inline-flex items-center text-left"
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <>
       <button
+        ref={triggerRef}
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen((prev) => !prev);
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsOpen(true);
         }}
-        onFocus={() => setIsOpen(true)}
-        onBlur={(e) => {
-          if (!containerRef.current?.contains(e.relatedTarget as Node)) {
-            setIsOpen(false);
-          }
-        }}
-        aria-label="Explicar Margem e Lucro"
+        aria-label="Entender resultado e margem estimados"
+        aria-haspopup="dialog"
         aria-expanded={isOpen}
-        className="p-1 rounded-full text-[#888882] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] hover:bg-neutral-200/60 dark:hover:bg-[#2B2B29] focus:outline-none focus:ring-2 focus:ring-[#2F2F2D] dark:focus:ring-white transition-all cursor-pointer"
+        className="inline-flex p-1 rounded-full text-[#888882] hover:text-[#2F2F2D] dark:hover:text-[#F4F4F0] hover:bg-neutral-200/60 dark:hover:bg-[#2B2B29] focus:outline-none focus:ring-2 focus:ring-[#2F2F2D] dark:focus:ring-white transition-all cursor-pointer"
       >
-        <Info className="w-3.5 h-3.5" />
+        <Info className="w-3.5 h-3.5" aria-hidden="true" />
       </button>
 
-      {isOpen && (
+      {isOpen && typeof document !== "undefined" && createPortal(
         <div
-          role="tooltip"
-          onClick={(e) => e.stopPropagation()}
-          className="absolute right-0 top-full mt-2 z-50 w-72 sm:w-80 p-3.5 rounded-2xl bg-white dark:bg-[#20201E] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-2xl text-left normal-case text-xs text-[#2F2F2D] dark:text-[#F4F4F0] animate-fadeIn pointer-events-auto"
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-3 sm:p-6 backdrop-blur-[2px]"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setIsOpen(false);
+          }}
         >
-          <div className="flex items-start justify-between gap-2">
-            <span className="font-bold text-[11px] text-[#888882] uppercase tracking-wider block">
-              Entenda Margem e Lucro
-            </span>
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={tituloId}
+            aria-describedby={descricaoId}
+            className="w-full max-w-md max-h-[85dvh] overflow-y-auto rounded-2xl border border-[#E2E2DD] bg-white p-5 text-left text-[#2F2F2D] shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220] dark:text-[#F4F4F0] sm:p-6"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id={tituloId} className="text-base font-extrabold leading-snug">
+                  Entenda resultado e margem
+                </h2>
+                <p className="mt-1 text-xs text-[#666662] dark:text-[#B8B8B2]">
+                  Uma explicação simples dos valores do serviço.
+                </p>
+              </div>
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={() => setIsOpen(false)}
+                aria-label="Fechar explicação"
+                className="shrink-0 rounded-lg p-2 text-[#666662] hover:bg-neutral-100 dark:text-[#B8B8B2] dark:hover:bg-[#2B2B29] focus:outline-none focus:ring-2 focus:ring-sky-500"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div id={descricaoId} className="mt-4 space-y-3 text-sm leading-relaxed text-[#444440] dark:text-[#E2E2DD]">
+              <p>
+                <strong>Resultado estimado</strong> é o valor cobrado pelo serviço menos o gasto direto com materiais.
+              </p>
+              <p>
+                <strong>Margem</strong> é a porcentagem desse resultado em relação ao preço cobrado.
+              </p>
+              <div className="rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] p-3 dark:border-[#3F3F3B] dark:bg-[#181817]">
+                <p className="font-bold">Exemplo</p>
+                <p className="mt-1">Preço: R$ 25,00</p>
+                <p>Custo direto: R$ 1,00</p>
+                <p className="mt-1 font-bold">Resultado estimado: R$ 24,00 · Margem: 96%</p>
+              </div>
+              <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                Este cálculo não desconta aluguel, contas fixas e outras despesas. Por isso, não é o lucro final da barbearia.
+              </p>
+            </div>
+
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="text-[#888882] hover:text-[#2F2F2D] dark:hover:text-white p-0.5 cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-[#2B2B29]"
-              aria-label="Fechar explicação"
+              className="mt-5 w-full rounded-xl bg-[#2F2F2D] px-4 py-3 text-sm font-bold text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-sky-500 dark:bg-[#F4F4F0] dark:text-[#181817] dark:hover:bg-white"
             >
-              <X className="w-3.5 h-3.5" />
+              Entendi
             </button>
           </div>
-          <p className="mt-1.5 text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
-            Lucro é o valor que sobra depois de descontar o custo direto do serviço. Margem é a porcentagem desse lucro em relação ao preço de venda.
-          </p>
-          <div className="mt-2.5 p-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD]/80 dark:border-[#3F3F3B]/80 text-[11px] text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
-            <strong className="text-[#2F2F2D] dark:text-[#F4F4F0] font-semibold block mb-0.5">
-              Exemplo:
-            </strong>
-            se o serviço custa R$ 25,00 e o custo direto é R$ 1,00, o lucro é R$ 24,00 e a margem é 96%.
-          </div>
-        </div>
+        </div>,
+        document.body
       )}
-    </div>
+    </>
+  );
+}
+
+interface MenuAcoesServicoProps {
+  servico: ServicoItem;
+  ocupado: boolean;
+  editar: () => void;
+  alternarStatus: () => void;
+  alternarVitrine: () => void;
+  remover: () => void;
+}
+
+/** Menu com portal: não fica cortado pela tabela ou pelos cards do celular. */
+function MenuAcoesServico({
+  servico,
+  ocupado,
+  editar,
+  alternarStatus,
+  alternarVitrine,
+  remover,
+}: MenuAcoesServicoProps) {
+  const [aberto, setAberto] = useState(false);
+  const [posicao, setPosicao] = useState({ top: 0, left: 0 });
+  const botaoRef = React.useRef<HTMLButtonElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!aberto) return;
+
+    const fecharFora = (evento: MouseEvent) => {
+      const alvo = evento.target;
+      if (
+        alvo instanceof Node &&
+        !botaoRef.current?.contains(alvo) &&
+        !menuRef.current?.contains(alvo)
+      ) {
+        setAberto(false);
+      }
+    };
+    const fecharEscape = (evento: KeyboardEvent) => {
+      if (evento.key === "Escape") {
+        evento.preventDefault();
+        setAberto(false);
+        botaoRef.current?.focus();
+      }
+    };
+    const fecharMovimento = () => setAberto(false);
+
+    document.addEventListener("mousedown", fecharFora);
+    document.addEventListener("keydown", fecharEscape);
+    window.addEventListener("scroll", fecharMovimento, true);
+    window.addEventListener("resize", fecharMovimento);
+
+    return () => {
+      document.removeEventListener("mousedown", fecharFora);
+      document.removeEventListener("keydown", fecharEscape);
+      window.removeEventListener("scroll", fecharMovimento, true);
+      window.removeEventListener("resize", fecharMovimento);
+    };
+  }, [aberto]);
+
+  useEffect(() => {
+    if (aberto) {
+      menuRef.current?.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
+    }
+  }, [aberto]);
+
+  const abrirOuFechar = () => {
+    if (aberto) {
+      setAberto(false);
+      return;
+    }
+    const retangulo = botaoRef.current?.getBoundingClientRect();
+    if (!retangulo) return;
+    const largura = 238;
+    const altura = 198;
+    const margem = 8;
+    const esquerda = Math.max(margem, Math.min(
+      retangulo.right - largura,
+      window.innerWidth - largura - margem
+    ));
+    const acima = window.innerHeight - retangulo.bottom < altura + margem &&
+      retangulo.top > altura + margem;
+    const topo = acima
+      ? retangulo.top - altura - 6
+      : Math.max(margem, Math.min(retangulo.bottom + 6, window.innerHeight - altura - margem));
+    setPosicao({ top: topo, left: esquerda });
+    setAberto(true);
+  };
+
+  const executarAcao = (acao: () => void) => {
+    setAberto(false);
+    acao();
+  };
+
+  return (
+    <>
+      <button
+        ref={botaoRef}
+        type="button"
+        disabled={ocupado}
+        aria-label={`Abrir ações do serviço ${servico.nome}`}
+        aria-haspopup="menu"
+        aria-expanded={aberto}
+        title={`Ações do serviço ${servico.nome}`}
+        onClick={abrirOuFechar}
+        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E2E2DD] bg-white text-[#2F2F2D] transition-colors hover:bg-[#FAF9F5] disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#3F3F3B] dark:bg-[#222220] dark:text-[#F4F4F0] dark:hover:bg-[#2B2B29]"
+      >
+        <MoreVertical className="h-5 w-5" aria-hidden="true" />
+      </button>
+      {aberto && typeof document !== "undefined" && createPortal(
+        <div
+          ref={menuRef}
+          role="menu"
+          aria-label={`Ações do serviço ${servico.nome}`}
+          style={{ top: posicao.top, left: posicao.left, width: 238 }}
+          className="fixed z-[65] space-y-0.5 rounded-xl border border-[#E2E2DD] bg-white p-1.5 shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220]"
+        >
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => executarAcao(editar)}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#2F2F2D] hover:bg-[#FAF9F5] dark:text-white dark:hover:bg-[#2B2B29]"
+          >
+            <Edit2 className="h-4 w-4" aria-hidden="true" />
+            Editar serviço
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => executarAcao(alternarStatus)}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#2F2F2D] hover:bg-[#FAF9F5] dark:text-white dark:hover:bg-[#2B2B29]"
+          >
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+            {servico.ativo ? "Desativar serviço" : "Ativar serviço"}
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => executarAcao(alternarVitrine)}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#2F2F2D] hover:bg-[#FAF9F5] dark:text-white dark:hover:bg-[#2B2B29]"
+          >
+            {servico.visivel_vitrine ? (
+              <EyeOff className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Eye className="h-4 w-4" aria-hidden="true" />
+            )}
+            {servico.visivel_vitrine ? "Ocultar da vitrine" : "Mostrar na vitrine"}
+          </button>
+          <div className="my-1 border-t border-[#E2E2DD] dark:border-[#3F3F3B]" />
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => executarAcao(remover)}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            Remover serviço
+          </button>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
@@ -171,8 +414,8 @@ export default function OperacaoServicosPage() {
   const [editingService, setEditingService] = useState<ServicoItem | null>(null);
   const [formName, setFormName] = useState("");
   const [formDescription, setFormDescription] = useState("");
-  const [formPrice, setFormPrice] = useState("");
-  const [formCost, setFormCost] = useState("");
+  const [formPrice, setFormPrice] = useState("0,00");
+  const [formCost, setFormCost] = useState("0,00");
   const [formIsActive, setFormIsActive] = useState(true);
   const [formShowInVitrine, setFormShowInVitrine] = useState(true);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
@@ -341,8 +584,8 @@ export default function OperacaoServicosPage() {
     setEditingService(null);
     setFormName("");
     setFormDescription("");
-    setFormPrice("");
-    setFormCost("");
+    setFormPrice("0,00");
+    setFormCost("0,00");
     setFormIsActive(true);
     setFormShowInVitrine(true);
     setFormErrors({});
@@ -354,12 +597,8 @@ export default function OperacaoServicosPage() {
     setEditingService(service);
     setFormName(service.nome);
     setFormDescription(service.descricao || "");
-    setFormPrice(service.preco ? service.preco.toFixed(2).replace(".", ",") : "");
-    setFormCost(
-      service.custo_estimado !== null && service.custo_estimado !== undefined && service.custo_estimado > 0
-        ? service.custo_estimado.toFixed(2).replace(".", ",")
-        : ""
-    );
+    setFormPrice(formatMoneySaved(service.preco));
+    setFormCost(formatMoneySaved(service.custo_estimado));
     setFormIsActive(service.ativo !== false);
     setFormShowInVitrine(service.visivel_vitrine !== false);
     setFormErrors({});
@@ -580,7 +819,7 @@ export default function OperacaoServicosPage() {
   // Cálculo de Margem em tempo real para o preview do Modal
   const livePriceNum = parseMoneyInput(formPrice) || 0;
   const liveCostNum = parseMoneyInput(formCost) || 0;
-  const liveProfitNum = Math.max(0, livePriceNum - liveCostNum);
+  const liveProfitNum = livePriceNum - liveCostNum;
   const liveMarginPercent = livePriceNum > 0 ? (liveProfitNum / livePriceNum) * 100 : 0;
 
   return (
@@ -633,7 +872,7 @@ export default function OperacaoServicosPage() {
           </h1>
           <p className="text-xs sm:text-sm text-[#666662] dark:text-[#B8B8B2] max-w-2xl leading-relaxed">
             Gerencie os serviços prestados na barbearia, defina preços, custos diretos e controle a
-            visibilidade na vitrine digital e no PDV.
+            visibilidade na vitrine digital e no Ponto de Venda.
           </p>
         </div>
 
@@ -646,6 +885,17 @@ export default function OperacaoServicosPage() {
           <Plus className="w-4 h-4" />
           <span>Novo Serviço</span>
         </button>
+      </section>
+
+      {/* Faixa padronizada de orientacao: cores do Servicos, fonte do Dashboard */}
+      <section aria-label="Como usar esta tela" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Cadastre os serviços oferecidos pela barbearia e informe quanto cobra por cada um. Se souber, adicione também o gasto com materiais por atendimento para acompanhar o lucro estimado. Use Editar, Ativo e Vitrine para organizar seus serviços.
+          </p>
+        </div>
       </section>
 
       {/* ======================================================== */}
@@ -807,7 +1057,7 @@ export default function OperacaoServicosPage() {
                 <option value="nome_asc">Nome (A-Z)</option>
                 <option value="preco_desc">Maior Preço</option>
                 <option value="preco_asc">Menor Preço</option>
-                <option value="margem_desc">Maior Margem (R$)</option>
+                <option value="margem_desc">Maior resultado (R$)</option>
               </select>
             </div>
 
@@ -888,7 +1138,7 @@ export default function OperacaoServicosPage() {
                     <th className="py-3.5 px-3 text-right">Custo Direto</th>
                     <th className="py-3.5 px-3 text-right">
                       <div className="inline-flex items-center justify-end gap-1">
-                        <span>Margem / Lucro</span>
+                        <span>Resultado / Margem</span>
                         <MargemLucroHelp />
                       </div>
                     </th>
@@ -901,7 +1151,7 @@ export default function OperacaoServicosPage() {
                   {filteredServices.map((service) => {
                     const price = service.preco || 0;
                     const cost = service.custo_estimado || 0;
-                    const profit = Math.max(0, price - cost);
+                    const profit = price - cost;
                     const margin = price > 0 ? (profit / price) * 100 : 0;
                     const isActive = service.ativo !== false;
                     const isVitrine = service.visivel_vitrine !== false;
@@ -948,8 +1198,8 @@ export default function OperacaoServicosPage() {
                         {/* 4. Margem / Lucro */}
                         <td className="py-3.5 px-3 text-right whitespace-nowrap">
                           <div className="space-y-0.5">
-                            <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400 block">
-                              +{formatBRL(profit)}
+                            <span className={`font-bold text-xs block ${corResultado(profit)}`}>
+                              {profit < 0 ? "Prejuízo: " : ""}{formatBRL(profit)}
                             </span>
                             <span className="text-[10px] font-medium text-[#888882] block">
                               {margin.toFixed(0)}% margem
@@ -1051,7 +1301,7 @@ export default function OperacaoServicosPage() {
             {filteredServices.map((service) => {
               const price = service.preco || 0;
               const cost = service.custo_estimado || 0;
-              const profit = Math.max(0, price - cost);
+              const profit = price - cost;
               const margin = price > 0 ? (profit / price) * 100 : 0;
               const isActive = service.ativo !== false;
               const isVitrine = service.visivel_vitrine !== false;
@@ -1093,12 +1343,12 @@ export default function OperacaoServicosPage() {
                     <div className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <span className="text-[10px] text-[#888882] uppercase font-bold tracking-wider block">
-                          Lucro / Margem
+                          Resultado / Margem
                         </span>
                         <MargemLucroHelp />
                       </div>
-                      <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400 block">
-                        +{formatBRL(profit)} ({margin.toFixed(0)}%)
+                      <span className={`font-bold text-xs block ${corResultado(profit)}`}>
+                        {profit < 0 ? "Prejuízo: " : ""}{formatBRL(profit)} ({margin.toFixed(0)}%)
                       </span>
                     </div>
                   </div>
@@ -1141,28 +1391,15 @@ export default function OperacaoServicosPage() {
                       </button>
                     </div>
 
-                    {/* Botões Editar e Remover */}
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenEditModal(service)}
-                        aria-label={`Editar serviço ${service.nome}`}
-                        title="Editar serviço"
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-white dark:hover:bg-[#2B2B29] cursor-pointer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5 text-[#666662] dark:text-[#B8B8B2]" />
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setServicoParaExcluir(service)}
-                        aria-label={`Remover serviço ${service.nome}`}
-                        title="Remover serviço"
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-[#FAF9F5] dark:bg-[#181817] hover:bg-red-50 dark:hover:bg-red-950/40 cursor-pointer"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 text-[#B45309] dark:text-red-400" />
-                      </button>
-                    </div>
+                    {/* Ações do serviço: mesmas opções do desktop */}
+                    <MenuAcoesServico
+                      servico={service}
+                      ocupado={loadingActionId !== null}
+                      editar={() => handleOpenEditModal(service)}
+                      alternarStatus={() => void handleToggleStatus(service)}
+                      alternarVitrine={() => void handleToggleVitrine(service)}
+                      remover={() => setServicoParaExcluir(service)}
+                    />
                   </div>
                 </div>
               );
@@ -1259,10 +1496,23 @@ export default function OperacaoServicosPage() {
                     <input id="sonar-srv-preco"
                       type="text"
                       required
-                      inputMode="decimal"
+                      inputMode="numeric"
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       value={formPrice}
                       onChange={(e) => {
-                        setFormPrice(e.target.value);
+                        setFormPrice(formatMoneyInput(e.target.value));
                         if (formErrors.price) setFormErrors((prev) => ({ ...prev, price: undefined }));
                       }}
                       placeholder="35,00"
@@ -1273,8 +1523,12 @@ export default function OperacaoServicosPage() {
                       }`}
                     />
                   </div>
-                  {formErrors.price && (
+                  {formErrors.price ? (
                     <p className="text-[10px] text-red-500 font-semibold">{formErrors.price}</p>
+                  ) : (
+                    <p className="text-[11px] leading-4 text-[#666662] dark:text-[#B8B8B2]">
+                      Valor que o cliente paga por esse serviço.
+                    </p>
                   )}
                 </div>
 
@@ -1289,10 +1543,23 @@ export default function OperacaoServicosPage() {
                     </span>
                     <input id="sonar-srv-custo"
                       type="text"
-                      inputMode="decimal"
+                      inputMode="numeric"
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       value={formCost}
                       onChange={(e) => {
-                        setFormCost(e.target.value);
+                        setFormCost(formatMoneyInput(e.target.value));
                         if (formErrors.cost) setFormErrors((prev) => ({ ...prev, cost: undefined }));
                       }}
                       placeholder="3,00"
@@ -1306,7 +1573,9 @@ export default function OperacaoServicosPage() {
                   {formErrors.cost ? (
                     <p className="text-[10px] text-red-500 font-semibold">{formErrors.cost}</p>
                   ) : (
-                    <p className="text-[10px] text-[#888882]">Insumos como lâminas e descartáveis</p>
+                    <p className="text-[11px] leading-4 text-[#666662] dark:text-[#B8B8B2]">
+                      Quanto você gasta em materiais para realizar um atendimento, como lâminas e descartáveis. Não inclui aluguel ou outras despesas fixas.
+                    </p>
                   )}
                 </div>
               </div>
@@ -1323,8 +1592,8 @@ export default function OperacaoServicosPage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs sm:text-sm font-extrabold text-emerald-600 dark:text-emerald-400 block">
-                      +{formatBRL(liveProfitNum)}
+                    <span className={`text-xs sm:text-sm font-extrabold block ${corResultado(liveProfitNum)}`}>
+                      {liveProfitNum < 0 ? "Prejuízo: " : ""}{formatBRL(liveProfitNum)}
                     </span>
                     <span className="text-[10px] font-semibold text-[#888882]">
                       {liveMarginPercent.toFixed(1)}% de margem
@@ -1345,7 +1614,7 @@ export default function OperacaoServicosPage() {
                       Serviço Ativo
                     </label>
                     <p className="text-[10px] text-[#666662] dark:text-[#B8B8B2]">
-                      Serviços ativos ficam disponíveis para lançamento rápido no PDV.
+                      Serviços ativos ficam disponíveis para lançamento rápido no Ponto de Venda.
                     </p>
                   </div>
                   <button
