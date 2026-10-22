@@ -30,7 +30,7 @@ const ATALHOS = [
   {
     titulo: "Cadastrar despesa",
     descricao: "Aluguel, energia ou insumos",
-    href: "/configuracoes/negocio/financeiro",
+    href: "/configuracoes/negocio/financeiro?nova-despesa=1",
     icone: FileText,
   },
   {

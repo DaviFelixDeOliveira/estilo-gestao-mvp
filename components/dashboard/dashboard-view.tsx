@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Calendar,
+  Info,
   X,
   TrendingUp,
   CheckCircle2,
@@ -467,6 +468,17 @@ export function DashboardView() {
         </p>
       </section>
 
+      {/* Faixa padronizada de orientacao: cores do Servicos, fonte do Dashboard */}
+      <section aria-labelledby="dashboard-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="dashboard-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Use os filtros para acompanhar as vendas, o dinheiro que entrou e saiu e os resultados da barbearia. Para registrar vendas, cadastrar serviços ou produtos e lançar despesas, use os atalhos em <strong>Comece a operar</strong>.
+          </p>
+        </div>
+      </section>
+
       {/* ======================================================== */}
       {/* 2. FILTRO DE PERÍODO (Segmented Control + Personalizado) */}
       {/* ======================================================== */}
@@ -633,7 +645,7 @@ export function DashboardView() {
                   Nenhuma movimentação encontrada neste período
                 </h3>
                 <p className="text-xs text-[#666662] dark:text-[#B8B8B2] max-w-sm leading-relaxed">
-                  Ao finalizar vendas no PDV ou lançar despesas, o gráfico de evolução consolidará aqui o fluxo da sua barbearia.
+                  Ao finalizar vendas no Ponto de Venda ou lançar despesas, o gráfico de evolução consolidará aqui o fluxo da sua barbearia.
                 </p>
               </div>
             ) : (
@@ -824,7 +836,7 @@ export function DashboardView() {
                     Nenhum item registrado no período selecionado.
                   </p>
                   <p className="text-[11px]">
-                    Registre novas vendas no PDV para alimentar os indicadores operacionais.
+                    Registre novas vendas no Ponto de Venda para alimentar os indicadores operacionais.
                   </p>
                 </div>
               ) : (
@@ -853,11 +865,11 @@ export function DashboardView() {
             {/* Modal Actions */}
             <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#EEEEEA] dark:border-[#3F3F3B]">
               <Link
-                href="/pdv"
+                href="/pdv/nova-venda"
                 onClick={() => setOperationalDetailModal(null)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
               >
-                <span>Abrir PDV</span>
+                <span>Abrir Ponto de Venda</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
