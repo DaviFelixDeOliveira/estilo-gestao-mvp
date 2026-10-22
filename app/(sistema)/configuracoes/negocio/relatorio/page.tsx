@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
+  Info,
   TrendingUp,
   TrendingDown,
   ArrowDownToLine,
@@ -42,18 +43,24 @@ function formatDateDisplay(dateStr: string): string {
   }
 }
 
+// Usa o dia do navegador, sem converter para UTC e mudar o dia no Brasil.
+function dataLocalISO(data: Date): string {
+  const dois = (valor: number) => String(valor).padStart(2, "0");
+  return [data.getFullYear(), dois(data.getMonth() + 1), dois(data.getDate())].join("-");
+}
+
 export default function RelatoriosPage() {
   const supabase = useMemo(() => createClient(), []);
 
   const [activeTab, setActiveTab] = useState<"visao-geral" | "lucratividade">("visao-geral");
   const [periodo, setPeriodo] = useState<PeriodoRelatorio>("mes");
 
-  const hojeISO = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const hojeISO = useMemo(() => dataLocalISO(new Date()), []);
 
   // Datas para o período personalizado
   const [customInicio, setCustomInicio] = useState(() => {
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+    return dataLocalISO(new Date(now.getFullYear(), now.getMonth(), 1));
   });
   const [customFim, setCustomFim] = useState(hojeISO);
 
@@ -71,6 +78,8 @@ export default function RelatoriosPage() {
   const [isFiltering, setIsFiltering] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [dados, setDados] = useState<RespostaDadosRelatorio | null>(null);
+  const [tentativaConsulta, setTentativaConsulta] = useState(0);
+  const requisicaoAtual = useRef(0);
 
   // Toast
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(
@@ -87,7 +96,7 @@ export default function RelatoriosPage() {
   // Calcula o intervalo de datas (p_inicio e p_fim) de acordo com o período selecionado
   const dateRange = useMemo(() => {
     const now = new Date();
-    const hojeStr = now.toISOString().split("T")[0];
+    const hojeStr = hojeISO;
 
     if (periodo === "hoje") {
       return { inicio: hojeStr, fim: hojeStr, label: "Hoje" };
@@ -99,14 +108,14 @@ export default function RelatoriosPage() {
       const monday = new Date(now);
       monday.setDate(now.getDate() + diffToMonday);
       return {
-        inicio: monday.toISOString().split("T")[0],
+        inicio: dataLocalISO(monday),
         fim: hojeStr,
         label: "Esta semana",
       };
     }
 
     if (periodo === "mes") {
-      const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+      const inicioMes = dataLocalISO(new Date(now.getFullYear(), now.getMonth(), 1));
       const nomeMes = now.toLocaleString("pt-BR", { month: "short" }).replace(".", "");
       const ano2Digitos = String(now.getFullYear()).slice(-2);
       return {
@@ -117,7 +126,7 @@ export default function RelatoriosPage() {
     }
 
     if (periodo === "ano") {
-      const inicioAno = new Date(now.getFullYear(), 0, 1).toISOString().split("T")[0];
+      const inicioAno = dataLocalISO(new Date(now.getFullYear(), 0, 1));
       return {
         inicio: inicioAno,
         fim: hojeStr,
@@ -131,41 +140,26 @@ export default function RelatoriosPage() {
       fim: customFim,
       label: `${formatDateDisplay(customInicio)} a ${formatDateDisplay(customFim)}`,
     };
-  }, [periodo, customInicio, customFim]);
+  }, [periodo, customInicio, customFim, hojeISO]);
 
-  // Carrega os dados reais do Supabase via RPC
-  const carregarRelatorio = useCallback(async () => {
-    setLoading(true);
+  // Invalida a consulta anterior e impede mostrar/exportar valores de outro periodo.
+  const prepararConsulta = (mostrarFiltro: boolean) => {
+    requisicaoAtual.current += 1;
+    setDados(null);
     setErro(null);
+    setLoading(true);
+    setIsFiltering(mostrarFiltro);
+  };
 
-    try {
-      const { data, error } = await supabase.rpc("obter_dados_relatorio", {
-        p_inicio: dateRange.inicio,
-        p_fim: dateRange.fim,
-      });
-
-      if (error) throw error;
-
-      if (data) {
-        setDados(data as unknown as RespostaDadosRelatorio);
-      }
-    } catch (err: unknown) {
-      const e = err as { code?: string; message?: string; details?: string; hint?: string };
-      const comCodigo = e?.code ? ` (código ${e.code})` : "";
-      const msg = e?.message
-        ? `${e.message}${comCodigo}`
-        : "Erro ao carregar dados do relatório.";
-      console.error("Relatórios: falha ao carregar dados", err);
-      setErro(msg);
-      showToast(msg, "error");
-    } finally {
-      setLoading(false);
-      setIsFiltering(false);
-    }
-  }, [supabase, dateRange, showToast]);
+  // Tentar novamente usa o mesmo fluxo de consulta dos filtros.
+  const carregarRelatorio = () => {
+    prepararConsulta(false);
+    setTentativaConsulta((anterior) => anterior + 1);
+  };
 
   useEffect(() => {
     let ativo = true;
+    const idConsulta = ++requisicaoAtual.current;
 
     async function fetchData() {
       try {
@@ -174,36 +168,37 @@ export default function RelatoriosPage() {
           p_fim: dateRange.fim,
         });
 
-        if (!ativo) return;
+        if (!ativo || idConsulta !== requisicaoAtual.current) return;
         if (error) throw error;
+        if (!data) throw new Error("A consulta não retornou dados do relatório. Tente novamente.");
 
-        if (data) {
-          setDados(data as unknown as RespostaDadosRelatorio);
-        }
+        setDados(data as unknown as RespostaDadosRelatorio);
+        setErro(null);
       } catch (err: unknown) {
-        if (!ativo) return;
+        if (!ativo || idConsulta !== requisicaoAtual.current) return;
         const e = err as { code?: string; message?: string; details?: string; hint?: string };
         const comCodigo = e?.code ? ` (código ${e.code})` : "";
         const msg = e?.message
           ? `${e.message}${comCodigo}`
           : "Erro ao carregar dados do relatório.";
         console.error("Relatórios: falha ao carregar dados", err);
+        setDados(null);
         setErro(msg);
         showToast(msg, "error");
       } finally {
-        if (ativo) {
+        if (ativo && idConsulta === requisicaoAtual.current) {
           setLoading(false);
           setIsFiltering(false);
         }
       }
     }
 
-    fetchData();
+    void fetchData();
 
     return () => {
       ativo = false;
     };
-  }, [supabase, dateRange, showToast]);
+  }, [supabase, dateRange, showToast, tentativaConsulta]);
 
   const handleSelectPeriodo = (p: PeriodoRelatorio) => {
     if (p === "personalizado") {
@@ -213,7 +208,8 @@ export default function RelatoriosPage() {
       setIsCustomModalOpen(true);
       return;
     }
-    setIsFiltering(true);
+    if (p === periodo) return;
+    prepararConsulta(true);
     setPeriodo(p);
   };
 
@@ -235,12 +231,16 @@ export default function RelatoriosPage() {
       return;
     }
 
+    if (periodo === "personalizado" && tempInicio === customInicio && tempFim === customFim) {
+      setIsCustomModalOpen(false);
+      return;
+    }
+
+    prepararConsulta(true);
     setCustomInicio(tempInicio);
     setCustomFim(tempFim);
     setIsCustomModalOpen(false);
-    setIsFiltering(true);
     setPeriodo("personalizado");
-    showToast("Período personalizado aplicado.");
   };
 
   // Categoria de maior saída para o rodapé explicativo
@@ -249,12 +249,18 @@ export default function RelatoriosPage() {
     return dados.saidasPorCategoria[0];
   }, [dados]);
 
-  // Forma de pagamento de maior volume
+  const maiorOrigemFaturamento = useMemo(() => {
+    const origens = dados?.faturamentoPorOrigem ?? [];
+    return origens.reduce<(typeof origens)[number] | null>(
+      (maior, atual) => atual.amount > (maior?.amount ?? 0) ? atual : maior,
+      null
+    );
+  }, [dados]);
 
-  // Total das vendas concluídas no período
+  // Os pagamentos sao liquidos, apos descontos. A base nao pode ser o valor bruto.
   const totalVendasPagamento = Math.max(
     0,
-    dados?.metrics.faturamento ?? 0
+    dados?.metrics.entradas ?? 0
   );
 
   // Soma das vendas com forma de pagamento informada
@@ -322,6 +328,17 @@ export default function RelatoriosPage() {
         </p>
       </header>
 
+
+      {/* Faixa padronizada de orientacao: cores azuis e fonte confortavel */}
+      <section aria-labelledby="relatorio-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="relatorio-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Escolha um período para ver o <strong>faturamento</strong>, as entradas, as saídas e os resultados da barbearia. Na aba <strong>Lucratividade</strong>, acompanhe o lucro estimado de serviços e produtos. Use <strong>Exportar</strong> para salvar os dados do relatório.
+          </p>
+        </div>
+      </section>
 
       {/* ======================================================== */}
       {/* 2. BOTÃO EXPORTAR */}
@@ -472,7 +489,7 @@ export default function RelatoriosPage() {
                     {formatMoney(dados.metrics.entradas)}
                   </div>
                   <p className="text-[10px] sm:text-xs text-[#666662] dark:text-[#B8B8B2] mt-2 pt-2 border-t border-emerald-200/60 dark:border-emerald-950/60 truncate">
-                    Entradas em caixa.
+                    Valor líquido das vendas, após descontos.
                   </p>
                 </div>
 
@@ -552,7 +569,7 @@ export default function RelatoriosPage() {
 
               {dados.metrics.quantidadeVendas === 0 && (
                 <div className="p-4 rounded-2xl bg-[#FAF9F5] dark:bg-[#181817] border border-dashed border-[#E2E2DD] dark:border-[#3F3F3B] text-xs text-[#888882] text-center">
-                  Nenhuma venda registrada neste período — os indicadores acima estão zerados.
+                  Nenhuma venda registrada neste período. As despesas e o resultado estimado continuam sendo exibidos quando houver gastos.
                 </div>
               )}
 
@@ -604,7 +621,11 @@ export default function RelatoriosPage() {
                     </div>
                   </div>
                   <div className="pt-3 mt-4 border-t border-[#E2E2DD]/70 dark:border-[#3F3F3B]/70 text-[11px] text-[#888882]">
-                    Serviços continuam como principal fonte da receita.
+                    {maiorOrigemFaturamento ? (
+                      <>Maior origem de faturamento no período: <strong>{maiorOrigemFaturamento.name}</strong>.</>
+                    ) : (
+                      "Nenhum faturamento registrado no período."
+                    )}
                   </div>
                 </article>
 
@@ -697,7 +718,7 @@ export default function RelatoriosPage() {
 
                       {totalVendasPagamento === 0 && (
                         <div className="py-4 text-center text-xs text-[#888882]">
-                          Nenhuma venda concluída no período.
+                          Nenhum valor líquido de vendas no período.
                         </div>
                       )}
                     </div>
@@ -706,7 +727,7 @@ export default function RelatoriosPage() {
                   <div className="pt-3 mt-4 border-t border-[#E2E2DD]/70 dark:border-[#3F3F3B]/70 text-[11px] text-[#888882]">
                     {totalVendasPagamento > 0 ? (
                       <>
-                        Total de vendas concluídas:{" "}
+                        Valor líquido das vendas concluídas:{" "}
                         {formatMoney(totalVendasPagamento)}.
                         {totalSemFormaInformada > 0.005 && (
                           <>
