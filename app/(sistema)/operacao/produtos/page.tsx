@@ -107,10 +107,10 @@ const INITIAL_PRODUTO_FORM: FormProdutoState = {
   categoria_id: "",
   nome: "",
   descricao: "",
-  preco_custo: "",
-  preco_venda: "",
-  estoque_atual: "10",
-  estoque_minimo: "3",
+  preco_custo: "0,00",
+  preco_venda: "0,00",
+  estoque_atual: "0",
+  estoque_minimo: "0",
   imagem_path: "",
   usar_imagem_categoria: true,
   ativo: true,
@@ -127,6 +127,19 @@ function formatMoneyDisplay(value: number | null | undefined): string {
   }).format(value);
 }
 
+function formatMoneyInput(value: string): string {
+  const digits = value
+    .replace(/\D/g, "")
+    .replace(/^0+(?=\d)/, "")
+    .slice(0, 12);
+
+  const cents = Number(digits || "0");
+
+  return (cents / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 function parseMoneyInput(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
@@ -138,7 +151,10 @@ function parseMoneyInput(value: string): number | null {
 
 function formatForInput(value: number | null | undefined): string {
   if (value === null || value === undefined) return "";
-  return String(value).replace(".", ",");
+  return value.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export default function OperacaoProdutosPage() {
@@ -658,10 +674,10 @@ export default function OperacaoProdutosPage() {
       categoria_id: item.categoria_id,
       nome: item.nome,
       descricao: item.descricao ?? "",
-      preco_custo: formatForInput(item.preco_custo),
-      preco_venda: formatForInput(item.preco_venda),
+      preco_custo: formatForInput(item.preco_custo) || "0,00",
+      preco_venda: formatForInput(item.preco_venda) || "0,00",
       estoque_atual: String(item.estoque_atual ?? 0),
-      estoque_minimo: item.estoque_minimo !== null ? String(item.estoque_minimo) : "3",
+      estoque_minimo: item.estoque_minimo !== null ? String(item.estoque_minimo) : "0",
       imagem_path: item.imagem_path ?? "",
       usar_imagem_categoria: item.usar_imagem_categoria,
       ativo: item.ativo,
@@ -734,7 +750,7 @@ export default function OperacaoProdutosPage() {
   const liveFinancials = useMemo(() => {
     const priceNum = parseMoneyInput(formProduto.preco_venda) || 0;
     const costNum = parseMoneyInput(formProduto.preco_custo) || 0;
-    const profit = Math.max(0, priceNum - costNum);
+    const profit = priceNum > 0 ? priceNum - costNum : 0;
     const marginPercent = priceNum > 0 ? (profit / priceNum) * 100 : 0;
     return {
       priceNum,
@@ -785,7 +801,7 @@ export default function OperacaoProdutosPage() {
 
     const precoCustoNum = parseMoneyInput(formProduto.preco_custo);
     if (precoCustoNum === null || precoCustoNum < 0) {
-      errors.preco_custo = "Preço de custo não pode ser negativo.";
+      errors.preco_custo = "Preço de compra não pode ser negativo.";
     }
 
     let estoqueMinimoNum: number | null = null;
@@ -1078,9 +1094,9 @@ export default function OperacaoProdutosPage() {
 
     if (qty === 0) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200/60 dark:border-red-900/40">
-          <Ban className="w-3 h-3 text-red-500 shrink-0" />
-          <span>0 un. • Esgotado</span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700">
+          <Package className="w-3 h-3 text-neutral-500 shrink-0" />
+          <span>0 un. • Sem estoque</span>
         </span>
       );
     }
@@ -1154,7 +1170,7 @@ export default function OperacaoProdutosPage() {
           </h1>
           <p className="text-xs sm:text-sm text-[#666662] dark:text-[#B8B8B2] max-w-2xl leading-relaxed">
             Gerencie o catálogo de produtos e bebidas da barbearia, controle estoques mínimos,
-            margens de lucro e visibilidade na vitrine digital e no PDV.
+            margens de lucro e visibilidade na vitrine digital e no Ponto de Venda.
           </p>
         </div>
 
@@ -1182,6 +1198,18 @@ export default function OperacaoProdutosPage() {
             <Plus className="w-4 h-4" />
             <span>Novo Produto</span>
           </button>
+        </div>
+      </section>
+
+      {/* Faixa padronizada de orientacao: cores do Servicos, fonte do Dashboard */}
+      <section aria-label="Como usar esta tela" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Cadastre os produtos vendidos na barbearia. Informe o preço cobrado do cliente e quanto custou cada unidade. Para registrar entradas, corrigir quantidades ou perdas, acesse{" "}
+            <Link href="/operacao/estoque" className="font-bold underline underline-offset-2 hover:text-sky-950 dark:hover:text-white">Estoque</Link>.
+          </p>
         </div>
       </section>
 
@@ -1260,12 +1288,12 @@ export default function OperacaoProdutosPage() {
 
         {/* Esgotados */}
         <div className="p-4 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-red-500">
+          <div className={`flex items-center justify-between ${metrics.outOfStock > 0 ? "text-amber-600 dark:text-amber-400" : "text-[#888882]"}`}>
             <span className="text-xs font-medium text-[#888882]">Esgotados</span>
             <Ban className="w-4 h-4" />
           </div>
           <div className="mt-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-red-600 dark:text-red-400">
+            <span className={`text-2xl sm:text-3xl font-extrabold ${metrics.outOfStock > 0 ? "text-amber-700 dark:text-amber-400" : "text-[#2F2F2D] dark:text-[#F4F4F0]"}`}>
               {loading ? "..." : metrics.outOfStock}
             </span>
             <p className="text-[11px] text-[#888882] mt-1">Estoque zerado (0 un.)</p>
@@ -1600,10 +1628,10 @@ export default function OperacaoProdutosPage() {
                             {formatMoneyDisplay(prod.preco_venda)}
                           </span>
                           <div className="flex items-center gap-2 mt-0.5 text-[10px] text-[#888882]">
-                            <span>Custo: {formatMoneyDisplay(prod.preco_custo || 0)}</span>
+                            <span>Compra: {formatMoneyDisplay(prod.preco_custo || 0)}</span>
                             <span>•</span>
-                            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-                              Lucro: {formatMoneyDisplay(profit)} ({marginPct.toFixed(0)}%)
+                            <span className={`font-semibold ${profit < 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                              Resultado: {formatMoneyDisplay(profit)} ({marginPct.toFixed(0)}%)
                             </span>
                           </div>
                         </div>
@@ -1738,8 +1766,8 @@ export default function OperacaoProdutosPage() {
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-[#888882] block">Custo / Margem</span>
-                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-[10px] text-[#888882] block">Resultado / Margem</span>
+                      <span className={`text-xs font-bold ${profit < 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}>
                         {formatMoneyDisplay(profit)} ({marginPct.toFixed(0)}%)
                       </span>
                     </div>
@@ -1860,7 +1888,7 @@ export default function OperacaoProdutosPage() {
                     Categoria do Produto <span className="text-red-500">*</span>
                   </label>
                   <Link
-                    href="/operacao/produtos"
+                    href="/operacao/categorias"
                     onClick={handleCloseModal}
                     className="text-[11px] font-bold text-[#2F2F2D] dark:text-white hover:underline flex items-center gap-1 cursor-pointer"
                   >
@@ -2068,16 +2096,44 @@ export default function OperacaoProdutosPage() {
                   <label htmlFor="sonar-prod-preco-venda" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                     Preço de Venda (R$) <span className="text-red-500">*</span>
                   </label>
+                  <p className="text-[11px] leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                    Quanto o cliente paga por uma unidade.
+                  </p>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
                       R$
                     </span>
                     <input id="sonar-prod-preco-venda"
                       type="text"
+                      inputMode="numeric"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+                        if (
+                          event.key.length === 1 &&
+                          !/^\d$/.test(event.key)
+                        ) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       required
                       value={formProduto.preco_venda}
                       onChange={(e) => {
-                        setFormProduto({ ...formProduto, preco_venda: e.target.value });
+                        setFormProduto({ ...formProduto, preco_venda: formatMoneyInput(e.target.value) });
                         if (formErrors.preco_venda) {
                           setFormErrors((prev) => ({ ...prev, preco_venda: undefined }));
                         }
@@ -2099,17 +2155,45 @@ export default function OperacaoProdutosPage() {
 
                 <div className="space-y-1">
                   <label htmlFor="sonar-prod-preco-custo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                    Preço de Custo (R$)
+                    Preço de Compra (R$)
                   </label>
+                  <p className="text-[11px] leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                    Quanto você pagou por uma unidade, não pelo lote inteiro.
+                  </p>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
                       R$
                     </span>
                     <input id="sonar-prod-preco-custo"
                       type="text"
+                      inputMode="numeric"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+                        if (
+                          event.key.length === 1 &&
+                          !/^\d$/.test(event.key)
+                        ) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       value={formProduto.preco_custo}
                       onChange={(e) => {
-                        setFormProduto({ ...formProduto, preco_custo: e.target.value });
+                        setFormProduto({ ...formProduto, preco_custo: formatMoneyInput(e.target.value) });
                         if (formErrors.preco_custo) {
                           setFormErrors((prev) => ({ ...prev, preco_custo: undefined }));
                         }
@@ -2136,18 +2220,18 @@ export default function OperacaoProdutosPage() {
                   <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <div>
                     <span className="text-[10px] text-[#888882] block font-medium">
-                      Margem de Lucro Estimada
+                      Margem Bruta Estimada
                     </span>
                     <span className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
                       {liveFinancials.priceNum > 0
-                        ? `${liveFinancials.marginPercent.toFixed(1)}% de margem líquida`
+                        ? `${liveFinancials.marginPercent.toFixed(1)}% de margem bruta`
                         : "Informe o preço de venda"}
                     </span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-[#888882] block">Lucro Bruto Unitário</span>
-                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                  <span className="text-[10px] text-[#888882] block">Resultado Bruto Unitário</span>
+                  <span className={`text-xs font-extrabold ${liveFinancials.profit < 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}>
                     {formatMoneyDisplay(liveFinancials.profit)}
                   </span>
                 </div>
@@ -2171,13 +2255,18 @@ export default function OperacaoProdutosPage() {
                         setFormErrors((prev) => ({ ...prev, estoque_atual: undefined }));
                       }
                     }}
-                    placeholder="10"
+                    placeholder="0"
                     className={`w-full px-3 py-2 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border text-xs sm:text-sm font-semibold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none transition-colors ${
                       formErrors.estoque_atual
                         ? "border-red-500 focus:border-red-500"
                         : "border-[#E2E2DD] dark:border-[#3F3F3B] focus:border-[#2F2F2D] dark:focus:border-white"
                     }`}
                   />
+                  <p className="text-[11px] leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                    {editingProduct
+                      ? "Quantidade disponível agora. Mudanças ficam registradas como ajuste de estoque."
+                      : "Se ainda não tem unidades, deixe 0. Informe a quantidade real se já tem produtos."}
+                  </p>
                   {formErrors.estoque_atual && (
                     <p className="text-[11px] font-semibold text-red-600 dark:text-red-400">
                       {formErrors.estoque_atual}
@@ -2403,7 +2492,7 @@ export default function OperacaoProdutosPage() {
                       Produto Ativo
                     </span>
                     <span className="text-[11px] text-[#888882] block">
-                      Permite que o produto apareça nas vendas do PDV se houver estoque
+                      Permite que o produto apareça nas vendas do Ponto de Venda se houver estoque
                     </span>
                   </span>
                   <input aria-label="Produto Ativo"
