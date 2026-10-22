@@ -92,6 +92,24 @@ function formatMoneyDisplay(value: number | null | undefined): string {
   }).format(value);
 }
 
+type SituacaoCompraEstoque = "PAGA" | "PENDENTE" | "GRATUITA" | "CUSTO_DESCONHECIDO";
+
+function hojeLocalEstoque(): string {
+  const partes = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date());
+  const pegar = (tipo: string) => partes.find((parte) => parte.type === tipo)?.value ?? "";
+  return `${pegar("year")}-${pegar("month")}-${pegar("day")}`;
+}
+
+function formatarCentavosEstoque(value: string): string {
+  const digitos = value.replace(/\D/g, "").replace(/^0+(?=\d)/, "").slice(0, 12);
+  return (Number(digitos || "0") / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 function parseMoneyInput(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
@@ -260,8 +278,11 @@ export default function EstoquePage() {
 
   // Estado do formulário de movimentação
   const [movementType, setMovementType] = useState<"add" | "adjust" | "loss">("add");
-  const [addQtyInput, setAddQtyInput] = useState<string>("10");
-  const [costInput, setCostInput] = useState<string>("");
+  const [addQtyInput, setAddQtyInput] = useState<string>("0");
+  const [purchaseStatus, setPurchaseStatus] = useState<SituacaoCompraEstoque | "">("");
+  const [purchaseTotalInput, setPurchaseTotalInput] = useState<string>("0,00");
+  const [purchasePaidDate, setPurchasePaidDate] = useState<string>(hojeLocalEstoque);
+  const [purchaseDueDate, setPurchaseDueDate] = useState<string>("");
   const [countedStockInput, setCountedStockInput] = useState<string>("10");
   const [lossQtyInput, setLossQtyInput] = useState<string>("1");
   const [lossReasonType, setLossReasonType] = useState<string>("Danificado / Avariado");
@@ -277,9 +298,9 @@ export default function EstoquePage() {
   const [historyTypeFilter, setHistoryTypeFilter] = useState<string>("all");
 
   // Toast feedback
-  const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "info" } | null>(null);
+  const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
 
-  const showToast = useCallback((message: string, type: "success" | "info" = "success") => {
+  const showToast = useCallback((message: string, type: "success" | "info" | "error" = "success") => {
     setFeedbackToast({ message, type });
     setTimeout(() => {
       setFeedbackToast(null);
@@ -581,11 +602,15 @@ export default function EstoquePage() {
     const currentStock = targetItem?.estoque_atual ?? 0;
 
     setMovementType(initialType);
-    setAddQtyInput("10");
+    setAddQtyInput("0");
     setCountedStockInput(String(currentStock));
     setLossQtyInput("1");
     setLossReasonType("Danificado / Avariado");
-    setCostInput(targetItem?.preco_custo ? targetItem.preco_custo.toFixed(2).replace(".", ",") : "");
+    // Exigir escolha explicita: preco cadastrado nao comprova pagamento.
+    setPurchaseStatus("");
+    setPurchaseTotalInput("0,00");
+    setPurchasePaidDate(hojeLocalEstoque());
+    setPurchaseDueDate("");
     setObservationInput("");
     setIsProductPickerOpen(false);
     setPickerSearchQuery("");
@@ -617,16 +642,13 @@ export default function EstoquePage() {
         delta: 0,
         currentStock: 0,
         newStock: 0,
-        totalCost: 0,
-        cleanCost: 0,
-        hasCost: false,
+        purchaseTotal: 0,
         error: "Nenhum produto selecionado.",
       };
     }
 
     const currentStock = selectedProduct.estoque_atual;
-    const cleanCost = parseMoneyInput(costInput) ?? 0;
-    const hasCost = costInput.trim() !== "" && cleanCost > 0;
+    const valorTotal = parseMoneyInput(purchaseTotalInput);
 
     let qty = 0;
     let delta = 0;
@@ -637,12 +659,28 @@ export default function EstoquePage() {
       if (!selectedProduct.ativo) {
         error = `O produto "${selectedProduct.nome}" está inativo. Reative-o em Produtos para repor estoque.`;
       }
-      const rawAddQty = Number.parseInt(addQtyInput, 10);
-      qty = Number.isNaN(rawAddQty) || rawAddQty <= 0 ? 0 : rawAddQty;
+      const rawAddQty = /^\d+$/.test(addQtyInput) ? Number(addQtyInput) : NaN;
+      qty = Number.isSafeInteger(rawAddQty) && rawAddQty > 0 ? rawAddQty : 0;
       delta = qty;
       newStock = currentStock + delta;
       if (!error && qty <= 0) {
-        error = "Informe uma quantidade a adicionar maior que zero.";
+        error = "Informe uma quantidade inteira a adicionar maior que zero.";
+      }
+      if (!error && !purchaseStatus) {
+        error = "Escolha se a reposição foi paga, está pendente, foi gratuita ou tem custo desconhecido.";
+      }
+      if (!error && (purchaseStatus === "PAGA" || purchaseStatus === "PENDENTE") &&
+          (valorTotal === null || !Number.isFinite(valorTotal) || valorTotal <= 0)) {
+        error = "Informe o valor total da compra, maior que zero.";
+      }
+      if (!error && purchaseStatus === "PAGA" && !purchasePaidDate) {
+        error = "Informe a data do pagamento.";
+      }
+      if (!error && purchaseStatus === "PAGA" && purchasePaidDate > hojeLocalEstoque()) {
+        error = "A data do pagamento não pode ser futura.";
+      }
+      if (!error && purchaseStatus === "PENDENTE" && purchaseDueDate && purchaseDueDate < hojeLocalEstoque()) {
+        error = "O vencimento da compra a pagar não pode ser anterior a hoje.";
       }
     } else if (movementType === "adjust") {
       const rawCounted = Number.parseInt(countedStockInput, 10);
@@ -673,37 +711,54 @@ export default function EstoquePage() {
       delta,
       currentStock,
       newStock: Math.max(0, newStock),
-      totalCost: qty * cleanCost,
-      cleanCost,
-      hasCost,
+      purchaseTotal: valorTotal ?? 0,
       error,
     };
-  }, [selectedProduct, movementType, addQtyInput, costInput, countedStockInput, lossQtyInput]);
+  }, [selectedProduct, movementType, addQtyInput, purchaseStatus, purchaseTotalInput,
+      purchasePaidDate, purchaseDueDate, countedStockInput, lossQtyInput]);
 
   // Executar a movimentação usando as RPCs reais do Supabase
   const handleRegisterMovement = async (e?: FormEvent) => {
     if (e) e.preventDefault();
     if (!selectedProduct || salvandoMovimentacao) return;
     if (movementCalculation.error) return;
+    // Conferir novamente ao salvar (inclusive se o dia virou com a tela aberta).
+    if (movementType === "add" && purchaseStatus === "PAGA" && purchasePaidDate > hojeLocalEstoque()) {
+      showToast("A data do pagamento não pode ser futura.", "error");
+      return;
+    }
+    if (movementType === "add" && purchaseStatus === "PENDENTE" && purchaseDueDate && purchaseDueDate < hojeLocalEstoque()) {
+      showToast("O vencimento da compra a pagar não pode ser anterior a hoje.", "error");
+      return;
+    }
 
     setSalvandoMovimentacao(true);
 
     try {
       if (movementType === "add") {
-        const custoUnitario = movementCalculation.hasCost ? movementCalculation.cleanCost : null;
         const motivo = observationInput.trim() || null;
+        const valorTotal = purchaseStatus === "PAGA" || purchaseStatus === "PENDENTE"
+          ? movementCalculation.purchaseTotal
+          : purchaseStatus === "GRATUITA" ? 0 : null;
 
-        const { error } = await supabase.rpc("repor_estoque", {
+        const { error } = await supabase.rpc("registrar_reposicao_com_compra", {
           p_produto_id: selectedProduct.id,
           p_quantidade: movementCalculation.qty,
-          p_custo_unitario: custoUnitario,
+          p_situacao: purchaseStatus,
+          p_valor_total: valorTotal,
+          p_data_pagamento: purchaseStatus === "PAGA" ? purchasePaidDate : null,
+          p_data_vencimento: purchaseStatus === "PENDENTE" ? (purchaseDueDate || null) : null,
           p_motivo: motivo,
         });
-
         if (error) throw error;
 
+        const complemento = purchaseStatus === "PAGA"
+          ? " e despesa paga registrada no Financeiro."
+          : purchaseStatus === "PENDENTE"
+          ? " e pagamento pendente registrado no Financeiro."
+          : " sem despesa financeira.";
         showToast(
-          `Reposição de ${movementCalculation.qty} un. registrada para "${selectedProduct.nome}".`,
+          `Reposição de ${movementCalculation.qty} un. de "${selectedProduct.nome}" registrada${complemento}`,
           "success"
         );
       } else if (movementType === "adjust") {
@@ -756,7 +811,7 @@ export default function EstoquePage() {
       await carregarDados();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao registrar movimentação de estoque.";
-      showToast(msg, "info");
+      showToast(msg, "error");
     } finally {
       setSalvandoMovimentacao(false);
     }
@@ -771,7 +826,11 @@ export default function EstoquePage() {
           aria-live="polite"
           className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 p-3.5 rounded-xl bg-[#2F2F2D] dark:bg-[#222220] text-white text-xs sm:text-sm font-semibold shadow-2xl border border-neutral-700 flex items-center gap-2.5 animate-fadeIn"
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          {feedbackToast.type === "error" ? (
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          )}
           <span>{feedbackToast.message}</span>
         </div>
       )}
@@ -817,24 +876,14 @@ export default function EstoquePage() {
         </div>
       </section>
 
-      {/* Banner de Ajuda */}
-      <section className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] shadow-xs flex items-start gap-3">
-        <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
-          <Info className="w-4 h-4" />
-        </div>
-        <div className="text-xs sm:text-sm">
-          <strong className="block font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-            Como usar esta tela
-          </strong>
-          <p className="mt-0.5 text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
-            Clique em um produto para ver detalhes. Use <b>Movimentar</b> para adicionar estoque, corrigir uma contagem ou registrar perda. Para alterar nome, preço, categoria ou imagem, vá em{" "}
-            <Link
-              href="/operacao/produtos"
-              className="font-bold underline text-[#2F2F2D] dark:text-[#F4F4F0] hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
-            >
-              Produtos
-            </Link>
-            .
+      {/* Faixa padronizada de orientacao: cores do Servicos, fonte do Dashboard */}
+      <section aria-labelledby="estoque-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="estoque-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Clique em um produto para ver detalhes. Use <strong>Movimentar</strong> para adicionar estoque, corrigir uma contagem ou registrar perda. Para alterar nome, preço, categoria ou imagem, vá em{" "}
+            <Link href="/operacao/produtos" className="font-bold underline underline-offset-2 hover:text-sky-950 dark:hover:text-white">Produtos</Link>.
           </p>
         </div>
       </section>
@@ -1154,7 +1203,7 @@ export default function EstoquePage() {
 
                       {/* 4. Mínimo */}
                       <td className="py-3.5 px-3 text-right font-medium text-[#888882]">
-                        {p.estoque_minimo ?? 3} un.
+                        {p.estoque_minimo ?? 0} un.
                       </td>
 
                       {/* 5. Situação */}
@@ -1276,7 +1325,7 @@ export default function EstoquePage() {
                         Mínimo
                       </span>
                       <strong className="text-sm font-black text-[#2F2F2D] dark:text-[#F4F4F0]">
-                        {p.estoque_minimo ?? 3} un.
+                        {p.estoque_minimo ?? 0} un.
                       </strong>
                     </div>
                   </div>
@@ -1440,12 +1489,15 @@ export default function EstoquePage() {
                                 type="button"
                                 onClick={() => {
                                   setSelectedProductId(p.id);
+                                  setAddQtyInput("0");
                                   setIsProductPickerOpen(false);
                                   setPickerSearchQuery("");
                                   setCountedStockInput(String(p.estoque_atual));
-                                  if (p.preco_custo) {
-                                    setCostInput(p.preco_custo.toFixed(2).replace(".", ","));
-                                  }
+                                  // Nao manter valores/status do produto anterior.
+                                  setPurchaseStatus("");
+                                  setPurchaseTotalInput("0,00");
+                                  setPurchasePaidDate(hojeLocalEstoque());
+                                  setPurchaseDueDate("");
                                 }}
                                 className={`w-full p-2 rounded-xl flex items-center justify-between text-left text-xs transition-colors cursor-pointer ${
                                   isSelected
@@ -1537,29 +1589,81 @@ export default function EstoquePage() {
                         min="1"
                         step="1"
                         value={addQtyInput}
+                        onFocus={(e) => e.currentTarget.select()}
                         onChange={(e) => setAddQtyInput(e.target.value)}
                         placeholder="Ex: 10"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white transition-colors"
                       />
                     </div>
 
-                    <div className="space-y-1">
-                      <label htmlFor="sonar-est-custo" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
-                        Custo unitário desta reposição <span className="font-normal text-[#888882]">(opcional)</span>
-                      </label>
-                      <div className="relative">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-[#888882] font-semibold">
-                          R$
-                        </span>
-                        <input id="sonar-est-custo"
-                          type="text"
-                          value={costInput}
-                          onChange={(e) => setCostInput(e.target.value)}
-                          placeholder="0,00"
-                          className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white transition-colors"
-                        />
+                    <fieldset className="space-y-2">
+                      <legend className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                        Como esses produtos chegaram? *
+                      </legend>
+                      <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                        Escolha uma opção. O preço de compra do cadastro não é considerado pagamento.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {([
+                          { valor: "PAGA", rotulo: "Compra já paga" },
+                          { valor: "PENDENTE", rotulo: "Compra a pagar" },
+                          { valor: "GRATUITA", rotulo: "Recebido gratuitamente" },
+                          { valor: "CUSTO_DESCONHECIDO", rotulo: "Custo desconhecido" },
+                        ] as const).map((opcao) => (
+                          <label key={opcao.valor}
+                            className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer text-xs font-semibold ${
+                              purchaseStatus === opcao.valor
+                                ? "border-[#2F2F2D] dark:border-[#F4F4F0] bg-[#EEEDE7] dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-white"
+                                : "border-[#E2E2DD] dark:border-[#3F3F3B] text-[#666662] dark:text-[#B8B8B2]"
+                            }`}>
+                            <input type="radio" name="situacao-compra-estoque"
+                              checked={purchaseStatus === opcao.valor}
+                              onChange={() => setPurchaseStatus(opcao.valor)} />
+                            {opcao.rotulo}
+                          </label>
+                        ))}
                       </div>
-                    </div>
+                    </fieldset>
+
+                    {(purchaseStatus === "PAGA" || purchaseStatus === "PENDENTE") && (
+                      <div className="space-y-2">
+                        <label htmlFor="sonar-est-valor-compra" className="block text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                          Valor TOTAL da compra (R$) *
+                        </label>
+                        <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
+                          Digite o valor total da compra, não o preço de cada unidade.
+                        </p>
+                        <input id="sonar-est-valor-compra" type="text" inputMode="numeric"
+                          value={purchaseTotalInput}
+                          onChange={(e) => setPurchaseTotalInput(formatarCentavosEstoque(e.target.value))}
+                          placeholder="0,00"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]" />
+                        {purchaseStatus === "PAGA" ? (
+                          <label className="block text-xs text-[#2F2F2D] dark:text-[#F4F4F0]">
+                            <span className="font-bold block mb-1">Data do pagamento *</span>
+                            <input type="date" value={purchasePaidDate} max={hojeLocalEstoque()}
+                              onChange={(e) => setPurchasePaidDate(e.target.value)}
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]" />
+                          </label>
+                        ) : (
+                          <label className="block text-xs text-[#2F2F2D] dark:text-[#F4F4F0]">
+                            <span className="font-bold block mb-1">Vencimento previsto (opcional)</span>
+                            <input type="date" value={purchaseDueDate} min={hojeLocalEstoque()}
+                              onChange={(e) => setPurchaseDueDate(e.target.value)}
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]" />
+                          </label>
+                        )}
+                      </div>
+                    )}
+                    {purchaseStatus === "GRATUITA" && (
+                      <p className="text-xs text-emerald-700 dark:text-emerald-400">Sem pagamento e sem despesa financeira.</p>
+                    )}
+                    {purchaseStatus === "CUSTO_DESCONHECIDO" && (
+                      <p className="text-xs text-amber-700 dark:text-amber-400">
+                        Não vamos inventar um custo ou registrar uma despesa.
+                        O custo continuará identificado como desconhecido nesta compra.
+                      </p>
+                    )}
 
                     <div className="space-y-1">
                       <label htmlFor="sonar-est-observacao-add" className="text-xs font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">
@@ -1594,11 +1698,11 @@ export default function EstoquePage() {
                           {movementCalculation.newStock} un.
                         </strong>
                       </div>
-                      {movementCalculation.hasCost && (
+                      {(purchaseStatus === "PAGA" || purchaseStatus === "PENDENTE") && (
                         <div className="flex items-center justify-between pt-1 text-[11px] text-[#888882]">
-                          <span>Investimento total:</span>
+                          <span>{purchaseStatus === "PAGA" ? "Saída financeira:" : "Pagamento pendente:"}</span>
                           <strong className="text-[#2F2F2D] dark:text-[#F4F4F0]">
-                            {formatMoneyDisplay(movementCalculation.totalCost)}
+                            {formatMoneyDisplay(movementCalculation.purchaseTotal)}
                           </strong>
                         </div>
                       )}
@@ -1919,7 +2023,7 @@ export default function EstoquePage() {
                       Estoque mínimo
                     </span>
                     <strong className="text-sm font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0] block mt-0.5">
-                      {selectedProduct.estoque_minimo ?? 3} un.
+                      {selectedProduct.estoque_minimo ?? 0} un.
                     </strong>
                   </div>
                 </div>
