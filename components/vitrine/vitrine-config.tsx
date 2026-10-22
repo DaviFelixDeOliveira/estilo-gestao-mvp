@@ -403,7 +403,7 @@ export function VitrineConfig({
             Vitrine Digital
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-[#666662] dark:text-[#B8B8B2]">
-            Publique sua página pública, confira quais dados aparecem para os clientes e controle a exibição de serviços e produtos.
+            Divulgue seu trabalho através de sua página pública. Confira quais dados aparecem para os seus clientes e controle a exibição dos serviços e produtos.
           </p>
         </div>
 
@@ -429,6 +429,17 @@ export function VitrineConfig({
         </div>
       </header>
 
+
+      {/* Faixa padronizada de orientacao: cores azuis e fonte confortavel */}
+      <section aria-labelledby="vitrine-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="vitrine-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Confira as informações exibidas aos clientes e escolha quais <strong>serviços e produtos</strong> ficam visíveis. Organize as fotos na aba <strong>Portfólio</strong>. Quando estiver tudo pronto, clique em <strong>Publicar vitrine</strong> e compartilhe o link público ou QR Code.
+          </p>
+        </div>
+      </section>
 
       <section className="overflow-hidden rounded-2xl border border-[#3F3F3B] bg-[#1C1C1B] p-5 text-white shadow-xs dark:border-neutral-700 dark:bg-[#181817] sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
@@ -457,7 +468,7 @@ export function VitrineConfig({
                   href={linkPublico}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="Abrir vitrine pública em nova aba"
+                  title="Abrir vitrine pública"
                   className="mt-1.5 block break-all text-base font-extrabold leading-snug text-white underline-offset-4 transition-colors hover:text-[#DFBE7C] hover:underline sm:text-lg [overflow-wrap:anywhere]"
                 >
                   {linkPublico}
@@ -613,7 +624,7 @@ export function VitrineConfig({
                 }`}
               >
                 <Check className="h-3.5 w-3.5" />
-                {principaisCompletos ? "Principais completas" : "Pendências"}
+                {principaisCompletos ? "Todas as principais estão completas" : "Há pendências a preencher"}
               </span>
             </div>
 
@@ -693,7 +704,7 @@ export function VitrineConfig({
 
               <ResumoPublicoCard
                 icon={<CreditCard className="h-3.5 w-3.5 text-emerald-500" />}
-                title="Pagamentos Informados"
+                title="Formas de Pagamento aceitas"
                 actionLabel="Editar pagamentos"
                 onAction={() => avisarEdicao("Formas de pagamento")}
               >
@@ -716,20 +727,20 @@ export function VitrineConfig({
           <section className="space-y-3 rounded-2xl border border-[#E2E2DD] bg-white p-5 shadow-xs dark:border-[#3F3F3B] dark:bg-[#222220]">
             <div className="flex items-center gap-2 border-b border-[#E2E2DD] pb-3 dark:border-[#3F3F3B]">
               <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <h2 className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">Dados privados — nunca exibidos na Vitrine</h2>
+              <h2 className="text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">Como seus dados são exibidos na Vitrine</h2>
             </div>
 
             <div className="grid grid-cols-1 gap-3 text-xs md:grid-cols-2">
               <div className="space-y-1.5 rounded-xl border border-emerald-200/50 bg-emerald-50/40 p-4 dark:border-emerald-800/30 dark:bg-emerald-950/20">
                 <span className="block font-bold text-emerald-900 dark:text-emerald-300">Visível Publicamente:</span>
                 <p className="text-[11px] leading-relaxed text-emerald-800 dark:text-emerald-200/90">
-                  Serviços ativos e preços ao público, produtos selecionados, fotos do portfólio, endereço físico, horários de atendimento, WhatsApp e formas de pagamento aceitas.
+                  Seus serviços ativos e preços ao público, produtos selecionados, fotos do portfólio, endereço físico, horários de atendimento, WhatsApp, Instagram e formas de pagamento aceitas.
                 </p>
               </div>
-              <div className="space-y-1.5 rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] p-4 dark:border-[#3F3F3B] dark:bg-[#181817]">
+              <div className="space-y-1.5 rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] p-4 dark:border-[#3F3F3B] dark:bg-[#c32f2f]">
                 <span className="block font-bold text-[#2F2F2D] dark:text-[#F4F4F0]">Estritamente Privado:</span>
                 <p className="text-[11px] leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
-                  Vendas, faturamento diário, despesas, custos internos, estoque em quantidade exata, relatórios financeiros e informações administrativas internas.
+                  Vendas, faturamento diário, despesas, custos internos, estoque em quantidade exata, relatórios financeiros e informações administrativas são completamente restritas ao proprietário da barbearia.
                 </p>
               </div>
             </div>
@@ -825,14 +836,7 @@ export function VitrineConfig({
           />
         </div>
       )}
-
-      <div className="flex gap-2.5 rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
-        <Shield className="h-4 w-4 shrink-0" />
-        <span>
-          <strong>Dados privados protegidos.</strong> Custos, estoque numérico e informações financeiras não são exibidos na Vitrine pública.
-        </span>
       </div>
-    </div>
   );
 }
 
