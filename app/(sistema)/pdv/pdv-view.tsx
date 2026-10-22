@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
@@ -28,9 +28,38 @@ import {
   AlertTriangle,
   Edit2,
   Eye,
+  Info,
 } from "lucide-react";
 
-export type FormaPagamentoTipo = "DINHEIRO" | "PIX" | "CARTAO_CREDITO" | "CARTAO_DEBITO" | "OUTRO";
+export type FormaPagamentoTipo = "DINHEIRO" | "PIX" | "CREDITO" | "DEBITO" | "OUTRO";
+
+const ROTULOS_PAGAMENTO_PDV: Record<FormaPagamentoTipo, string> = {
+  PIX: "Pix",
+  DINHEIRO: "Dinheiro",
+  DEBITO: "Débito",
+  CREDITO: "Crédito",
+  OUTRO: "Outro",
+};
+
+function normalizarFormaPagamentoPdv(valor: string): FormaPagamentoTipo | null {
+  const formas: Record<string, FormaPagamentoTipo> = {
+    PIX: "PIX",
+    DINHEIRO: "DINHEIRO",
+    DEBITO: "DEBITO",
+    CARTAO_DEBITO: "DEBITO",
+    CREDITO: "CREDITO",
+    CARTAO_CREDITO: "CREDITO",
+    OUTRO: "OUTRO",
+  };
+  return formas[valor] ?? null;
+}
+
+function somenteFormasAtivasPdv(registros: { forma_pagamento: string }[]): FormaPagamentoTipo[] {
+  const ativas = registros
+    .map((registro) => normalizarFormaPagamentoPdv(registro.forma_pagamento))
+    .filter((forma): forma is FormaPagamentoTipo => forma !== null);
+  return [...new Set(ativas)];
+}
 export type StatusFilterHistorico = "todos" | "CONCLUIDA" | "CANCELADA";
 export type PeriodoFilterType = "hoje" | "7dias" | "30dias" | "todos";
 
@@ -110,7 +139,7 @@ export interface VendaDetalhe {
   observacao: string | null;
   total_bruto: number;
   desconto_tipo: string | null;
-  desconto_valor: number | null;
+  desconto_valor_informado: number | null;
   desconto_total: number;
   total_liquido: number;
   total_custo: number;
@@ -120,6 +149,8 @@ export interface VendaDetalhe {
   itens: Array<{
     id: string;
     tipo: "SERVICO" | "PRODUTO";
+    servico_id: string | null;
+    produto_id: string | null;
     nome: string;
     quantidade: number;
     preco_unitario: number;
@@ -134,12 +165,115 @@ export interface VendaDetalhe {
   }>;
 }
 
+interface CorrecaoVendaAtiva {
+  id: string;
+  numero_venda: number;
+  ocorrida_em_original: string;
+  itens_originais: Array<{ tipo: "SERVICO" | "PRODUTO"; id: string; quantidade: number }>;
+  assinatura_original: string;
+}
+
+function validarItensRascunhoPdv(valor: unknown): ItemComanda[] {
+  if (!Array.isArray(valor)) return [];
+  return valor.filter((entrada: unknown): entrada is ItemComanda => {
+    if (typeof entrada !== "object" || entrada === null) return false;
+    const item = entrada as Partial<ItemComanda>;
+    return (item.tipo === "SERVICO" || item.tipo === "PRODUTO") &&
+      typeof item.id === "string" && item.id.length > 0 &&
+      typeof item.nome === "string" && item.nome.length > 0 &&
+      typeof item.preco === "number" && Number.isFinite(item.preco) && item.preco >= 0 &&
+      typeof item.quantidade === "number" && Number.isInteger(item.quantidade) && item.quantidade > 0;
+  });
+}
+
+function validarDescontoRascunhoPdv(valor: unknown): DescontoVenda | null {
+  if (typeof valor !== "object" || valor === null) return null;
+  const d = valor as Partial<DescontoVenda>;
+  if ((d.tipo !== "PERCENTUAL" && d.tipo !== "VALOR_FIXO") ||
+      typeof d.valor !== "number" || !Number.isFinite(d.valor) || d.valor <= 0 ||
+      (d.tipo === "PERCENTUAL" && d.valor > 100)) return null;
+  return { tipo: d.tipo, valor: d.valor };
+}
+
+function validarPagamentosRascunhoPdv(valor: unknown): PaymentSplitEntry[] {
+  if (!Array.isArray(valor)) return [];
+  return valor.flatMap((entrada: unknown, indice: number) => {
+    if (typeof entrada !== "object" || entrada === null) return [];
+    const item = entrada as Partial<PaymentSplitEntry>;
+    if (typeof item.forma_pagamento !== "string" ||
+        !normalizarFormaPagamentoPdv(item.forma_pagamento) ||
+        typeof item.valor !== "number" || !Number.isFinite(item.valor) || item.valor < 0) return [];
+    return [{
+      id: typeof item.id === "string" && item.id ? item.id : `recuperado-${indice}`,
+      forma_pagamento: normalizarFormaPagamentoPdv(item.forma_pagamento)!,
+      valor: item.valor,
+    }];
+  });
+}
+
+function assinaturaCorrecaoPdv(
+  itens: ItemComanda[], desconto: DescontoVenda | null, pagamentos: PaymentSplitEntry[],
+  data: string, hora: string, observacao: string
+): string {
+  return JSON.stringify({
+    itens: itens.map((i) => ({ tipo: i.tipo, id: i.id, quantidade: i.quantidade }))
+      .sort((a, b) => `${a.tipo}:${a.id}`.localeCompare(`${b.tipo}:${b.id}`)),
+    desconto: desconto ? { tipo: desconto.tipo, valor: desconto.valor } : null,
+    pagamentos: pagamentos.map((p) => ({ forma: p.forma_pagamento, valor: Math.round(p.valor * 100) / 100 }))
+      .sort((a, b) => a.forma.localeCompare(b.forma)),
+    data, hora, observacao: observacao.trim(),
+  });
+}
+
+function dataLocalPdv(valor: string): { data: string; hora: string } {
+  const d = new Date(valor);
+  if (Number.isNaN(d.getTime())) throw new Error("Data original da venda inválida.");
+  const dois = (n: number) => String(n).padStart(2, "0");
+  return {
+    data: `${d.getFullYear()}-${dois(d.getMonth() + 1)}-${dois(d.getDate())}`,
+    hora: `${dois(d.getHours())}:${dois(d.getMinutes())}`,
+  };
+}
+
 function formatBRL(value: number | null | undefined): string {
   if (value === null || value === undefined) return "R$ 0,00";
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
   }).format(value);
+}
+
+function formatarValorMonetarioPdv(valor: number): string {
+  return Math.max(0, valor).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function valorDosDigitosMonetariosPdv(texto: string): number {
+  const digitos = texto.replace(/\D/g, "").replace(/^0+(?=\d)/, "").slice(0, 12);
+  return Number(digitos || "0") / 100;
+}
+
+function lerMoedaFormatadaPdv(texto: string): number | null {
+  if (!/^(?:\d+|\d{1,3}(?:\.\d{3})+),\d{2}$/.test(texto)) {
+    return null;
+  }
+  const valor = Number(texto.replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(valor) ? valor : null;
+}
+
+function impedirTeclaNaoNumericaPdv(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (event.ctrlKey || event.metaKey || event.altKey) return;
+  if (event.key.length === 1 && !/^[0-9]$/.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
+function impedirColagemNaoNumericaPdv(event: React.ClipboardEvent<HTMLInputElement>) {
+  if (!/^[0-9]+$/.test(event.clipboardData.getData("text"))) {
+    event.preventDefault();
+  }
 }
 
 function formatarNumeroVenda(num: number): string {
@@ -218,14 +352,14 @@ function obterPeriodoFiltro(periodo: PeriodoFilterType): { inicio: string | null
   }
 
   const agora = new Date();
-  // Subtrair 30 segundos do momento atual para garantir com certeza absoluta que p_fim <= clock_timestamp()
-  const fimDate = new Date(agora.getTime() - 30 * 1000);
+  // A funcao listar_vendas exige inicio e fim preenchidos juntos.
+  // O fim e o momento atual, sem esconder os ultimos 30 segundos.
 
   let inicioDate: Date;
 
   if (periodo === "hoje") {
     const inicioHoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 0, 0, 0, 0);
-    inicioDate = inicioHoje.getTime() > fimDate.getTime() ? fimDate : inicioHoje;
+    inicioDate = inicioHoje;
   } else if (periodo === "7dias") {
     inicioDate = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
   } else if (periodo === "30dias") {
@@ -236,8 +370,16 @@ function obterPeriodoFiltro(periodo: PeriodoFilterType): { inicio: string | null
 
   return {
     inicio: inicioDate.toISOString(),
-    fim: fimDate.toISOString(),
+    fim: agora.toISOString(),
   };
+}
+
+function obterMensagemErroPdv(erro: unknown, padrao: string): string {
+  if (typeof erro === "object" && erro !== null && "message" in erro) {
+    const mensagem = (erro as { message?: unknown }).message;
+    if (typeof mensagem === "string" && mensagem.trim()) return mensagem;
+  }
+  return padrao;
 }
 
 function obterFormasPagamentoFiltro(forma: string): string[] | null {
@@ -265,11 +407,28 @@ interface PdvViewProps {
   initialTab: "nova-venda" | "historico";
 }
 
+// No servidor e na primeira renderizacao do navegador, o portal fica ausente.
+// Depois da hidratacao, React monta a barra flutuante sem alterar o HTML inicial.
+function inscreverPortalPdv(): () => void {
+  return () => {};
+}
+function portalDisponivelCliente(): boolean {
+  return true;
+}
+function portalDisponivelServidor(): boolean {
+  return false;
+}
+
 export function PdvView({ initialTab }: PdvViewProps) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
   const activeTab = initialTab;
+  const portalPronto = useSyncExternalStore(
+    inscreverPortalPdv,
+    portalDisponivelCliente,
+    portalDisponivelServidor
+  );
 
   const handleTabChange = (tab: "nova-venda" | "historico") => {
     if (tab === "nova-venda") {
@@ -283,6 +442,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
   const [servicos, setServicos] = useState<ServicoItem[]>([]);
   const [produtos, setProdutos] = useState<ProdutoItem[]>([]);
   const [formasHabilitadas, setFormasHabilitadas] = useState<FormaPagamentoTipo[]>([]);
+  const [erroFormasPagamento, setErroFormasPagamento] = useState<string | null>(null);
   const [loadingCatalogo, setLoadingCatalogo] = useState(true);
   const [erroCatalogo, setErroCatalogo] = useState<string | null>(null);
 
@@ -291,132 +451,137 @@ export function PdvView({ initialTab }: PdvViewProps) {
 
   // Comanda / Carrinho
   const [comanda, setComanda] = useState<ItemComanda[]>([]);
+  // Guarda a versao mais recente para impedir conferencia de uma comanda ja alterada.
+  const comandaRef = React.useRef(comanda);
+  useEffect(() => {
+    comandaRef.current = comanda;
+  }, [comanda]);
   const [desconto, setDesconto] = useState<DescontoVenda | null>(null);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
-  const [confirmarLimpezaComanda, setConfirmarLimpezaComanda] = useState(false);
 
-  // Rascunho da comanda separado por conta.
+  // Rascunhos separados por conta. A correcao nunca sobrescreve a comanda comum.
   const [chaveRascunho, setChaveRascunho] = useState<string | null>(null);
+  const [rascunhoPronto, setRascunhoPronto] = useState(false);
+  const [correcaoAtiva, setCorrecaoAtiva] = useState<CorrecaoVendaAtiva | null>(null);
+
+  // Checkout Form & Pagamentos Divididos (Split)
+  const [splitPayments, setSplitPayments] = useState<PaymentSplitEntry[]>([]);
+  const [observacaoVenda, setObservacaoVenda] = useState("");
+  const [dataVenda, setDataVenda] = useState("");
+  const [horaVenda, setHoraVenda] = useState("");
+  const [usarHoraAtual, setUsarHoraAtual] = useState(true);
+  const [finalizandoVenda, setFinalizandoVenda] = useState(false);
+  const [erroFinalizacao, setErroFinalizacao] = useState<string | null>(null);
 
   useEffect(() => {
     let ativo = true;
-
     async function recuperarRascunho() {
       try {
         const { data, error } = await supabase.auth.getUser();
-
         if (!ativo || error || !data.user) return;
-
         const chave = `estilo-gestao-pdv-rascunho-v1:${data.user.id}`;
+        const salvoCorrecao = localStorage.getItem(`${chave}:correcao-v1`);
+        let recuperouCorrecao = false;
 
-        try {
-          const textoSalvo = localStorage.getItem(chave);
-
-          if (textoSalvo) {
-            const dados: unknown = JSON.parse(textoSalvo);
-
-            if (typeof dados === "object" && dados !== null) {
-              const rascunho = dados as {
-                itens?: unknown;
-                desconto?: unknown;
-              };
-
-              if (Array.isArray(rascunho.itens)) {
-                const itensValidos = rascunho.itens.filter(
-                  (entrada: unknown): entrada is ItemComanda => {
-                    if (typeof entrada !== "object" || entrada === null) {
-                      return false;
-                    }
-
-                    const item = entrada as Partial<ItemComanda>;
-
-                    return (
-                      (item.tipo === "SERVICO" || item.tipo === "PRODUTO") &&
-                      typeof item.id === "string" &&
-                      item.id.length > 0 &&
-                      typeof item.nome === "string" &&
-                      item.nome.length > 0 &&
-                      typeof item.preco === "number" &&
-                      Number.isFinite(item.preco) &&
-                      item.preco >= 0 &&
-                      typeof item.quantidade === "number" &&
-                      Number.isInteger(item.quantidade) &&
-                      item.quantidade > 0
-                    );
-                  }
-                );
-
-                if (ativo) {
-                  setComanda(itensValidos);
-                }
-
-                const descontoSalvo = rascunho.desconto;
-
-                if (
-                  ativo &&
-                  itensValidos.length > 0 &&
-                  typeof descontoSalvo === "object" &&
-                  descontoSalvo !== null
-                ) {
-                  const d = descontoSalvo as Partial<DescontoVenda>;
-
-                  if (
-                    (d.tipo === "PERCENTUAL" || d.tipo === "VALOR_FIXO") &&
-                    typeof d.valor === "number" &&
-                    Number.isFinite(d.valor) &&
-                    d.valor > 0 &&
-                    (d.tipo === "VALOR_FIXO" || d.valor <= 100)
-                  ) {
-                    setDesconto({
-                      tipo: d.tipo,
-                      valor: d.valor,
-                    });
-                  }
-                }
-              }
+        if (salvoCorrecao) {
+          try {
+            const dados = JSON.parse(salvoCorrecao) as {
+              contexto?: CorrecaoVendaAtiva;
+              itens?: unknown; desconto?: unknown; pagamentos?: unknown;
+              observacao?: unknown; dataVenda?: unknown; horaVenda?: unknown;
+            };
+            const contexto = dados.contexto;
+            if (contexto && typeof contexto.id === "string" &&
+                Number.isInteger(contexto.numero_venda) &&
+                typeof contexto.ocorrida_em_original === "string" &&
+                typeof contexto.assinatura_original === "string" &&
+                Array.isArray(contexto.itens_originais) &&
+                typeof dados.dataVenda === "string" && typeof dados.horaVenda === "string") {
+              setCorrecaoAtiva(contexto);
+              setComanda(validarItensRascunhoPdv(dados.itens));
+              setDesconto(validarDescontoRascunhoPdv(dados.desconto));
+              setSplitPayments(validarPagamentosRascunhoPdv(dados.pagamentos));
+              setObservacaoVenda(typeof dados.observacao === "string" ? dados.observacao : "");
+              setDataVenda(dados.dataVenda);
+              setHoraVenda(dados.horaVenda);
+              setUsarHoraAtual(false);
+              recuperouCorrecao = true;
+            }
+          } catch (err) {
+            console.warn("Não foi possível recuperar a correção da venda:", err);
+          }
+        }
+        if (!recuperouCorrecao) {
+          const salvo = localStorage.getItem(chave);
+          if (salvo) {
+            try {
+              const dados = JSON.parse(salvo) as { itens?: unknown; desconto?: unknown };
+              const itens = validarItensRascunhoPdv(dados.itens);
+              setComanda(itens);
+              setDesconto(itens.length > 0 ? validarDescontoRascunhoPdv(dados.desconto) : null);
+            } catch (err) {
+              console.warn("Não foi possível recuperar a comanda:", err);
             }
           }
-        } catch (erro) {
-          console.warn("Nao foi possivel recuperar a comanda:", erro);
         }
-
         if (ativo) {
           setChaveRascunho(chave);
+          setRascunhoPronto(true);
         }
       } catch (erro) {
-        console.warn("Nao foi possivel identificar a conta:", erro);
+        console.warn("Não foi possível identificar a conta:", erro);
       }
     }
-
     void recuperarRascunho();
-
-    return () => {
-      ativo = false;
-    };
+    return () => { ativo = false; };
   }, [supabase]);
 
-  // Atualiza o rascunho sempre que a comanda mudar.
+  // Salva imediatamente cada alteração, inclusive pagamentos e horário na correção.
   useEffect(() => {
-    if (!chaveRascunho) return;
-
+    if (!chaveRascunho || !rascunhoPronto) return;
     try {
-      if (comanda.length === 0) {
+      if (correcaoAtiva) {
+        localStorage.setItem(`${chaveRascunho}:correcao-v1`, JSON.stringify({
+          contexto: correcaoAtiva,
+          itens: comanda, desconto, pagamentos: splitPayments,
+          observacao: observacaoVenda, dataVenda, horaVenda,
+        }));
+      } else if (comanda.length === 0) {
         localStorage.removeItem(chaveRascunho);
-        return;
+      } else {
+        localStorage.setItem(chaveRascunho, JSON.stringify({ itens: comanda, desconto }));
       }
-
-      localStorage.setItem(
-        chaveRascunho,
-        JSON.stringify({
-          itens: comanda,
-          desconto,
-        })
-      );
     } catch (erro) {
-      console.warn("Nao foi possivel guardar a comanda:", erro);
+      console.warn("Não foi possível guardar o rascunho:", erro);
     }
-  }, [chaveRascunho, comanda, desconto]);
+  }, [chaveRascunho, rascunhoPronto, correcaoAtiva, comanda, desconto, splitPayments, observacaoVenda, dataVenda, horaVenda]);
 
+  // Devolve ao barbeiro a comanda que estava aberta antes de iniciar a correção.
+  const restaurarComandaNormal = () => {
+    let itens: ItemComanda[] = [];
+    let descontoSalvo: DescontoVenda | null = null;
+    try {
+      if (chaveRascunho) {
+        const texto = localStorage.getItem(chaveRascunho);
+        if (texto) {
+          const dados = JSON.parse(texto) as { itens?: unknown; desconto?: unknown };
+          itens = validarItensRascunhoPdv(dados.itens);
+          descontoSalvo = itens.length > 0 ? validarDescontoRascunhoPdv(dados.desconto) : null;
+        }
+        localStorage.removeItem(`${chaveRascunho}:correcao-v1`);
+      }
+    } catch (err) {
+      console.warn("Não foi possível recuperar a comanda anterior:", err);
+    }
+    setCorrecaoAtiva(null);
+    setComanda(itens);
+    setDesconto(descontoSalvo);
+    setSplitPayments([]);
+    setObservacaoVenda("");
+    setIsMobileCartOpen(false);
+    setIsCheckoutModalOpen(false);
+    setErroFinalizacao(null);
+  };
 
   // Modais de Venda
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -428,16 +593,8 @@ export function PdvView({ initialTab }: PdvViewProps) {
     desconto: number;
     itensCount: number;
     pagamentos: { forma_pagamento: string; valor: number }[];
+    correcaoNumeroOriginal?: number;
   } | null>(null);
-
-  // Checkout Form & Pagamentos Divididos (Split)
-  const [splitPayments, setSplitPayments] = useState<PaymentSplitEntry[]>([]);
-  const [observacaoVenda, setObservacaoVenda] = useState("");
-  const [dataVenda, setDataVenda] = useState("");
-  const [horaVenda, setHoraVenda] = useState("");
-  const [usarHoraAtual, setUsarHoraAtual] = useState(true);
-  const [finalizandoVenda, setFinalizandoVenda] = useState(false);
-  const [erroFinalizacao, setErroFinalizacao] = useState<string | null>(null);
 
   // Desconto Form (Mantido exatamente como solicitado)
   const [discountTypeInput, setDiscountTypeInput] = useState<"PERCENTUAL" | "VALOR_FIXO">("PERCENTUAL");
@@ -447,7 +604,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
   // Histórico de Vendas
   const [vendas, setVendas] = useState<VendaResumo[]>([]);
   const [totalVendasCount, setTotalVendasCount] = useState(0);
-  const [loadingHistorico, setLoadingHistorico] = useState(false);
+  const [loadingHistorico, setLoadingHistorico] = useState(true);
   const [erroHistorico, setErroHistorico] = useState<string | null>(null);
   const [paginaHistorico, setPaginaHistorico] = useState(1);
   const [periodoFilter, setPeriodoFilter] = useState<PeriodoFilterType>("hoje");
@@ -466,7 +623,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
   const [cancelandoVenda, setCancelandoVenda] = useState(false);
 
   const [saleToCorrect, setSaleToCorrect] = useState<{ id: string; numero_venda: number } | null>(null);
-  const [corrigindoVenda, setCorrigindoVenda] = useState(false);
+  const [preparandoCorrecao, setPreparandoCorrecao] = useState(false);
 
   const [toastFeedback, setToastFeedback] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
 
@@ -494,8 +651,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
           .order("nome", { ascending: true }),
         supabase
           .from("barbearia_formas_pagamento")
-          .select("forma_pagamento, ativo")
-          .eq("ativo", true),
+          .select("forma_pagamento"),
       ]);
 
       if (resServicos.error) throw resServicos.error;
@@ -509,10 +665,12 @@ export function PdvView({ initialTab }: PdvViewProps) {
       }));
       setProdutos(prodsFormatados);
 
-      if (!resFormas.error && resFormas.data && resFormas.data.length > 0) {
-        setFormasHabilitadas(resFormas.data.map((f) => f.forma_pagamento as FormaPagamentoTipo));
+      if (resFormas.error) {
+        setFormasHabilitadas([]);
+        setErroFormasPagamento("Não foi possível consultar as formas de pagamento habilitadas. Atualize a tela para tentar novamente.");
       } else {
-        setFormasHabilitadas(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "OUTRO"]);
+        setFormasHabilitadas(somenteFormasAtivasPdv(resFormas.data ?? []));
+        setErroFormasPagamento(null);
       }
       setErroCatalogo(null);
     } catch (err: unknown) {
@@ -567,7 +725,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
       setErroHistorico(null);
     } catch (err: unknown) {
       console.error("Falha ao consultar histórico de vendas:", err);
-      const msg = err instanceof Error ? err.message : "Erro ao consultar histórico de vendas.";
+      const msg = obterMensagemErroPdv(err, "Erro ao consultar histórico de vendas.");
       setErroHistorico(msg);
       setVendas([]);
       setTotalVendasCount(0);
@@ -597,8 +755,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
             .order("nome", { ascending: true }),
           supabase
             .from("barbearia_formas_pagamento")
-            .select("forma_pagamento, ativo")
-            .eq("ativo", true),
+            .select("forma_pagamento"),
         ]);
 
         if (!ativo) return;
@@ -613,10 +770,12 @@ export function PdvView({ initialTab }: PdvViewProps) {
         }));
         setProdutos(prodsFormatados);
 
-        if (!resFormas.error && resFormas.data && resFormas.data.length > 0) {
-          setFormasHabilitadas(resFormas.data.map((f) => f.forma_pagamento as FormaPagamentoTipo));
+        if (resFormas.error) {
+          setFormasHabilitadas([]);
+          setErroFormasPagamento("Não foi possível consultar as formas de pagamento habilitadas. Atualize a tela para tentar novamente.");
         } else {
-          setFormasHabilitadas(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "OUTRO"]);
+          setFormasHabilitadas(somenteFormasAtivasPdv(resFormas.data ?? []));
+          setErroFormasPagamento(null);
         }
         setErroCatalogo(null);
       } catch (err: unknown) {
@@ -685,7 +844,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
       } catch (err: unknown) {
         if (!ativo) return;
         console.error("Falha ao consultar histórico de vendas:", err);
-        const msg = err instanceof Error ? err.message : "Erro ao consultar histórico de vendas.";
+        const msg = obterMensagemErroPdv(err, "Erro ao consultar histórico de vendas.");
         setErroHistorico(msg);
         setVendas([]);
         setTotalVendasCount(0);
@@ -753,66 +912,73 @@ export function PdvView({ initialTab }: PdvViewProps) {
     }
   };
 
-  // Corrigir Venda: Cancela a venda original no banco, carrega os itens na comanda da Nova Venda e redireciona
-  const handleConfirmarCorrecao = async () => {
-    if (!saleToCorrect || corrigindoVenda) return;
-    setCorrigindoVenda(true);
-
+  // Prepara a correção sem tocar na venda original. O banco só será chamado ao concluir.
+  const iniciarCorrecaoSegura = async () => {
+    if (!saleToCorrect || preparandoCorrecao) return;
+    if (!chaveRascunho || !rascunhoPronto) {
+      showToast("Aguarde a identificação da conta e tente novamente.", "error");
+      return;
+    }
+    setPreparandoCorrecao(true);
     try {
-      // 1. Obter detalhes reais da venda a ser corrigida
-      const { data: detalheData, error: detalheError } = await supabase.rpc("obter_detalhes_venda", {
-        p_venda_id: saleToCorrect.id,
-      });
-
-      if (detalheError) throw detalheError;
-      const detalhe: VendaDetalhe = Array.isArray(detalheData) ? detalheData[0] : detalheData;
-
-      if (!detalhe || !detalhe.itens) {
-        throw new Error("Não foi possível recuperar os itens da venda para correção.");
+      if (localStorage.getItem(`${chaveRascunho}:correcao-v1`)) {
+        setSaleToCorrect(null);
+        showToast("Já existe uma correção em andamento. Conclua ou descarte aquela correção antes de iniciar outra.", "info");
+        router.push("/pdv/nova-venda");
+        return;
       }
-
-      // 2. Cancelar a venda original registrando o motivo
-      const { error: cancelError } = await supabase.rpc("cancelar_venda", {
+      const { data, error } = await supabase.rpc("obter_detalhes_venda", {
         p_venda_id: saleToCorrect.id,
-        p_motivo: "Venda cancelada para correção",
       });
-
-      if (cancelError) throw cancelError;
-
-      // 3. Montar a nova comanda a partir dos itens originais
-      const itensRestaurados: ItemComanda[] = detalhe.itens.map((it) => ({
-        tipo: it.tipo,
-        id: it.id,
-        nome: it.nome,
-        preco: it.preco_unitario,
-        quantidade: it.quantidade,
+      if (error) throw error;
+      const detalhe = (Array.isArray(data) ? data[0] : data) as VendaDetalhe | null;
+      if (!detalhe || detalhe.status !== "CONCLUIDA") {
+        throw new Error("Esta venda não está concluída ou não está disponível para correção.");
+      }
+      if (!Array.isArray(detalhe.itens) || detalhe.itens.length === 0) {
+        throw new Error("Não foi possível recuperar os itens desta venda.");
+      }
+      const itens: ItemComanda[] = detalhe.itens.map((i) => {
+        const id = i.tipo === "SERVICO" ? i.servico_id : i.produto_id;
+        if (!id || !Number.isInteger(i.quantidade) || i.quantidade <= 0) {
+          throw new Error(`O item ${i.nome} não pode ser recuperado para correção.`);
+        }
+        return {
+          tipo: i.tipo, id, nome: i.nome, preco: Number(i.preco_unitario),
+          quantidade: i.quantidade,
+        };
+      });
+      const descontoOriginal: DescontoVenda | null = detalhe.desconto_tipo &&
+        detalhe.desconto_valor_informado != null && detalhe.desconto_valor_informado > 0
+        ? { tipo: detalhe.desconto_tipo === "PERCENTUAL" ? "PERCENTUAL" : "VALOR_FIXO",
+            valor: Number(detalhe.desconto_valor_informado) }
+        : null;
+      const pagamentos: PaymentSplitEntry[] = (detalhe.pagamentos ?? []).map((p, i) => {
+        const forma = normalizarFormaPagamentoPdv(p.forma_pagamento);
+        if (!forma) throw new Error("A venda original possui uma forma de pagamento não reconhecida.");
+        return { id: `correcao-${i}-${p.id}`, forma_pagamento: forma, valor: Number(p.valor) };
+      });
+      const { data: dataOriginal, hora: horaOriginal } = dataLocalPdv(detalhe.ocorrida_em);
+      const observacao = detalhe.observacao ?? "";
+      const contexto: CorrecaoVendaAtiva = {
+        id: detalhe.id,
+        numero_venda: detalhe.numero_venda,
+        ocorrida_em_original: detalhe.ocorrida_em,
+        itens_originais: itens.map((i) => ({ tipo: i.tipo, id: i.id, quantidade: i.quantidade })),
+        assinatura_original: assinaturaCorrecaoPdv(itens, descontoOriginal, pagamentos,
+          dataOriginal, horaOriginal, observacao),
+      };
+      // Grava ANTES de navegar. A comanda normal permanece intacta na outra chave.
+      localStorage.setItem(`${chaveRascunho}:correcao-v1`, JSON.stringify({
+        contexto, itens, desconto: descontoOriginal, pagamentos,
+        observacao, dataVenda: dataOriginal, horaVenda: horaOriginal,
       }));
-
-      setComanda(itensRestaurados);
-
-      // 4. Restaurar desconto se existia
-      if (detalhe.desconto_valor && detalhe.desconto_valor > 0) {
-        setDesconto({
-          tipo: detalhe.desconto_tipo === "PERCENTUAL" ? "PERCENTUAL" : "VALOR_FIXO",
-          valor: detalhe.desconto_valor,
-        });
-      } else {
-        setDesconto(null);
-      }
-
-      // 5. Fechar modais e redirecionar para a aba Nova Venda
       setSaleToCorrect(null);
-      setDetalheVendaId(null);
-      handleTabChange("nova-venda");
-
-      showToast(`Itens da Venda ${formatarNumeroVenda(saleToCorrect.numero_venda)} carregados na comanda para correção.`, "success");
-      await carregarHistorico();
-      await carregarCatalogo();
+      router.push("/pdv/nova-venda");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Não foi possível carregar a venda para correção.";
-      showToast(msg, "error");
+      showToast(obterMensagemErroPdv(err, "Não foi possível preparar a correção."), "error");
     } finally {
-      setCorrigindoVenda(false);
+      setPreparandoCorrecao(false);
     }
   };
 
@@ -848,8 +1014,36 @@ export function PdvView({ initialTab }: PdvViewProps) {
 
   const isPagamentoValido = useMemo(() => {
     if (splitPayments.length === 0) return true;
-    return Math.abs(diferencaPagamento) <= 0.01;
+    return diferencaPagamento === 0;
   }, [splitPayments, diferencaPagamento]);
+
+  const correcaoSemAlteracoes = correcaoAtiva !== null &&
+    assinaturaCorrecaoPdv(comanda, desconto, splitPayments, dataVenda, horaVenda, observacaoVenda)
+    === correcaoAtiva.assinatura_original;
+
+  // A transação devolve ao estoque os produtos da venda original antes de vender os novos.
+  // Por isso a prévia de disponibilidade também precisa considerar essa devolução.
+  const quantidadeOriginalProduto = (produtoId: string): number =>
+    correcaoAtiva?.itens_originais
+      .filter((i) => i.tipo === "PRODUTO" && i.id === produtoId)
+      .reduce((total, i) => total + i.quantidade, 0) ?? 0;
+
+  // Reajusta a prévia aos preços atuais, que também são usados pela RPC finalizar_venda.
+  useEffect(() => {
+    if (!correcaoAtiva || loadingCatalogo) return;
+    setComanda((anterior) => {
+      let alterou = false;
+      const atualizada = anterior.map((item) => {
+        const atual = item.tipo === "SERVICO"
+          ? servicos.find((s) => s.id === item.id)?.preco
+          : produtos.find((p) => p.id === item.id)?.preco_venda;
+        if (typeof atual !== "number" || !Number.isFinite(atual) || atual === item.preco) return item;
+        alterou = true;
+        return { ...item, preco: atual };
+      });
+      return alterou ? atualizada : anterior;
+    });
+  }, [correcaoAtiva, loadingCatalogo, servicos, produtos]);
 
   // Manipulação de Serviços (Liga / Desliga)
   const handleToggleServico = (servico: ServicoItem) => {
@@ -889,15 +1083,21 @@ export function PdvView({ initialTab }: PdvViewProps) {
     return null;
   };
 
+  // Na correção, a RPC devolve os itens da venda original antes de aplicar a nova.
+  // Este valor é apenas uma prévia para os botões; o banco confirma o estoque ao salvar.
+  const estoqueDisponivelNaComanda = (produto: ProdutoItem): number =>
+    produto.estoque_atual + quantidadeOriginalProduto(produto.id);
+
   const handleProdutoIncrementar = (produto: ProdutoItem) => {
-    if (produto.estoque_atual <= 0) return;
+    const estoqueDisponivel = estoqueDisponivelNaComanda(produto);
+    if (estoqueDisponivel <= 0) return;
 
     setComanda((prev) => {
       const index = prev.findIndex((i) => i.id === produto.id && i.tipo === "PRODUTO");
       if (index >= 0) {
         const itemAtual = prev[index];
-        if (itemAtual.quantidade >= produto.estoque_atual) {
-          showToast(`Limite de estoque atingido para "${produto.nome}" (${produto.estoque_atual} un.).`, "error");
+        if (itemAtual.quantidade >= estoqueDisponivel) {
+          showToast(`Limite de estoque atingido para "${produto.nome}" (${estoqueDisponivel} un. disponíveis nesta venda).`, "error");
           return prev;
         }
         const nova = [...prev];
@@ -940,54 +1140,171 @@ export function PdvView({ initialTab }: PdvViewProps) {
   const handleLimparComanda = () => {
     setComanda([]);
     setDesconto(null);
+    setObservacaoVenda("");
+    setSplitPayments([]);
+    setErroFinalizacao(null);
   };
 
-  // Abrir Checkout inicializando com a primeira forma de pagamento no valor total
-  const handleAbrirCheckout = () => {
+  // Mesmo removendo o ultimo item pelo botao de diminuir ou pela lixeira,
+  // o desconto nao pode ficar guardado para a proxima comanda.
+  useEffect(() => {
+    if (comanda.length === 0 && desconto !== null) {
+      setDesconto(null);
+    }
+  }, [comanda.length, desconto]);
+
+  // Confere os dados atuais do Supabase ANTES do checkout e ANTES da venda.
+  // A RPC continua sendo a autoridade final, mas o usuario precisa conferir
+  // novamente quando o preco apresentado na comanda for alterado.
+  const conferirItensEPrecosComanda = async (itensVerificados: ItemComanda[]): Promise<string | null> => {
+    if (itensVerificados.length === 0) {
+      throw new Error("Adicione pelo menos um item antes de continuar.");
+    }
+
+    const assinatura = (itens: ItemComanda[]) => JSON.stringify(
+      itens.map((item) => [item.tipo, item.id, item.quantidade, item.preco])
+    );
+    const assinaturaInicial = assinatura(itensVerificados);
+    const idsServicos = [...new Set(
+      itensVerificados.filter((item) => item.tipo === "SERVICO").map((item) => item.id)
+    )];
+    const idsProdutos = [...new Set(
+      itensVerificados.filter((item) => item.tipo === "PRODUTO").map((item) => item.id)
+    )];
+
+    const [resServicos, resProdutos] = await Promise.all([
+      idsServicos.length > 0
+        ? supabase.from("servicos").select("id, ativo, preco").in("id", idsServicos)
+        : Promise.resolve({ data: [], error: null }),
+      idsProdutos.length > 0
+        ? supabase.from("produtos").select("id, ativo, estoque_atual, preco_venda").in("id", idsProdutos)
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+
+    if (resServicos.error || resProdutos.error) {
+      throw new Error("Não foi possível conferir os itens e preços atuais. Verifique sua conexão e tente novamente.");
+    }
+    // Durante a consulta o usuario pode alterar ou limpar os itens.
+    // Nunca abra o checkout nem finalize uma versao antiga da comanda.
+    if (assinatura(comandaRef.current) !== assinaturaInicial) {
+      throw new Error("A comanda foi alterada durante a conferência. Confira os itens e tente novamente.");
+    }
+
+    const servicosAtuais = new Map((resServicos.data ?? []).map((item) => [item.id, item]));
+    const produtosAtuais = new Map((resProdutos.data ?? []).map((item) => [item.id, item]));
+    const precosAtualizados = new Map<string, number>();
+    const alterados: Array<{ nome: string; anterior: number; atual: number }> = [];
+
+    for (const item of itensVerificados) {
+      const registro = item.tipo === "SERVICO"
+        ? servicosAtuais.get(item.id)
+        : produtosAtuais.get(item.id);
+      if (!registro || !registro.ativo) {
+        throw new Error(`"${item.nome}" não está mais disponível. Remova esse item da comanda para continuar.`);
+      }
+      if (item.tipo === "PRODUTO") {
+        const produto = produtosAtuais.get(item.id);
+        const devolucao = quantidadeOriginalProduto(item.id);
+        if (!produto || produto.estoque_atual + devolucao < item.quantidade) {
+          throw new Error(`Estoque insuficiente para "${item.nome}". Ajuste a quantidade para continuar.`);
+        }
+      }
+      const precoAtual = item.tipo === "SERVICO"
+        ? servicosAtuais.get(item.id)?.preco
+        : produtosAtuais.get(item.id)?.preco_venda;
+      if (typeof precoAtual !== "number" || !Number.isFinite(precoAtual) || precoAtual < 0) {
+        throw new Error(`Não foi possível conferir o preço de "${item.nome}". Tente novamente.`);
+      }
+      precosAtualizados.set(`${item.tipo}:${item.id}`, precoAtual);
+      if (Math.round(precoAtual * 100) !== Math.round(item.preco * 100)) {
+        alterados.push({ nome: item.nome, anterior: item.preco, atual: precoAtual });
+      }
+    }
+
+    if (alterados.length === 0) return null;
+
+    // O cliente ve o valor atualizado, mas precisa clicar de novo para confirmar.
+    setComanda((atual) => atual.map((item) => {
+      const precoAtual = precosAtualizados.get(`${item.tipo}:${item.id}`);
+      return precoAtual !== undefined && Math.round(precoAtual * 100) !== Math.round(item.preco * 100)
+        ? { ...item, preco: precoAtual }
+        : item;
+    }));
+    // Sincroniza o catalogo em memoria para nao reintroduzir o preco antigo.
+    setServicos((atual) => atual.map((item) => {
+      const novoPreco = precosAtualizados.get(`SERVICO:${item.id}`);
+      return novoPreco !== undefined && item.preco !== novoPreco ? { ...item, preco: novoPreco } : item;
+    }));
+    setProdutos((atual) => atual.map((item) => {
+      const novoPreco = precosAtualizados.get(`PRODUTO:${item.id}`);
+      return novoPreco !== undefined && item.preco_venda !== novoPreco
+        ? { ...item, preco_venda: novoPreco } : item;
+    }));
+
+    if (alterados.length === 1) {
+      const item = alterados[0];
+      return `O preço de "${item.nome}" mudou de ${formatBRL(item.anterior)} para ${formatBRL(item.atual)}. Confira o novo total, desconto e pagamentos antes de continuar.`;
+    }
+    return `Os preços de ${alterados.length} itens mudaram. A comanda foi atualizada. Confira o novo total, desconto e pagamentos antes de continuar.`;
+  };
+
+  // Confere disponibilidade e precos atuais antes de abrir o checkout.
+  const handleAbrirCheckout = async () => {
     if (comanda.length === 0) return;
     setErroFinalizacao(null);
 
-    // Pagamento nao informado e permitido.
-    setSplitPayments([]);
+    try {
+      const avisoPreco = await conferirItensEPrecosComanda(comanda);
+      if (avisoPreco) {
+        showToast(`${avisoPreco} Clique novamente em Avançar.`, "info");
+        setIsMobileCartOpen(false);
+        return;
+      }
+    } catch (err: unknown) {
+      showToast(obterMensagemErroPdv(err, "Não foi possível verificar os itens."), "error");
+      return;
+    }
 
-    const agora = new Date();
-
-    const doisDigitos = (numero: number) =>
-      String(numero).padStart(2, "0");
-
-    setDataVenda(
-      `${agora.getFullYear()}-${doisDigitos(agora.getMonth() + 1)}-${doisDigitos(agora.getDate())}`
-    );
-
-    setHoraVenda(
-      `${doisDigitos(agora.getHours())}:${doisDigitos(agora.getMinutes())}`
-    );
-
-    setUsarHoraAtual(true);
-
+    if (!correcaoAtiva) {
+      // Venda comum: sem pagamento informado, data/hora atuais.
+      setSplitPayments([]);
+      const agora = new Date();
+      const doisDigitos = (numero: number) => String(numero).padStart(2, "0");
+      setDataVenda(`${agora.getFullYear()}-${doisDigitos(agora.getMonth() + 1)}-${doisDigitos(agora.getDate())}`);
+      setHoraVenda(`${doisDigitos(agora.getHours())}:${doisDigitos(agora.getMinutes())}`);
+      setUsarHoraAtual(true);
+    }
+    // Correção: mantém pagamentos, observação e data/hora da venda original.
     setIsMobileCartOpen(false);
     setIsCheckoutModalOpen(true);
   };
 
   // Adicionar uma nova linha de pagamento no Checkout
   const handleAddSplitPayment = () => {
-    const available =
-      formasHabilitadas.length > 0
-        ? formasHabilitadas
-        : (["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "OUTRO"] as FormaPagamentoTipo[]);
-    const nextForma =
-      available.find((f) => !splitPayments.some((p) => p.forma_pagamento === f)) || available[0];
+    if (formasHabilitadas.length === 0) {
+      showToast(erroFormasPagamento || "Ative uma forma de pagamento nas Configurações da Barbearia para adicioná-la à venda.", "error");
+      return;
+    }
+    const nextForma = formasHabilitadas.find(
+      (forma) => !splitPayments.some((p) => p.forma_pagamento === forma)
+    );
+    if (!nextForma) {
+      showToast("Todas as formas de pagamento disponíveis já foram adicionadas.", "info");
+      return;
+    }
 
-    const defaultAmount = valorRestantePagamento > 0 ? valorRestantePagamento : 0;
-
-    setSplitPayments((prev) => [
-      ...prev,
-      {
-      id: `pay-${Date.now()}-${crypto.randomUUID()}`,
-        forma_pagamento: nextForma,
-        valor: Math.round(defaultAmount * 100) / 100,
-      },
-    ]);
+    setSplitPayments((prev) => {
+      // Protecao para dois cliques rapidos antes da tela atualizar.
+      if (prev.some((p) => p.forma_pagamento === nextForma)) return prev;
+      return [
+        ...prev,
+        {
+          id: `pay-${Date.now()}-${crypto.randomUUID()}`,
+          forma_pagamento: nextForma,
+          valor: 0,
+        },
+      ];
+    });
   };
 
   const handleUpdateSplitPayment = (
@@ -995,18 +1312,32 @@ export function PdvView({ initialTab }: PdvViewProps) {
     field: "forma_pagamento" | "valor",
     value: string
   ) => {
-    setSplitPayments((prev) =>
-      prev.map((item) => {
+    if (field === "forma_pagamento") {
+      const formaEscolhida = normalizarFormaPagamentoPdv(value);
+      if (!formaEscolhida || !formasHabilitadas.includes(formaEscolhida)) {
+        showToast("Esta forma de pagamento não está habilitada.", "error");
+        return;
+      }
+      if (splitPayments.some((p) => p.id !== id && p.forma_pagamento === formaEscolhida)) {
+        showToast("Esta forma de pagamento já está na venda. Altere o valor na linha existente.", "error");
+        return;
+      }
+    }
+    setSplitPayments((prev) => {
+      if (field === "forma_pagamento" &&
+          prev.some((p) => p.id !== id && p.forma_pagamento === value)) {
+        return prev;
+      }
+      return prev.map((item) => {
         if (item.id === id) {
           if (field === "valor") {
-            const num = Number.parseFloat(value.replace(",", ".")) || 0;
-            return { ...item, valor: Math.max(0, num) };
+            return { ...item, valor: valorDosDigitosMonetariosPdv(value) };
           }
           return { ...item, forma_pagamento: value as FormaPagamentoTipo };
         }
         return item;
-      })
-    );
+      });
+    });
   };
 
   const handleRemoveSplitPayment = (id: string) => {
@@ -1016,8 +1347,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
   // Aplicar Desconto
   const handleAplicarDesconto = (e: React.FormEvent) => {
     e.preventDefault();
-    const val = Number.parseFloat(discountValueInput.replace(",", "."));
-    if (Number.isNaN(val) || val <= 0) {
+    const val = discountTypeInput === "VALOR_FIXO"
+      ? lerMoedaFormatadaPdv(discountValueInput || "0,00")
+      : Number.parseFloat(discountValueInput.replace(",", "."));
+    if (val === null || !Number.isFinite(val) || val <= 0) {
       showToast("Informe um valor de desconto válido maior que zero.", "error");
       return;
     }
@@ -1042,11 +1375,20 @@ export function PdvView({ initialTab }: PdvViewProps) {
   // Finalizar Venda via RPC finalizar_venda
   const handleFinalizarVenda = async () => {
     if (finalizandoVenda || comanda.length === 0 || !isPagamentoValido) return;
+    if (correcaoSemAlteracoes) {
+      setErroFinalizacao("Nenhuma alteração identificada. Modifique um item, quantidade, desconto ou pagamento, ou descarte a correção.");
+      return;
+    }
     setFinalizandoVenda(true);
     setErroFinalizacao(null);
     const inicioFinalizacao = Date.now();
 
     try {
+      // Revalida antes da RPC: o preco pode ter mudado com o checkout aberto.
+      const avisoPreco = await conferirItensEPrecosComanda(comanda);
+      if (avisoPreco) {
+        throw new Error(`${avisoPreco} Revise os valores e clique novamente em Concluir venda.`);
+      }
       const payloadItens = comanda.map((item) => ({
         tipo: item.tipo,
         id: item.id,
@@ -1060,9 +1402,29 @@ export function PdvView({ initialTab }: PdvViewProps) {
       ) {
         throw new Error("Informe valores válidos para todos os pagamentos.");
       }
+      if (new Set(pagamentosValidos.map((p) => p.forma_pagamento)).size !== pagamentosValidos.length) {
+        throw new Error("A mesma forma de pagamento foi adicionada mais de uma vez. Remova a repetida.");
+      }
+
+      if (pagamentosValidos.length > 0) {
+        if (pagamentosValidos.some((pagamento) => !formasHabilitadas.includes(pagamento.forma_pagamento))) {
+          throw new Error("Uma forma de pagamento foi desativada. Remova essa forma e selecione outra habilitada.");
+        }
+        // Confere novamente, pois a configuração pode ter mudado com o checkout aberto.
+        const { data: formasAtuais, error: erroConferenciaFormas } = await supabase
+          .from("barbearia_formas_pagamento")
+          .select("forma_pagamento");
+        if (erroConferenciaFormas) {
+          throw new Error("Não foi possível conferir os pagamentos habilitados. Verifique sua conexão e tente novamente.");
+        }
+        const ativasAgora = somenteFormasAtivasPdv(formasAtuais ?? []);
+        if (pagamentosValidos.some((pagamento) => !ativasAgora.includes(pagamento.forma_pagamento))) {
+          throw new Error("Uma forma de pagamento deixou de estar habilitada. Atualize a tela e ajuste o pagamento antes de concluir.");
+        }
+      }
 
       const totalPago = pagamentosValidos.reduce((acc, p) => acc + p.valor, 0);
-      if (pagamentosValidos.length > 0 && Math.abs(totalPago - totalLiquidoComanda) > 0.01) {
+      if (pagamentosValidos.length > 0 && Math.round(totalPago * 100) !== Math.round(totalLiquidoComanda * 100)) {
         throw new Error(
           `A soma dos pagamentos (${formatBRL(totalPago)}) deve ser igual ao total da venda (${formatBRL(totalLiquidoComanda)}).`
         );
@@ -1092,7 +1454,12 @@ export function PdvView({ initialTab }: PdvViewProps) {
         throw new Error("Informe uma data e hora válidas.");
       }
 
-      const ocorridaEm = new Date(`${dataVenda}T${horaEfetiva}:00`);
+      const dataHoraOriginal = correcaoAtiva ? dataLocalPdv(correcaoAtiva.ocorrida_em_original) : null;
+      const mantidaOriginal = dataHoraOriginal !== null &&
+        dataVenda === dataHoraOriginal.data && horaEfetiva === dataHoraOriginal.hora;
+      const ocorridaEm = mantidaOriginal
+        ? new Date(correcaoAtiva!.ocorrida_em_original)
+        : new Date(`${dataVenda}T${horaEfetiva}:00`);
 
       if (
         Number.isNaN(ocorridaEm.getTime()) ||
@@ -1100,14 +1467,26 @@ export function PdvView({ initialTab }: PdvViewProps) {
       ) {
         throw new Error("A data da venda é inválida ou está no futuro.");
       }
-      const { data, error } = await supabase.rpc("finalizar_venda", {
+      const parametros = {
         p_itens: payloadItens,
         p_desconto_tipo: descontoTipoParam,
         p_desconto_valor: descontoValorParam,
         p_pagamentos: payloadPagamentos,
         p_ocorrida_em: ocorridaEm.toISOString(),
         p_observacao: observacaoVenda.trim() || null,
-      });
+      };
+      // SOMENTE a RPC corrigir_venda cancela a original; nunca usar duas chamadas.
+      // A RPC nova pode ainda não constar nos tipos gerados do Supabase.
+      // Tipagem local, sem alterar arquivos globais nem perder o contexto do cliente.
+      const clienteRpc = supabase as unknown as {
+        rpc: (nome: string, args: Record<string, unknown>) => Promise<{
+          data: unknown; error: { message: string } | null;
+        }>;
+      };
+      const { data, error } = await clienteRpc.rpc(
+        correcaoAtiva ? "corrigir_venda" : "finalizar_venda",
+        correcaoAtiva ? { ...parametros, p_venda_original_id: correcaoAtiva.id } : parametros
+      );
 
       if (error) {
         const errLower = (error.message || "").toLowerCase();
@@ -1120,7 +1499,9 @@ export function PdvView({ initialTab }: PdvViewProps) {
         throw error;
       }
 
-      const resultado = Array.isArray(data) ? data[0] : data;
+      const resultado = (Array.isArray(data) ? data[0] : data) as {
+        numero_venda?: number; venda_id?: string;
+      } | null;
       const numeroVendaGerado = resultado?.numero_venda || 0;
       const vendaIdGerado = resultado?.venda_id || "";
 
@@ -1138,12 +1519,17 @@ export function PdvView({ initialTab }: PdvViewProps) {
         desconto: valorDescontoCalculado,
         itensCount: comanda.reduce((acc, i) => acc + i.quantidade, 0),
         pagamentos: payloadPagamentos,
+        correcaoNumeroOriginal: correcaoAtiva?.numero_venda,
       });
 
       setIsCheckoutModalOpen(false);
       setIsSuccessModalOpen(true);
-      handleLimparComanda();
-      setObservacaoVenda("");
+      if (correcaoAtiva) {
+        restaurarComandaNormal();
+      } else {
+        handleLimparComanda();
+        setObservacaoVenda("");
+      }
 
       await carregarCatalogo();
     } catch (err: unknown) {
@@ -1270,6 +1656,41 @@ export function PdvView({ initialTab }: PdvViewProps) {
         </div>
       </section>
 
+      {/* Orientação da tela atual: mesmo padrão das demais áreas do sistema */}
+      <section className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" />
+        <div>
+          <p className="text-sm font-extrabold">Como usar esta tela</p>
+          {activeTab === "nova-venda" ? (
+            <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+              Escolha serviços e produtos para montar a comanda. Confira as quantidades, o subtotal e os descontos; depois avance para revisar os pagamentos e concluir a venda. Para consultar vendas anteriores, abra <strong>Histórico de Vendas</strong>.
+            </p>
+          ) : (
+            <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+              Consulte as vendas registradas, filtre por período, situação ou pagamento e abra os detalhes de cada venda. Para ajustar um registro, use <strong>Corrigir venda</strong>: a original continua válida até a nova venda ser concluída. Você também pode cancelar uma venda separadamente, com confirmação.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {activeTab === "nova-venda" && correcaoAtiva && (
+        <section className="flex flex-col gap-3 rounded-xl border border-sky-300 bg-sky-50 p-4 text-sky-950 dark:border-sky-800 dark:bg-sky-950/30 dark:text-sky-100 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1 text-sm">
+            <p className="font-extrabold">Corrigindo venda {formatarNumeroVenda(correcaoAtiva.numero_venda)}</p>
+            <p className="leading-relaxed">
+              A venda original continua concluída. Itens, desconto e pagamentos foram recuperados.
+              A original só será cancelada ao concluir a correção com sucesso.
+              Se desistir, pode descartar a correção sem modificar a venda original.
+            </p>
+            <p className="text-xs">Os preços atuais podem ser diferentes dos preços da venda original. Confira o total antes de concluir.</p>
+          </div>
+          <button type="button" onClick={restaurarComandaNormal}
+            className="shrink-0 rounded-lg border border-sky-400 px-3 py-2 text-xs font-bold hover:bg-sky-100 dark:hover:bg-sky-900/50">
+            Descartar correção
+          </button>
+        </section>
+      )}
+
       {/* ======================================================== */}
       {/* ABA 1: NOVA VENDA (Serviços e Produtos Separados) */}
       {/* ======================================================== */}
@@ -1393,7 +1814,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                                 {naComanda ? (
                                   <>
                                     <Check className="w-3.5 h-3.5 stroke-[3]" />
-                                    <span>Adicionado na comanda</span>
+                                    <span>Adicionado</span>
                                   </>
                                 ) : (
                                   <>
@@ -1430,8 +1851,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
                       {filteredCatalog.produtos.map((produto) => {
                         const itemNaComanda = comanda.find((i) => i.id === produto.id && i.tipo === "PRODUTO");
                         const qtdSelecionada = itemNaComanda ? itemNaComanda.quantidade : 0;
-                        const esgotado = produto.estoque_atual <= 0;
-                        const limiteAtingido = qtdSelecionada >= produto.estoque_atual;
+                        const estoqueDevolvido = quantidadeOriginalProduto(produto.id);
+                        const estoqueDisponivel = estoqueDisponivelNaComanda(produto);
+                        const esgotado = estoqueDisponivel <= 0;
+                        const limiteAtingido = qtdSelecionada >= estoqueDisponivel;
                         const fotoUrl = resolverImagemProdutoPdv(produto);
 
                         return (
@@ -1485,7 +1908,14 @@ export function PdvView({ initialTab }: PdvViewProps) {
                                   </span>
                                 ) : (
                                   <span className="text-[#666662] dark:text-[#B8B8B2]">
-                                    Estoque: <strong className="text-[#2F2F2D] dark:text-white">{produto.estoque_atual} un.</strong>
+                                    {estoqueDevolvido > 0 ? (
+                                      <>
+                                        Disponível nesta correção: <strong className="text-[#2F2F2D] dark:text-white">{estoqueDisponivel} un.</strong>
+                                        <span className="block text-[10px]">Estoque atual: {produto.estoque_atual} un.</span>
+                                      </>
+                                    ) : (
+                                      <>Estoque: <strong className="text-[#2F2F2D] dark:text-white">{produto.estoque_atual} un.</strong></>
+                                    )}
                                   </span>
                                 )}
 
@@ -1698,7 +2128,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                     className="w-full mt-2 py-3 px-4 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] font-extrabold text-sm hover:opacity-95 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                   >
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Finalizar venda</span>
+                    <span>Avançar</span>
                   </button>
                 </div>
               )}
@@ -1913,7 +2343,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
               <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#888882]" />
               <p className="text-xs text-[#888882]">Consultando histórico de vendas...</p>
             </div>
-          ) : vendasOrdenadas.length === 0 ? (
+          ) : erroHistorico ? null : vendasOrdenadas.length === 0 ? (
             <div className="p-12 text-center rounded-2xl bg-white dark:bg-[#222220] border-2 border-dashed border-[#E2E2DD] dark:border-[#3F3F3B] space-y-2">
               <ShoppingBag className="w-10 h-10 mx-auto text-[#888882] opacity-50" />
               <h3 className="font-bold text-sm text-[#2F2F2D] dark:text-[#F4F4F0]">
@@ -2132,11 +2562,9 @@ export function PdvView({ initialTab }: PdvViewProps) {
       )}
 
       {/* Barra flutuante mobile fora do contêiner com animação de página. */}
-      {activeTab === "nova-venda" && typeof document !== "undefined" &&
+      {activeTab === "nova-venda" && portalPronto && comanda.length > 0 && typeof document !== "undefined" &&
         createPortal(
           <div
-            aria-hidden={comanda.length === 0}
-            inert={comanda.length === 0}
             className={`fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-3 right-3 z-40 lg:hidden transition-opacity duration-300 ease-out motion-reduce:transition-none ${
               comanda.length > 0
                 ? "opacity-100"
@@ -2147,21 +2575,39 @@ export function PdvView({ initialTab }: PdvViewProps) {
                 <button
                   type="button"
                   onClick={() => setIsMobileCartOpen(true)}
-                  aria-label="Abrir comanda"
-                  className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl p-1 text-left"
+                  aria-label="Ver comanda: conferir itens, quantidades e precos"
+                  className="flex min-w-0 flex-1 items-center gap-1.5 rounded-xl p-1 text-left"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4F4F0] text-[#2F2F2D] dark:bg-[#333331] dark:text-white">
+                  <span className="hidden min-[380px]:flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4F4F0] text-[#2F2F2D] dark:bg-[#333331] dark:text-white">
                     <ShoppingBag className="h-5 w-5" />
                   </span>
 
                   <span className="min-w-0">
-                    <span className="block text-xs font-bold text-[#2F2F2D] dark:text-white">
-                      {comanda.reduce((total, item) => total + item.quantidade, 0)} itens
+                    <span className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-[#2F2F2D] dark:text-white">
+                        {comanda.reduce((total, item) => total + item.quantidade, 0)} itens
+                      </span>
+                      <span className="rounded bg-blue-500/10 px-1 py-0.5 text-[9px] font-bold leading-none text-blue-700 dark:text-blue-300">
+                        Ver
+                      </span>
                     </span>
-                    <span className="block whitespace-nowrap text-sm font-extrabold text-[#2F2F2D] dark:text-white">
+                    <span className="block truncate whitespace-nowrap text-xs font-extrabold text-[#2F2F2D] dark:text-white">
                       Total: {formatBRL(totalLiquidoComanda)}
                     </span>
                   </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleLimparComanda();
+                    setIsMobileCartOpen(false);
+                  }}
+                  aria-label="Limpar comanda"
+                  title="Limpar comanda"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-red-600 hover:bg-red-500/10 dark:text-red-400"
+                >
+                  <Trash2 className="h-4 w-4" />
                 </button>
 
                 <button
@@ -2170,7 +2616,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F2F2D] px-3.5 text-xs font-bold text-white dark:bg-[#F4F4F0] dark:text-[#181817]"
                 >
                   <CheckCircle2 className="h-4 w-4" />
-                  Finalizar
+                  Avançar
                 </button>
               </div>
           </div>,
@@ -2200,7 +2646,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                       id="checkout-modal-title"
                       className="text-base font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]"
                     >
-                      Finalizar venda
+                      {correcaoAtiva ? `Concluir correção da venda ${formatarNumeroVenda(correcaoAtiva.numero_venda)}` : "Finalizar venda"}
                     </h3>
                     <p className="text-[11px] text-[#666662] dark:text-[#B8B8B2]">
                       Revise os valores, confirme descontos e informe a forma de pagamento.
@@ -2219,6 +2665,13 @@ export function PdvView({ initialTab }: PdvViewProps) {
 
               {/* Corpo */}
               <div className="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+                {correcaoAtiva && (
+                  <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-xs leading-relaxed text-sky-950 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-100">
+                    A venda original continua válida até esta correção ser concluída.
+                    Confira os preços atuais dos itens, descontos e pagamentos.
+                    Se a operação falhar, a venda original será preservada.
+                  </div>
+                )}
                 {/* Resumo Financeiro */}
                 <div className="p-4 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] space-y-2.5">
                   <div className="flex items-center justify-between text-[#666662] dark:text-[#B8B8B2]">
@@ -2256,6 +2709,61 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   </div>
                 </div>
 
+                {/* Desconto na etapa de pagamento */}
+                <div className="rounded-xl border border-[#E2E2DD] bg-[#FAF9F5] p-3.5 dark:border-[#3F3F3B] dark:bg-[#181817]">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase text-[#2F2F2D] dark:text-[#F4F4F0]">Desconto</p>
+                      <p className="mt-1 text-[11px] text-[#666662] dark:text-[#B8B8B2]">
+                        {desconto
+                          ? (desconto.tipo === "PERCENTUAL"
+                            ? String(desconto.valor) + "% aplicado"
+                            : formatBRL(desconto.valor) + " aplicado")
+                          : "Opcional — aplique antes de concluir a venda"}
+                      </p>
+                    </div>
+                    {desconto ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDiscountTypeInput(desconto.tipo);
+                            setDiscountValueInput(
+                              desconto.tipo === "VALOR_FIXO"
+                                ? formatarValorMonetarioPdv(desconto.valor)
+                                : String(desconto.valor)
+                            );
+                            setIsDiscountOpen(true);
+                          }}
+                          className="rounded-lg bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-700 dark:text-blue-300"
+                        >
+                          Alterar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDesconto(null)}
+                          className="rounded-lg px-2 py-2 text-xs font-bold text-red-600 dark:text-red-400"
+                        >
+                          Remover
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDiscountTypeInput("PERCENTUAL");
+                          setDiscountValueInput("");
+                          setIsDiscountOpen(true);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-700 dark:text-blue-300"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Aplicar desconto
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 {/* Formas de Pagamento (Visual AI Studio) */}
                 <div className="space-y-2.5 pt-1">
                   <div className="flex items-center justify-between">
@@ -2271,42 +2779,69 @@ export function PdvView({ initialTab }: PdvViewProps) {
                     <button
                       type="button"
                       onClick={handleAddSplitPayment}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold text-[#2F2F2D] dark:text-white transition-colors cursor-pointer shrink-0"
+                      disabled={formasHabilitadas.length === 0 ||
+                        !formasHabilitadas.some((forma) => !splitPayments.some((p) => p.forma_pagamento === forma))}
+                      title={formasHabilitadas.length === 0
+                        ? "Nenhuma forma de pagamento habilitada"
+                        : formasHabilitadas.every((forma) => splitPayments.some((p) => p.forma_pagamento === forma))
+                        ? "Todas as formas de pagamento já foram adicionadas"
+                        : "Adicionar forma de pagamento"}
+                      className="inline-flex items-center gap-1 rounded-lg border border-sky-300 bg-sky-100 px-2.5 py-1 text-xs font-bold text-sky-900 transition-colors hover:bg-sky-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-sky-700 dark:bg-sky-900/50 dark:text-sky-100 dark:hover:bg-sky-900 shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Adicionar forma</span>
                     </button>
                   </div>
 
+                  {formasHabilitadas.length === 0 && (
+                    <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                      {erroFormasPagamento || "Nenhuma forma de pagamento habilitada. Você pode registrar sem informar o pagamento ou habilitar formas nas Configurações da Barbearia."}
+                    </p>
+                  )}
+
                   <div className="space-y-2">
                     {splitPayments.map((entry) => (
                       <div
                         key={entry.id}
-                        className="p-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-center gap-2"
+                        className="p-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] flex flex-wrap items-center gap-2 sm:flex-nowrap"
                       >
                         <select
                           value={entry.forma_pagamento}
                           onChange={(e) =>
                             handleUpdateSplitPayment(entry.id, "forma_pagamento", e.target.value)
                           }
-                          className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] font-bold text-xs text-[#2F2F2D] dark:text-white focus:outline-none"
+                          className="w-full min-w-0 px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] font-bold text-xs text-[#2F2F2D] dark:text-white focus:outline-none sm:w-auto"
                         >
-                          <option value="PIX">Pix</option>
-                          <option value="DINHEIRO">Dinheiro</option>
-                          <option value="CARTAO_DEBITO">Débito</option>
-                          <option value="CARTAO_CREDITO">Crédito</option>
-                          <option value="OUTRO">Outro</option>
+                          {!formasHabilitadas.includes(entry.forma_pagamento) && (
+                            <option value={entry.forma_pagamento} disabled>
+                              {ROTULOS_PAGAMENTO_PDV[entry.forma_pagamento]} (desativada — escolha outra)
+                            </option>
+                          )}
+                          {formasHabilitadas.map((forma) => (
+                            <option
+                              key={forma}
+                              value={forma}
+                              disabled={splitPayments.some((p) => p.id !== entry.id && p.forma_pagamento === forma)}
+                            >
+                              {ROTULOS_PAGAMENTO_PDV[forma]}
+                            </option>
+                          ))}
                         </select>
 
-                        <div className="relative flex-1">
+                        <div className="relative min-w-0 flex-1">
                           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[11px] text-neutral-400 font-bold">
                             R$
                           </span>
                           <input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            value={entry.valor === 0 ? "" : entry.valor}
+                            type="text"
+                            inputMode="numeric"
+                            aria-label="Valor deste pagamento em reais"
+                            value={formatarValorMonetarioPdv(entry.valor)}
+                            onKeyDown={impedirTeclaNaoNumericaPdv}
+                            onPaste={impedirColagemNaoNumericaPdv}
+                            onDrop={(event) => event.preventDefault()}
+                            onFocus={(event) => event.currentTarget.select()}
+                            onClick={(event) => event.currentTarget.select()}
                             onChange={(e) =>
                               handleUpdateSplitPayment(entry.id, "valor", e.target.value)
                             }
@@ -2353,14 +2888,14 @@ export function PdvView({ initialTab }: PdvViewProps) {
                       </span>
                     </div>
 
-                    {!isPagamentoValido && diferencaPagamento < -0.01 && (
+                    {!isPagamentoValido && diferencaPagamento < 0 && (
                       <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1.5">
                         <AlertTriangle className="w-4 h-4 shrink-0" />
                         <span>Faltam {formatBRL(Math.abs(diferencaPagamento))} para completar o pagamento.</span>
                       </div>
                     )}
 
-                    {!isPagamentoValido && diferencaPagamento > 0.01 && (
+                    {!isPagamentoValido && diferencaPagamento > 0 && (
                       <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                         <AlertTriangle className="w-4 h-4 shrink-0" />
                         <span>O valor informado ultrapassa o total da venda em {formatBRL(diferencaPagamento)}.</span>
@@ -2440,6 +2975,12 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   />
                 </div>
 
+                {correcaoSemAlteracoes && (
+                  <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs font-medium text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                    Nenhuma alteração identificada. Altere os itens, o desconto ou o pagamento antes de concluir.
+                    A venda original permanece válida.
+                  </p>
+                )}
                 {erroFinalizacao && (
                   <p className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1.5">
                     <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -2461,10 +3002,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
 
                 <button
                   type="button"
-                  disabled={finalizandoVenda || !isPagamentoValido}
+                  disabled={finalizandoVenda || !isPagamentoValido || correcaoSemAlteracoes}
                   onClick={handleFinalizarVenda}
                   className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2 cursor-pointer ${
-                    finalizandoVenda || !isPagamentoValido
+                    finalizandoVenda || !isPagamentoValido || correcaoSemAlteracoes
                       ? "bg-[#EEEDE7] dark:bg-[#2B2B29] text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-60"
                       : "bg-[#2F2F2D] hover:bg-[#3A3A38] dark:bg-[#F4F4F0] dark:hover:bg-white text-white dark:text-[#181817] active:scale-98"
                   }`}
@@ -2477,7 +3018,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   ) : (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Concluir venda</span>
+                      <span>{correcaoAtiva ? "Concluir correção" : "Concluir venda"}</span>
                     </>
                   )}
                 </button>
@@ -2537,7 +3078,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
               <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]">
                 <button
                   type="button"
-                  onClick={() => setDiscountTypeInput("PERCENTUAL")}
+                  onClick={() => {
+                    setDiscountTypeInput("PERCENTUAL");
+                    setDiscountValueInput("");
+                  }}
                   className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     discountTypeInput === "PERCENTUAL"
                       ? "bg-white dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-white shadow-xs"
@@ -2548,7 +3092,10 @@ export function PdvView({ initialTab }: PdvViewProps) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setDiscountTypeInput("VALOR_FIXO")}
+                  onClick={() => {
+                    setDiscountTypeInput("VALOR_FIXO");
+                    setDiscountValueInput("0,00");
+                  }}
                   className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     discountTypeInput === "VALOR_FIXO"
                       ? "bg-white dark:bg-[#2B2B29] text-[#2F2F2D] dark:text-white shadow-xs"
@@ -2564,13 +3111,33 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   {discountTypeInput === "PERCENTUAL" ? "Percentual de desconto (%)" : "Valor do desconto (R$)"}
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max={discountTypeInput === "PERCENTUAL" ? 100 : subtotalComanda}
-                  value={discountValueInput}
-                  onChange={(e) => setDiscountValueInput(e.target.value)}
-                  placeholder={discountTypeInput === "PERCENTUAL" ? "Ex: 10" : "Ex: 15.00"}
+                  type={discountTypeInput === "PERCENTUAL" ? "number" : "text"}
+                  inputMode={discountTypeInput === "PERCENTUAL" ? "decimal" : "numeric"}
+                  step={discountTypeInput === "PERCENTUAL" ? "0.01" : undefined}
+                  min={discountTypeInput === "PERCENTUAL" ? "0" : undefined}
+                  max={discountTypeInput === "PERCENTUAL" ? 100 : undefined}
+                  value={discountTypeInput === "VALOR_FIXO" ? (discountValueInput || "0,00") : discountValueInput}
+                  onKeyDown={(event) => {
+                    if (discountTypeInput === "VALOR_FIXO") impedirTeclaNaoNumericaPdv(event);
+                  }}
+                  onPaste={(event) => {
+                    if (discountTypeInput === "VALOR_FIXO") impedirColagemNaoNumericaPdv(event);
+                  }}
+                  onDrop={(event) => {
+                    if (discountTypeInput === "VALOR_FIXO") event.preventDefault();
+                  }}
+                  onFocus={(event) => {
+                    if (discountTypeInput === "VALOR_FIXO") event.currentTarget.select();
+                  }}
+                  onClick={(event) => {
+                    if (discountTypeInput === "VALOR_FIXO") event.currentTarget.select();
+                  }}
+                  onChange={(e) => setDiscountValueInput(
+                    discountTypeInput === "VALOR_FIXO"
+                      ? formatarValorMonetarioPdv(valorDosDigitosMonetariosPdv(e.target.value))
+                      : e.target.value
+                  )}
+                  placeholder={discountTypeInput === "PERCENTUAL" ? "Ex: 10" : "0,00"}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] focus:outline-none"
                   autoFocus
                 />
@@ -2634,7 +3201,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
               {/* Título e número da venda */}
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                  Venda Concluída!
+                  {vendaSucessoData.correcaoNumeroOriginal ? "Venda corrigida com sucesso!" : "Venda Concluída!"}
                 </span>
 
                 <h3 className="text-xl font-black text-[#2F2F2D] dark:text-[#F4F4F0] mt-1">
@@ -2643,10 +3210,17 @@ export function PdvView({ initialTab }: PdvViewProps) {
                 </h3>
               </div>
 
+              {vendaSucessoData.correcaoNumeroOriginal && (
+                <p className="text-xs leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                  A venda {formatarNumeroVenda(vendaSucessoData.correcaoNumeroOriginal)} foi cancelada
+                  após a conclusão desta venda corrigida.
+                </p>
+              )}
+
               {/* Resumo da venda */}
               <div className="p-4 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] space-y-2 text-xs text-left">
                 <div className="flex items-center justify-between text-[#666662] dark:text-[#B8B8B2]">
-                  <span>Total Pago:</span>
+                  <span>{vendaSucessoData.pagamentos.length > 0 ? "Total pago:" : "Total da venda:"}</span>
 
                   <strong className="text-sm font-black text-[#2F2F2D] dark:text-[#F4F4F0]">
                     {formatBRL(vendaSucessoData.total)}
@@ -2816,7 +3390,7 @@ export function PdvView({ initialTab }: PdvViewProps) {
                     {vendaDetalhe.desconto_total > 0 && (
                       <div className="flex justify-between text-rose-600 dark:text-rose-400 font-semibold">
                         <span>
-                          Desconto {vendaDetalhe.desconto_tipo === "PERCENTUAL" ? `(${vendaDetalhe.desconto_valor}%)` : ""}
+                          Desconto {vendaDetalhe.desconto_tipo === "PERCENTUAL" ? `(${vendaDetalhe.desconto_valor_informado}%)` : ""}
                         </span>
                         <span>- {formatBRL(vendaDetalhe.desconto_total)}</span>
                       </div>
@@ -3000,49 +3574,35 @@ export function PdvView({ initialTab }: PdvViewProps) {
         )}
 
       {/* ======================================================== */}
-      {/* MODAL 6: CONFIRMAR CORREÇÃO DE VENDA */}
+      {/* MODAL 6: INICIAR CORREÇÃO SEGURA */}
       {/* ======================================================== */}
       {saleToCorrect && typeof document !== "undefined" &&
         createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="correction-modal-title"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
-          >
-            <div className="w-full max-w-sm bg-white dark:bg-[#222220] rounded-2xl shadow-2xl border border-[#E2E2DD] dark:border-[#3F3F3B] p-5 space-y-4 animate-slideUp">
-              <div className="w-10 h-10 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 mx-auto flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5" />
-              </div>
-
-              <div className="text-center space-y-1.5">
-                <h3
-                  id="correction-modal-title"
-                  className="text-base font-extrabold text-rose-600 dark:text-rose-400"
-                >
-                  Corrigir Venda {formatarNumeroVenda(saleToCorrect.numero_venda)}?
-                </h3>
-                <p className="text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
-                  Para preservar o histórico, a venda original será cancelada e uma nova venda será criada a partir dos mesmos itens na tela de Nova venda.
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <button
-                  type="button"
-                  disabled={corrigindoVenda}
-                  onClick={() => setSaleToCorrect(null)}
-                  className="flex-1 py-2.5 px-4 rounded-xl border border-[#E2E2DD] dark:border-[#3F3F3B] bg-white dark:bg-[#181817] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[#2F2F2D] dark:text-[#F4F4F0] font-bold text-xs transition-all cursor-pointer shadow-2xs"
-                >
-                  Cancelar
+          <div role="dialog" aria-modal="true" aria-labelledby="correction-modal-title"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fadeIn">
+            <div className="w-full max-w-sm space-y-4 rounded-2xl border border-[#E2E2DD] bg-white p-5 shadow-2xl dark:border-[#3F3F3B] dark:bg-[#222220] animate-slideUp">
+              <Info className="mx-auto h-7 w-7 text-sky-600 dark:text-sky-400" />
+              <h3 id="correction-modal-title" className="text-center text-base font-extrabold text-[#2F2F2D] dark:text-[#F4F4F0]">
+                Corrigir venda {formatarNumeroVenda(saleToCorrect.numero_venda)}?
+              </h3>
+              <p className="text-sm leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                Os itens, quantidades, descontos e formas de pagamento desta venda serão carregados na comanda para você conferir e alterar o que precisar.
+              </p>
+              <p className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-sm leading-relaxed text-sky-950 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-100">
+                <strong>A venda original continuará válida.</strong> Ela só será cancelada quando você concluir a venda corrigida com sucesso.
+                Se desistir, a venda original não será alterada.
+              </p>
+              <p className="text-xs leading-relaxed text-[#666662] dark:text-[#B8B8B2]">
+                Uma correção sem mudanças não poderá ser concluída. Se você já possui uma comanda comum, ela ficará guardada separadamente.
+              </p>
+              <div className="flex gap-2">
+                <button type="button" disabled={preparandoCorrecao} onClick={() => setSaleToCorrect(null)}
+                  className="flex-1 rounded-xl border border-[#E2E2DD] px-3 py-2.5 text-sm font-semibold dark:border-[#3F3F3B]">
+                  Voltar
                 </button>
-                <button
-                  type="button"
-                  disabled={corrigindoVenda}
-                  onClick={handleConfirmarCorrecao}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all cursor-pointer"
-                >
-                  {corrigindoVenda ? "Processando..." : "Prosseguir com correção"}
+                <button type="button" disabled={preparandoCorrecao} onClick={iniciarCorrecaoSegura}
+                  className="flex-1 rounded-xl bg-[#2F2F2D] px-3 py-2.5 text-sm font-bold text-white disabled:opacity-50 dark:bg-[#F4F4F0] dark:text-[#181817]">
+                  {preparandoCorrecao ? "Preparando..." : "Iniciar correção"}
                 </button>
               </div>
             </div>
@@ -3066,22 +3626,23 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   Comanda Atual
                 </h3>
                 <div className="flex items-center gap-2">
-                  {comanda.length > 0 && (
-                    <button
+                  <button
                       type="button"
-                      onClick={() => setConfirmarLimpezaComanda(true)}
+                      disabled={comanda.length === 0}
+                      onClick={() => {
+                        handleLimparComanda();
+                        setIsMobileCartOpen(false);
+                      }}
                       aria-label="Limpar comanda"
                       title="Limpar comanda"
-                      className="flex h-10 w-10 items-center justify-center rounded-xl text-[#888882] hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl text-red-600 hover:bg-red-500/10 disabled:opacity-40 dark:text-red-400"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                  )}
 
                   <button
                     type="button"
                     onClick={() => {
-                      setConfirmarLimpezaComanda(false);
                       setIsMobileCartOpen(false);
                     }}
                     aria-label="Fechar comanda"
@@ -3091,39 +3652,6 @@ export function PdvView({ initialTab }: PdvViewProps) {
                   </button>
                 </div>
               </div>
-
-              {confirmarLimpezaComanda && (
-                <div className="mb-3 shrink-0 space-y-3 rounded-xl border border-red-500/30 bg-red-500/5 p-3">
-                  <p className="text-sm font-bold text-[#2F2F2D] dark:text-white">
-                    Limpar toda a comanda?
-                  </p>
-                  <p className="text-xs text-[#666662] dark:text-[#B8B8B2]">
-                    Todos os itens e o desconto serão removidos.
-                  </p>
-
-                  <div className="flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setConfirmarLimpezaComanda(false)}
-                      className="min-h-10 rounded-xl border border-[#E2E2DD] px-4 text-xs font-bold dark:border-[#3F3F3B] dark:text-white"
-                    >
-                      Cancelar
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleLimparComanda();
-                        setConfirmarLimpezaComanda(false);
-                        setIsMobileCartOpen(false);
-                      }}
-                      className="min-h-10 rounded-xl bg-red-600 px-4 text-xs font-bold text-white"
-                    >
-                      Limpar tudo
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {/* Lista */}
               <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pr-1 pb-2">
@@ -3195,56 +3723,6 @@ export function PdvView({ initialTab }: PdvViewProps) {
                     <span>Subtotal:</span>
                     <strong className="text-[#2F2F2D] dark:text-white">{formatBRL(subtotalComanda)}</strong>
                   </div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-  {desconto ? (
-    <>
-      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-        Desconto ({desconto.tipo === "PERCENTUAL"
-          ? `${desconto.valor}%`
-          : formatBRL(desconto.valor)})
-      </span>
-
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-emerald-600 dark:text-emerald-400">
-          -{formatBRL(valorDescontoCalculado)}
-        </span>
-
-        <button
-          type="button"
-          onClick={() => {
-            setDiscountTypeInput(desconto.tipo);
-            setDiscountValueInput(String(desconto.valor));
-            setIsDiscountOpen(true);
-          }}
-          className="min-h-9 px-2 font-semibold text-blue-600 dark:text-blue-400"
-        >
-          Alterar
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setDesconto(null)}
-          className="min-h-9 px-2 font-semibold text-red-600 dark:text-red-400"
-        >
-          Remover
-        </button>
-      </div>
-    </>
-  ) : (
-    <button
-      type="button"
-      onClick={() => {
-        setDiscountTypeInput("PERCENTUAL");
-        setDiscountValueInput("");
-        setIsDiscountOpen(true);
-      }}
-      className="inline-flex min-h-10 items-center gap-2 font-semibold text-blue-600 dark:text-blue-400"
-    >
-      <Plus className="h-4 w-4" />
-      Adicionar desconto
-    </button>
-  )}
-</div>
                   <div className="flex items-center justify-between text-base font-black text-[#2F2F2D] dark:text-[#F4F4F0] pt-1">
                     <span>Total Líquido:</span>
                     <span>{formatBRL(totalLiquidoComanda)}</span>
