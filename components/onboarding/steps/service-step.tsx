@@ -65,20 +65,50 @@ function formatInitialMoney(
   return String(value).replace(".", ",");
 }
 
-function formatarPrecoExibicao(value: string) {
-  const bruto = String(value).replace(".", ",");
+function formatarPrecoExibicao(value: string) { return formatarValorExistente(value); }
 
-  return bruto || "0,00";
+function formatarDigitacaoMonetaria(value: string): string {
+  const digits = value
+    .replace(/\D/g, "")
+    .replace(/^0+(?=\d)/, "")
+    .slice(0, 12);
+
+  return (Number(digits || "0") / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
+function formatarValorExistente(
+  value: string | number | null | undefined
+): string {
+  const bruto = String(value ?? "").trim();
+
+  if (!bruto) return "0,00";
+
+  const normalizado = normalizeMoney(bruto);
+  if (normalizado === null) return bruto;
+
+  const numero = Number(normalizado);
+  if (!Number.isFinite(numero) || numero < 0) return bruto;
+
+  return numero.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 function normalizeMoney(value: string) {
   const trimmed = value.trim();
 
-  if (!/^\d+(?:[,.]\d{1,2})?$/.test(trimmed)) {
-    return null;
+  if (/^\d+(?:[,.]\d{1,2})?$/.test(trimmed)) {
+    return trimmed.replace(",", ".");
   }
 
-  return trimmed.replace(",", ".");
+  if (/^\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?$/.test(trimmed)) {
+    return trimmed.replace(/\./g, "").replace(",", ".");
+  }
+
+  return null;
 }
 
 function normalizeName(value: string) {
@@ -169,11 +199,10 @@ export function ServiceStep({
   const [formNome, setFormNome] =
     useState("");
   const [formPreco, setFormPreco] =
-    useState("45,00");
+    useState("0,00");
   const [formDescricao, setFormDescricao] =
     useState("");
-  const [formCusto, setFormCusto] =
-    useState("");
+  const [formCusto, setFormCusto] = useState("0,00");
 
   // Visibilidade na Vitrine do serviço em edição (padrão: visível).
   const [formVisivel, setFormVisivel] =
@@ -279,18 +308,21 @@ export function ServiceStep({
     campo: "nome" | "preco" | "custo",
     valor: string
   ) {
+    const proximoValor =
+      campo === "nome" ? valor : formatarDigitacaoMonetaria(valor);
+
     if (campo === "nome") {
-      setFormNome(valor);
+      setFormNome(proximoValor);
     } else if (campo === "preco") {
-      setFormPreco(valor);
+      setFormPreco(proximoValor);
     } else {
-      setFormCusto(valor);
+      setFormCusto(proximoValor);
     }
 
     if (touched[campo]) {
       setFormErrors((atuais) => ({
         ...atuais,
-        [campo]: validarCampo(campo, valor),
+        [campo]: validarCampo(campo, proximoValor),
       }));
     }
   }
@@ -319,9 +351,9 @@ export function ServiceStep({
   function abrirNovo() {
     setEditingId(null);
     setFormNome("");
-    setFormPreco("");
+    setFormPreco("0,00");
     setFormDescricao("");
-    setFormCusto("");
+    setFormCusto("0,00");
     setFormVisivel(true);
     setTouched({});
     setFormErrors({});
@@ -336,11 +368,9 @@ export function ServiceStep({
   function abrirEdicao(servico: ServiceFormItem) {
     setEditingId(servico.formId);
     setFormNome(servico.nome);
-    setFormPreco(
-      formatarPrecoExibicao(servico.preco)
-    );
+    setFormPreco(formatarValorExistente(servico.preco));
     setFormDescricao(servico.descricao || "");
-    setFormCusto(servico.custo_estimado || "");
+    setFormCusto(formatarValorExistente(servico.custo_estimado));
     setFormVisivel(
       servico.visivel_vitrine !== false
     );
@@ -967,6 +997,27 @@ export function ServiceStep({
 
                   <input
                     id="service-price-modal"
+                      inputMode="numeric"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+                        if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                     type="text"
                     placeholder="0,00"
                     value={formPreco}
@@ -1056,6 +1107,27 @@ export function ServiceStep({
 
                   <input
                     id="service-cost-modal"
+                      inputMode="numeric"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+                        if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                     type="text"
                     placeholder="0,00"
                     value={formCusto}

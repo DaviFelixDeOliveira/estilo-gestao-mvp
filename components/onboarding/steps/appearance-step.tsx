@@ -5,10 +5,12 @@ import {
   ReactNode,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import { FinishLoader } from "@/components/onboarding/finish-loader";
 
@@ -325,6 +327,10 @@ export function AppearanceStep({
 
   const router = useRouter();
 
+  const { theme: temaDaInterface, setTheme } = useTheme();
+  const temaAnteriorRef = useRef<string | null>(null);
+  const concluiuRef = useRef(false);
+
   const [tema, setTema] =
     useState<Theme>(initialTheme);
 
@@ -335,6 +341,32 @@ export function AppearanceStep({
   useEffect(() => {
     onDraftChange?.({ tema });
   }, [tema, onDraftChange]);
+
+  // Mostra o tema escolhido imediatamente.
+  useEffect(() => {
+    if (!temaDaInterface) return;
+
+    if (temaAnteriorRef.current === null) {
+      temaAnteriorRef.current = temaDaInterface;
+    }
+
+    setTheme(
+      tema === "CLARO"
+        ? "light"
+        : tema === "ESCURO"
+          ? "dark"
+          : "system"
+    );
+  }, [tema, temaDaInterface, setTheme]);
+
+  // Restaura a aparencia anterior se o cadastro nao foi concluido.
+  useEffect(() => {
+    return () => {
+      if (!concluiuRef.current && temaAnteriorRef.current !== null) {
+        setTheme(temaAnteriorRef.current);
+      }
+    };
+  }, [setTheme]);
 
   const diasAbertos = resumoHorarios.filter(
     (item) => !item.fechado
@@ -441,6 +473,7 @@ export function AppearanceStep({
         );
       }
 
+      concluiuRef.current = true;
       onConcluido?.();
 
       router.replace("/dashboard");

@@ -156,21 +156,52 @@ const FORMAS_PAGAMENTO: {
 function formatMoney(
   value: number | string | null
 ) {
-  if (value === null || value === "") {
-    return "";
-  }
-
-  return String(value).replace(".", ",");
+  if (value === null || value === "") return "";
+  return formatarValorExistente(value);
 }
 
+function formatarDigitacaoMonetaria(value: string): string {
+  const digits = value
+    .replace(/\D/g, "")
+    .replace(/^0+(?=\d)/, "")
+    .slice(0, 12);
+
+  return (Number(digits || "0") / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function formatarValorExistente(
+  value: string | number | null | undefined
+): string {
+  const bruto = String(value ?? "").trim();
+
+  if (!bruto) return "0,00";
+
+  const normalizado = normalizeMoney(bruto);
+  if (normalizado === null) return bruto;
+
+  const numero = Number(normalizado);
+  if (!Number.isFinite(numero) || numero < 0) return bruto;
+
+  return numero.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 function normalizeMoney(value: string) {
   const trimmed = value.trim();
 
-  if (!/^\d+(?:[,.]\d{1,2})?$/.test(trimmed)) {
-    return null;
+  if (/^\d+(?:[,.]\d{1,2})?$/.test(trimmed)) {
+    return trimmed.replace(",", ".");
   }
 
-  return trimmed.replace(",", ".");
+  if (/^\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?$/.test(trimmed)) {
+    return trimmed.replace(/\./g, "").replace(",", ".");
+  }
+
+  return null;
 }
 
 function normalizeName(value: string) {
@@ -414,10 +445,8 @@ export function ProductPaymentStep({
     useState<string | null>(null);
   const [formNome, setFormNome] =
     useState("");
-  const [formPrecoVenda, setFormPrecoVenda] =
-    useState("");
-  const [formCusto, setFormCusto] =
-    useState("");
+  const [formPrecoVenda, setFormPrecoVenda] = useState("0,00");
+  const [formCusto, setFormCusto] = useState("0,00");
   const [formCategoria, setFormCategoria] =
     useState("");
   const [formDescricao, setFormDescricao] =
@@ -687,8 +716,8 @@ export function ProductPaymentStep({
   function abrirNovoProduto() {
     setProdutoEditandoId(null);
     setFormNome("");
-    setFormPrecoVenda("");
-    setFormCusto("");
+    setFormPrecoVenda("0,00");
+    setFormCusto("0,00");
     setFormCategoria(
       nomesCategorias[0]?.nome ?? ""
     );
@@ -705,8 +734,8 @@ export function ProductPaymentStep({
   ) {
     setProdutoEditandoId(produto.formId);
     setFormNome(produto.nome);
-    setFormPrecoVenda(produto.preco_venda);
-    setFormCusto(produto.preco_custo);
+    setFormPrecoVenda(formatarValorExistente(produto.preco_venda));
+    setFormCusto(formatarValorExistente(produto.preco_custo));
     setFormCategoria(produto.categoria_nome);
     setFormDescricao(produto.descricao || "");
     setFormVisivel(
@@ -764,20 +793,25 @@ export function ProductPaymentStep({
     campo: "nome" | "precoVenda" | "custo" | "categoria",
     valor: string
   ) {
+    const proximoValor =
+      campo === "precoVenda" || campo === "custo"
+        ? formatarDigitacaoMonetaria(valor)
+        : valor;
+
     if (campo === "nome") {
-      setFormNome(valor);
+      setFormNome(proximoValor);
     } else if (campo === "precoVenda") {
-      setFormPrecoVenda(valor);
+      setFormPrecoVenda(proximoValor);
     } else if (campo === "custo") {
-      setFormCusto(valor);
+      setFormCusto(proximoValor);
     } else {
-      setFormCategoria(valor);
+      setFormCategoria(proximoValor);
     }
 
     if (produtoTouched[campo]) {
       setFormProdutoErros((atuais) => ({
         ...atuais,
-        [campo]: validarCampoProduto(campo, valor),
+        [campo]: validarCampoProduto(campo, proximoValor),
       }));
     }
   }
@@ -1799,8 +1833,28 @@ export function ProductPaymentStep({
 
                     <input
                       id="product-price"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+                        if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       type="text"
-                      inputMode="decimal"
+                      inputMode="numeric"
                       value={formPrecoVenda}
                       onChange={(event) =>
                         alterarCampoProduto(
@@ -1860,8 +1914,28 @@ export function ProductPaymentStep({
 
                     <input
                       id="product-cost"
+                      onKeyDown={(event) => {
+                        if (event.ctrlKey || event.metaKey || event.altKey) return;
+                        if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onPaste={(event) => {
+                        if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onDrop={(event) => event.preventDefault()}
+                      onFocus={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
+                      onClick={(event) => {
+                        const input = event.currentTarget;
+                        input.setSelectionRange(input.value.length, input.value.length);
+                      }}
                       type="text"
-                      inputMode="decimal"
+                      inputMode="numeric"
                       value={formCusto}
                       onChange={(event) =>
                         alterarCampoProduto(

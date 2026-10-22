@@ -72,7 +72,11 @@ const CLASSE_INPUT_BASE =
   "w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-[#18191E] border text-[#1E1E1C] dark:text-white placeholder-[#8E8E89] dark:placeholder-[#52525B] text-sm focus:outline-none focus:ring-2 transition-all";
 
 function mascaraWhatsapp(valor: string) {
-  const digitos = valor.replace(/\D/g, "").slice(0, 11);
+  const numeros = valor.replace(/\D/g, "");
+  const digitos =
+    numeros.startsWith("55") && numeros.length > 11
+      ? numeros.slice(2, 13)
+      : numeros.slice(0, 11);
 
   if (digitos.length === 0) {
     return "";
@@ -728,13 +732,22 @@ export function BusinessDataStep({
               <Phone className="h-4 w-4" />
             </div>
 
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-2 left-10 flex items-center border-l border-[#D5D4CD] pl-2 text-sm font-bold text-[#1E1E1C] dark:border-white/10 dark:text-white"
+            >
+              +55
+            </span>
+
             <input
               id="business-phone"
+              aria-label="WhatsApp: DDD e numero, codigo do Brasil +55 fixo"
+              style={{ paddingLeft: "5.25rem" }}
               type="tel"
               required
               inputMode="tel"
-              autoComplete="tel"
-              maxLength={15}
+              autoComplete="tel-national"
+              maxLength={24}
               aria-invalid={Boolean(erros.whatsapp)}
               aria-describedby={
                 erros.whatsapp
