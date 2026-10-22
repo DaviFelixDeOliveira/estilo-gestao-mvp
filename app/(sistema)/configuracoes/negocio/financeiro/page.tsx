@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback, useMemo, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
+import { ComprasEstoquePendentes } from "@/components/financeiro/compras-estoque-pendentes";
 import {
   TrendingDown,
   TrendingUp,
@@ -214,6 +215,10 @@ export interface RespostaResumoFinanceiro {
   resultado_estimado: number;
 }
 
+function dataLocalFinanceiro(data: Date): string {
+  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+}
+
 function formatMoney(value: number | null | undefined): string {
   if (value === null || value === undefined) return "R$ 0,00";
   return new Intl.NumberFormat("pt-BR", {
@@ -222,6 +227,24 @@ function formatMoney(value: number | null | undefined): string {
   }).format(value);
 }
 
+function formatarDinheiroDigitado(value: string): string {
+  const digitos = value
+    .replace(/\D/g, "")
+    .replace(/^0+(?=\d)/, "")
+    .slice(0, 12);
+
+  return (Number(digitos || "0") / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function formatarDinheiroExistente(valor: number): string {
+  return valor.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 function parseMoney(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
@@ -255,14 +278,14 @@ export default function FinanceiroPage() {
 
   // Filtro de Período
   const hoje = useMemo(() => new Date(), []);
-  const todayISO = useMemo(() => hoje.toISOString().split("T")[0], [hoje]);
+  const todayISO = useMemo(() => dataLocalFinanceiro(hoje), [hoje]);
 
   const primeiroDiaMes = useMemo(
-    () => new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split("T")[0],
+    () => dataLocalFinanceiro(new Date(hoje.getFullYear(), hoje.getMonth(), 1)),
     [hoje]
   );
   const ultimoDiaMes = useMemo(
-    () => new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).toISOString().split("T")[0],
+    () => dataLocalFinanceiro(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0)),
     [hoje]
   );
 
@@ -300,6 +323,7 @@ export default function FinanceiroPage() {
   });
 
   const [despesas, setDespesas] = useState<DespesaItem[]>([]);
+  const [idsDespesasAutomaticas, setIdsDespesasAutomaticas] = useState<Set<string> | null>(null);
   const [expenseSearch, setExpenseSearch] = useState("");
   const [expenseCategoryFilter, setExpenseCategoryFilter] = useState<string>("all");
 
@@ -332,7 +356,7 @@ export default function FinanceiroPage() {
   // Campos do Formulário Unificado / Edição
   const [formName, setFormName] = useState("");
   const [formCategory, setFormCategory] = useState<CategoriaDespesa>("OUTROS");
-  const [formAmount, setFormAmount] = useState("");
+  const [formAmount, setFormAmount] = useState("0,00");
   const [formDate, setFormDate] = useState(todayISO);
   const [formDueDay, setFormDueDay] = useState("10");
   const [formDescription, setFormDescription] = useState("");
@@ -342,7 +366,7 @@ export default function FinanceiroPage() {
   // Modal: Pagar Ocorrência
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [selectedPayOcorrencia, setSelectedPayOcorrencia] = useState<OcorrenciaItem | null>(null);
-  const [payAmountInput, setPayAmountInput] = useState("");
+  const [payAmountInput, setPayAmountInput] = useState("0,00");
   const [payDateInput, setPayDateInput] = useState(todayISO);
   const [payError, setPayError] = useState<string | null>(null);
 
@@ -368,6 +392,17 @@ export default function FinanceiroPage() {
     isDanger: false,
     action: () => {},
   });
+
+  // Abre a nova despesa quando o usuario chega pelo atalho do Dashboard.
+  // A consulta permanece na URL para permitir abrir novamente ao atualizar.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("nova-despesa") !== "1") {
+      return;
+    }
+    // Agenda a abertura apos a montagem, inclusive no modo estrito do React.
+    const frame = window.requestAnimationFrame(() => setIsModalOpen(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   // Trava scroll ao abrir qualquer modal
   useEffect(() => {
@@ -422,20 +457,28 @@ export default function FinanceiroPage() {
 
   const carregarDespesas = useCallback(async () => {
     try {
-      const { data, error } = await supabase.rpc("listar_despesas", {
+      const [resDespesas, resIds] = await Promise.all([
+        supabase.rpc("listar_despesas", {
         p_inicio: dataInicio,
         p_fim: dataFim,
         p_categoria: expenseCategoryFilter !== "all" ? (expenseCategoryFilter as CategoriaDespesa) : null,
         p_busca: expenseSearch.trim() || null,
         p_pagina: 1,
         p_por_pagina: 100,
-      });
-      if (error) throw error;
+        }),
+        supabase.rpc("listar_ids_despesas_compras"),
+      ]);
+      if (resDespesas.error) throw resDespesas.error;
+      if (resIds.error) throw resIds.error;
+      if (!Array.isArray(resIds.data)) throw new Error("Não foi possível verificar a proteção das despesas de compras.");
+      setIdsDespesasAutomaticas(new Set(resIds.data.filter((id: unknown): id is string => typeof id === "string")));
+      const data = resDespesas.data;
       if (data) {
         const resp = data as unknown as RespostaListarDespesas;
         setDespesas(Array.isArray(resp?.itens) ? resp.itens : []);
       }
     } catch (err: unknown) {
+      setIdsDespesasAutomaticas(null);
       const msg = err instanceof Error ? err.message : "Erro ao listar despesas.";
       showToast(msg, "error");
     }
@@ -470,33 +513,15 @@ export default function FinanceiroPage() {
 
   const carregarReposicoesEstoque = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("movimentacoes_estoque")
-        .select(`
-          id,
-          tipo,
-          quantidade_delta,
-          custo_unitario_snapshot,
-          valor_total_snapshot,
-          created_at,
-          produto:produtos ( id, nome )
-        `)
-        .eq("tipo", "ENTRADA_REPOSICAO")
-        .order("created_at", { ascending: false })
-        .limit(20);
-
-      if (!error && data) {
-        const formatados: MovimentacaoReposicaoItem[] = data.map((m) => {
-          const prod = Array.isArray(m.produto) ? m.produto[0] : m.produto;
-          return {
-            ...m,
-            produto: prod,
-          };
-        });
-        setReposicoesDisponiveis(formatados);
-      }
-    } catch {
-      // Ignora silenciosamente reposições se não aplicável
+      // Lista apenas reposicoes LEGADAS, sem compra nova e sem despesa vinculada.
+      const { data, error } = await supabase.rpc("listar_reposicoes_manuais_vinculaveis", {
+        p_limite: 50,
+      });
+      if (error) throw error;
+      setReposicoesDisponiveis(Array.isArray(data) ? data as MovimentacaoReposicaoItem[] : []);
+    } catch (error: unknown) {
+      console.error("Falha ao consultar reposicoes antigas sem despesa:", error);
+      setReposicoesDisponiveis([]);
     }
   }, [supabase]);
 
@@ -557,18 +582,18 @@ export default function FinanceiroPage() {
       setPeriod(newPeriod);
       const now = new Date();
       if (newPeriod === "hoje") {
-        const t = now.toISOString().split("T")[0];
+        const t = dataLocalFinanceiro(now);
         setDataInicio(t);
         setDataFim(t);
       } else if (newPeriod === "semana") {
-        const seteDias = new Date(now.getTime() - 7 * 86400000).toISOString().split("T")[0];
+        const seteDias = dataLocalFinanceiro(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7));
         setDataInicio(seteDias);
         setDataFim(todayISO);
       } else if (newPeriod === "mes") {
         setDataInicio(primeiroDiaMes);
         setDataFim(ultimoDiaMes);
       } else if (newPeriod === "ano") {
-        const primeiroDiaAno = new Date(now.getFullYear(), 0, 1).toISOString().split("T")[0];
+        const primeiroDiaAno = dataLocalFinanceiro(new Date(now.getFullYear(), 0, 1));
         setDataInicio(primeiroDiaAno);
         setDataFim(todayISO);
       }
@@ -699,7 +724,7 @@ export default function FinanceiroPage() {
     setIsRecurring(false);
     setFormName("");
     setFormCategory("OUTROS");
-    setFormAmount("");
+    setFormAmount("0,00");
     setFormDate(todayISO);
     setFormDueDay("10");
     setFormDescription("");
@@ -708,13 +733,18 @@ export default function FinanceiroPage() {
     setIsModalOpen(true);
   };
 
+  const handleOpenNewRecurring = () => {
+    handleOpenNewExpense();
+    setIsRecurring(true);
+  };
+
   const handleOpenEditExpense = (exp: DespesaItem) => {
     setEditingExpenseId(exp.id);
     setEditingRecurringId(null);
     setIsRecurring(false);
     setFormName(exp.nome);
     setFormCategory(exp.categoria);
-    setFormAmount(exp.valor.toFixed(2).replace(".", ","));
+    setFormAmount(formatarDinheiroExistente(exp.valor));
     setFormDate(exp.data_despesa);
     setFormDescription(exp.descricao || "");
     setFormMovId(exp.movimentacao_estoque_id || "");
@@ -728,7 +758,7 @@ export default function FinanceiroPage() {
     setIsRecurring(true);
     setFormName(rec.nome);
     setFormCategory(rec.categoria);
-    setFormAmount(rec.valor_previsto.toFixed(2).replace(".", ","));
+    setFormAmount(formatarDinheiroExistente(rec.valor_previsto));
     setFormDueDay(String(rec.dia_vencimento));
     setFormDescription(rec.descricao || "");
     setFormMovId("");
@@ -891,7 +921,7 @@ export default function FinanceiroPage() {
   // Handler: Marcar Ocorrência como Paga
   const handleOpenPayModal = (ocorr: OcorrenciaItem) => {
     setSelectedPayOcorrencia(ocorr);
-    setPayAmountInput(ocorr.valor_previsto.toFixed(2).replace(".", ","));
+    setPayAmountInput(formatarDinheiroExistente(ocorr.valor_previsto));
     setPayDateInput(todayISO);
     setPayError(null);
     setIsPayModalOpen(true);
@@ -1104,18 +1134,14 @@ export default function FinanceiroPage() {
       </header>
 
 
-      {/* ======================================================== */}
-      {/* 2. EDUCATIONAL BANNER */}
-      {/* ======================================================== */}
-      <section className="p-4 rounded-2xl bg-[#FAF9F5] dark:bg-[#20201E] border border-[#E2E2DD] dark:border-[#3F3F3B] flex items-start gap-3">
-        <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 shrink-0">
-          <Info className="w-4 h-4" />
-        </div>
-        <div className="text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
-          <strong className="font-bold text-[#2F2F2D] dark:text-[#F4F4F0] block mb-0.5">
-            Use esta tela para responder rapidamente: “quanto entrou?”, “quanto saiu?” e “o que ainda preciso pagar?”
-          </strong>
-          Despesas recorrentes pendentes ainda não contam como saída. Elas só entram no resultado quando você marcar como pagas.
+      {/* Faixa padronizada de orientacao: cores azuis e fonte confortavel */}
+      <section aria-labelledby="financeiro-como-usar" className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
+        <div className="min-w-0 space-y-1">
+          <h2 id="financeiro-como-usar" className="text-sm font-extrabold">Como usar esta tela</h2>
+          <p className="text-sm leading-relaxed text-sky-900/80 dark:text-sky-100/80">
+            Escolha um período para consultar as <strong>entradas</strong>, as <strong>saídas</strong> e o resultado estimado. Use <strong>Nova despesa</strong> para registrar gastos e a aba <strong>Recorrentes</strong> para acompanhar contas fixas. Despesas recorrentes pendentes só entram nas saídas quando são marcadas como pagas.
+          </p>
         </div>
       </section>
 
@@ -1282,6 +1308,9 @@ export default function FinanceiroPage() {
       {/* ======================================================== */}
       {activeTab === "overview" && (
         <div className="space-y-5 animate-fadeIn">
+          <ComprasEstoquePendentes onPaid={() => {
+            void Promise.all([carregarResumo(), carregarDespesas()]);
+          }} />
           {/* PRÓXIMO PAGAMENTO */}
           {nextPayment ? (
             <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#20201E] border border-amber-200/80 dark:border-amber-900/60 shadow-xs relative overflow-hidden">
@@ -1353,10 +1382,10 @@ export default function FinanceiroPage() {
                 </div>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-emerald-900 dark:text-emerald-300">
-                    Próximo pagamento: Todas as contas em dia!
+                    Próximo pagamento: Sem contas recorrentes pendentes!
                   </h3>
                   <p className="text-xs text-emerald-800/80 dark:text-emerald-400/80 mt-0.5">
-                    Não há pagamentos pendentes ou contas a vencer para este mês.
+                    Não há contas recorrentes pendentes ou a vencer neste mês. Compras de estoque pendentes aparecem separadamente.
                   </p>
                 </div>
               </div>
@@ -1440,7 +1469,7 @@ export default function FinanceiroPage() {
               {pendingOccurrences.length === 0 ? (
                 <div className="p-8 text-center text-xs text-emerald-700 dark:text-emerald-400 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40">
                   <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-emerald-500" />
-                  <p className="font-bold">Todas as contas em dia!</p>
+                  <p className="font-bold">Sem contas recorrentes pendentes!</p>
                   <p className="mt-1 text-[11px] text-[#888882]">Não há pendências recorrentes para este mês.</p>
                 </div>
               ) : (
@@ -1617,7 +1646,8 @@ export default function FinanceiroPage() {
 
                       <td className="py-3.5 px-3 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button
+                          {idsDespesasAutomaticas !== null && !idsDespesasAutomaticas.has(exp.id) && (
+<button
                             type="button"
                             onClick={() => handleOpenEditExpense(exp)}
                             className="p-1.5 rounded-lg text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-[#2B2B29] transition-colors cursor-pointer"
@@ -1625,7 +1655,9 @@ export default function FinanceiroPage() {
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
-                          <button
+)}
+                          {idsDespesasAutomaticas !== null && !idsDespesasAutomaticas.has(exp.id) && (
+<button
                             type="button"
                             onClick={() => handlePromptDeleteExpense(exp)}
                             className="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
@@ -1633,6 +1665,10 @@ export default function FinanceiroPage() {
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
+)}
+{idsDespesasAutomaticas?.has(exp.id) && (
+  <span className="text-[11px] text-[#888882]" title="Esta despesa é controlada pelo Estoque">Controlada pelo Estoque</span>
+)}
                         </div>
                       </td>
                     </tr>
@@ -1671,7 +1707,8 @@ export default function FinanceiroPage() {
                     </div>
 
                     <div className="flex items-center gap-1">
-                      <button
+                      {idsDespesasAutomaticas !== null && !idsDespesasAutomaticas.has(exp.id) && (
+<button
                         type="button"
                         onClick={() => handleOpenEditExpense(exp)}
                         className="p-1.5 rounded-lg text-[#666662] dark:text-[#B8B8B2] hover:text-[#2F2F2D] dark:hover:text-white"
@@ -1679,7 +1716,9 @@ export default function FinanceiroPage() {
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
-                      <button
+)}
+                      {idsDespesasAutomaticas !== null && !idsDespesasAutomaticas.has(exp.id) && (
+<button
                         type="button"
                         onClick={() => handlePromptDeleteExpense(exp)}
                         className="p-1.5 rounded-lg text-red-600 dark:text-red-400"
@@ -1687,6 +1726,10 @@ export default function FinanceiroPage() {
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
+)}
+{idsDespesasAutomaticas?.has(exp.id) && (
+  <span className="text-[11px] text-[#888882]" title="Esta despesa é controlada pelo Estoque">Controlada pelo Estoque</span>
+)}
                     </div>
                   </div>
                 </article>
@@ -1939,7 +1982,7 @@ export default function FinanceiroPage() {
 
               <button
                 type="button"
-                onClick={handleOpenNewExpense}
+                onClick={handleOpenNewRecurring}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817] text-xs font-bold shadow-xs hover:bg-black dark:hover:bg-white transition-all cursor-pointer w-full sm:w-auto"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -1949,7 +1992,7 @@ export default function FinanceiroPage() {
 
             {recorrencias.length === 0 ? (
               <div className="py-10 text-center text-xs text-[#888882] rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B]">
-                Nenhuma despesa recorrente cadastrada. Clique em &quot;Nova despesa&quot; e marque a opção recorrente.
+                Nenhuma despesa recorrente cadastrada. Clique em &quot;Nova recorrência&quot; para cadastrar.
               </div>
             ) : (
               <>
@@ -2133,6 +2176,8 @@ export default function FinanceiroPage() {
                       ? "Editar recorrência"
                       : editingExpenseId
                       ? "Editar despesa"
+                      : isRecurring
+                      ? "Nova recorrência"
                       : "Nova despesa"}
                   </h2>
                   <p className="mt-1 text-xs text-[#666662] dark:text-[#B8B8B2] leading-relaxed">
@@ -2246,10 +2291,30 @@ export default function FinanceiroPage() {
                       </span>
                       <input
                         type="text"
-                        inputMode="decimal"
+                        inputMode="numeric"
+                        onKeyDown={(event) => {
+                          if (event.ctrlKey || event.metaKey || event.altKey) return;
+                          if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onPaste={(event) => {
+                          if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onDrop={(event) => event.preventDefault()}
+                        onFocus={(event) => {
+                          const campo = event.currentTarget;
+                          campo.setSelectionRange(campo.value.length, campo.value.length);
+                        }}
+                        onClick={(event) => {
+                          const campo = event.currentTarget;
+                          campo.setSelectionRange(campo.value.length, campo.value.length);
+                        }}
                         required
                         value={formAmount}
-                        onChange={(e) => setFormAmount(e.target.value)}
+                        onChange={(e) => setFormAmount(formatarDinheiroDigitado(e.target.value))}
                         placeholder="0,00"
                         className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] placeholder-[#888882] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white transition-colors"
                       />
@@ -2416,9 +2481,29 @@ export default function FinanceiroPage() {
                     </span>
                     <input id="sonar-fin-valor-pago"
                       type="text"
-                      inputMode="decimal"
+                      inputMode="numeric"
+                        onKeyDown={(event) => {
+                          if (event.ctrlKey || event.metaKey || event.altKey) return;
+                          if (event.key.length === 1 && !/^\d$/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onPaste={(event) => {
+                          if (!/^\d+$/.test(event.clipboardData.getData("text"))) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onDrop={(event) => event.preventDefault()}
+                        onFocus={(event) => {
+                          const campo = event.currentTarget;
+                          campo.setSelectionRange(campo.value.length, campo.value.length);
+                        }}
+                        onClick={(event) => {
+                          const campo = event.currentTarget;
+                          campo.setSelectionRange(campo.value.length, campo.value.length);
+                        }}
                       value={payAmountInput}
-                      onChange={(e) => setPayAmountInput(e.target.value)}
+                      onChange={(e) => setPayAmountInput(formatarDinheiroDigitado(e.target.value))}
                       className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#FAF9F5] dark:bg-[#181817] border border-[#E2E2DD] dark:border-[#3F3F3B] text-xs sm:text-sm font-bold text-[#2F2F2D] dark:text-[#F4F4F0] placeholder-[#888882] focus:outline-none focus:border-[#2F2F2D] dark:focus:border-white transition-colors"
                     />
                   </div>
