@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
 import { BottomNav } from "./bottom-nav";
+import { PlanoNormalContext } from "./plano-context";
 
 
 interface ShellProps {
@@ -13,6 +14,7 @@ interface ShellProps {
   nomeMarca?: string | null;
   email?: string | null;
   logoUrl?: string | null;
+  planoNormal: boolean;
 }
 
 export function Shell({
@@ -21,6 +23,7 @@ export function Shell({
   nomeMarca,
   email,
   logoUrl,
+  planoNormal,
 }: ShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
@@ -33,6 +36,7 @@ export function Shell({
   }
 
   return (
+    <PlanoNormalContext.Provider value={planoNormal}>
     <div className="min-h-screen bg-[#F4F4F0] dark:bg-[#181817] text-[#2F2F2D] dark:text-[#F4F4F0] flex flex-col font-sans transition-colors duration-200 overflow-x-hidden w-full max-w-full min-w-0">
       {/* 1. Sidebar Desktop (lg: 1024px+) */}
 
@@ -73,5 +77,6 @@ export function Shell({
       {/* 3. Bottom Navigation Mobile (< lg) */}
       <BottomNav />
     </div>
+    </PlanoNormalContext.Provider>
   );
 }
