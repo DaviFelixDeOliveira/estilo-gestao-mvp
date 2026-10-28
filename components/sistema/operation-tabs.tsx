@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePlanoNormal } from "./plano-context";
 
 export type OperationTabId = "servicos" | "produtos" | "categorias" | "estoque";
 
@@ -23,12 +24,13 @@ interface OperationTabsProps {
 }
 
 export function OperationTabs({ activeTab }: OperationTabsProps) {
+  const planoNormal = usePlanoNormal();
   return (
     <nav
       aria-label="Abas da Operação"
       className="flex items-center p-1 rounded-2xl bg-[#EEEDE7] dark:bg-[#222220] border border-[#E2E2DD] dark:border-[#3F3F3B] w-full sm:w-fit overflow-x-auto gap-1 select-none"
     >
-      {OPERATION_TABS.map((tab) => {
+      {OPERATION_TABS.filter((tab) => planoNormal || tab.id !== "estoque").map((tab) => {
         const isActive = tab.id === activeTab;
 
         if (isActive) {
