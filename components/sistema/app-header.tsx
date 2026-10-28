@@ -14,6 +14,9 @@ interface AppHeaderProps {
 }
 
 function getHeaderTitles(pathname: string): { title: string; breadcrumb: string } {
+  if (pathname === "/minha-assinatura") {
+    return { title: "Minha assinatura", breadcrumb: "Minha assinatura" };
+  }
   if (pathname === "/dashboard") {
     return { title: "Dashboard", breadcrumb: "Dashboard" };
   }
