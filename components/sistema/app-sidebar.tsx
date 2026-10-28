@@ -14,6 +14,7 @@ import {
   Menu,
 } from "lucide-react";
 import { AccountMenu, getBarbershopInitials } from "./account-menu";
+import { usePlanoNormal } from "./plano-context";
 
 interface AppSidebarProps {
   collapsed: boolean;
@@ -33,6 +34,7 @@ export function AppSidebar({
   logoUrl,
 }: AppSidebarProps) {
   const pathname = usePathname();
+  const planoNormal = usePlanoNormal();
 
   const businessName =
     (nomeMarca && nomeMarca.trim()) ||
@@ -138,7 +140,17 @@ export function AppSidebar({
           {!collapsed && <span>Dashboard</span>}
         </Link>
 
+        <Link
+          href="/minha-assinatura"
+          title="Minha assinatura"
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all hover:bg-[#F4F4F0] dark:hover:bg-[#2B2B29] ${pathname === "/minha-assinatura" ? "bg-[#2F2F2D] dark:bg-[#F4F4F0] text-white dark:text-[#181817]" : "text-[#666662] dark:text-[#B8B8B2]"} ${collapsed ? "justify-center px-0" : ""}`}
+        >
+          <CreditCard className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Minha assinatura</span>}
+        </Link>
+
         {/* Item 2: PDV Group */}
+        {planoNormal && (
         <div className="pt-0.5">
           <button
             type="button"
@@ -196,6 +208,7 @@ export function AppSidebar({
             </div>
           )}
         </div>
+        )}
 
         {/* Item 3: Operação Group */}
         <div className="pt-0.5">
@@ -262,7 +275,8 @@ export function AppSidebar({
               >
                 Categorias
               </Link>
-              <Link
+              {planoNormal && (
+<Link
                 href="/operacao/estoque"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/operacao/estoque"
@@ -272,6 +286,7 @@ export function AppSidebar({
               >
                 Estoque
               </Link>
+              )}
             </div>
           )}
         </div>
@@ -314,7 +329,8 @@ export function AppSidebar({
               <span className="block px-2.5 pt-1 text-[10px] font-bold uppercase tracking-wider text-[#888882]">
                 Negócio
               </span>
-              <Link
+              {planoNormal && (
+<Link
                 href="/configuracoes/negocio/financeiro"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/negocio/financeiro" || pathname === "/financeiro"
@@ -324,7 +340,9 @@ export function AppSidebar({
               >
                 Financeiro
               </Link>
-              <Link
+              )}
+              {planoNormal && (
+<Link
                 href="/configuracoes/negocio/relatorio"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                   pathname === "/configuracoes/negocio/relatorio" ||
@@ -336,6 +354,7 @@ export function AppSidebar({
               >
                 Relatórios
               </Link>
+              )}
               <Link
                 href="/configuracoes/negocio/vitrine"
                 className={`block w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
