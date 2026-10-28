@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Shell } from "@/components/sistema/shell";
 import { SincronizarTemaConta } from "@/components/sistema/sincronizar-tema-conta";
 import { resolverSrcMidia } from "@/lib/imagens";
+import { consultarAcessoUsuarioAtual } from "@/lib/assinaturas/consultar-acesso";
 
 export default async function SistemaLayout({
   children,
@@ -78,6 +79,18 @@ export default async function SistemaLayout({
     redirect("/onboarding");
   }
 
+  // O plano é validado no servidor em cada renderização da área autenticada.
+  const sessaoPlano = await consultarAcessoUsuarioAtual();
+  if (!sessaoPlano || sessaoPlano.barbeariaId !== perfil.barbearia_id) {
+    throw new Error("Não foi possível confirmar o acesso à barbearia.");
+  }
+
+  if (sessaoPlano.acesso.situacaoConta === "SUSPENSA") {
+    redirect("/acesso-negado");
+  }
+
+  const planoNormal = sessaoPlano.acesso.planoEfetivo === "NORMAL";
+
   let nomeMarca: string | null = null;
   let logoUrl: string | null = null;
 
@@ -105,6 +118,7 @@ export default async function SistemaLayout({
         nomeMarca={nomeMarca}
         email={user.email}
         logoUrl={logoUrl}
+        planoNormal={planoNormal}
       >
         {children}
       </Shell>
