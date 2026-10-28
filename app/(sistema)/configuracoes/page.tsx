@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { usePlanoNormal } from "@/components/sistema/plano-context";
 import {
   Building2,
   MapPin,
@@ -86,6 +87,7 @@ const grupos: {
 
 export default function ConfiguracoesPage() {
   const router = useRouter();
+  const planoNormal = usePlanoNormal();
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 1024px)");
@@ -134,7 +136,12 @@ export default function ConfiguracoesPage() {
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-[#E4E4DF] bg-white shadow-sm dark:border-[#3B3B38] dark:bg-[#242422]">
-            {grupo.opcoes.map((opcao, indice) => {
+            {grupo.opcoes
+              .filter((opcao) => planoNormal || ![
+                "/configuracoes/negocio/financeiro",
+                "/configuracoes/negocio/relatorios",
+              ].includes(opcao.href))
+              .map((opcao, indice) => {
               const Icone = opcao.Icone;
 
               return (
