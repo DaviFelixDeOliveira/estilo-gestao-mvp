@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePlanoNormal } from "./plano-context";
 import { usePathname } from "next/navigation";
 import {
   LayoutGrid,
@@ -33,6 +34,13 @@ const BOTTOM_NAV_ITEMS = [
   },
 ];
 
+const FREE_NAV_ITEMS: typeof BOTTOM_NAV_ITEMS = [
+  { title: "Dashboard", href: "/dashboard", icon: LayoutGrid, exact: true },
+  { title: "Operação", href: "/operacao/servicos", icon: Layers },
+  { title: "Configurações", href: "/configuracoes", icon: Settings },
+  { title: "Assinatura", href: "/minha-assinatura", icon: CreditCard },
+];
+
 function itemEstaAtivo(
   pathname: string,
   item: (typeof BOTTOM_NAV_ITEMS)[number]
@@ -60,8 +68,10 @@ function itemEstaAtivo(
 
 export function BottomNav() {
   const pathname = usePathname();
+  const planoNormal = usePlanoNormal();
+  const itens = planoNormal ? BOTTOM_NAV_ITEMS : FREE_NAV_ITEMS;
 
-  const indiceAtivo = BOTTOM_NAV_ITEMS.findIndex((item) =>
+  const indiceAtivo = itens.findIndex((item) =>
     itemEstaAtivo(pathname, item)
   );
 
@@ -77,11 +87,11 @@ export function BottomNav() {
           indiceAtivo >= 0 ? "opacity-100" : "opacity-0"
         }`}
         style={{
-          left: `calc(${((Math.max(indiceAtivo, 0) + 0.5) / BOTTOM_NAV_ITEMS.length) * 100}% + 9px)`,
+          left: `calc(${((Math.max(indiceAtivo, 0) + 0.5) / itens.length) * 100}% + 9px)`,
         }}
       />
 
-      {BOTTOM_NAV_ITEMS.map((item) => {
+      {itens.map((item) => {
         const isActive = itemEstaAtivo(pathname, item);
         const Icon = item.icon;
 
